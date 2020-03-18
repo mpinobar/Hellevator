@@ -35,10 +35,10 @@ public abstract class DemonBase : MonoBehaviour
 
     private void Awake()
     {
-        m_limbsColliders    = ReturnComponentsInChildren<Collider2D>();
-        m_limbsRbds         = ReturnComponentsInChildren<Rigidbody2D>();
+        m_limbsColliders    = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
+        m_limbsRbds         = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();
         m_myRgb             = GetComponent<Rigidbody2D>();
-        m_myCollider        = GetComponent<Collider2D>();
+        m_myCollider        = transform.GetChild(1).GetComponent<Collider2D>();
         mask                = LayerMask.NameToLayer("Default");
         SetGroundOffset();
     }
@@ -49,23 +49,7 @@ public abstract class DemonBase : MonoBehaviour
         groundOffset = impact.distance;
     }
 
-    /// <summary>
-    /// Method that returns the child gameobjects with the specified component, without the parent
-    /// </summary>
-    /// <typeparam name="T">The specified component that the method will look for</typeparam>
-    /// <returns></returns>
-    private T[] ReturnComponentsInChildren<T>()
-    {
-        T[] array = GetComponentsInChildren<T>();
-        T[] returnedArray = new T[array.Length - 1];
 
-        for (int i = 1; i < array.Length; i++)
-        {
-            returnedArray[i - 1] = array[i];
-        }
-
-        return returnedArray;
-    }
 
     /// <summary>
     /// Sets the demon to be the one controlled by the player and turns off ragdoll physics
@@ -95,7 +79,7 @@ public abstract class DemonBase : MonoBehaviour
 
     protected virtual void Update()
     {
-        print(LayerMask.LayerToName(mask));
+
     }
 
 
@@ -127,7 +111,7 @@ public abstract class DemonBase : MonoBehaviour
         }
 
         //toggle the collider and the rigidbody of the parent gameobject
-        m_myCollider.enabled = !active;
+        m_myCollider.gameObject.SetActive(!active);
         m_myRgb.isKinematic = active;
     }
 
@@ -144,34 +128,37 @@ public abstract class DemonBase : MonoBehaviour
     private DemonBase LookForNearestDemon(int radiusLimit)
     {
         int lookForRadius = 1;
-        LayerMask lm = LayerMask.NameToLayer("Ragdoll");
-        print(LayerMask.LayerToName(lm));
+        DemonBase demon = null;
         while (lookForRadius <= radiusLimit)
         {
-            Collider2D other = Physics2D.OverlapCircle(transform.position, lookForRadius, lm);
-            if(other != null)
+            Collider2D[] other = Physics2D.OverlapCircleAll(transform.position, lookForRadius);
+            for (int i = 0; i < other.Length; i++)
             {
-                print(other.transform.root.name);
-                return other.transform.root.GetComponent<DemonBase>();
+                DemonBase foundDemon = other[i].transform.root.GetComponent<DemonBase>();
+                if (foundDemon != null && foundDemon != this)
+                {
+                    demon = foundDemon;
+                    return demon;
+                }
             }
-            else
+            
+            if(demon == null)
             {
                 lookForRadius++;
             }            
         }
-        return null;
+        return demon;
     }
 
     public void PossessNearestDemon(int radiusLimit)
     {
         DemonBase demonToPossess = LookForNearestDemon(radiusLimit);
+        print(demonToPossess.name);
         if(demonToPossess != null)
         {
             demonToPossess.SetControlledByPlayer();
             SetNotControlledByPlayer();
         }
-        
-
     }
 
 }
