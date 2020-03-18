@@ -18,7 +18,7 @@ public abstract class DemonBase : MonoBehaviour
     //Ragdoll child references
     private Collider2D[]    m_limbsColliders;
     private Rigidbody2D[]   m_limbsRbds;
-    public LayerMask       mask; 
+    private LayerMask       mask; 
 
     //Demon references
     private Rigidbody2D m_myRgb;
@@ -39,9 +39,8 @@ public abstract class DemonBase : MonoBehaviour
         m_limbsRbds         = ReturnComponentsInChildren<Rigidbody2D>();
         m_myRgb             = GetComponent<Rigidbody2D>();
         m_myCollider        = GetComponent<Collider2D>();
-       // mask                = LayerMask.NameToLayer("Default");
+        mask                = LayerMask.NameToLayer("Default");
         SetGroundOffset();
-        print(groundOffset);
     }
 
     private void SetGroundOffset()
@@ -75,13 +74,14 @@ public abstract class DemonBase : MonoBehaviour
     {
         m_isControlledByPlayer = true;
         SetRagdollActive(false);
+
+        
         Transform childObject = transform.GetChild(0);
         childObject.parent = null;
 
         RaycastHit2D impact = Physics2D.Raycast(childObject.position, Vector2.down, 3, mask);
         float torsoOffset = impact.distance;
 
-        print(torsoOffset);
         transform.position = new Vector2(childObject.transform.position.x, childObject.transform.position.y + groundOffset - torsoOffset);           
 
         childObject.parent = transform;
@@ -95,7 +95,7 @@ public abstract class DemonBase : MonoBehaviour
 
     protected virtual void Update()
     {
-
+        print(LayerMask.LayerToName(mask));
     }
 
 
@@ -139,6 +139,39 @@ public abstract class DemonBase : MonoBehaviour
         m_isControlledByPlayer = false;
         SetRagdollActive(true);
         m_myRgb.velocity = Vector2.zero;
+    }
+
+    private DemonBase LookForNearestDemon(int radiusLimit)
+    {
+        int lookForRadius = 1;
+        LayerMask lm = LayerMask.NameToLayer("Ragdoll");
+        print(LayerMask.LayerToName(lm));
+        while (lookForRadius <= radiusLimit)
+        {
+            Collider2D other = Physics2D.OverlapCircle(transform.position, lookForRadius, lm);
+            if(other != null)
+            {
+                print(other.transform.root.name);
+                return other.transform.root.GetComponent<DemonBase>();
+            }
+            else
+            {
+                lookForRadius++;
+            }            
+        }
+        return null;
+    }
+
+    public void PossessNearestDemon(int radiusLimit)
+    {
+        DemonBase demonToPossess = LookForNearestDemon(radiusLimit);
+        if(demonToPossess != null)
+        {
+            demonToPossess.SetControlledByPlayer();
+            SetNotControlledByPlayer();
+        }
+        
+
     }
 
 }

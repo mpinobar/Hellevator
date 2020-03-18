@@ -11,12 +11,15 @@ public class BasicZombie : DemonBase
     public float Acceleration { get => m_acceleration; }
     public float JumpForce { get => m_jumpForce; }
 
+
+    public bool possessing;
     public override void UseSkill()
     {
         
     }
     private void Start()
     {
+        if(possessing)
         SetControlledByPlayer();
     }
 
@@ -27,12 +30,9 @@ public class BasicZombie : DemonBase
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            SetControlledByPlayer();
+            PossessNearestDemon(10);
         }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            SetNotControlledByPlayer();
-        }
+        
 
 
         if (IsControlledByPlayer)
