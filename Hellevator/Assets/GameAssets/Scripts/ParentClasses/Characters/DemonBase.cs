@@ -12,13 +12,15 @@ public abstract class DemonBase : MonoBehaviour
     //Member variables
     private bool     m_isRagdollActive;
     private bool     m_isControlledByPlayer;
-    private float    groundOffset;
+    private float    m_groundOffset;
 
 
     //Ragdoll child references
     private Collider2D[]    m_limbsColliders;
     private Rigidbody2D[]   m_limbsRbds;
-    private LayerMask       mask; 
+
+    //mask for ground detection
+    [SerializeField] private LayerMask m_mask; 
 
     //Demon references
     private Rigidbody2D m_myRgb;
@@ -26,7 +28,7 @@ public abstract class DemonBase : MonoBehaviour
 
     #region Properties
 
-    protected bool      IsControlledByPlayer { get => m_isControlledByPlayer; }
+    protected bool      IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
     protected bool      IsRagdollActive { get => m_isRagdollActive; }
     public Rigidbody2D  MyRgb { get => m_myRgb; }
     public Collider2D   MyCollider { get => m_myCollider; }
@@ -37,19 +39,19 @@ public abstract class DemonBase : MonoBehaviour
     {
 
         m_limbsColliders    = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
-        m_limbsRbds         = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();
-
-     
+        m_limbsRbds         = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();     
         m_myRgb             = GetComponent<Rigidbody2D>();
         m_myCollider        = transform.GetChild(1).GetComponent<Collider2D>();
-        mask                = LayerMask.NameToLayer("Default");
         SetGroundOffset();
     }
 
+    /// <summary>
+    /// Detects disance to ground for repositioning when demon is possessed
+    /// </summary>
     private void SetGroundOffset()
     {
-        RaycastHit2D impact = Physics2D.Raycast(transform.position, Vector2.down, 3, mask);
-        groundOffset = impact.distance;
+        RaycastHit2D impact = Physics2D.Raycast(transform.position, Vector2.down, 3, m_mask);
+        m_groundOffset      = impact.distance;
     }  	
 
 
@@ -59,20 +61,18 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetControlledByPlayer()
     {
-        m_isControlledByPlayer = true;
-        SetRagdollActive(false);
-
         
-        Transform childObject = transform.GetChild(0);
-        childObject.parent = null;
-
-        RaycastHit2D impact = Physics2D.Raycast(childObject.position, Vector2.down, 3, mask);
-        float torsoOffset = impact.distance;
-
-        transform.position = new Vector2(childObject.transform.position.x, childObject.transform.position.y + groundOffset - torsoOffset);           
-
-        childObject.parent = transform;
-        childObject.localPosition = new Vector2(childObject.localPosition.x, -groundOffset + torsoOffset);
+        IsControlledByPlayer = true;
+        SetRagdollActive(false);
+        PosesionManager.Instance.ControlledDemon = this;
+        
+        Transform childObject   = transform.GetChild(0);
+        childObject.parent      = null;
+        RaycastHit2D impact     = Physics2D.Raycast(childObject.position, Vector2.down, 3, m_mask);
+        float torsoOffset       = impact.distance;
+        transform.position      = new Vector2(childObject.transform.position.x, childObject.transform.position.y + m_groundOffset - torsoOffset);          
+        childObject.parent      = transform;
+        childObject.localPosition = new Vector2(childObject.localPosition.x, -m_groundOffset + torsoOffset);
     }
     
     /// <summary>
@@ -123,44 +123,9 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetNotControlledByPlayer()
     {
-        m_isControlledByPlayer = false;
+        IsControlledByPlayer = false;
         SetRagdollActive(true);
         m_myRgb.velocity = Vector2.zero;
-    }
-
-    private DemonBase LookForNearestDemon(int radiusLimit)
-    {
-        int lookForRadius = 1;
-        DemonBase demon = null;
-        while (lookForRadius <= radiusLimit)
-        {
-            Collider2D[] other = Physics2D.OverlapCircleAll(transform.position, lookForRadius);
-            for (int i = 0; i < other.Length; i++)
-            {
-                DemonBase foundDemon = other[i].transform.root.GetComponent<DemonBase>();
-                if (foundDemon != null && foundDemon != this)
-                {
-                    demon = foundDemon;
-                    return demon;
-                }
-            }
-            
-            if(demon == null)
-            {
-                lookForRadius++;
-            }            
-        }
-        return demon;
-    }
-
-    public void PossessNearestDemon(int radiusLimit)
-    {
-        DemonBase demonToPossess = LookForNearestDemon(radiusLimit);
-        print(demonToPossess.name);
-        if(demonToPossess != null)
-        {
-            demonToPossess.SetControlledByPlayer();
-            SetNotControlledByPlayer();
-        }
+        this.enabled = false;
     }
 }
