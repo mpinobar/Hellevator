@@ -35,6 +35,7 @@ public abstract class DemonBase : MonoBehaviour
 
     private void Awake()
     {
+		
         m_limbsColliders    = ReturnComponentsInChildren<Collider2D>();
         m_limbsRbds         = ReturnComponentsInChildren<Rigidbody2D>();
         m_myRgb             = GetComponent<Rigidbody2D>();
@@ -47,7 +48,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         RaycastHit2D impact = Physics2D.Raycast(transform.position, Vector2.down, 3, mask);
         groundOffset = impact.distance;
-    }
+    }  	
 
     /// <summary>
     /// Method that returns the child gameobjects with the specified component, without the parent
@@ -170,8 +171,5 @@ public abstract class DemonBase : MonoBehaviour
             demonToPossess.SetControlledByPlayer();
             SetNotControlledByPlayer();
         }
-        
-
     }
-
 }
