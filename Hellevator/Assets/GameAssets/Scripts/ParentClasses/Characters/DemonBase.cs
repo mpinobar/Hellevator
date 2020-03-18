@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,12 +10,15 @@ using UnityEngine;
 public abstract class DemonBase : MonoBehaviour
 {
     //Member variables
-    private bool m_isRagdollActive;
-    private bool m_isControlledByPlayer;
+    private bool     m_isRagdollActive;
+    private bool     m_isControlledByPlayer;
+    private float    groundOffset;
+
 
     //Ragdoll child references
     private Collider2D[]    m_limbsColliders;
-    public Rigidbody2D[]   m_limbsRbds;
+    private Rigidbody2D[]   m_limbsRbds;
+    public LayerMask       mask; 
 
     //Demon references
     private Rigidbody2D m_myRgb;
@@ -22,10 +26,10 @@ public abstract class DemonBase : MonoBehaviour
 
     #region Properties
 
-    protected bool IsControlledByPlayer { get => m_isControlledByPlayer; }
-    protected bool IsRagdollActive { get => m_isRagdollActive; }
-    public Rigidbody2D MyRgb { get => m_myRgb; }
-    public Collider2D MyCollider { get => m_myCollider; }
+    protected bool      IsControlledByPlayer { get => m_isControlledByPlayer; }
+    protected bool      IsRagdollActive { get => m_isRagdollActive; }
+    public Rigidbody2D  MyRgb { get => m_myRgb; }
+    public Collider2D   MyCollider { get => m_myCollider; }
 
     #endregion
 
@@ -35,17 +39,32 @@ public abstract class DemonBase : MonoBehaviour
         m_limbsRbds         = ReturnComponentsInChildren<Rigidbody2D>();
         m_myRgb             = GetComponent<Rigidbody2D>();
         m_myCollider        = GetComponent<Collider2D>();
+       // mask                = LayerMask.NameToLayer("Default");
+        SetGroundOffset();
+        print(groundOffset);
     }
-    
 
+    private void SetGroundOffset()
+    {
+        RaycastHit2D impact = Physics2D.Raycast(transform.position, Vector2.down, 3, mask);
+        groundOffset = impact.distance;
+    }
+
+    /// <summary>
+    /// Method that returns the child gameobjects with the specified component, without the parent
+    /// </summary>
+    /// <typeparam name="T">The specified component that the method will look for</typeparam>
+    /// <returns></returns>
     private T[] ReturnComponentsInChildren<T>()
     {
         T[] array = GetComponentsInChildren<T>();
         T[] returnedArray = new T[array.Length - 1];
+
         for (int i = 1; i < array.Length; i++)
         {
             returnedArray[i - 1] = array[i];
         }
+
         return returnedArray;
     }
 
@@ -56,6 +75,17 @@ public abstract class DemonBase : MonoBehaviour
     {
         m_isControlledByPlayer = true;
         SetRagdollActive(false);
+        Transform childObject = transform.GetChild(0);
+        childObject.parent = null;
+
+        RaycastHit2D impact = Physics2D.Raycast(childObject.position, Vector2.down, 3, mask);
+        float torsoOffset = impact.distance;
+
+        print(torsoOffset);
+        transform.position = new Vector2(childObject.transform.position.x, childObject.transform.position.y + groundOffset - torsoOffset);           
+
+        childObject.parent = transform;
+        childObject.localPosition = new Vector2(childObject.localPosition.x, -groundOffset + torsoOffset);
     }
     
     /// <summary>
@@ -63,10 +93,9 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public abstract void UseSkill();
 
-
     protected virtual void Update()
     {
-        print(m_myRgb.velocity);
+
     }
 
 
@@ -97,6 +126,8 @@ public abstract class DemonBase : MonoBehaviour
             }
         }
 
+        //toggle the collider and the rigidbody of the parent gameobject
+        m_myCollider.enabled = !active;
         m_myRgb.isKinematic = active;
     }
 
@@ -107,6 +138,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         m_isControlledByPlayer = false;
         SetRagdollActive(true);
+        m_myRgb.velocity = Vector2.zero;
     }
 
 }
