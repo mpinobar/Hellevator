@@ -12,7 +12,7 @@ public abstract class DemonBase : MonoBehaviour
     //Member variables
     private bool     m_isRagdollActive;
     private bool     m_isControlledByPlayer;
-    public float    m_groundOffset;
+    private float    m_groundOffset;
 
 
     //Ragdoll child references
@@ -44,6 +44,7 @@ public abstract class DemonBase : MonoBehaviour
         m_myCollider        = transform.GetChild(1).GetComponent<Collider2D>();
         SetGroundOffset();
     }
+
     /// <summary>
     /// Detects disance to ground for repositioning when demon is possessed
     /// </summary>

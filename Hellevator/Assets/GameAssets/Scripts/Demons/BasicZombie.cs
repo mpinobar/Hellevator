@@ -7,19 +7,21 @@ public class BasicZombie : DemonBase
     [SerializeField] private float m_speed;
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
+    [SerializeField] bool m_possessedOnStart;
+
     public float Speed { get => m_speed; }
     public float Acceleration { get => m_acceleration; }
     public float JumpForce { get => m_jumpForce; }
 
 
-    public bool possessedOnStart;
+
     public override void UseSkill()
     {
         
     }
     private void Start()
     {
-        if (possessedOnStart)
+        if (m_possessedOnStart)
         {
             SetControlledByPlayer();
         }

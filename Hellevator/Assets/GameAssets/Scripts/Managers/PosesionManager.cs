@@ -5,9 +5,9 @@ using UnityEngine;
 public class PosesionManager : TemporalSingleton<PosesionManager>
 {
 
-    public DemonBase m_controlledDemon;
-    public Collider2D[] other;
+    private DemonBase m_controlledDemon;    
     public DemonBase ControlledDemon { get => m_controlledDemon; set => m_controlledDemon = value; }
+
     public override void Awake()
     {
         base.Awake();
@@ -24,7 +24,7 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
 
         while (lookForRadius <= radiusLimit)
         {
-            other = Physics2D.OverlapCircleAll(currentDemon.transform.position, lookForRadius);
+            Collider2D[] other = Physics2D.OverlapCircleAll(currentDemon.transform.position, lookForRadius);
             for (int i = 0; i < other.Length; i++)
             {
                 DemonBase foundDemon = other[i].transform.root.GetComponent<DemonBase>();
