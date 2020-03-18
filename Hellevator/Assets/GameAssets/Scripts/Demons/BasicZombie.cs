@@ -19,8 +19,15 @@ public class BasicZombie : DemonBase
     }
     private void Start()
     {
-        if(possessing)
-        SetControlledByPlayer();
+        if (possessing)
+        {
+            SetControlledByPlayer();
+        }
+        else
+        {
+            SetNotControlledByPlayer();
+        }
+        
     }
 
     // Update is called once per frame
@@ -33,8 +40,6 @@ public class BasicZombie : DemonBase
             PossessNearestDemon(10);
         }
         
-
-
         if (IsControlledByPlayer)
         {
             float xInput = Input.GetAxisRaw("Horizontal");            
