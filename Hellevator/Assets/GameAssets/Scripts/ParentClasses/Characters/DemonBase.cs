@@ -35,8 +35,11 @@ public abstract class DemonBase : MonoBehaviour
 
     private void Awake()
     {
+
         m_limbsColliders    = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
         m_limbsRbds         = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();
+
+     
         m_myRgb             = GetComponent<Rigidbody2D>();
         m_myCollider        = transform.GetChild(1).GetComponent<Collider2D>();
         mask                = LayerMask.NameToLayer("Default");
@@ -47,7 +50,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         RaycastHit2D impact = Physics2D.Raycast(transform.position, Vector2.down, 3, mask);
         groundOffset = impact.distance;
-    }
+    }  	
 
 
 
@@ -160,5 +163,4 @@ public abstract class DemonBase : MonoBehaviour
             SetNotControlledByPlayer();
         }
     }
-
 }
