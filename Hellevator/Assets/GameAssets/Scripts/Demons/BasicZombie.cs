@@ -12,14 +12,14 @@ public class BasicZombie : DemonBase
     public float JumpForce { get => m_jumpForce; }
 
 
-    public bool possessing;
+    public bool possessedOnStart;
     public override void UseSkill()
     {
         
     }
     private void Start()
     {
-        if (possessing)
+        if (possessedOnStart)
         {
             SetControlledByPlayer();
         }
@@ -27,7 +27,6 @@ public class BasicZombie : DemonBase
         {
             SetNotControlledByPlayer();
         }
-        
     }
 
     // Update is called once per frame
@@ -35,9 +34,9 @@ public class BasicZombie : DemonBase
     {
         base.Update();
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P) && IsControlledByPlayer)
         {
-            PossessNearestDemon(10);
+            PosesionManager.Instance.PossessNearestDemon(100,this);
         }
         
         if (IsControlledByPlayer)
