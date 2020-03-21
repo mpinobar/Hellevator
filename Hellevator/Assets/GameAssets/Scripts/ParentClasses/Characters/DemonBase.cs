@@ -13,11 +13,18 @@ public abstract class DemonBase : MonoBehaviour
     private bool     m_isRagdollActive;
     private bool     m_isControlledByPlayer;
     private float    m_groundOffset;
+    private bool     m_isLerpingToResetBones;
+    private bool     m_hasResetParentPosition;
 
+
+    [SerializeField] private float    m_recomposingSpeed = 3;
+    [SerializeField] private float    m_recomposingDistanceMargin = 0.05f;
 
     //Ragdoll child references
-    private Collider2D[]    m_limbsColliders;
-    private Rigidbody2D[]   m_limbsRbds;
+    private Collider2D[]        m_limbsColliders;
+    private Rigidbody2D[]       m_limbsRbds;
+    private Transform[]         m_childTransforms;
+    private RagdollTransform[]  m_childInitialTransforms;
 
     //mask for ground detection
     [SerializeField] protected LayerMask m_defaultMask; 
@@ -37,11 +44,13 @@ public abstract class DemonBase : MonoBehaviour
 
     private void Awake()
     {
+        m_limbsColliders            = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
+        m_limbsRbds                 = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();     
+        m_myRgb                     = GetComponent<Rigidbody2D>();
+        m_myCollider                = transform.GetChild(1).GetComponent<Collider2D>();
+        m_childInitialTransforms    = SaveRagdollInitialTransform();
+        m_childTransforms           = ReturnComponentsInChildren<Transform>();
 
-        m_limbsColliders    = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
-        m_limbsRbds         = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();     
-        m_myRgb             = GetComponent<Rigidbody2D>();
-        m_myCollider        = transform.GetChild(1).GetComponent<Collider2D>();
         SetGroundOffset();
     }
 
@@ -54,6 +63,24 @@ public abstract class DemonBase : MonoBehaviour
         m_groundOffset      = impact.distance;
     }  	
 
+    /// <summary>
+    /// Returns all child component references of specified component, excluding the parent
+    /// </summary>
+    /// <typeparam name="T">The specified component to look for</typeparam>
+    /// <returns>An array with the components</returns>
+    private T[] ReturnComponentsInChildren<T>()
+    {
+        T[] array = GetComponentsInChildren<T>();
+        T[] returnedArray = new T[array.Length - 1];
+
+        for (int i = 0; i < returnedArray.Length; i++)
+        {
+            returnedArray[i] = array[i + 1];
+        }
+        return returnedArray;
+    }
+    
+
 
 
     /// <summary>
@@ -61,20 +88,27 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetControlledByPlayer()
     {
-        
-        IsControlledByPlayer = true;
         SetRagdollActive(false);
         PosesionManager.Instance.ControlledDemon = this;
-        
-        Transform childObject   = transform.GetChild(0);
-        childObject.parent      = null;
-        RaycastHit2D impact     = Physics2D.Raycast(childObject.position, Vector2.down, 3, m_defaultMask);
-        float torsoOffset       = impact.distance;
-        transform.position      = new Vector2(childObject.transform.position.x, childObject.transform.position.y + m_groundOffset - torsoOffset);          
-        childObject.parent      = transform;
-        childObject.localPosition = new Vector2(childObject.localPosition.x, -m_groundOffset + torsoOffset);
+        m_isLerpingToResetBones = true;
+        m_hasResetParentPosition = false;
     }
     
+    /// <summary>
+    /// Saves the position and rotation of each ragdoll part with an identifier by hashed name
+    /// </summary>
+    /// <returns>Returns an array of RagdollTransform with the position and rotation of all the child objects</returns>
+    private RagdollTransform[] SaveRagdollInitialTransform()
+    {
+        Transform[] aux = ReturnComponentsInChildren<Transform>();
+        RagdollTransform[] rdolls = new RagdollTransform[aux.Length];
+        for (int i = 0; i < rdolls.Length; i++)
+        {
+            rdolls[i] = new RagdollTransform(aux[i].name.GetHashCode(), aux[i].localPosition, aux[i].localRotation);
+        }
+        return rdolls;
+    }
+
     /// <summary>
     /// Uses the active skill of the demon
     /// </summary>
@@ -82,7 +116,10 @@ public abstract class DemonBase : MonoBehaviour
 
     protected virtual void Update()
     {
-
+        if (m_isLerpingToResetBones)
+        {
+            LerpResetRagdollTransforms();
+        }
     }
 
 
@@ -123,9 +160,74 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetNotControlledByPlayer()
     {
-        IsControlledByPlayer = false;
         SetRagdollActive(true);
         m_myRgb.velocity = Vector2.zero;
         this.enabled = false;
     }
+
+
+
+    /// <summary>
+    /// Resets the position and rotation of all ragdoll parts immediately
+    /// </summary>
+    private void ResetRagdollTransforms()
+    {
+        m_childTransforms = ReturnComponentsInChildren<Transform>();
+        for (int i = 0; i < m_childTransforms.Length; i++)
+        {
+            int partId = m_childTransforms[i].name.GetHashCode();
+
+            for (int j = 0; j < m_childInitialTransforms.Length; j++)
+            {
+                if(partId == m_childInitialTransforms[j].Id)
+                {
+                    m_childTransforms[i].localPosition = m_childInitialTransforms[j].Position;
+                    m_childTransforms[i].localRotation = m_childInitialTransforms[j].Rotation;
+                }
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Resets the position and rotation of all ragdoll parts lerping
+    /// </summary>
+    private void LerpResetRagdollTransforms()
+    {
+        Transform torso = m_limbsColliders[0].transform;
+        if (!m_hasResetParentPosition)
+        {
+            torso.parent = null;
+            Debug.DrawRay(torso.position, Vector2.down, Color.red, 3);
+            RaycastHit2D impact = Physics2D.Raycast(torso.position, Vector2.down, 3, m_defaultMask);
+            transform.position = impact.point + Vector2.up * 2;
+            m_hasResetParentPosition = true;
+            torso.parent = transform;
+        }
+        
+
+        for (int i = 0; i < m_childTransforms.Length; i++)
+        {
+            int partId = m_childTransforms[i].name.GetHashCode();
+
+            for (int j = 0; j < m_childInitialTransforms.Length; j++)
+            {
+                if (partId == m_childInitialTransforms[j].Id)
+                {
+                    m_childTransforms[i].localPosition = Vector3.Lerp(m_childTransforms[i].localPosition, m_childInitialTransforms[j].Position, m_recomposingSpeed * Time.deltaTime);
+                    m_childTransforms[i].localRotation = Quaternion.Lerp(m_childTransforms[i].localRotation, m_childInitialTransforms[j].Rotation, m_recomposingSpeed * Time.deltaTime);
+                    
+                }
+            }
+        }
+        //print(Vector3.Distance(torso.localPosition, m_childInitialTransforms[0].Position));
+        if(Vector3.Distance(torso.localPosition, m_childInitialTransforms[0].Position) < m_recomposingDistanceMargin)
+        {
+            ResetRagdollTransforms();
+            m_isLerpingToResetBones = false;
+            IsControlledByPlayer = true;
+            m_hasResetParentPosition = false;
+        }
+    }
+
 }
