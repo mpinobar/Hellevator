@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class BasicZombie : DemonBase
 {
-    [SerializeField] private float m_speed;
+    #region Variables
+
+    [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
-    [SerializeField] bool m_possessedOnStart;
+    [SerializeField] private bool  m_possessedOnStart;
 
-    public float Speed { get => m_speed; }
+    private bool  m_canJump;
+
+    #endregion
+
+    #region Properties
+    public float MaxSpeed { get => m_maxSpeed; }
     public float Acceleration { get => m_acceleration; }
     public float JumpForce { get => m_jumpForce; }
-
+    #endregion
 
 
     public override void UseSkill()
@@ -29,6 +36,7 @@ public class BasicZombie : DemonBase
         {
             SetNotControlledByPlayer();
         }
+        m_canJump = true;
     }
 
     // Update is called once per frame
@@ -43,11 +51,28 @@ public class BasicZombie : DemonBase
         
         if (IsControlledByPlayer)
         {
+            //horizontal movement
             float xInput = Input.GetAxisRaw("Horizontal");            
-            MyRgb.velocity = Vector2.MoveTowards(MyRgb.velocity, Vector2.right * xInput * Speed, Acceleration * Time.deltaTime);
-            if (Input.GetKeyDown(KeyCode.Space))
+            MyRgb.velocity = Vector2.MoveTowards(MyRgb.velocity, Vector2.right * xInput * MaxSpeed, Acceleration * Time.deltaTime);
+
+            //jumping
+            if (Input.GetKeyDown(KeyCode.Space) && m_canJump)
             {
                 MyRgb.AddForce(Vector2.up*JumpForce);
+                m_canJump = false;
+            }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //collision detection for jump reset
+        RaycastHit2D [] impact = Physics2D.CircleCastAll(transform.position,0.5f, Vector2.down,2);        
+        for (int i = 0; i < impact.Length; i++)
+        {
+            if(collision.collider == impact[i].collider)
+            {
+                m_canJump = true;
             }
         }
     }

@@ -20,7 +20,7 @@ public abstract class DemonBase : MonoBehaviour
     private Rigidbody2D[]   m_limbsRbds;
 
     //mask for ground detection
-    [SerializeField] private LayerMask m_mask; 
+    [SerializeField] protected LayerMask m_defaultMask; 
 
     //Demon references
     private Rigidbody2D m_myRgb;
@@ -50,7 +50,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     private void SetGroundOffset()
     {
-        RaycastHit2D impact = Physics2D.Raycast(transform.position, Vector2.down, 3, m_mask);
+        RaycastHit2D impact = Physics2D.Raycast(transform.position, Vector2.down, 3, m_defaultMask);
         m_groundOffset      = impact.distance;
     }  	
 
@@ -68,7 +68,7 @@ public abstract class DemonBase : MonoBehaviour
         
         Transform childObject   = transform.GetChild(0);
         childObject.parent      = null;
-        RaycastHit2D impact     = Physics2D.Raycast(childObject.position, Vector2.down, 3, m_mask);
+        RaycastHit2D impact     = Physics2D.Raycast(childObject.position, Vector2.down, 3, m_defaultMask);
         float torsoOffset       = impact.distance;
         transform.position      = new Vector2(childObject.transform.position.x, childObject.transform.position.y + m_groundOffset - torsoOffset);          
         childObject.parent      = transform;
