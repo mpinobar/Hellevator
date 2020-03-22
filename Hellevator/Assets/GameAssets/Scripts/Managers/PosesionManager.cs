@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PosesionManager : TemporalSingleton<PosesionManager>
 {
@@ -8,9 +9,9 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
     public DemonBase m_controlledDemon;    
     public DemonBase ControlledDemon { get => m_controlledDemon; set => m_controlledDemon = value; }
 
-    public override void Awake()
+    private void Start()
     {
-        base.Awake();
+        InputManager.Instance.UpdateDemonReference();
     }
     /// <summary>
     /// Returns the nearest demon to the demon currently controlled by the player, with a distance limit
@@ -57,6 +58,11 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
             demonToPossess.enabled = true;
             demonToPossess.SetControlledByPlayer();
             CameraManager.Instance.ChangeCamTarget();
+            InputManager.Instance.UpdateDemonReference();
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
