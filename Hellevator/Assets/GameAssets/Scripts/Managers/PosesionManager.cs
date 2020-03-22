@@ -5,7 +5,7 @@ using UnityEngine;
 public class PosesionManager : TemporalSingleton<PosesionManager>
 {
 
-    private DemonBase m_controlledDemon;    
+    public DemonBase m_controlledDemon;    
     public DemonBase ControlledDemon { get => m_controlledDemon; set => m_controlledDemon = value; }
 
     public override void Awake()
@@ -33,7 +33,6 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
                 {
 					if (!foundDemon.IsInDanger)
 					{
-						//print("FOUND: " + foundDemon.name);
 						return foundDemon;
 					}
                 }

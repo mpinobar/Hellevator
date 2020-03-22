@@ -11,10 +11,10 @@ public abstract class DemonBase : MonoBehaviour
 {
     //Member variables
     private bool     m_isRagdollActive;
-    private bool     m_isControlledByPlayer;
+    public bool     m_isControlledByPlayer;
     private float    m_groundOffset;
 
-	  private bool     m_isInDanger;
+    public bool     m_isInDanger;
 
   	//Weight variables
    	[SerializeField] private float m_weight;
@@ -169,6 +169,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetNotControlledByPlayer()
     {
+        IsControlledByPlayer = false;
         SetRagdollActive(true);
         m_myRgb.velocity = Vector2.zero;
         this.enabled = false;
