@@ -56,7 +56,8 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
         if (demonToPossess != null)
         {
             demonToPossess.enabled = true;
-            demonToPossess.SetControlledByPlayer();            
+            demonToPossess.SetControlledByPlayer();
+            CameraManager.Instance.ChangeCamTarget();
         }
     }
 }

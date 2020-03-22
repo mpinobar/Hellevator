@@ -18,6 +18,7 @@ public class Spikes : MonoBehaviour
 			{
 
 				PosesionManager.Instance.PossessNearestDemon(100, cmpDemon);
+				collision.GetComponentInParent<BloodInstantiate>().InstantiateBlood();
 
 			}
 			else
