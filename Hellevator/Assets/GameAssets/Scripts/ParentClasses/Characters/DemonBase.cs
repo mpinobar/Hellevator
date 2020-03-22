@@ -11,10 +11,10 @@ public abstract class DemonBase : MonoBehaviour
 {
     //Member variables
     private bool     m_isRagdollActive;
-    public bool     m_isControlledByPlayer;
+    private bool     m_isControlledByPlayer;
     private float    m_groundOffset;
 
-    public bool     m_isInDanger;
+    private bool     m_isInDanger;
 
   	//Weight variables
    	[SerializeField] private float m_weight;
@@ -214,8 +214,8 @@ public abstract class DemonBase : MonoBehaviour
             m_hasResetParentPosition = true;
             torso.parent = transform;
         }
-        
 
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, m_recomposingSpeed * Time.deltaTime);
         for (int i = 0; i < m_childTransforms.Length; i++)
         {
             int partId = m_childTransforms[i].name.GetHashCode();
