@@ -31,8 +31,11 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
 
                 if (foundDemon != null && foundDemon != ControlledDemon)
                 {
-                    //print("FOUND: " + foundDemon.name);
-                    return foundDemon;
+					if (!foundDemon.IsInDanger)
+					{
+						//print("FOUND: " + foundDemon.name);
+						return foundDemon;
+					}
                 }
             }
             lookForRadius++;            

@@ -13,6 +13,10 @@ public abstract class DemonBase : MonoBehaviour
     private bool     m_isRagdollActive;
     private bool     m_isControlledByPlayer;
     private float    m_groundOffset;
+	private bool     m_isInDanger;
+
+	//Weight variables
+	[SerializeField] private float m_weight;
 
 
     //Ragdoll child references
@@ -28,14 +32,17 @@ public abstract class DemonBase : MonoBehaviour
 
     #region Properties
 
-    protected bool      IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
+    public bool      IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
     protected bool      IsRagdollActive { get => m_isRagdollActive; }
-    public Rigidbody2D  MyRgb { get => m_myRgb; }
+	public bool IsInDanger { get => m_isInDanger; set => m_isInDanger = value; }
+	public Rigidbody2D  MyRgb { get => m_myRgb; }
     public Collider2D   MyCollider { get => m_myCollider; }
+	public float Weight { get => m_weight; set => m_weight = value; }
 
-    #endregion
 
-    private void Awake()
+	#endregion
+
+	private void Awake()
     {
 
         m_limbsColliders    = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
