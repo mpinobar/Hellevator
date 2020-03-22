@@ -16,7 +16,9 @@ public class Spikes : MonoBehaviour
 
 			if (cmpDemon.IsControlledByPlayer)
 			{
+
 				PosesionManager.Instance.PossessNearestDemon(100, cmpDemon);
+
 			}
 			else
 			{
