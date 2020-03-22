@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1026955379128610780}
   - component: {fileID: 3397441551754352178}
   m_Layer: 8
-  m_Name: GameObject
+  m_Name: DemonCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -493,7 +493,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0.0000020537375, y: -0.50000006}
-  m_ConnectedAnchor: {x: -0.29241538, y: 0.25000024}
+  m_ConnectedAnchor: {x: -0.29241562, y: 0.25000024}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -648,7 +648,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: -0.5066376, y: 0.50307703}
-  m_ConnectedAnchor: {x: -0.25812507, y: -0.51720667}
+  m_ConnectedAnchor: {x: -0.2581253, y: -0.5172068}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -803,7 +803,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0.47936344, y: 0.5030769}
-  m_ConnectedAnchor: {x: 0.25812483, y: -0.51720667}
+  m_ConnectedAnchor: {x: 0.2581253, y: -0.5172068}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -993,11 +993,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de8aadc5403e52a4d86467ecc3121d8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_isControlledByPlayer: 0
-  m_speed: 20
+  m_weight: 5
+  m_recomposingSpeed: 3
+  m_recomposingDistanceMargin: 0.005
+  m_defaultMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_maxSpeed: 5
   m_acceleration: 7
-  m_jumpForce: 150
-  possessedOnStart: 0
+  m_jumpForce: 400
+  m_possessedOnStart: 0
 --- !u!50 &6608793992106833565
 Rigidbody2D:
   serializedVersion: 4
@@ -1013,7 +1018,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 6200000, guid: 23853c5d6a288f74db93db9671a43140, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1

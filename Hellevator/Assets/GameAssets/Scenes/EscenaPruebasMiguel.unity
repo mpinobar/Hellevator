@@ -211,45 +211,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1676767983, guid: 8f00afffef3953d47a6d48274a6ff0f5, type: 3}
-      propertyPath: possessedOnStart
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1676767983, guid: 8f00afffef3953d47a6d48274a6ff0f5, type: 3}
-      propertyPath: m_jumpForce
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 1676767983, guid: 8f00afffef3953d47a6d48274a6ff0f5, type: 3}
-      propertyPath: m_mask.m_Bits
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1676767983, guid: 8f00afffef3953d47a6d48274a6ff0f5, type: 3}
-      propertyPath: m_defaultMask.m_Bits
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1676767983, guid: 8f00afffef3953d47a6d48274a6ff0f5, type: 3}
-      propertyPath: m_maxSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1676767983, guid: 8f00afffef3953d47a6d48274a6ff0f5, type: 3}
-      propertyPath: m_recomposingDistanceMargin
-      value: 0.005
-      objectReference: {fileID: 0}
-    - target: {fileID: 2898965343716787217, guid: 8f00afffef3953d47a6d48274a6ff0f5,
-        type: 3}
-      propertyPath: m_Name
-      value: DemonCollider
-      objectReference: {fileID: 0}
-    - target: {fileID: 5180346640468453595, guid: 8f00afffef3953d47a6d48274a6ff0f5,
-        type: 3}
-      propertyPath: m_ConnectedAnchor.x
-      value: -0.29241562
-      objectReference: {fileID: 0}
-    - target: {fileID: 5180346640837617913, guid: 8f00afffef3953d47a6d48274a6ff0f5,
-        type: 3}
-      propertyPath: m_ConnectedAnchor.x
-      value: -0.25812483
-      objectReference: {fileID: 0}
     - target: {fileID: 5180346641535575440, guid: 8f00afffef3953d47a6d48274a6ff0f5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -310,11 +271,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ragdoll
       objectReference: {fileID: 0}
-    - target: {fileID: 6608793992106833565, guid: 8f00afffef3953d47a6d48274a6ff0f5,
-        type: 3}
-      propertyPath: m_GravityScale
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f00afffef3953d47a6d48274a6ff0f5, type: 3}
 --- !u!1001 &1301164855
@@ -348,6 +304,10 @@ PrefabInstance:
       propertyPath: m_recomposingDistanceMargin
       value: 0.005
       objectReference: {fileID: 0}
+    - target: {fileID: 1676767983, guid: 8f00afffef3953d47a6d48274a6ff0f5, type: 3}
+      propertyPath: m_weight
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2898965343716787217, guid: 8f00afffef3953d47a6d48274a6ff0f5,
         type: 3}
       propertyPath: m_Name
@@ -358,10 +318,20 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.y
       value: -0.5172068
       objectReference: {fileID: 0}
+    - target: {fileID: 5180346640837617913, guid: 8f00afffef3953d47a6d48274a6ff0f5,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -0.25812483
+      objectReference: {fileID: 0}
     - target: {fileID: 5180346640970599356, guid: 8f00afffef3953d47a6d48274a6ff0f5,
         type: 3}
       propertyPath: m_ConnectedAnchor.y
       value: -0.5172068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5180346640970599356, guid: 8f00afffef3953d47a6d48274a6ff0f5,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.25812483
       objectReference: {fileID: 0}
     - target: {fileID: 5180346641535575440, guid: 8f00afffef3953d47a6d48274a6ff0f5,
         type: 3}
@@ -577,10 +547,29 @@ PrefabInstance:
       propertyPath: m_recomposingDistanceMargin
       value: 0.005
       objectReference: {fileID: 0}
+    - target: {fileID: 1676767983, guid: 8f00afffef3953d47a6d48274a6ff0f5, type: 3}
+      propertyPath: m_weight
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2898965343716787217, guid: 8f00afffef3953d47a6d48274a6ff0f5,
         type: 3}
       propertyPath: m_Name
       value: DemonCollider
+      objectReference: {fileID: 0}
+    - target: {fileID: 5180346640468453595, guid: 8f00afffef3953d47a6d48274a6ff0f5,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -0.29241538
+      objectReference: {fileID: 0}
+    - target: {fileID: 5180346640837617913, guid: 8f00afffef3953d47a6d48274a6ff0f5,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -0.25812507
+      objectReference: {fileID: 0}
+    - target: {fileID: 5180346640970599356, guid: 8f00afffef3953d47a6d48274a6ff0f5,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.25812483
       objectReference: {fileID: 0}
     - target: {fileID: 5180346641535575440, guid: 8f00afffef3953d47a6d48274a6ff0f5,
         type: 3}
