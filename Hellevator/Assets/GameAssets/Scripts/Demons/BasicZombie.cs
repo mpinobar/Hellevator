@@ -9,9 +9,9 @@ public class BasicZombie : DemonBase
     [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
-    [SerializeField] private bool  m_possessedOnStart;
+    [SerializeField] ParticleSystem walkingParticles;
 
-    private bool  m_canJump;
+    private bool  m_isGrounded;
 
     #endregion
 
@@ -26,41 +26,21 @@ public class BasicZombie : DemonBase
     {
         
     }
-    private void Start()
+
+
+
+
+    public override void Move(float xInput)
     {
-        if (m_possessedOnStart)
-        {
-            SetControlledByPlayer();
-        }
-        else
-        {
-            SetNotControlledByPlayer();
-        }
-        m_canJump = true;
+        MyRgb.velocity = Vector2.MoveTowards(MyRgb.velocity, Vector2.right * xInput * MaxSpeed, Acceleration * Time.deltaTime);
     }
 
-    // Update is called once per frame
-    protected override void Update()
+    public override void Jump()
     {
-        base.Update();
-
-        if (Input.GetKeyDown(KeyCode.P) && IsControlledByPlayer)
+        if (m_isGrounded)
         {
-            PosesionManager.Instance.PossessNearestDemon(100,this);
-        }
-        
-        if (IsControlledByPlayer)
-        {
-            //horizontal movement
-            float xInput = Input.GetAxisRaw("Horizontal");            
-            MyRgb.velocity = Vector2.MoveTowards(MyRgb.velocity, Vector2.right * xInput * MaxSpeed, Acceleration * Time.deltaTime);
-
-            //jumping
-            if (Input.GetKeyDown(KeyCode.Space) && m_canJump)
-            {
-                MyRgb.AddForce(Vector2.up*JumpForce);
-                m_canJump = false;
-            }
+            MyRgb.AddForce(Vector2.up * JumpForce);
+            m_isGrounded = false;
         }
     }
 
@@ -72,8 +52,21 @@ public class BasicZombie : DemonBase
         {
             if(collision.collider == impact[i].collider)
             {
-                m_canJump = true;
+                m_isGrounded = true;
             }
         }
+    }
+
+    public override void ToggleWalkingParticles(bool active)
+    {
+        if (active)
+        {
+            walkingParticles.Play();
+        }
+        else
+        {
+            walkingParticles.Stop();
+        }
+        
     }
 }

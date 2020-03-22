@@ -12,8 +12,6 @@ public abstract class DemonBase : MonoBehaviour
     //Member variables
     private bool     m_isRagdollActive;
     private bool     m_isControlledByPlayer;
-    private float    m_groundOffset;
-
     private bool     m_isInDanger;
 
   	//Weight variables
@@ -25,6 +23,7 @@ public abstract class DemonBase : MonoBehaviour
 
     [SerializeField] private float    m_recomposingSpeed = 3;
     [SerializeField] private float    m_recomposingDistanceMargin = 0.05f;
+    [SerializeField] private bool     m_possessedOnStart;
 
     //Ragdoll child references
     private Collider2D[]        m_limbsColliders;
@@ -60,17 +59,21 @@ public abstract class DemonBase : MonoBehaviour
         m_childInitialTransforms    = SaveRagdollInitialTransform();
         m_childTransforms           = ReturnComponentsInChildren<Transform>();
 
-        SetGroundOffset();
+        if (m_possessedOnStart)
+        {
+            SetControlledByPlayer();
+        }
+        else
+        {
+            SetNotControlledByPlayer();
+        }
+        
     }
 
-    /// <summary>
-    /// Detects disance to ground for repositioning when demon is possessed
-    /// </summary>
-    private void SetGroundOffset()
+    private void Start()
     {
-        RaycastHit2D impact = Physics2D.Raycast(transform.position, Vector2.down, 3, m_defaultMask);
-        m_groundOffset      = impact.distance;
-    }  	
+        
+    }
 
     /// <summary>
     /// Returns all child component references of specified component, excluding the parent
@@ -123,6 +126,23 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public abstract void UseSkill();
 
+    /// <summary>
+    /// The standard horizontal movement
+    /// </summary>
+    /// <param name="xInput">Input to feed to the method, left or right</param>
+    public abstract void Move(float xInput);
+
+    /// <summary>
+    /// Demon jumping
+    /// </summary>
+    public abstract void Jump();
+
+    /// <summary>
+    /// Activates or deactivates the walking particles
+    /// </summary>
+    /// <param name="active">True to turn them on, false to turn them off</param>
+    public abstract void ToggleWalkingParticles(bool active);
+
     protected virtual void Update()
     {
         if (m_isLerpingToResetBones)
@@ -171,7 +191,6 @@ public abstract class DemonBase : MonoBehaviour
     {
         IsControlledByPlayer = false;
         SetRagdollActive(true);
-        m_myRgb.velocity = Vector2.zero;
         this.enabled = false;
     }
 
@@ -183,6 +202,7 @@ public abstract class DemonBase : MonoBehaviour
     private void ResetRagdollTransforms()
     {
         m_childTransforms = ReturnComponentsInChildren<Transform>();
+        transform.rotation = Quaternion.identity;
         for (int i = 0; i < m_childTransforms.Length; i++)
         {
             int partId = m_childTransforms[i].name.GetHashCode();
