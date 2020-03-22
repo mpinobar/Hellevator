@@ -20,8 +20,7 @@ public class Spikes : MonoBehaviour
         }
     }
 
-				PosesionManager.Instance.PossessNearestDemon(100, cmpDemon);
-				collision.GetComponentInParent<BloodInstantiate>().InstantiateBlood();
+				
     private void LogBodiesInside()
     {
         print("Number of demons inside: " + m_spikesData.Count);
@@ -66,6 +65,7 @@ public class Spikes : MonoBehaviour
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                     cmpDemon.IsInDanger = true;
                     PosesionManager.Instance.PossessNearestDemon(100, cmpDemon);
+                    collision.GetComponentInParent<BloodInstantiate>().InstantiateBlood();
                 }
                 else
                 {
