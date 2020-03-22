@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class RagdollTransform 
 {
-    private int id;
-    private Vector3 position;
-    private Quaternion rotation;
+    private int m_id;
+    private Vector3 m_position;
+    private Quaternion m_rotation;
 
     public RagdollTransform(int id, Vector3 position, Quaternion rotation)
     {
-        this.id = id;
-        this.position = position;
-        this.rotation = rotation;
+        this.m_id = id;
+        this.m_position = position;
+        this.m_rotation = rotation;
     }
 
-    public Vector3 Position { get => position; set => position = value; }
-    public Quaternion Rotation { get => rotation; set => rotation = value; }
-    public int Id { get => id; set => id = value; }
+    public Vector3 Position { get => m_position; set => m_position = value; }
+    public Quaternion Rotation { get => m_rotation; set => m_rotation = value; }
+    public int Id { get => m_id; set => m_id = value; }
 }
