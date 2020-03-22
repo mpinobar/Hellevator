@@ -12,3 +12,8 @@ public enum  GameType
     PLAYER_VS_AI,
     PLAYER_VS_PLAYER
 } 
+
+public enum TypeOfPreassurePlate
+{
+	PaltformRaiser, PlatformLowerer, ButtonLike, None
+}
