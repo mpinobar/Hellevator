@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Spikes : MonoBehaviour
 {
+
     List<SpikesWeightData> m_spikesData;
     
     private void Awake()
