@@ -12,6 +12,7 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
     private void Start()
     {
         InputManager.Instance.UpdateDemonReference();
+        CameraManager.Instance.ChangeCamTarget();
     }
     /// <summary>
     /// Returns the nearest demon to the demon currently controlled by the player, with a distance limit
