@@ -65,7 +65,7 @@ public class Spikes : MonoBehaviour
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                     cmpDemon.IsInDanger = true;
                     cmpDemon.SetColor(Color.red);
-                    PosesionManager.Instance.PossessNearestDemon(100, cmpDemon);
+                    cmpDemon.Die();
                     collision.GetComponentInParent<BloodInstantiate>().InstantiateBlood();
                 }
                 else
