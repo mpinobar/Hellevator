@@ -115,7 +115,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 1.4
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -865,7 +865,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 170
+      scalar: 180
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -4937,7 +4937,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: -0.00000011920929, y: -0.5121778}
-  m_ConnectedAnchor: {x: -0.00000008940697, y: 0.5}
+  m_ConnectedAnchor: {x: 0, y: 0.5}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -5066,7 +5066,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: -0.0000057911866, y: 0.4999999}
-  m_ConnectedAnchor: {x: 0.27320477, y: 0.24999928}
+  m_ConnectedAnchor: {x: 0.2732048, y: 0.24999928}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -5211,7 +5211,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0.0000020537375, y: -0.50000006}
-  m_ConnectedAnchor: {x: -0.2924156, y: 0.25000024}
+  m_ConnectedAnchor: {x: -0.29241562, y: 0.25000024}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -5356,7 +5356,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: -0.5066376, y: 0.50307703}
-  m_ConnectedAnchor: {x: -0.2581251, y: -0.51720667}
+  m_ConnectedAnchor: {x: -0.2581215, y: -0.51720667}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -5501,7 +5501,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0.47936344, y: 0.5030769}
-  m_ConnectedAnchor: {x: 0.25812507, y: -0.5172069}
+  m_ConnectedAnchor: {x: 0.2581253, y: -0.51720715}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -5703,14 +5703,17 @@ MonoBehaviour:
   m_weight: 5
   m_recomposingSpeed: 3
   m_recomposingDistanceMargin: 0.005
-  m_possessedOnStart: 0
+  m_possessedOnStart: 1
   m_defaultMask:
     serializedVersion: 2
     m_Bits: 1
-  m_maxSpeed: 5
-  m_acceleration: 7
-  m_jumpForce: 400
+  m_maxSpeed: 8
+  m_acceleration: 30
+  m_jumpForce: 450
   walkingParticles: {fileID: 1075503057}
+  m_JumpMask:
+    serializedVersion: 2
+    m_Bits: 769
 --- !u!50 &6608793992106833565
 Rigidbody2D:
   serializedVersion: 4

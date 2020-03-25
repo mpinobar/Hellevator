@@ -14,15 +14,16 @@ public abstract class DemonBase : MonoBehaviour
     private bool     m_isControlledByPlayer;
     private bool     m_isInDanger;
 
-  	//Weight variables
-   	[SerializeField] private float m_weight;
-  
+    //Weight variables
+    [Header("Physicality")]
+    [SerializeField] private float m_weight;
+    [SerializeField] private float m_recomposingSpeed = 3;
+    [SerializeField] private float m_recomposingDistanceMargin = 0.05f;
     private bool     m_isLerpingToResetBones;
     private bool     m_hasResetParentPosition;
 
 
-    [SerializeField] private float    m_recomposingSpeed = 3;
-    [SerializeField] private float    m_recomposingDistanceMargin = 0.05f;
+    [Header("Possession")]
     [SerializeField] private bool     m_possessedOnStart;
 
     //Ragdoll child references
@@ -32,6 +33,7 @@ public abstract class DemonBase : MonoBehaviour
     private RagdollTransform[]  m_childInitialTransforms;
 
     //mask for ground detection
+    [Header("Don't touch")]
     [SerializeField] protected LayerMask m_defaultMask; 
 
     //Demon references

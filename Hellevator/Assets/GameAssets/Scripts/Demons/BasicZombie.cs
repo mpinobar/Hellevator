@@ -6,9 +6,12 @@ public class BasicZombie : DemonBase
 {
     #region Variables
 
+    [Header("Movement")]
     [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
+
+    [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
     [SerializeField] LayerMask m_JumpMask;
 
@@ -72,6 +75,7 @@ public class BasicZombie : DemonBase
     {
         if (IsGrounded() && !m_isJumping)
         {
+            MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
             MyRgb.AddForce(Vector2.up * JumpForce);
             m_isJumping = true;
         }
@@ -80,7 +84,7 @@ public class BasicZombie : DemonBase
 
     private bool IsGrounded()
     {
-        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.5f, Vector2.down, 3,m_JumpMask);
+        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.5f, Vector2.down, 2,m_JumpMask);
         bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
         {
