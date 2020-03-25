@@ -31,9 +31,9 @@ public class InputManager : PersistentSingleton<InputManager>
     protected virtual void Update()
     {
         if (m_currentDemon != null)
-        {
+        {            
             m_currentDemon.Move(m_moveInputValue);
-            m_currentDemon.ToggleWalkingParticles(m_moveInputValue != 0);
+            m_currentDemon.ToggleWalkingParticles(m_moveInputValue != 0 && m_currentDemon.IsGrounded());
         }
         else
         {
@@ -43,13 +43,14 @@ public class InputManager : PersistentSingleton<InputManager>
 
 	void Jump()
 	{
+        m_currentDemon.ToggleWalkingParticles(false);
 		m_currentDemon.Jump();
 	}
 
 	void PossesNearestDemon()
 	{
-		PosesionManager.Instance.PossessNearestDemon(100, m_currentDemon);
-	}
+        m_currentDemon.Die();
+    }
 
 	void UseSkill()
 	{

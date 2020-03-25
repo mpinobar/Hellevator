@@ -13,10 +13,14 @@ public abstract class DemonBase : MonoBehaviour
     private bool     m_isRagdollActive;
     private bool     m_isControlledByPlayer;
     private bool     m_isInDanger;
+    public bool   m_isJumping;
+
 
     //Weight variables
     [Header("Physicality")]
-    [SerializeField] private float m_weight;
+    [Tooltip("Weight of the body for puzzles")]
+    [SerializeField] protected float m_weight;
+    [Tooltip("Speed at which the body recovers from ragdoll to idle pose")]
     [SerializeField] private float m_recomposingSpeed = 3;
     [SerializeField] private float m_recomposingDistanceMargin = 0.05f;
     private bool     m_isLerpingToResetBones;
@@ -25,6 +29,7 @@ public abstract class DemonBase : MonoBehaviour
 
     [Header("Possession")]
     [SerializeField] private bool     m_possessedOnStart;
+    [SerializeField] private float    m_maximumPossessionRange;
 
     //Ragdoll child references
     private Collider2D[]        m_limbsColliders;
@@ -34,7 +39,8 @@ public abstract class DemonBase : MonoBehaviour
 
     //mask for ground detection
     [Header("Don't touch")]
-    [SerializeField] protected LayerMask m_defaultMask; 
+    [SerializeField] protected LayerMask m_defaultMask;
+    [SerializeField] protected LayerMask m_JumpMask;
 
     //Demon references
     private Rigidbody2D m_myRgb;
@@ -42,12 +48,12 @@ public abstract class DemonBase : MonoBehaviour
 
     #region Properties
 
-    public bool      IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
+    public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
     protected bool      IsRagdollActive { get => m_isRagdollActive; }
-	public bool IsInDanger { get => m_isInDanger; set => m_isInDanger = value; }
+	public bool         IsInDanger { get => m_isInDanger; set => m_isInDanger = value; }
 	public Rigidbody2D  MyRgb { get => m_myRgb; }
     public Collider2D   MyCollider { get => m_myCollider; }
-	public float Weight { get => m_weight; set => m_weight = value; }
+	public float        Weight { get => m_weight; }
 
 
 	#endregion
@@ -68,8 +74,7 @@ public abstract class DemonBase : MonoBehaviour
         else
         {
             SetNotControlledByPlayer();
-        }
-        
+        }        
     }
     
 
@@ -90,8 +95,6 @@ public abstract class DemonBase : MonoBehaviour
         return returnedArray;
     }
     
-
-
 
     /// <summary>
     /// Sets the demon to be the one controlled by the player and turns off ragdoll physics
@@ -202,8 +205,7 @@ public abstract class DemonBase : MonoBehaviour
         SetRagdollActive(true);
         this.enabled = false;
     }
-
-
+    
 
     /// <summary>
     /// Resets the position and rotation of all ragdoll parts immediately
@@ -267,6 +269,41 @@ public abstract class DemonBase : MonoBehaviour
             IsControlledByPlayer = true;
             m_hasResetParentPosition = false;
         }
+    }
+
+    /// <summary>
+    /// Die method for characters
+    /// </summary>
+    public virtual void Die()
+    {
+        MyRgb.velocity = Vector2.zero;
+        ToggleWalkingParticles(false);
+        PosesionManager.Instance.PossessNearestDemon(m_maximumPossessionRange, this);
+    }
+    /// <summary>
+    /// Check to see if the character is grounded
+    /// </summary>
+    /// <returns>Boolean determining if it is touching the ground</returns>
+    public bool IsGrounded()
+    {
+        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.5f, Vector2.down, 2, m_JumpMask);
+        bool isGrounded = false;
+        for (int i = 0; i < impact.Length; i++)
+        {
+            if (impact[i].transform.root != transform)
+            {
+                isGrounded = true;
+            }
+        }
+        return isGrounded;
+    }
+    /// <summary>
+    /// Visualizing the maximum possession range in editor scene
+    /// </summary>
+    private void OnDrawGizmosSelected()
+    {
+        UnityEditor.Handles.color = Color.red;
+        UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
     }
 
 }

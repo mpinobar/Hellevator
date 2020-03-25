@@ -5704,16 +5704,21 @@ MonoBehaviour:
   m_recomposingSpeed: 3
   m_recomposingDistanceMargin: 0.005
   m_possessedOnStart: 0
+  m_maximumPossessionRange: 20
   m_defaultMask:
     serializedVersion: 2
     m_Bits: 1
+  m_JumpMask:
+    serializedVersion: 2
+    m_Bits: 769
   m_maxSpeed: 4
   m_acceleration: 25
   m_jumpForce: 450
   walkingParticles: {fileID: 1075503057}
-  m_JumpMask:
-    serializedVersion: 2
-    m_Bits: 769
+  m_firstGravity: 2.25
+  m_secondGravity: 2.5
+  m_thirdGravity: 2
+  m_fourthGravity: 5
 --- !u!50 &6608793992106833565
 Rigidbody2D:
   serializedVersion: 4

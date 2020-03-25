@@ -20,7 +20,7 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
     /// <param name="radiusLimit">Maximum radius to look for a demon to possess</param>
     /// <param name="currentDemon">Transform of the currently possessed demon</param>
     /// <returns></returns>
-    private DemonBase LookForNearestDemon(int radiusLimit, DemonBase currentDemon)
+    private DemonBase LookForNearestDemon(float radiusLimit, DemonBase currentDemon)
     {
         int lookForRadius = 1;
 
@@ -49,7 +49,7 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
     /// </summary>
     /// <param name="radiusLimit">Maximum radius to look for a demon to possess</param>
     /// <param name="currentDemon">Currently possessed demon</param>
-    public void PossessNearestDemon(int radiusLimit, DemonBase currentDemon)
+    public void PossessNearestDemon(float radiusLimit, DemonBase currentDemon)
     {
         ControlledDemon.SetNotControlledByPlayer();
         DemonBase demonToPossess = LookForNearestDemon(radiusLimit, currentDemon);
