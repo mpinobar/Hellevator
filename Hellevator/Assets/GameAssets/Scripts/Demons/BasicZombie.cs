@@ -42,15 +42,15 @@ public class BasicZombie : DemonBase
             //ascending part of the jump
             if (MyRgb.velocity.y > 1)
             {
-                MyRgb.gravityScale = 2;
+                MyRgb.gravityScale = 2.25f;
             }
             else if (MyRgb.velocity.y > 0)
             {
-                MyRgb.gravityScale = 1;
+                MyRgb.gravityScale = 2.5f;
             }
             else if (MyRgb.velocity.y > -1)
             {
-                MyRgb.gravityScale = 2.5f;
+                MyRgb.gravityScale = 2;
             }
             else
             {
