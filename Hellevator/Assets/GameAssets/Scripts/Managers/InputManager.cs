@@ -28,7 +28,7 @@ public class InputManager : PersistentSingleton<InputManager>
 	}
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (m_currentDemon != null)
         {
@@ -43,7 +43,6 @@ public class InputManager : PersistentSingleton<InputManager>
 
 	void Jump()
 	{
-
 		m_currentDemon.Jump();
 	}
 

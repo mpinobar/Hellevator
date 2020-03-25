@@ -10,8 +10,9 @@ public class BasicZombie : DemonBase
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
     [SerializeField] ParticleSystem walkingParticles;
+    [SerializeField] LayerMask m_JumpMask;
 
-    private bool  m_isGrounded;
+    private bool m_isJumping;
 
     #endregion
 
@@ -27,34 +28,69 @@ public class BasicZombie : DemonBase
         
     }
 
+    protected override void Update()
+    {
+        base.Update();
 
+        print(IsGrounded());
+        //in the air while jumping
+        if (!IsGrounded())
+        {
+            //ascending part of the jump
+            if (MyRgb.velocity.y > 1)
+            {
+                MyRgb.gravityScale = 2;
+            }
+            else if (MyRgb.velocity.y > 0)
+            {
+                MyRgb.gravityScale = 1;
+            }
+            else if (MyRgb.velocity.y > -1)
+            {
+                MyRgb.gravityScale = 2.5f;
+            }
+            else
+            {
+                MyRgb.gravityScale = 5;
+            }
+
+        }
+        else
+        {
+            MyRgb.gravityScale = 2;
+        }
+    }
 
 
     public override void Move(float xInput)
     {
-        MyRgb.velocity = Vector2.MoveTowards(MyRgb.velocity, Vector2.right * xInput * MaxSpeed, Acceleration * Time.deltaTime);
+        MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, Acceleration * Time.deltaTime),MyRgb.velocity.y);
+           // Vector2.MoveTowards(MyRgb.velocity, Vector2.right * xInput * MaxSpeed + MyRgb.velocity.y * Vector2.up, Acceleration * Time.deltaTime);
     }
 
     public override void Jump()
     {
-        if (m_isGrounded)
+        if (IsGrounded() && !m_isJumping)
         {
             MyRgb.AddForce(Vector2.up * JumpForce);
-            m_isGrounded = false;
+            m_isJumping = true;
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private bool IsGrounded()
     {
-        //collision detection for jump reset
-        RaycastHit2D [] impact = Physics2D.CircleCastAll(transform.position,0.5f, Vector2.down,2);        
+        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.5f, Vector2.down, 3,m_JumpMask);
+        bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
         {
-            if(collision.collider == impact[i].collider)
+            if (impact[i].transform.root != transform)
             {
-                m_isGrounded = true;
+                isGrounded = true;
+                m_isJumping = false;
             }
         }
+        return isGrounded;
     }
 
     public override void ToggleWalkingParticles(bool active)

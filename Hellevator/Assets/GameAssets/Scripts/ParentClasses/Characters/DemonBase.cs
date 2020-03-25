@@ -69,11 +69,7 @@ public abstract class DemonBase : MonoBehaviour
         }
         
     }
-
-    private void Start()
-    {
-        
-    }
+    
 
     /// <summary>
     /// Returns all child component references of specified component, excluding the parent
@@ -151,6 +147,17 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Changes the color of all limbs
+    /// </summary>
+    /// <param name="color">The new color to be assigned</param>
+    public void SetColor(Color color)
+    {
+        for (int i = 0; i < m_limbsColliders.Length; i++)
+        {
+            m_limbsColliders[i].GetComponent<SpriteRenderer>().material.color = color;
+        }
+    }
 
     /// <summary>
     /// Toggles the ragdoll physics of the demon

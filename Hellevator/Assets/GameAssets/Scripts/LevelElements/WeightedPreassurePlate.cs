@@ -80,7 +80,7 @@ public class WeightedPreassurePlate : MonoBehaviour
 						m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
 						float LOpositionY = m_linkedObjectDistanceToEndPosition * percentage;
-						print(LOpositionY);
+						//print(LOpositionY);
 						m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - LOpositionY, m_linkedObjectStartingPosition.z), m_linkedObjectSpeed * Time.deltaTime);
 					}
 				}
