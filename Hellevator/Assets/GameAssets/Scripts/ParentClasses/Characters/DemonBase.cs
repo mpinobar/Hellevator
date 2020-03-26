@@ -54,11 +54,12 @@ public abstract class DemonBase : MonoBehaviour
 	public Rigidbody2D  MyRgb { get => m_myRgb; }
     public Collider2D   MyCollider { get => m_myCollider; }
 	public float        Weight { get => m_weight; }
+    public Collider2D[] LimbsColliders { get => m_limbsColliders; }
 
 
-	#endregion
+    #endregion
 
-	private void Awake()
+    private void Awake()
     {
         m_limbsColliders            = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
         m_limbsRbds                 = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();     

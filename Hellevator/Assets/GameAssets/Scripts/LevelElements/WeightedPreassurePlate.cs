@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class WeightedPreassurePlate : MonoBehaviour
 	[SerializeField] private float m_weightNeeded;
 	private float m_currentWeight;
 	private List<DemonBase> m_enemiesOnPreassurePlate;
+    [SerializeField] private LayerMask m_enemyLayerMask;
 
 	//Position Variables
 	[SerializeField] private float m_speed;
@@ -30,17 +32,16 @@ public class WeightedPreassurePlate : MonoBehaviour
 	private bool m_preassurePlateActivated;
 	private bool m_preassurePlateIsAtLocation;
 	[SerializeField] private ButtonActivatedBase m_buttonActivatedObject;
-	
+    List<SpikesWeightData> m_spikesData;
 
-	private void Awake()
+    private void Awake()
 	{
 		m_enemiesOnPreassurePlate = new List<DemonBase>(0);
 		m_startingPosition = m_parent.transform.position;
 		m_currentWeight = 0;
 		m_distanceToEndPosition = Vector3.Distance(m_startingPosition, m_pressurePlateEndPosition.position);
-
-
-		if(m_linkedObjectPosition != null)
+        m_spikesData = new List<SpikesWeightData>();
+        if (m_linkedObjectPosition != null)
 		{
 			m_linkedObjectStartingPosition = m_linkedObjectPosition.position;
 			m_linkedObjectDistanceToEndPosition = Vector3.Distance(m_linkedObjectStartingPosition, m_linkedObjectEndPosition.position);
@@ -53,7 +54,9 @@ public class WeightedPreassurePlate : MonoBehaviour
 
 	private void Update()
 	{
-		switch (m_type)
+        //print(m_enemiesOnPreassurePlate.Count);
+        CalculateAccumulatedWeight();
+        switch (m_type)
 		{
 			//The linked Objects final positions needs to be higher than it's starting One;
 			case TypeOfPreassurePlate.PaltformRaiser:
@@ -124,35 +127,117 @@ public class WeightedPreassurePlate : MonoBehaviour
 				break;
 			default:
 				break;
-		}
+		}        
 	}
 
-	private void OnTriggerEnter2D(Collider2D collision)
-	{
-		if (collision.GetComponentInParent<DemonBase>() != null)
-		{
-			DemonBase otherDemon = collision.GetComponentInParent<DemonBase>();
-			
-			if (!m_enemiesOnPreassurePlate.Contains(otherDemon))
-			{
-				m_currentWeight = m_currentWeight + otherDemon.Weight;
-				m_enemiesOnPreassurePlate.Add(otherDemon);
-			}
-		}
-	}
 
-	private void OnTriggerExit2D(Collider2D collision)
-	{
-		if (collision.GetComponentInParent<DemonBase>() != null)
-		{
-			DemonBase otherDemon = collision.GetComponentInParent<DemonBase>();
-			
-			if (m_enemiesOnPreassurePlate.Contains(otherDemon))
-			{
-				m_currentWeight = m_currentWeight - otherDemon.Weight;
-			}
+    // On trigger enter kill the character that collided. 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
 
-			m_enemiesOnPreassurePlate.Remove(otherDemon);
-		}
-	}
+        if (cmpDemon != null)
+        {
+            bool isCounted = false;
+
+            for (int i = 0; i < m_spikesData.Count; i++)
+            {
+                //if the demon is already inside the spikes
+                if (cmpDemon == m_spikesData[i].AssociatedDemon)
+                {
+                    isCounted = true;
+
+                    //add the collider to the associated demon's collider list if it isnt already included
+                    if (!m_spikesData[i].Colliders.Contains(collision) && collision.gameObject.tag != "BodyCollider")
+                    {
+                        m_spikesData[i].Colliders.Add(collision);
+                    }
+                }
+            }
+            if (!isCounted)
+            {
+
+                m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
+                m_enemiesOnPreassurePlate.Add(cmpDemon);
+                m_currentWeight += cmpDemon.Weight;
+               
+            }
+
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.GetComponentInParent<DemonBase>() != null && collision.gameObject.tag != "BodyCollider")
+        {
+            DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
+
+            for (int i = 0; i < m_spikesData.Count; i++)
+            {
+                //if the demon is already inside the spikes
+                if (cmpDemon == m_spikesData[i].AssociatedDemon)
+                {
+                    //remove the collider from the associated demon's collider list 
+                    if (m_spikesData[i].Colliders.Contains(collision))
+                    {
+                        m_spikesData[i].Colliders.Remove(collision);
+
+                        //all the limbs have exited the spikes
+                        if (m_spikesData[i].Colliders.Count == 0)
+                        {
+                            m_currentWeight -= cmpDemon.Weight;
+                            m_spikesData.RemoveAt(i);
+                            m_enemiesOnPreassurePlate.Remove(cmpDemon);
+                        }
+                        else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
+                        {
+                            m_enemiesOnPreassurePlate.Remove(cmpDemon);
+                            m_currentWeight -= cmpDemon.Weight;
+                            m_spikesData.RemoveAt(i);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    private void CalculateAccumulatedWeight()
+    {
+        
+        float totalWeight = 0;
+        for (int i = 0; i < m_enemiesOnPreassurePlate.Count; i++)
+        {
+            totalWeight += CalculateWeightOnTop(m_enemiesOnPreassurePlate[i]);            
+        }
+        m_currentWeight = totalWeight;
+    }
+
+    private float CalculateWeightOnTop(DemonBase demon)
+    {
+        float totalWeight = demon.Weight;
+
+        List<DemonBase> demonsOnTop = new List<DemonBase>();
+        float distanceToCast = 0.5f;
+
+
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(demon.LimbsColliders[0].transform.position, 0.3f, Vector2.up, distanceToCast, m_enemyLayerMask);
+
+        for (int j = 0; j < hits.Length; j++)
+        {
+            DemonBase demonOnTop = hits[j].transform.root.GetComponent<DemonBase>();
+            if (demonOnTop != null)
+            {
+                if (demonOnTop != demon && !demonsOnTop.Contains(demonOnTop) && !m_enemiesOnPreassurePlate.Contains(demonOnTop))
+                {
+                    demonsOnTop.Add(demonOnTop);
+                }
+            }
+        }
+
+        for (int i = 0; i < demonsOnTop.Count; i++)
+        {
+            totalWeight += CalculateWeightOnTop(demonsOnTop[i]);
+        }
+        return totalWeight;
+    }
+
 }
