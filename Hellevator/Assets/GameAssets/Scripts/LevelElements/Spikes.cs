@@ -64,7 +64,8 @@ public class Spikes : MonoBehaviour
                 {
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                     cmpDemon.IsInDanger = true;
-                    PosesionManager.Instance.PossessNearestDemon(100, cmpDemon);
+                    cmpDemon.SetColor(Color.red);
+                    cmpDemon.Die();
                     collision.GetComponentInParent<BloodInstantiate>().InstantiateBlood();
                 }
                 else
@@ -73,6 +74,7 @@ public class Spikes : MonoBehaviour
                     {
                         m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                         cmpDemon.IsInDanger = true;
+                        cmpDemon.SetColor(Color.red);
                         //Create the method for enemy death
                         print("Create the method for enemy death");
                         //cmpDemon.Die();
@@ -105,10 +107,12 @@ public class Spikes : MonoBehaviour
                         if(m_spikesData[i].Colliders.Count == 0)
                         {
                             cmpDemon.IsInDanger = false;
+                            cmpDemon.SetColor(Color.white);
                             m_spikesData.RemoveAt(i);
                         }
                         else if(m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
                         {
+                            cmpDemon.SetColor(Color.white);
                             cmpDemon.IsInDanger = false;
                             m_spikesData.RemoveAt(i);
                         }
