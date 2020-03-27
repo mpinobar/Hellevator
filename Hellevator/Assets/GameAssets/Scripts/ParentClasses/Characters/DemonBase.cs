@@ -19,7 +19,6 @@ public abstract class DemonBase : MonoBehaviour
     private bool    m_hasResetParentPosition;
 
 
-
     //Weight variables
     [Header("Physicality")]
     [Tooltip("Weight of the body for puzzles")]
@@ -33,8 +32,14 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private bool     m_possessedOnStart;
     [SerializeField] private float    m_maximumPossessionRange;
 
-    //Ragdoll child references
-    private Collider2D[]        m_limbsColliders;
+	//IAReferences
+	[Space]
+	[Header("IA")]
+	[Tooltip("Where or not the enemy starts controlled by IA behaviour")]
+	[SerializeField] protected bool m_isControlledByIA = false;
+
+	//Ragdoll child references
+	private Collider2D[]        m_limbsColliders;
     private Rigidbody2D[]       m_limbsRbds;
     private Transform[]         m_childTransforms;
     private RagdollTransform[]  m_childInitialTransforms;
@@ -51,9 +56,10 @@ public abstract class DemonBase : MonoBehaviour
     protected Animator      m_myAnimator;
     private SpriteRenderer  m_mySprite;
 
-    #region Properties
+	
+	#region Properties
 
-    public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
+	public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
     protected bool      IsRagdollActive { get => m_isRagdollActive; }
 	public bool         IsInDanger { get => m_isInDanger; set => m_isInDanger = value; }
 	public Rigidbody2D  MyRgb { get => m_myRgb; }
@@ -66,7 +72,7 @@ public abstract class DemonBase : MonoBehaviour
 
     #endregion
 
-    private void Awake()
+    protected virtual void Awake()
     {
         m_limbsColliders            = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
         m_limbsRbds                 = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();     
@@ -84,7 +90,14 @@ public abstract class DemonBase : MonoBehaviour
         }
         else
         {
-            SetNotControlledByPlayer();
+			if (m_isControlledByIA)
+			{
+				SetControlledByAI();
+			}
+			else
+			{
+				SetNotControlledByPlayer();
+			}
         }        
     }
     
@@ -106,6 +119,16 @@ public abstract class DemonBase : MonoBehaviour
         return returnedArray;
     }
     
+	/// <summary>
+	/// Sets the demon to be controlled by the AI and turns off ragdoll physics
+	/// </summary>
+	public void SetControlledByAI()
+	{
+		SetRagdollActive(false);
+		m_isControlledByIA = true;
+		m_isLerpingToResetBones = true;
+		m_hasResetParentPosition = false;
+	}
 
     /// <summary>
     /// Sets the demon to be the one controlled by the player and turns off ragdoll physics
@@ -116,6 +139,7 @@ public abstract class DemonBase : MonoBehaviour
         PosesionManager.Instance.ControlledDemon = this;
         m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
+		m_isControlledByIA = false;
     }
     
     /// <summary>
@@ -207,7 +231,9 @@ public abstract class DemonBase : MonoBehaviour
         //toggle the collider and the rigidbody of the parent gameobject
         m_myCollider.gameObject.SetActive(!active);
         m_myRgb.isKinematic = active;
-    }
+
+		m_isControlledByIA = false;	
+	}
 
     /// <summary>
     /// Sets the demon to be no longer controlled by the player and activates ragdoll physics
