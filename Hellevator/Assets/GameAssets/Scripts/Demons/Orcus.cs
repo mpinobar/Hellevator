@@ -4,34 +4,6 @@ using UnityEngine;
 
 public class Orcus : DemonBase
 {
-	#region Variables
-
-	[Space]
-
-	[SerializeField] private float m_IAMaxSpeed = 0f;
-	private float m_IAcurrentSpeed = 0f;
-	[SerializeField] private float m_IAcceleration = 0f;
-	[SerializeField] private float m_IAStoppingDistance = 0f;
-
-	[SerializeField] private List<Transform> m_IAPatrolPoints = new List<Transform> (0);
-	private int m_IACurrentPatrolPoint = 0;
-
-	private bool m_IAStopping = false;
-	private float m_IADirectionSpeedModifier = 1;
-
-	private Rigidbody2D m_IACmpRb = null;
-	private Vector3 IAVelocity = Vector3.zero;
-
-	[SerializeField] private EnemyState m_IACurrentState = EnemyState.None;
-	[SerializeField] private float m_IADetectionRange = 0f;
-	[SerializeField] private float m_IADetectionAngle = 0f;
-	[SerializeField] private float m_IADetectionRayCount = 0f;
-	[SerializeField] private LayerMask m_IADetectionLayers;
-	[SerializeField] private LayerMask m_IADetectionLayersForForwardVector;
-
-	#endregion Variables
-
-
 	public override void Jump()
 	{
 		throw new System.NotImplementedException();
@@ -54,17 +26,7 @@ public class Orcus : DemonBase
 
 	private void Awake()
 	{
-		m_IACmpRb = this.GetComponent<Rigidbody2D>();
-		m_IACurrentPatrolPoint = 0;
-		float xPatrolCoord = m_IAPatrolPoints[m_IACurrentPatrolPoint].position.x;
-		if ((xPatrolCoord - this.transform.position.x) < 0)
-		{
-			m_IADirectionSpeedModifier = -1;
-		}
-		else
-		{
-			m_IADirectionSpeedModifier = 1;
-		}
+		IAAwake();
 	}
 
 	// Start is called before the first frame update
@@ -78,34 +40,8 @@ public class Orcus : DemonBase
     {
 		base.Update();
 
-		if(m_IACurrentState != EnemyState.Chasing)
-		{
-			
-		}
-
-
-		if (Input.GetKeyDown(KeyCode.N))
-		{
-			IASenseForPlayer();
-		}
-
-		//switch (m_IACurrentState)
-		//{
-		//	case EnemyState.Chasing:
-		//		break;
-		//	case EnemyState.Patrol:
-		//		{
-		//			IAPatrolUpdate();
-		//		}
-		//		break;
-		//	case EnemyState.GoingBack:
-		//		break;
-		//	case EnemyState.None:
-		//		break;
-		//	default:
-		//		break;
-		//}
-    }
+		IAUpdate();
+	}
 
 	private Vector3 GetVectorFromAngle(float angle)
 	{
@@ -126,7 +62,107 @@ public class Orcus : DemonBase
 
 	#region IA
 
-	void IASenseForPlayer()
+
+	#region Variables
+
+	[Space]
+
+	[SerializeField] private float m_IAMaxSpeed = 0f;
+	private float m_IAcurrentSpeed = 0f;
+	[SerializeField] private float m_IAcceleration = 0f;
+	[SerializeField] private float m_IAStoppingDistance = 0f;
+	[SerializeField] private EnemyState m_IACurrentState = EnemyState.None;
+
+	[Space]
+
+	[SerializeField] private float m_IADetectionRange = 0f;
+	[SerializeField] private float m_IADetectionAngle = 0f;
+	[SerializeField] private float m_IADetectionRayCount = 0f;
+	[SerializeField] private LayerMask m_IADetectionLayers;
+	[SerializeField] private LayerMask m_IADetectionLayersForForwardVector;
+
+	[Space]
+	[SerializeField] private List<Transform> m_IAPatrolPoints = new List<Transform>(0);
+	private int m_IACurrentPatrolPoint = 0;
+
+	[Space]
+	[SerializeField] private float m_maxDistanceChasingFromSpawn = 0f;
+	[SerializeField] private float m_maxDistanceChasingFromPlayerX = 0f;
+	[SerializeField] private float m_maxDistanceChasingFromPlayerY = 0f;
+	[SerializeField] private float m_maxDistanceChasingFromPlayer = 0f;
+
+	private Transform m_IACharacterBeingChased = null;
+
+
+	private bool m_IAStopping = false;
+	private float m_IADirectionSpeedModifier = 1;
+
+	private Rigidbody2D m_IACmpRb = null;
+	private Vector3 m_IAVelocity = Vector3.zero;
+	
+	private Vector3 m_IAStartingPos = Vector3.zero;
+
+	#endregion Variables
+
+	void IAAwake()
+	{
+		m_IACmpRb = this.GetComponent<Rigidbody2D>();
+		m_IACurrentPatrolPoint = 0;
+		float xPatrolCoord = m_IAPatrolPoints[m_IACurrentPatrolPoint].position.x;
+		if ((xPatrolCoord - this.transform.position.x) < 0)
+		{
+			m_IADirectionSpeedModifier = -1;
+		}
+		else
+		{
+			m_IADirectionSpeedModifier = 1;
+		}
+
+		m_IAStartingPos = this.transform.position;
+	}
+
+	void IAUpdate()
+	{
+		switch (m_IACurrentState)
+		{
+			case EnemyState.Chasing:
+				{
+
+					IAChaseUpdate();
+
+					//if (!IACheckStopChaseConditions())
+					//{
+						
+					//}
+					//else
+					//{
+					//	IAGoBackToPatrol();
+					//}
+				}
+				break;
+			case EnemyState.Patrol:
+				{
+					if (!IASenseForPlayer())
+					{
+						IAPatrolUpdate();
+					}
+					else
+					{
+						IAStartChase();
+					}
+				}
+				break;
+			case EnemyState.GoingBack:
+				break;
+			case EnemyState.None:
+				break;
+			default:
+				break;
+		}
+	}
+
+
+	bool IASenseForPlayer()
 	{
 		float angleIncrease = m_IADetectionAngle / m_IADetectionRayCount;
 
@@ -175,7 +211,18 @@ public class Orcus : DemonBase
 		for (int i = 0; i <= m_IADetectionRayCount; i++)
 		{
 			Vector3 rayDirection = GetVectorFromAngle(angle);
-			RaycastHit2D hits = Physics2D.Raycast(this.transform.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
+			RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
+
+			for (int y = 0; y< hits.Length; i++)
+			{
+				if (hits[y].collider.GetComponent<DemonBase>() != null)
+				{
+					if (hits[y].collider.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+					{
+						return true;
+					}
+				}
+			}
 
 			if(i == 0)
 			{
@@ -195,16 +242,86 @@ public class Orcus : DemonBase
 				angle = angle - angleIncrease;
 			}
 		}
+
+		return false;
+	}
+
+	void IAStartChase()
+	{
+		m_IACurrentState = EnemyState.Chasing;
+		m_IAStopping = false; 
+	}
+
+	bool  IACheckStopChaseConditions()
+	{
+		float distance = Vector3.Distance(this.transform.position, m_IAStartingPos);
+
+		if(distance >= m_maxDistanceChasingFromSpawn)
+		{
+			return true;
+		}
+
+		distance = Mathf.Abs(this.transform.position.x - PosesionManager.Instance.ControlledDemon.transform.position.x);
+		if(distance >= m_maxDistanceChasingFromPlayerX)
+		{
+			return true;
+		}
+
+		distance = Mathf.Abs(this.transform.position.y - PosesionManager.Instance.ControlledDemon.transform.position.y);
+		if (distance >= m_maxDistanceChasingFromPlayerY)
+		{
+			return true;
+		}
+		distance = Vector3.Distance(this.transform.position, PosesionManager.Instance.ControlledDemon.transform.position);
+		if (distance >= m_maxDistanceChasingFromPlayer)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 	void IAChaseUpdate()
 	{
-		
+		//Set Char being Chased 
+
+		m_IACharacterBeingChased = PosesionManager.Instance.ControlledDemon.transform;
+
+		//Check Direction Of Movement
+
+		float xDistance = m_IACharacterBeingChased.position.x - this.transform.position.x;
+
+		if(xDistance == 0)
+		{
+			m_IADirectionSpeedModifier = 0;
+		}
+		else if (xDistance < 0)
+		{
+			m_IADirectionSpeedModifier = -1;
+		}
+		else if (xDistance > 0)
+		{
+			m_IADirectionSpeedModifier = 1;
+		}
+
+		//Move
+
+		m_IAVelocity = m_IACmpRb.velocity;
+		m_IAcurrentSpeed = m_IAcurrentSpeed + m_IAcceleration * Time.deltaTime * m_IADirectionSpeedModifier;
+
+		if (m_IAcurrentSpeed * m_IADirectionSpeedModifier > m_IAMaxSpeed)
+		{
+			m_IAcurrentSpeed = m_IAMaxSpeed * m_IADirectionSpeedModifier;
+		}
+
+		m_IACmpRb.velocity = new Vector3(m_IAcurrentSpeed, m_IAVelocity.y, 0);
 	}
 
 	void IAGoBackToPatrol()
 	{
+		m_IACurrentState = EnemyState.Patrol;
 
+		IASetNextPatrolPoint();
 	}
 
 	void IAPatrolUpdate()
@@ -221,7 +338,7 @@ public class Orcus : DemonBase
 			}
 		}
 
-		IAVelocity = m_IACmpRb.velocity;
+		m_IAVelocity = m_IACmpRb.velocity;
 
 		m_IAcurrentSpeed = m_IAcurrentSpeed + m_IAcceleration * Time.deltaTime * m_IADirectionSpeedModifier;
 
@@ -238,9 +355,7 @@ public class Orcus : DemonBase
 			}
 		}
 
-		m_IACmpRb.velocity = new Vector3(m_IAcurrentSpeed, IAVelocity.y, 0);
-
-		print(m_IAcurrentSpeed);
+		m_IACmpRb.velocity = new Vector3(m_IAcurrentSpeed, m_IAVelocity.y, 0);
 	}
 
 	void IASetNextPatrolPoint()
@@ -254,6 +369,17 @@ public class Orcus : DemonBase
 		else
 		{
 			m_IACurrentPatrolPoint = m_IACurrentPatrolPoint + 1;
+		}
+
+		float xDistance = m_IAPatrolPoints[m_IACurrentPatrolPoint].position.x - this.transform.position.x;
+		
+		if (xDistance <= 0)
+		{
+			m_IADirectionSpeedModifier = -1;
+		}
+		else if (xDistance > 0)
+		{
+			m_IADirectionSpeedModifier = 1;
 		}
 	}
 
