@@ -17,3 +17,7 @@ public enum TypeOfPreassurePlate
 {
 	PaltformRaiser, PlatformLowerer, ButtonLike, None
 }
+public enum EnemyState
+{
+	Chasing, Patrol, GoingBack, None
+}
