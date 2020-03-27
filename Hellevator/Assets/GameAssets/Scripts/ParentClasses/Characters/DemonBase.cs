@@ -253,7 +253,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             torso.parent = null;
             Debug.DrawRay(torso.position, Vector2.down, Color.red, 3);
-            RaycastHit2D impact = Physics2D.Raycast(torso.position, Vector2.down, 3, m_defaultMask);
+            RaycastHit2D impact = Physics2D.Raycast(torso.position, Vector2.down, 4, m_defaultMask);
             transform.position = impact.point + Vector2.up * 2;
             m_hasResetParentPosition = true;
             torso.parent = transform;
