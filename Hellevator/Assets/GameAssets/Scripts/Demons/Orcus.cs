@@ -123,6 +123,12 @@ public class Orcus : DemonBase
 
 	void IAUpdate()
 	{
+
+		if (Input.GetKeyDown(KeyCode.M))
+		{
+			print(IASenseForPlayer());
+		}
+
 		switch (m_IACurrentState)
 		{
 			case EnemyState.Chasing:
@@ -130,14 +136,14 @@ public class Orcus : DemonBase
 
 					IAChaseUpdate();
 
-					//if (!IACheckStopChaseConditions())
-					//{
-						
-					//}
-					//else
-					//{
-					//	IAGoBackToPatrol();
-					//}
+					if (!IACheckStopChaseConditions())
+					{
+
+					}
+					else
+					{
+						IAGoBackToPatrol();
+					}
 				}
 				break;
 			case EnemyState.Patrol:
@@ -213,11 +219,11 @@ public class Orcus : DemonBase
 			Vector3 rayDirection = GetVectorFromAngle(angle);
 			RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
 
-			for (int y = 0; y< hits.Length; i++)
+			for (int y = 0; y< hits.Length; y++)
 			{
-				if (hits[y].collider.GetComponent<DemonBase>() != null)
+				if (hits[y].collider.GetComponentInParent<DemonBase>() != null)
 				{
-					if (hits[y].collider.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+					if (hits[y].collider.GetComponentInParent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
 					{
 						return true;
 					}
@@ -291,7 +297,7 @@ public class Orcus : DemonBase
 
 		float xDistance = m_IACharacterBeingChased.position.x - this.transform.position.x;
 
-		if(xDistance == 0)
+		if (xDistance == 0)
 		{
 			m_IADirectionSpeedModifier = 0;
 		}
