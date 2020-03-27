@@ -124,6 +124,8 @@ public class Orcus : DemonBase
 		return n;
 	}
 
+	#region IA
+
 	void IASenseForPlayer()
 	{
 		float angleIncrease = m_IADetectionAngle / m_IADetectionRayCount;
@@ -254,4 +256,6 @@ public class Orcus : DemonBase
 			m_IACurrentPatrolPoint = m_IACurrentPatrolPoint + 1;
 		}
 	}
+
+	#endregion IA
 }
