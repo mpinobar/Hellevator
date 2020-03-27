@@ -45,6 +45,7 @@ public abstract class DemonBase : MonoBehaviour
     //Demon references
     private Rigidbody2D m_myRgb;
     private Collider2D  m_myCollider;
+    protected Animator  m_myAnimator;
 
     #region Properties
 
@@ -67,7 +68,7 @@ public abstract class DemonBase : MonoBehaviour
         m_myCollider                = transform.GetChild(1).GetComponent<Collider2D>();
         m_childInitialTransforms    = SaveRagdollInitialTransform();
         m_childTransforms           = ReturnComponentsInChildren<Transform>();
-
+        m_myAnimator                = GetComponent<Animator>();
         if (m_possessedOnStart)
         {
             SetControlledByPlayer();
@@ -159,9 +160,9 @@ public abstract class DemonBase : MonoBehaviour
     /// <param name="color">The new color to be assigned</param>
     public void SetColor(Color color)
     {
-        for (int i = 0; i < m_limbsColliders.Length; i++)
+        for (int i = 0; i < m_limbsRbds.Length; i++)
         {
-            m_limbsColliders[i].GetComponent<SpriteRenderer>().material.color = color;
+            m_limbsRbds[i].GetComponent<SpriteRenderer>().material.color = color;
         }
     }
 
@@ -172,6 +173,7 @@ public abstract class DemonBase : MonoBehaviour
     private void SetRagdollActive(bool active)
     {
         m_isRagdollActive = active;
+        GetComponent<SpriteRenderer>().enabled = !active;
                
         //activate all the limbs colliders if ragdoll is active, set inactive otherwise
         for (int i = 0; i < m_limbsColliders.Length; i++)
@@ -183,6 +185,7 @@ public abstract class DemonBase : MonoBehaviour
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
             m_limbsRbds[i].isKinematic = !active;
+            m_limbsRbds[i].GetComponent<SpriteRenderer>().enabled = active;
 
             //reset velocity in case the player will control it
             if (!active)
@@ -287,7 +290,7 @@ public abstract class DemonBase : MonoBehaviour
     /// <returns>Boolean determining if it is touching the ground</returns>
     public bool IsGrounded()
     {
-        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.5f, Vector2.down, 2, m_JumpMask);
+        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.5f, Vector2.down, 3, m_JumpMask);
         bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
         {

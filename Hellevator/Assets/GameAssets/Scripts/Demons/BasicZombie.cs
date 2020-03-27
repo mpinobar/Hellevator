@@ -15,6 +15,7 @@ public class BasicZombie : DemonBase
     [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
     
+    
     [Header("Gravity")]
     [Range(1,10)]
     [Tooltip("Ascending part of the jump")]
@@ -36,6 +37,8 @@ public class BasicZombie : DemonBase
     public float JumpForce { get => m_jumpForce; }
 
     #endregion
+
+
 
 
     public override void UseSkill()
@@ -76,6 +79,7 @@ public class BasicZombie : DemonBase
         {
             MyRgb.gravityScale = 2;
         }
+        m_myAnimator.SetBool("Walking", Mathf.Abs(MyRgb.velocity.x) > 0.2f);
     }
 
     
