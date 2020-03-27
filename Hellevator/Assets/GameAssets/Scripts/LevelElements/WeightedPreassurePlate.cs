@@ -200,17 +200,26 @@ public class WeightedPreassurePlate : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Calls recurring method to calculate accumulated weight of all stacked bodies
+    /// </summary>
     private void CalculateAccumulatedWeight()
     {
         
         float totalWeight = 0;
         for (int i = 0; i < m_enemiesOnPreassurePlate.Count; i++)
         {
-            totalWeight += CalculateWeightOnTop(m_enemiesOnPreassurePlate[i]);            
+            totalWeight += CalculateWeightOnTop(m_enemiesOnPreassurePlate[i]);
         }
         m_currentWeight = totalWeight;
     }
 
+    /// <summary>
+    /// Recurring method that returns the weight of all bodies on top of the specified demon
+    /// </summary>
+    /// <param name="demon">The demon upon which the funcion will be called again</param>
+    /// <returns>The sum of the weights on top</returns>
     private float CalculateWeightOnTop(DemonBase demon)
     {
         float totalWeight = demon.Weight;
