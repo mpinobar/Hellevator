@@ -246,7 +246,7 @@ public abstract class DemonBase : MonoBehaviour
     public void SetNotControlledByPlayer()
     {
         IsControlledByPlayer = false;
-        m_isDead = false;
+        m_isDead = true;
         SetRagdollActive(true);
         this.enabled = false;
     }
