@@ -280,8 +280,8 @@ public abstract class DemonBase : MonoBehaviour
         if (!m_hasResetParentPosition)
         {
             torso.parent = null;
-            Debug.DrawRay(torso.position, Vector2.down, Color.red, 3);
-            RaycastHit2D impact = Physics2D.Raycast(torso.position, Vector2.down, 4, m_defaultMask);
+            //Debug.DrawRay(torso.position, Vector2.down*Mathf.Infinity, Color.red, 3);
+            RaycastHit2D impact = Physics2D.Raycast(torso.position, Vector2.down, Mathf.Infinity, m_defaultMask);
             transform.position = impact.point + Vector2.up * 2;
             m_hasResetParentPosition = true;
             torso.parent = transform;
