@@ -99,8 +99,6 @@ public class Orcus : DemonBase
 	public override void Move(float xInput)
 	{
 		MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, Acceleration * Time.deltaTime), MyRgb.velocity.y);
-		print(MyRgb.velocity);
-		// Vector2.MoveTowards(MyRgb.velocity, Vector2.right * xInput * MaxSpeed + MyRgb.velocity.y * Vector2.up, Acceleration * Time.deltaTime);
 	}
 
 	public override void Jump()

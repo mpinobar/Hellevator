@@ -90,14 +90,15 @@ public abstract class DemonBase : MonoBehaviour
         }
         else
         {
-			if (m_isControlledByIA)
-			{
-				SetControlledByAI();
-			}
-			else
+            if (m_isControlledByIA)
+            {
+                SetControlledByAI();
+            }
+            else
 			{
 				SetNotControlledByPlayer();
 			}
+            
         }        
     }
     
@@ -126,8 +127,9 @@ public abstract class DemonBase : MonoBehaviour
 	{
 		SetRagdollActive(false);
 		m_isControlledByIA = true;
-		m_isLerpingToResetBones = true;
+		//m_isLerpingToResetBones = true;
 		m_hasResetParentPosition = false;
+        m_isControlledByPlayer = false;
 	}
 
     /// <summary>
@@ -232,7 +234,7 @@ public abstract class DemonBase : MonoBehaviour
         m_myCollider.gameObject.SetActive(!active);
         m_myRgb.isKinematic = active;
 
-		m_isControlledByIA = false;	
+		//m_isControlledByIA = false;	
 	}
 
     /// <summary>
@@ -325,7 +327,15 @@ public abstract class DemonBase : MonoBehaviour
         {
             m_childTransforms[0].localScale = Vector3.one;
         }
-        PosesionManager.Instance.PossessNearestDemon(m_maximumPossessionRange, this);
+        if (m_isControlledByPlayer)
+        {
+            PosesionManager.Instance.PossessNearestDemon(m_maximumPossessionRange, this);
+        }
+        else if (m_isControlledByIA)
+        {
+            m_isControlledByIA = false;
+            SetRagdollActive(true);
+        }
     }
     /// <summary>
     /// Check to see if the character is grounded

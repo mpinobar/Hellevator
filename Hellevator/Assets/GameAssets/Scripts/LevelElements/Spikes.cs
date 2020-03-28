@@ -59,9 +59,9 @@ public class Spikes : MonoBehaviour
             }
             if (!isCounted)
             {
-                
                 if (cmpDemon.IsControlledByPlayer)
                 {
+                    print("a");
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                     cmpDemon.IsInDanger = true;
                     cmpDemon.SetColor(Color.red);
@@ -72,12 +72,13 @@ public class Spikes : MonoBehaviour
                 {
                     if (collision.gameObject.tag != "BodyCollider")
                     {
+
                         m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                         cmpDemon.IsInDanger = true;
                         cmpDemon.SetColor(Color.red);
                         //Create the method for enemy death
                         print("Create the method for enemy death");
-                        //cmpDemon.Die();
+                        cmpDemon.Die();
                     }
 
 
