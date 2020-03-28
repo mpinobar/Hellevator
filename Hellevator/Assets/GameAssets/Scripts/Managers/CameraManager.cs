@@ -21,7 +21,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
     bool isTriggerFarCamera;
 
     public bool IsCam1 { get => isCam1; set => isCam1 = value; }
-    public bool IsOnTriggerPz { get => isTriggerFarCamera; set => isTriggerFarCamera = value; }
+    public bool IsTriggerFarCamera { get => isTriggerFarCamera; set => isTriggerFarCamera = value; }
     public GameObject Camera1 { get => camera1; set => camera1 = value; }
     public GameObject Camera2 { get => camera2; set => camera2 = value; }
     public GameObject Camera3 { get => camera3; set => camera3 = value; }
@@ -35,6 +35,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
         Camera4.SetActive(false);
 
         IsCam1 = true;
+        isCam3 = true;
 
         vcam1.Follow = PosesionManager.Instance.ControlledDemon.transform;
         vcam1.LookAt = PosesionManager.Instance.ControlledDemon.transform;
