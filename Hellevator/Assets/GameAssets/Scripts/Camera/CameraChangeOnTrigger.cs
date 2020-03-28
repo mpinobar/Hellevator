@@ -9,21 +9,31 @@ public class CameraChangeOnTrigger : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        cameraManager.IsOnTriggerPz = true;
+        if(collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+        {
+            print("dentroTrigger");
 
-        cameraManager.Camera1.SetActive(false);
-        cameraManager.Camera2.SetActive(false);
+            cameraManager.IsTriggerFarCamera = true;
 
-        cameraManager.ChangeCamTarget();
+            cameraManager.Camera1.SetActive(false);
+            cameraManager.Camera2.SetActive(false);
+
+            cameraManager.ChangeCamTarget();
+        }            
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        cameraManager.IsOnTriggerPz = false;
+        if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+        {
+            print("FueraTrigger");
 
-        cameraManager.Camera3.SetActive(false);
-        cameraManager.Camera4.SetActive(false);
+            cameraManager.IsTriggerFarCamera = false;
 
-        cameraManager.ChangeCamTarget();
+            cameraManager.Camera3.SetActive(false);
+            cameraManager.Camera4.SetActive(false);
+
+            cameraManager.ChangeCamTarget();
+        }
     }
 }
