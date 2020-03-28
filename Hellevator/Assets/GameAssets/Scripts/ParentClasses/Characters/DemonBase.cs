@@ -17,7 +17,7 @@ public abstract class DemonBase : MonoBehaviour
     private float   m_movementDirection;
     private bool    m_isLerpingToResetBones;
     private bool    m_hasResetParentPosition;
-
+    protected bool  m_isDead;
 
     //Weight variables
     [Header("Physicality")]
@@ -68,6 +68,7 @@ public abstract class DemonBase : MonoBehaviour
     public Collider2D[] LimbsColliders { get => m_limbsColliders; }
     public float MovementDirection { get => m_movementDirection; set => m_movementDirection = value; }
     public SpriteRenderer MySprite { get => m_mySprite; }
+    public bool IsDead { get => m_isDead; set => m_isDead = value; }
 
 
     #endregion
@@ -130,13 +131,15 @@ public abstract class DemonBase : MonoBehaviour
 		//m_isLerpingToResetBones = true;
 		m_hasResetParentPosition = false;
         m_isControlledByPlayer = false;
-	}
+        m_isDead = false;
+    }
 
     /// <summary>
     /// Sets the demon to be the one controlled by the player and turns off ragdoll physics
     /// </summary>
     public void SetControlledByPlayer()
     {
+        m_isDead = false;
         SetRagdollActive(false);
         PosesionManager.Instance.ControlledDemon = this;
         m_isLerpingToResetBones = true;
@@ -243,6 +246,7 @@ public abstract class DemonBase : MonoBehaviour
     public void SetNotControlledByPlayer()
     {
         IsControlledByPlayer = false;
+        m_isDead = false;
         SetRagdollActive(true);
         this.enabled = false;
     }
@@ -319,6 +323,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
+        m_isDead = true;
         if (MovementDirection == -1)
         {
             m_childTransforms[0].localScale = new Vector3(-1, 1, 1);
