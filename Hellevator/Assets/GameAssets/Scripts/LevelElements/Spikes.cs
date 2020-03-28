@@ -61,7 +61,6 @@ public class Spikes : MonoBehaviour
             {
                 if (cmpDemon.IsControlledByPlayer)
                 {
-                    print("a");
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                     cmpDemon.IsInDanger = true;
                     cmpDemon.SetColor(Color.red);
