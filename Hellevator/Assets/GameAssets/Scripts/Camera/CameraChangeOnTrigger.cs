@@ -9,9 +9,10 @@ public class CameraChangeOnTrigger : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+        print("dentroTrigger");
+        if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
         {
-            print("dentroTrigger");
+            print(collision.transform.root.GetComponent<DemonBase>());
 
             cameraManager.IsTriggerFarCamera = true;
 
