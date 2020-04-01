@@ -85,6 +85,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public void RestartLevel()
     {
         m_loadingScene = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        m_isRestarting = true;        
+        if( m_checkPoints != null && m_checkPoints.Count > 0)
+        {
+            m_isRestarting = true;
+        }
+        
     }
 }

@@ -29,6 +29,9 @@ public class CameraManager : TemporalSingleton<CameraManager>
 
     private void Start()
     {
+        vcam1.Follow = PosesionManager.Instance.ControlledDemon.transform;
+        vcam1.LookAt = PosesionManager.Instance.ControlledDemon.transform;
+
         Camera1.SetActive(true);
         Camera2.SetActive(false);
         Camera3.SetActive(false);
@@ -37,8 +40,6 @@ public class CameraManager : TemporalSingleton<CameraManager>
         IsCam1 = true;
         isCam3 = true;
 
-        vcam1.Follow = PosesionManager.Instance.ControlledDemon.transform;
-        vcam1.LookAt = PosesionManager.Instance.ControlledDemon.transform;
     }
 
     public void ChangeCamTarget()

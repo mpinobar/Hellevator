@@ -8,6 +8,8 @@ public class WeightedPreassurePlate : MonoBehaviour
 	//Weight and type variables
 	[SerializeField] private TypeOfPreassurePlate m_type = TypeOfPreassurePlate.None;
 	[SerializeField] private float m_weightNeeded;
+    [Tooltip("Check this if the pressure plate blocks possession of bodies on this pressure plate")]
+    [SerializeField] private bool m_blocksPossession;
 	private float m_currentWeight;
 	private List<DemonBase> m_enemiesOnPreassurePlate;
     [SerializeField] private LayerMask m_enemyLayerMask;
@@ -188,12 +190,14 @@ public class WeightedPreassurePlate : MonoBehaviour
                             m_currentWeight -= cmpDemon.Weight;
                             m_spikesData.RemoveAt(i);
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);
+                            cmpDemon.IsPossessionBlocked = false;
                         }
                         else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
                         {
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);
                             m_currentWeight -= cmpDemon.Weight;
                             m_spikesData.RemoveAt(i);
+                            cmpDemon.IsPossessionBlocked = false;
                         }
                     }
                 }
@@ -224,24 +228,37 @@ public class WeightedPreassurePlate : MonoBehaviour
     {
         float totalWeight = demon.Weight;
 
+        if (m_blocksPossession)
+        {
+            demon.IsPossessionBlocked = true;
+        }
+
         List<DemonBase> demonsOnTop = new List<DemonBase>();
         float distanceToCast = 0.5f;
 
-
+        //cast a circle upwards to see if there is a different body on top
         RaycastHit2D[] hits = Physics2D.CircleCastAll(demon.LimbsColliders[0].transform.position, 0.3f, Vector2.up, distanceToCast, m_enemyLayerMask);
 
         for (int j = 0; j < hits.Length; j++)
         {
+            //check if the collider on top is a demon
             DemonBase demonOnTop = hits[j].transform.root.GetComponent<DemonBase>();
             if (demonOnTop != null)
             {
+                //add it to a list of demons that are on top of this one, making sure not to add it twice
                 if (demonOnTop != demon && !demonsOnTop.Contains(demonOnTop) && !m_enemiesOnPreassurePlate.Contains(demonOnTop))
                 {
                     demonsOnTop.Add(demonOnTop);
+
+                    //block possession of the demons on top if it should be done
+                    if (m_blocksPossession)
+                    {
+                        demonOnTop.IsPossessionBlocked = true;
+                    }
                 }
             }
         }
-
+        //recurring method for the demons on top of this one
         for (int i = 0; i < demonsOnTop.Count; i++)
         {
             totalWeight += CalculateWeightOnTop(demonsOnTop[i]);

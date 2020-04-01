@@ -17,6 +17,7 @@ public abstract class DemonBase : MonoBehaviour
     private float   m_movementDirection;
     private bool    m_isLerpingToResetBones;
     private bool    m_hasResetParentPosition;
+    private bool    m_isPossessionBlocked;
     protected bool  m_isDead;
 
     //Weight variables
@@ -69,6 +70,7 @@ public abstract class DemonBase : MonoBehaviour
     public float MovementDirection { get => m_movementDirection; set => m_movementDirection = value; }
     public SpriteRenderer MySprite { get => m_mySprite; }
     public bool IsDead { get => m_isDead; set => m_isDead = value; }
+    public bool IsPossessionBlocked { get => m_isPossessionBlocked; set => m_isPossessionBlocked = value;  }
 
 
     #endregion
@@ -364,10 +366,10 @@ public abstract class DemonBase : MonoBehaviour
     /// <summary>
     /// Visualizing the maximum possession range in editor scene
     /// </summary>
-    //private void OnDrawGizmosSelected()
-    //{
-    //    UnityEditor.Handles.color = Color.red;
-    //    UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
-    //}
+    private void OnDrawGizmosSelected()
+    {
+        UnityEditor.Handles.color = Color.red;
+        UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
+    }
 
 }
