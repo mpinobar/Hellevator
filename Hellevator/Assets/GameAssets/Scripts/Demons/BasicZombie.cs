@@ -11,6 +11,10 @@ public class BasicZombie : DemonBase
     [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
+    [SerializeField] private bool m_canJump;
+    [SerializeField] private bool m_canDoubleJump;
+    private bool m_hasJumped;
+    private bool m_hasDoubleJumped;
 
     [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
@@ -91,10 +95,20 @@ public class BasicZombie : DemonBase
 
     public override void Jump()
     {
-        if (IsGrounded())
-        {            
-            MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
-            MyRgb.AddForce(Vector2.up * JumpForce);
+        if (m_canJump)
+        {
+            if (!m_hasJumped)
+            {
+                MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
+                MyRgb.AddForce(Vector2.up * JumpForce);
+                m_hasJumped = true;
+            }
+            else if(m_canDoubleJump && !m_hasDoubleJumped)
+            {
+                MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
+                MyRgb.AddForce(Vector2.up * JumpForce);
+                m_hasDoubleJumped = true;
+            }
         }
     }
     
@@ -107,6 +121,20 @@ public class BasicZombie : DemonBase
         else
         {
             walkingParticles.Stop();
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (IsGrounded())
+        {
+            if (m_canJump)
+            {
+                m_hasJumped = false;
+                if (m_canDoubleJump)
+                {
+                    m_hasDoubleJumped = false;
+                }
+            }
         }
     }
 }

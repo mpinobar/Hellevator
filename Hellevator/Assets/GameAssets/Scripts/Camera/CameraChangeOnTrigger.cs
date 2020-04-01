@@ -16,7 +16,7 @@ public class CameraChangeOnTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print("dentroTrigger");
+
         if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
         {
             print(collision.transform.root.GetComponent<DemonBase>());
@@ -43,7 +43,6 @@ public class CameraChangeOnTrigger : MonoBehaviour
     {
         if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
         {
-            print("FueraTrigger");
 
             if (cameraManager.Camera1.activeSelf == true)
             {

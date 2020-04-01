@@ -63,7 +63,7 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            LevelManager.Instance.RestartLevel();
         }
     }
 }
