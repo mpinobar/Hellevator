@@ -33,7 +33,7 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
 
                 if (foundDemon != null && foundDemon != ControlledDemon)
                 {
-					if (!foundDemon.IsInDanger && foundDemon.IsDead)
+					if (!foundDemon.IsInDanger && foundDemon.IsDead && !foundDemon.IsPossessionBlocked)
 					{
 						return foundDemon;
 					}

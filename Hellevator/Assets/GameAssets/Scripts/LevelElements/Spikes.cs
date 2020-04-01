@@ -62,8 +62,7 @@ public class Spikes : MonoBehaviour
                 if (cmpDemon.IsControlledByPlayer)
                 {
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
-                    cmpDemon.IsInDanger = true;
-                    cmpDemon.SetColor(Color.red);
+                    cmpDemon.IsInDanger = true;                    
                     cmpDemon.Die();
                     collision.GetComponentInParent<BloodInstantiate>().InstantiateBlood();
                 }
@@ -73,8 +72,7 @@ public class Spikes : MonoBehaviour
                     {
 
                         m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
-                        cmpDemon.IsInDanger = true;
-                        cmpDemon.SetColor(Color.red);
+                        cmpDemon.IsInDanger = true;                        
                         //Create the method for enemy death
                         print("Create the method for enemy death");
                         cmpDemon.Die();
@@ -106,13 +104,11 @@ public class Spikes : MonoBehaviour
                         //all the limbs have exited the spikes
                         if(m_spikesData[i].Colliders.Count == 0)
                         {
-                            cmpDemon.IsInDanger = false;
-                            cmpDemon.SetColor(Color.white);
+                            cmpDemon.IsInDanger = false;                            
                             m_spikesData.RemoveAt(i);
                         }
                         else if(m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
-                        {
-                            cmpDemon.SetColor(Color.white);
+                        {                            
                             cmpDemon.IsInDanger = false;
                             m_spikesData.RemoveAt(i);
                         }
