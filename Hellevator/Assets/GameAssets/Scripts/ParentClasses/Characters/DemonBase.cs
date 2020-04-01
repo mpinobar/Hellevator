@@ -32,7 +32,7 @@ public abstract class DemonBase : MonoBehaviour
     [Header("Possession")]
     [SerializeField] private bool     m_possessedOnStart;
     [SerializeField] private float    m_maximumPossessionRange;
-
+    [SerializeField] private Color    m_tintWhenCantBePossessed;
 	//IAReferences
 	[Space]
 	[Header("IA")]
@@ -62,17 +62,36 @@ public abstract class DemonBase : MonoBehaviour
 
 	public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
     protected bool      IsRagdollActive { get => m_isRagdollActive; }
-	public bool         IsInDanger { get => m_isInDanger; set => m_isInDanger = value; }
-	public Rigidbody2D  MyRgb { get => m_myRgb; }
-    public Collider2D   MyCollider { get => m_myCollider; }
-	public float        Weight { get => m_weight; }
-    public Collider2D[] LimbsColliders { get => m_limbsColliders; }
-    public float MovementDirection { get => m_movementDirection; set => m_movementDirection = value; }
-    public SpriteRenderer MySprite { get => m_mySprite; }
-    public bool IsDead { get => m_isDead; set => m_isDead = value; }
-    public bool IsPossessionBlocked { get => m_isPossessionBlocked; set => m_isPossessionBlocked = value;  }
+	
+	public Rigidbody2D      MyRgb { get => m_myRgb; }
+    public Collider2D       MyCollider { get => m_myCollider; }
+	public float            Weight { get => m_weight; }
+    public Collider2D[]     LimbsColliders { get => m_limbsColliders; }
+    public float            MovementDirection { get => m_movementDirection; set => m_movementDirection = value; }
+    public SpriteRenderer   MySprite { get => m_mySprite; }
+    public bool             IsDead { get => m_isDead; set => m_isDead = value; }
+    public bool             IsInDanger { get => m_isInDanger; set => m_isInDanger = value; }
 
 
+
+    public bool IsPossessionBlocked
+    {
+        get => m_isPossessionBlocked;
+        set
+        {
+            if (value)
+            {
+                SetColor(m_tintWhenCantBePossessed);
+            }
+            else
+            {
+                SetColor(Color.white);
+            }
+            m_isPossessionBlocked = value;
+        }
+    }
+
+    
     #endregion
 
     protected virtual void Awake()
@@ -200,6 +219,7 @@ public abstract class DemonBase : MonoBehaviour
     /// <param name="color">The new color to be assigned</param>
     public void SetColor(Color color)
     {
+        GetComponent<SpriteRenderer>().color = color;
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
             m_limbsRbds[i].GetComponent<SpriteRenderer>().material.color = color;
