@@ -280,6 +280,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     private void LerpResetRagdollTransforms()
     {
+        IsControlledByPlayer = true;
         Transform torso = m_limbsColliders[0].transform;
         if (!m_hasResetParentPosition)
         {
@@ -311,7 +312,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             ResetRagdollTransforms();
             m_isLerpingToResetBones = false;
-            IsControlledByPlayer = true;
+            
             m_hasResetParentPosition = false;
         }
     }
