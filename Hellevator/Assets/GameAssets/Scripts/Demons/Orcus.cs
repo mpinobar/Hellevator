@@ -10,6 +10,9 @@ public class Orcus : DemonBase
 	[SerializeField] private float m_maxSpeed;
 	[SerializeField] private float m_acceleration = 7;
 	[SerializeField] private float m_jumpForce = 10;
+    [SerializeField] private float m_enrageSpeedMultiplier = 3f;
+
+    private bool m_usedSkill;
 
 	[Header("References")]
 	[SerializeField] ParticleSystem walkingParticles;
@@ -34,13 +37,16 @@ public class Orcus : DemonBase
 	public float MaxSpeed { get => m_maxSpeed; }
 	public float Acceleration { get => m_acceleration; }
 	public float JumpForce { get => m_jumpForce; }
+    public bool UsedSkill { get => m_usedSkill; }
 
-	#endregion
+    #endregion
 
-	
-	protected override void Awake()
+
+    protected override void Awake()
 	{
 		base.Awake();
+
+        m_usedSkill = false;
 
 		if (m_isControlledByIA)
 		{
@@ -50,7 +56,12 @@ public class Orcus : DemonBase
 	
 	public override void UseSkill()
 	{
-
+        if (!m_usedSkill)
+        {
+            m_usedSkill = true;
+            m_maxSpeed *= m_enrageSpeedMultiplier;
+            m_acceleration *= m_enrageSpeedMultiplier;
+        }
 	}
 	
 
