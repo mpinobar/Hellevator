@@ -5,7 +5,6 @@ using UnityEngine;
 public class BoxOrcus : MonoBehaviour
 {
 	[SerializeField] private float m_distanceMax = 0f;
-    [SerializeField] private float m_enrageSpeedMultiplier = 3f;
 	private Transform m_orcus = null;
 	private Rigidbody2D m_cmpRB = null;
     Collider2D[] m_parts;
