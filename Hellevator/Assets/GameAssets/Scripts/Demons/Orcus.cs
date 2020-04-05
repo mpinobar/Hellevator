@@ -150,14 +150,6 @@ public class Orcus : DemonBase
 	[SerializeField] private EnemyState m_IACurrentState = EnemyState.None;
 
 	[Space]
-
-	[SerializeField] private float m_IADetectionRange = 0f;
-	[SerializeField] private float m_IADetectionAngle = 0f;
-	[SerializeField] private float m_IADetectionRayCount = 0f;
-	[SerializeField] private LayerMask m_IADetectionLayers;
-	[SerializeField] private LayerMask m_IADetectionLayersForForwardVector;
-
-	[Space]
 	[SerializeField] private List<Transform> m_IAPatrolPoints = new List<Transform>(0);
 	private int m_IACurrentPatrolPoint = 0;
 
