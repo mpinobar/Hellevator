@@ -38,10 +38,15 @@ public abstract class DemonBase : MonoBehaviour
 	[Space]
 	[Header("IA")]
 	[Tooltip("Where or not the enemy starts controlled by IA behaviour")]
-	[SerializeField] protected bool m_isControlledByIA = false;
+	[SerializeField] protected bool         m_isControlledByIA = false;
+    [SerializeField] protected float        m_IADetectionRange = 0f;
+    [SerializeField] protected float        m_IADetectionAngle = 0f;
+    [SerializeField] protected float        m_IADetectionRayCount = 0f;
+    [SerializeField] protected LayerMask    m_IADetectionLayers;
+    [SerializeField] protected LayerMask    m_IADetectionLayersForForwardVector;
 
-	//Ragdoll child references
-	private Collider2D[]        m_limbsColliders;
+    //Ragdoll child references
+    private Collider2D[]        m_limbsColliders;
     private Rigidbody2D[]       m_limbsRbds;
     private Transform[]         m_childTransforms;
     private RagdollTransform[]  m_childInitialTransforms;
@@ -66,16 +71,12 @@ public abstract class DemonBase : MonoBehaviour
     private Vector3 m_initialPositionRightGrab;
     private Vector3 m_initialPositionLeftGrab;
 
-    [SerializeField] private float m_IADetectionRange = 0f;
-    [SerializeField] private float m_IADetectionAngle = 0f;
-    [SerializeField] private float m_IADetectionRayCount = 0f;
-    [SerializeField] private LayerMask m_IADetectionLayers;
-    [SerializeField] private LayerMask m_IADetectionLayersForForwardVector;
-
+    /*
     [SerializeField] private Transform m_grabRayStartPositionRight;
     [SerializeField] private Transform m_grabRayStartPositionLeft;
 
     private bool m_hasADemonGrabed = false;
+    */
     #region Properties
 
     public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
@@ -88,7 +89,22 @@ public abstract class DemonBase : MonoBehaviour
     public float            MovementDirection { get => m_movementDirection; set => m_movementDirection = value; }
     public SpriteRenderer   MySprite { get => m_mySprite; }
     public bool             IsDead { get => m_isDead; set => m_isDead = value; }
-    public bool             IsInDanger { get => m_isInDanger; set => m_isInDanger = value; }
+    public bool 
+        IsInDanger {
+        get => m_isInDanger;
+        set
+        {
+            if (value)
+            {
+                SetColor(m_tintWhenCantBePossessed);
+            }
+            else
+            {
+                SetColor(Color.white);
+            }
+            m_isInDanger = value;
+        }
+    }
 
 
 
@@ -123,9 +139,10 @@ public abstract class DemonBase : MonoBehaviour
         m_myAnimator                = GetComponent<Animator>();
         m_childSprites              = ReturnComponentsInChildren<SpriteRenderer>();
         m_mySprite                  = GetComponent<SpriteRenderer>();
+        /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
-
+        */
         if (m_possessedOnStart)
         {
             SetControlledByPlayer();
