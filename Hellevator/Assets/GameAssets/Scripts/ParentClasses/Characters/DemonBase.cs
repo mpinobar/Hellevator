@@ -251,13 +251,29 @@ public abstract class DemonBase : MonoBehaviour
 						GameObject parent = hits[y].collider.GetComponentInParent<DemonBase>().gameObject;
 						if (parent.transform.GetChild(0).gameObject == hits[y].collider.gameObject)
 						{
-							m_hasADemonGrabed = true;
+							//hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = this.m_myRgb;
 
-							hits[y].collider.transform.parent.transform.SetParent(this.transform);
+							//m_hasADemonGrabed = true;
+
+							hits[y].collider.GetComponent<GrabbedTorso>().IsGrabbed = true;
+							if (isLookingRight)
+							{
+								hits[y].collider.GetComponent<GrabbedTorso>().LinkedTransform = m_grabRayStartPositionRight;
+							}
+							else
+							{
+								hits[y].collider.GetComponent<GrabbedTorso>().LinkedTransform = m_grabRayStartPositionLeft;
+							}
+
+
+
+							//hits[y].collider.transform.parent.transform.SetParent(this.transform);
 							//hits[y].collider.transform.SetParent(this.transform);
 
 							//hits[y].collider.GetComponent<DistanceJoint2D>().connectedBody = this.GetComponent<Rigidbody2D>();
+
 							//hits[y].collider.GetComponent<Rigidbody2D>().isKinematic = true;
+
 							break;
 						}
 					}
