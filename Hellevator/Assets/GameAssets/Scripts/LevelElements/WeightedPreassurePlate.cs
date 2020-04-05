@@ -39,9 +39,16 @@ public class WeightedPreassurePlate : MonoBehaviour
     private void Awake()
 	{
 		m_enemiesOnPreassurePlate = new List<DemonBase>(0);
-		m_startingPosition = m_parent.transform.position;
+		if(m_type == TypeOfPreassurePlate.Elevator)
+		{
+			m_startingPosition = m_parent.localPosition;
+		}
+		else
+		{
+			m_startingPosition = m_parent.transform.position;
+		}
 		m_currentWeight = 0;
-		m_distanceToEndPosition = Vector3.Distance(m_startingPosition, m_pressurePlateEndPosition.position);
+		m_distanceToEndPosition = Vector3.Distance(m_startingPosition, m_pressurePlateEndPosition.localPosition);
         m_spikesData = new List<SpikesWeightData>();
         if (m_linkedObjectPosition != null)
 		{
@@ -119,6 +126,39 @@ public class WeightedPreassurePlate : MonoBehaviour
 							m_preassurePlateIsAtLocation = true;
 							this.gameObject.SetActive(false);
 						}
+					}
+				}
+				break;
+			case TypeOfPreassurePlate.Elevator:
+				{
+					float percentaje = m_currentWeight / m_weightNeeded;
+					float positionY = m_distanceToEndPosition * percentaje;
+
+					if(percentaje != 0)
+					{
+						if (m_preassurePlateActivated)
+						{
+							//Mover la plataforma
+							m_linkedObjectPosition.position = Vector2.MoveTowards(m_linkedObjectPosition.position, m_linkedObjectEndPosition.position, m_speed * Time.deltaTime);
+						}
+
+						else
+						{
+							//Mover el boton
+							m_parent.localPosition = Vector2.MoveTowards(m_parent.localPosition, new Vector2(m_parent.localPosition.x, m_startingPosition.y - positionY), m_speed * Time.deltaTime);
+							if((m_startingPosition.y  - m_parent.localPosition.y) >= m_distanceToEndPosition)
+							{
+								m_preassurePlateActivated = true;
+							}
+						}
+					}
+					else
+					{
+						m_preassurePlateActivated = false;
+						//Mover el boton a su posicion local original
+						m_parent.localPosition = Vector2.MoveTowards(m_parent.localPosition, m_startingPosition, m_speed * Time.deltaTime);
+						//Mover el ascensor a su posición original del mundo
+						m_linkedObjectPosition.position = Vector2.MoveTowards(m_linkedObjectPosition.position, m_linkedObjectStartingPosition, m_speed * Time.deltaTime);
 					}
 				}
 				break;
