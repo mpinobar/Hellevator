@@ -167,7 +167,7 @@ public abstract class DemonBase : MonoBehaviour
 		{
 			LerpResetRagdollTransforms();
 		}
-        #region Grab
+
         /*
         if (m_hasADemonGrabed)
         {
@@ -223,9 +223,9 @@ public abstract class DemonBase : MonoBehaviour
             }
         }
         */
-    }
+	}
 
-
+	#region Grab
 
     /*
 	/// <summary>
@@ -372,14 +372,14 @@ public abstract class DemonBase : MonoBehaviour
 		}
 	}
     */
-    #endregion Grab
+	#endregion Grab
 
-    /// <summary>
-    /// Returns all child component references of specified component, excluding the parent
-    /// </summary>
-    /// <typeparam name="T">The specified component to look for</typeparam>
-    /// <returns>An array with the components</returns>
-    private T[] ReturnComponentsInChildren<T>()
+	/// <summary>
+	/// Returns all child component references of specified component, excluding the parent
+	/// </summary>
+	/// <typeparam name="T">The specified component to look for</typeparam>
+	/// <returns>An array with the components</returns>
+	private T[] ReturnComponentsInChildren<T>()
     {
         T[] array = GetComponentsInChildren<T>();
         T[] returnedArray = new T[array.Length - 1];
