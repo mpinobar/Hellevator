@@ -63,8 +63,6 @@ public class Orcus : DemonBase
             m_acceleration *= m_enrageSpeedMultiplier;
         }
 	}
-	
-
 
 	protected override void Update()
 	{
@@ -201,12 +199,6 @@ public class Orcus : DemonBase
 
 	void IAUpdate()
 	{
-
-		if (Input.GetKeyDown(KeyCode.M))
-		{
-			print(IASenseForPlayer());
-		}
-
 		switch (m_IACurrentState)
 		{
 			case EnemyState.Chasing:
@@ -467,24 +459,5 @@ public class Orcus : DemonBase
 		}
 	}
 
-	#endregion IA
-
-	#region AngleCalculations
-	private Vector3 GetVectorFromAngle(float angle)
-	{
-		float angleRad = angle * (Mathf.PI / 180f);
-		return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-	}
-
-	private float GetAngleFromVector(Vector3 dir)
-	{
-
-		dir = dir.normalized;
-		float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-		if (n < 0) n += 360;
-
-		return n;
-	}
-	#endregion AngleCalculations
+	#endregion IA	
 }

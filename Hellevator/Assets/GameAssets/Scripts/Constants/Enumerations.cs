@@ -21,3 +21,8 @@ public enum EnemyState
 {
 	Chasing, Patrol, GoingBack, None
 }
+public enum BalanzaState
+{
+	Equal, RightIsHeavier, LeftIsHeavier
+}
+
