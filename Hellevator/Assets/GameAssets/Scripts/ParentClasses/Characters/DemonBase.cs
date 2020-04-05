@@ -19,6 +19,7 @@ public abstract class DemonBase : MonoBehaviour
     private bool    m_hasResetParentPosition;
     private bool    m_isPossessionBlocked;
     protected bool  m_isDead;
+    private bool    m_grabbedByRight;
 
     //Weight variables
     [Header("Physicality")]
@@ -62,10 +63,22 @@ public abstract class DemonBase : MonoBehaviour
 	[Space]
 	[Header("Grab variables")]
 	private float m_hi = 0f;
-	
-	#region Properties
+    private Vector3 m_initialPositionRightGrab;
+    private Vector3 m_initialPositionLeftGrab;
 
-	public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
+    [SerializeField] private float m_IADetectionRange = 0f;
+    [SerializeField] private float m_IADetectionAngle = 0f;
+    [SerializeField] private float m_IADetectionRayCount = 0f;
+    [SerializeField] private LayerMask m_IADetectionLayers;
+    [SerializeField] private LayerMask m_IADetectionLayersForForwardVector;
+
+    [SerializeField] private Transform m_grabRayStartPositionRight;
+    [SerializeField] private Transform m_grabRayStartPositionLeft;
+
+    private bool m_hasADemonGrabed = false;
+    #region Properties
+
+    public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
     protected bool      IsRagdollActive { get => m_isRagdollActive; }
 	
 	public Rigidbody2D      MyRgb { get => m_myRgb; }
@@ -110,6 +123,8 @@ public abstract class DemonBase : MonoBehaviour
         m_myAnimator                = GetComponent<Animator>();
         m_childSprites              = ReturnComponentsInChildren<SpriteRenderer>();
         m_mySprite                  = GetComponent<SpriteRenderer>();
+        m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
+        m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
 
         if (m_possessedOnStart)
         {
@@ -135,22 +150,67 @@ public abstract class DemonBase : MonoBehaviour
 		{
 			LerpResetRagdollTransforms();
 		}
+
+        /*
+        if (m_hasADemonGrabed)
+        {
+            if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+            {
+                m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
+            }
+
+            if (m_grabbedByRight)
+            {
+                if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+                {
+                    m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
+                }
+                else
+                {
+                    m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 100;
+                }
+
+                if (MovementDirection == 1)
+                {
+                    //want to push to the right
+                    m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab + Vector3.right * 4f;
+                }
+                else
+                {
+                    //dragging towards the left
+                    m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab;
+                }
+            }
+            else
+            {
+                if (!m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+                {
+                    m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 0;
+                }
+                else
+                {
+                    m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 100;
+                }
+
+
+                if (MovementDirection == 1)
+                {
+                    //dragging towards the right
+                    m_grabRayStartPositionLeft.localPosition= m_initialPositionLeftGrab;
+                }
+                else
+                {
+                    //want to push to the left
+                    m_grabRayStartPositionLeft.localPosition = m_initialPositionLeftGrab - Vector3.right * 4f;
+                }
+            }
+        }
+        */
 	}
 
 	#region Grab
 
-	[Space]
-
-	[SerializeField] private float m_IADetectionRange = 0f;
-	[SerializeField] private float m_IADetectionAngle = 0f;
-	[SerializeField] private float m_IADetectionRayCount = 0f;
-	[SerializeField] private LayerMask m_IADetectionLayers;
-	[SerializeField] private LayerMask m_IADetectionLayersForForwardVector;
-
-	[SerializeField] private Transform m_grabRayStartPositionRight;
-	[SerializeField] private Transform m_grabRayStartPositionLeft;
-
-	private bool m_hasADemonGrabed = false;
+    /*
 	/// <summary>
 	/// The demon tries to grab a dead demon
 	/// </summary>
@@ -253,16 +313,18 @@ public abstract class DemonBase : MonoBehaviour
 						{
 							//hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = this.m_myRgb;
 
-							//m_hasADemonGrabed = true;
+							m_hasADemonGrabed = true;
 
-							hits[y].collider.GetComponent<GrabbedTorso>().IsGrabbed = true;
+							//hits[y].collider.GetComponent<GrabbedTorso>().IsGrabbed = true;
 							if (isLookingRight)
 							{
-								hits[y].collider.GetComponent<GrabbedTorso>().LinkedTransform = m_grabRayStartPositionRight;
+								hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = m_grabRayStartPositionRight.GetComponent<Rigidbody2D>();
+                                m_grabbedByRight = true;
 							}
 							else
 							{
-								hits[y].collider.GetComponent<GrabbedTorso>().LinkedTransform = m_grabRayStartPositionLeft;
+								hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = m_grabRayStartPositionLeft.GetComponent<Rigidbody2D>();
+                                m_grabbedByRight = false;
 							}
 
 
@@ -292,7 +354,7 @@ public abstract class DemonBase : MonoBehaviour
 			}
 		}
 	}
-
+    */
 	#endregion Grab
 
 	/// <summary>
@@ -546,6 +608,24 @@ public abstract class DemonBase : MonoBehaviour
         }
         return isGrounded;
     }
+
+
+    //public bool IsTorsoGrounded()
+    //{
+    //    Debug.DrawRay(transform.position, Vector3.down * 2, Color.red);
+    //    RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.GetChild(0).position, 0.1f, Vector2.down, 3, m_JumpMask);
+    //    bool isGrounded = false;
+    //    for (int i = 0; i < impact.Length; i++)
+    //    {
+    //        if (impact[i].transform.root != transform)
+    //        {
+    //            isGrounded = true;
+    //        }
+    //    }
+    //    return isGrounded;
+    //}
+
+
     /// <summary>
     /// Visualizing the maximum possession range in editor scene
     /// </summary>
