@@ -41,10 +41,7 @@ public class BasicZombie : DemonBase
     public float JumpForce { get => m_jumpForce; }
 
     #endregion
-
-
-
-
+	
     public override void UseSkill()
     {
         
@@ -123,6 +120,7 @@ public class BasicZombie : DemonBase
             walkingParticles.Stop();
         }
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (IsGrounded())
@@ -137,4 +135,5 @@ public class BasicZombie : DemonBase
             }
         }
     }
+
 }

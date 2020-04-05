@@ -57,6 +57,11 @@ public abstract class DemonBase : MonoBehaviour
     protected Animator      m_myAnimator;
     private SpriteRenderer  m_mySprite;
 
+
+	//Grab Variables
+	[Space]
+	[Header("Grab variables")]
+	private float m_hi = 0f;
 	
 	#region Properties
 
@@ -123,14 +128,163 @@ public abstract class DemonBase : MonoBehaviour
             
         }        
     }
-    
 
-    /// <summary>
-    /// Returns all child component references of specified component, excluding the parent
-    /// </summary>
-    /// <typeparam name="T">The specified component to look for</typeparam>
-    /// <returns>An array with the components</returns>
-    private T[] ReturnComponentsInChildren<T>()
+	protected virtual void Update()
+	{
+		if (m_isLerpingToResetBones)
+		{
+			LerpResetRagdollTransforms();
+		}
+	}
+
+	#region Grab
+
+	[Space]
+
+	[SerializeField] private float m_IADetectionRange = 0f;
+	[SerializeField] private float m_IADetectionAngle = 0f;
+	[SerializeField] private float m_IADetectionRayCount = 0f;
+	[SerializeField] private LayerMask m_IADetectionLayers;
+	[SerializeField] private LayerMask m_IADetectionLayersForForwardVector;
+
+	[SerializeField] private Transform m_grabRayStartPositionRight;
+	[SerializeField] private Transform m_grabRayStartPositionLeft;
+
+	private bool m_hasADemonGrabed = false;
+	/// <summary>
+	/// The demon tries to grab a dead demon
+	/// </summary>
+	public void Grab()
+	{
+		bool isLookingRight = !m_mySprite.flipX;
+		RaycastHit2D rayNormal;
+		if (isLookingRight)
+		{
+			rayNormal = Physics2D.Raycast(m_grabRayStartPositionRight.position, this.transform.up, 2, m_IADetectionLayersForForwardVector);
+		}
+		else
+		{
+			rayNormal = Physics2D.Raycast(m_grabRayStartPositionLeft.position, this.transform.up, 2, m_IADetectionLayersForForwardVector);
+		}
+
+		float angleIncrease = m_IADetectionAngle / m_IADetectionRayCount;
+		
+		Vector2 forwardVector = Vector2.zero;
+
+		float angle = 0f;
+
+		if (isLookingRight)
+		{
+			if (GetAngleFromVector(rayNormal.normal) >= 90)
+			{
+				forwardVector = -Vector2.Perpendicular(rayNormal.normal);
+				angle = Vector2.Angle(forwardVector, this.transform.right);
+
+				angle = angle - m_IADetectionAngle / 2f;
+			}
+			else
+			{
+				forwardVector = -Vector2.Perpendicular(rayNormal.normal);
+				angle = -Vector2.Angle(forwardVector, this.transform.right);
+
+				angle = angle - m_IADetectionAngle / 2f;
+			}
+		}
+		else
+		{
+
+			if (GetAngleFromVector(rayNormal.normal) >= 90)
+			{
+				forwardVector = -Vector2.Perpendicular(rayNormal.normal);
+				angle = Vector2.Angle(forwardVector, this.transform.right);
+
+				angle = 180 + angle + m_IADetectionAngle / 2f;
+			}
+			else
+			{
+				forwardVector = Vector2.Perpendicular(rayNormal.normal);
+				angle = -Vector2.Angle(forwardVector, -this.transform.right);
+
+				angle = 180 + angle + m_IADetectionAngle / 2f;
+			}
+		}
+
+		for (int i = 0; i <= m_IADetectionRayCount; i++)
+		{
+			Vector3 rayDirection = GetVectorFromAngle(angle);
+
+			RaycastHit2D[] hits;
+
+			if (isLookingRight)
+			{
+				hits = Physics2D.RaycastAll(m_grabRayStartPositionRight.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
+
+				if (i == 0)
+				{
+					Debug.DrawRay(m_grabRayStartPositionRight.position, rayDirection, Color.cyan, 3f);
+				}
+				else
+				{
+					Debug.DrawRay(m_grabRayStartPositionRight.position, rayDirection, Color.blue, 3f);
+				}
+			}
+			else
+			{
+				hits = Physics2D.RaycastAll(m_grabRayStartPositionLeft.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
+
+				if (i == 0)
+				{
+					Debug.DrawRay(m_grabRayStartPositionLeft.position, rayDirection, Color.cyan, 3f);
+				}
+				else
+				{
+					Debug.DrawRay(m_grabRayStartPositionLeft.position, rayDirection, Color.blue, 3f);
+				}
+			}
+
+			for (int y = 0; y < hits.Length; y++)
+			{
+				if (hits[y].collider.GetComponentInParent<DemonBase>() != null)
+				{
+					if(hits[y].collider.transform.root != this.transform)
+					{
+						GameObject parent = hits[y].collider.GetComponentInParent<DemonBase>().gameObject;
+						if (parent.transform.GetChild(0).gameObject == hits[y].collider.gameObject)
+						{
+							m_hasADemonGrabed = true;
+
+							hits[y].collider.transform.parent.transform.SetParent(this.transform);
+							//hits[y].collider.transform.SetParent(this.transform);
+
+							//hits[y].collider.GetComponent<DistanceJoint2D>().connectedBody = this.GetComponent<Rigidbody2D>();
+							//hits[y].collider.GetComponent<Rigidbody2D>().isKinematic = true;
+							break;
+						}
+					}
+				}
+			}
+
+			
+
+			if (isLookingRight)
+			{
+				angle = angle + angleIncrease;
+			}
+			else
+			{
+				angle = angle - angleIncrease;
+			}
+		}
+	}
+
+	#endregion Grab
+
+	/// <summary>
+	/// Returns all child component references of specified component, excluding the parent
+	/// </summary>
+	/// <typeparam name="T">The specified component to look for</typeparam>
+	/// <returns>An array with the components</returns>
+	private T[] ReturnComponentsInChildren<T>()
     {
         T[] array = GetComponentsInChildren<T>();
         T[] returnedArray = new T[array.Length - 1];
@@ -205,13 +359,6 @@ public abstract class DemonBase : MonoBehaviour
     /// <param name="active">True to turn them on, false to turn them off</param>
     public abstract void ToggleWalkingParticles(bool active);
 
-    protected virtual void Update()
-    {
-        if (m_isLerpingToResetBones)
-        {
-            LerpResetRagdollTransforms();
-        }
-    }
 
     /// <summary>
     /// Changes the color of all limbs
@@ -392,4 +539,22 @@ public abstract class DemonBase : MonoBehaviour
         UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
     }
 
+	#region AngleCalculations
+	protected Vector3 GetVectorFromAngle(float angle)
+	{
+		float angleRad = angle * (Mathf.PI / 180f);
+		return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+	}
+
+	protected float GetAngleFromVector(Vector3 dir)
+	{
+
+		dir = dir.normalized;
+		float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+		if (n < 0) n += 360;
+
+		return n;
+	}
+	#endregion AngleCalculations
 }
