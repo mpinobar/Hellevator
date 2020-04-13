@@ -648,8 +648,8 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     private void OnDrawGizmosSelected()
     {
-        //UnityEditor.Handles.color = Color.red;
-        //UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
+        UnityEditor.Handles.color = Color.red;
+        UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
     }
 
 	#region AngleCalculations
