@@ -4895,6 +4895,78 @@ CapsuleCollider2D:
   m_Offset: {x: -0.00000047683716, y: -0.00000011920929}
   m_Size: {x: 0.3, y: 2.14}
   m_Direction: 0
+--- !u!1 &1249791878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1249791880}
+  - component: {fileID: 1249791879}
+  m_Layer: 0
+  m_Name: Point Light 2D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1249791880
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249791878}
+  m_LocalRotation: {x: -0, y: -0, z: -0.1446638, w: 0.9894809}
+  m_LocalPosition: {x: -0.099998474, y: 0.19000006, z: 3.2382812}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5180346641535575440}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1249791879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249791878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LightType: 3
+  m_BlendStyleIndex: 0
+  m_FalloffIntensity: 0.5
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_LightVolumeOpacity: 0
+  m_ApplyToSortingLayers: 00000000
+  m_LightCookieSprite: {fileID: 0}
+  m_UseNormalMap: 0
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_ShadowIntensity: 0
+  m_ShadowVolumeIntensity: 0
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 1.8646293
+  m_PointLightOuterRadius: 3.2141073
+  m_PointLightDistance: 3
+  m_PointLightQuality: 1
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
 --- !u!1 &1909822213
 GameObject:
   m_ObjectHideFlags: 0
@@ -5172,7 +5244,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: -0.16493858, y: -0.53339446}
-  m_ConnectedAnchor: {x: -0.083236694, y: 0.37115002}
+  m_ConnectedAnchor: {x: -0.083229065, y: 0.37115002}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -5431,7 +5503,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0.0000020537375, y: -0.50000006}
-  m_ConnectedAnchor: {x: 0.26908875, y: -0.92298317}
+  m_ConnectedAnchor: {x: 0.26908112, y: -0.92298317}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -5560,7 +5632,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0.021891963, y: 1.1647546}
-  m_ConnectedAnchor: {x: 0.15779114, y: -0.7043295}
+  m_ConnectedAnchor: {x: 0.1578064, y: -0.704329}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -5859,6 +5931,7 @@ Transform:
   - {fileID: 1026955379128610780}
   - {fileID: 5553776243201471867}
   - {fileID: 1075503058}
+  - {fileID: 1249791880}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5896,17 +5969,6 @@ MonoBehaviour:
   m_JumpMask:
     serializedVersion: 2
     m_Bits: 769
-  m_IADetectionRange: 0
-  m_IADetectionAngle: 0
-  m_IADetectionRayCount: 0
-  m_IADetectionLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_IADetectionLayersForForwardVector:
-    serializedVersion: 2
-    m_Bits: 0
-  m_grabRayStartPositionRight: {fileID: 0}
-  m_grabRayStartPositionLeft: {fileID: 0}
   m_maxSpeed: 7.5
   m_acceleration: 30
   m_jumpForce: 450
@@ -5969,7 +6031,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
