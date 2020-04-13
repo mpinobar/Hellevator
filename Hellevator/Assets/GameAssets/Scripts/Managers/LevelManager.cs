@@ -57,6 +57,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
                 UpdateLastCheckPointReference();
                 m_lastCheckPoint.SpawnPlayer();
                 m_isRestarting = false;
+                Time.timeScale = 1;
             }
         }
     }
