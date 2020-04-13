@@ -39,17 +39,19 @@ public class WeightedPreassurePlate : MonoBehaviour
     private void Awake()
 	{
 		m_enemiesOnPreassurePlate = new List<DemonBase>(0);
-		if(m_type == TypeOfPreassurePlate.Elevator)
+		m_currentWeight = 0;
+		
+		if (m_type == TypeOfPreassurePlate.Elevator)
 		{
 			m_startingPosition = m_parent.localPosition;
+			m_distanceToEndPosition = Vector3.Distance(m_startingPosition, m_pressurePlateEndPosition.localPosition);
 		}
 		else
 		{
 			m_startingPosition = m_parent.transform.position;
+			m_distanceToEndPosition = Vector3.Distance(m_startingPosition, m_pressurePlateEndPosition.position);
 		}
-		m_currentWeight = 0;
-		m_distanceToEndPosition = Vector3.Distance(m_startingPosition, m_pressurePlateEndPosition.localPosition);
-        m_spikesData = new List<SpikesWeightData>();
+		m_spikesData = new List<SpikesWeightData>();
         if (m_linkedObjectPosition != null)
 		{
 			m_linkedObjectStartingPosition = m_linkedObjectPosition.position;
