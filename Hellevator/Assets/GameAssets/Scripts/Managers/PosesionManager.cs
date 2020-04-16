@@ -5,12 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class PosesionManager : TemporalSingleton<PosesionManager>
 {
-
-    public DemonBase m_controlledDemon;    
+    private bool m_usingTimeStop;
+    private bool m_pickingDemon;
+    private DemonBase m_controlledDemon;
     public DemonBase ControlledDemon { get => m_controlledDemon; set => m_controlledDemon = value; }
 
     private void Start()
     {
+        m_usingTimeStop = false;
+        Cursor.visible = false;
         InputManager.Instance.UpdateDemonReference();
         CameraManager.Instance.ChangeCamTarget();
     }
@@ -33,13 +36,13 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
 
                 if (foundDemon != null && foundDemon != ControlledDemon)
                 {
-					if (!foundDemon.IsInDanger && foundDemon.IsDead && !foundDemon.IsPossessionBlocked)
-					{
-						return foundDemon;
-					}
+                    if (!foundDemon.IsInDanger && foundDemon.IsDead && !foundDemon.IsPossessionBlocked)
+                    {
+                        return foundDemon;
+                    }
                 }
             }
-            lookForRadius++;            
+            lookForRadius++;
         }
         return null;
     }
@@ -51,9 +54,45 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
     /// <param name="currentDemon">Currently possessed demon</param>
     public void PossessNearestDemon(float radiusLimit, DemonBase currentDemon)
     {
-        ControlledDemon.SetNotControlledByPlayer();
-        DemonBase demonToPossess = LookForNearestDemon(radiusLimit, currentDemon);
-        
+        if (m_usingTimeStop)
+        {
+            PossessTimeStop();
+        }
+        else
+        {
+            ControlledDemon.SetNotControlledByPlayer();
+            DemonBase demonToPossess = LookForNearestDemon(radiusLimit, currentDemon);
+            SetDemonControlled(demonToPossess);
+        }
+    }
+
+
+    private void Update()
+    {
+        if (m_pickingDemon)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Collider2D col = Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.25f);
+                if (col != null)
+                {
+                    DemonBase demon = col.transform.root.GetComponent<DemonBase>();
+                    if (demon != null)
+                    {
+                        ControlledDemon.SetNotControlledByPlayer();
+                        SetDemonControlled(demon);
+                        Cursor.visible = false;
+                        m_pickingDemon = false;
+                    }
+                }
+
+            }
+        }
+    }
+
+    private static void SetDemonControlled(DemonBase demonToPossess)
+    {
+        Time.timeScale = 1;
         if (demonToPossess != null)
         {
             demonToPossess.enabled = true;
@@ -66,4 +105,12 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
             LevelManager.Instance.RestartLevel();
         }
     }
+
+    public void PossessTimeStop()
+    {
+        Time.timeScale = 0f;
+        m_pickingDemon = true;
+        Cursor.visible = true;
+    }
+
 }
