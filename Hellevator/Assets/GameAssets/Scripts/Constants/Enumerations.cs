@@ -21,12 +21,6 @@ public enum EnemyState
 {
 	Chasing, Patrol, GoingBack, None
 }
-
-public enum SpawnerType
-{
-    Periodic, AlwaysOneSpawned
-}
-
 public enum BalanzaState
 {
 	Equal, RightIsHeavier, LeftIsHeavier
