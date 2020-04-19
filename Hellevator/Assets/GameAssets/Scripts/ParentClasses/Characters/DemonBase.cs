@@ -475,7 +475,7 @@ public abstract class DemonBase : MonoBehaviour
     private void SetRagdollActive(bool active)
     {
         m_isRagdollActive = active;
-        m_mySprite.enabled = !active;
+        
                
         //activate all the limbs colliders if ragdoll is active, set inactive otherwise
         for (int i = 0; i < m_limbsColliders.Length; i++)
@@ -486,8 +486,7 @@ public abstract class DemonBase : MonoBehaviour
         //set all the limbs as dynamic if ragdoll is active, kinematic otherwise
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
-            m_limbsRbds[i].isKinematic = !active;
-            m_childSprites[i].enabled = active;
+            m_limbsRbds[i].isKinematic = !active;            
             
             //reset velocity in case the player will control it
             if (!active)
@@ -509,10 +508,15 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetNotControlledByPlayer()
     {
+        m_mySprite.enabled = false;
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
         this.enabled = false;
+        for (int i = 0; i < m_childSprites.Length; i++)
+        {
+            m_childSprites[i].enabled = true;
+        }
     }
     
 
@@ -544,7 +548,6 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     private void LerpResetRagdollTransforms()
     {
-        IsControlledByPlayer = true;
         Transform torso = m_limbsColliders[0].transform;
         if (!m_hasResetParentPosition)
         {
@@ -576,8 +579,13 @@ public abstract class DemonBase : MonoBehaviour
         {
             ResetRagdollTransforms();
             m_isLerpingToResetBones = false;
-            
+            IsControlledByPlayer = true;
             m_hasResetParentPosition = false;
+            m_mySprite.enabled = true;
+            for (int i = 0; i < m_childSprites.Length; i++)
+            {
+                m_childSprites[i].enabled = false;
+            }
         }
     }
 
@@ -646,11 +654,11 @@ public abstract class DemonBase : MonoBehaviour
     /// <summary>
     /// Visualizing the maximum possession range in editor scene
     /// </summary>
-    private void OnDrawGizmosSelected()
-    {
-        UnityEditor.Handles.color = Color.red;
-        UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
-    }
+    //private void OnDrawGizmosSelected()
+    //{
+    //    UnityEditor.Handles.color = Color.red;
+    //    UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
+    //}
 
 	#region AngleCalculations
 	protected Vector3 GetVectorFromAngle(float angle)
