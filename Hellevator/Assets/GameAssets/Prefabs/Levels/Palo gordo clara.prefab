@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6834325115375612978}
   - component: {fileID: 6834325115375612981}
   - component: {fileID: 6834325115375612980}
-  - component: {fileID: 6834325115375612979}
   m_Layer: 0
   m_Name: Tronco
   m_TagString: Untagged
@@ -92,7 +91,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 6834325115375612977}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3c2095af2e7f8084d8df2b443ede23b8, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -109,27 +108,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &6834325115375612979
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6834325115375612977}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1 &6834325115673502872
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +119,7 @@ GameObject:
   - component: {fileID: 6834325115673502873}
   - component: {fileID: 6834325115673502876}
   - component: {fileID: 6834325115673502875}
-  - component: {fileID: 6834325115673502874}
+  - component: {fileID: 654424216}
   m_Layer: 0
   m_Name: Puntita izquierda
   m_TagString: Untagged
@@ -222,7 +200,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 6834325115673502872}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3c2095af2e7f8084d8df2b443ede23b8, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -239,7 +217,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &6834325115673502874
+--- !u!50 &654424216
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -301,7 +279,7 @@ GameObject:
   - component: {fileID: 6834325116236949716}
   - component: {fileID: 6834325116236949719}
   - component: {fileID: 6834325116236949718}
-  - component: {fileID: 6834325116236949717}
+  - component: {fileID: 1570108539}
   m_Layer: 0
   m_Name: Puntita derecha
   m_TagString: Untagged
@@ -382,7 +360,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 6834325116236949715}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3c2095af2e7f8084d8df2b443ede23b8, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -399,7 +377,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &6834325116236949717
+--- !u!50 &1570108539
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -430,6 +408,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6834325116604885819}
   - component: {fileID: 6834325116604885818}
+  - component: {fileID: 1349128684}
   m_Layer: 0
   m_Name: Palo gordo clara
   m_TagString: Untagged
@@ -470,3 +449,27 @@ MonoBehaviour:
   m_endPosition: {fileID: 6834325115682158566}
   m_speed: 8
   m_waitTimeOnArrival: 0
+  m_enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!50 &1349128684
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6834325116604885817}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 6200000, guid: 3c2095af2e7f8084d8df2b443ede23b8, type: 2}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
