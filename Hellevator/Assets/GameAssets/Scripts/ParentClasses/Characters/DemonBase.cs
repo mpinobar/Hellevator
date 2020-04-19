@@ -415,6 +415,7 @@ public abstract class DemonBase : MonoBehaviour
         m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
+        IsControlledByPlayer = true;
     }
     
     /// <summary>
@@ -579,7 +580,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             ResetRagdollTransforms();
             m_isLerpingToResetBones = false;
-            IsControlledByPlayer = true;
+            
             m_hasResetParentPosition = false;
             m_mySprite.enabled = true;
             for (int i = 0; i < m_childSprites.Length; i++)
