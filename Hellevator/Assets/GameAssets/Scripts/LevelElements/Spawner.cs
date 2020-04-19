@@ -9,7 +9,11 @@ public class Spawner : MonoBehaviour
     private List<DemonBase> m_spawnedDemons;
     [SerializeField] float m_spawnTimer = 6f;
     [SerializeField] int m_maxSpawnedDemons;
+    float maxRange;
+
     private float m_timer;
+
+    public float MaxRange { get => maxRange; set => maxRange = value; }
 
     private void Start()
     {
@@ -26,6 +30,11 @@ public class Spawner : MonoBehaviour
             if (m_timer <= 0)
             {
                 m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity));
+                if(maxRange != 0)
+                {
+                    m_spawnedDemons[m_spawnedDemons.Count - 1].MaximumPossessionRange = maxRange;
+                }
+
                 m_timer = m_spawnTimer;
             }
         }

@@ -125,7 +125,9 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
-    
+    public float MaximumPossessionRange { get => m_maximumPossessionRange; set => m_maximumPossessionRange = value; }
+
+
     #endregion
 
     protected virtual void Awake()

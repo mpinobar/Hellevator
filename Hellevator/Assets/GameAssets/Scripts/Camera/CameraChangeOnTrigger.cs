@@ -6,6 +6,10 @@ using Cinemachine;
 public class CameraChangeOnTrigger : MonoBehaviour
 {
     [SerializeField] CameraManager cameraManager;
+    [SerializeField] Transform pointToLook;
+
+    [SerializeField] float ortographicSize;
+    
     Animator cam1, cam2;
 
     void Awake()
@@ -21,21 +25,23 @@ public class CameraChangeOnTrigger : MonoBehaviour
         {
             print(collision.transform.root.GetComponent<DemonBase>());
 
-            if(cameraManager.Camera1.activeSelf == true)
+            /*if(cameraManager.Camera1.activeSelf == true)
             {
                 cam1.SetTrigger("zoom");
             }
             else if(cameraManager.Camera2.activeSelf == true)
             {
                 cam2.SetTrigger("zoom");
-            }
+            }*/
+            cameraManager.PointToLook = pointToLook;
+            cameraManager.NewOrtographicSize = ortographicSize;
 
-            //cameraManager.IsTriggerFarCamera = true;
+            cameraManager.IsTriggerFarCamera = true;
 
-            //cameraManager.Camera1.SetActive(false);
-            //cameraManager.Camera2.SetActive(false);
+            cameraManager.Camera1.SetActive(false);
+            cameraManager.Camera2.SetActive(false);
 
-            //cameraManager.ChangeCamTarget();
+            cameraManager.ChangeCamTarget();
         }            
     }
 
@@ -44,21 +50,21 @@ public class CameraChangeOnTrigger : MonoBehaviour
         if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
         {
 
-            if (cameraManager.Camera1.activeSelf == true)
+            /*if (cameraManager.Camera1.activeSelf == true)
             {
                 cam1.SetTrigger("zoom");
             }
             else if (cameraManager.Camera2.activeSelf == true)
             {
                 cam2.SetTrigger("zoom");
-            }
+            }*/
 
-            //cameraManager.IsTriggerFarCamera = false;
+            cameraManager.IsTriggerFarCamera = false;
 
-            //cameraManager.Camera3.SetActive(false);
-            //cameraManager.Camera4.SetActive(false);
+            cameraManager.Camera3.SetActive(false);
+            cameraManager.Camera4.SetActive(false);
 
-            //cameraManager.ChangeCamTarget();
+           cameraManager.ChangeCamTarget();
         }
     }
 }
