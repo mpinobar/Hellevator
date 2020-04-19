@@ -8,16 +8,24 @@ public class MineKart : MonoBehaviour
 	[SerializeField] private Transform m_minekartBeginingPos = null;
 	[SerializeField] private Transform m_minekartEndPos = null; 
 	[SerializeField] private Transform m_minekart = null;
+	private Rigidbody2D m_cmpRbMinekart = null;
+		
 
 	[SerializeField] private float m_weightNeeded = 0f;
 	[SerializeField] private float m_speed = 0f;
+	[SerializeField] private float m_stoppingDistance = 0f;
 
 	private float m_currentWeight = 0;
 	private float m_disntanceToEndPos = 0f;
 	private float m_percentage = 0f;
 
-    // Start is called before the first frame update
-    void Start()
+	private void Awake()
+	{
+		m_cmpRbMinekart = m_minekart.GetComponent<Rigidbody2D>();
+	}
+
+	// Start is called before the first frame update
+	void Start()
     {
 		m_minekart.position = m_minekartBeginingPos.position;
 		m_disntanceToEndPos =  m_minekartEndPos.position.x - m_minekartBeginingPos.position.x;
@@ -34,9 +42,35 @@ public class MineKart : MonoBehaviour
 			m_percentage = 1;
 		}
 
-		m_minekart.position = Vector2.MoveTowards(m_minekart.position, new Vector2(m_minekartBeginingPos.position.x + m_percentage * m_disntanceToEndPos, m_minekart.position.y), m_speed * Time.deltaTime);
-		
-    }
+		Vector2 currentDestination = new Vector2(m_minekartBeginingPos.position.x + m_percentage * m_disntanceToEndPos, m_minekart.position.y);
+
+		float speedModifier = 0f;
+
+		if(currentDestination.x < m_minekart.position.x)
+		{
+			speedModifier = -1;
+		}
+		else if(currentDestination.x > m_minekart.position.x)
+		{
+			speedModifier = 1;
+		}
+
+		if (Vector2.Distance(m_minekart.position, currentDestination) <= m_stoppingDistance)
+		{
+			speedModifier = 0f;
+		}
+
+		m_cmpRbMinekart.velocity = new Vector2(m_speed * Time.deltaTime * speedModifier, 0);
+
+		print(m_cmpRbMinekart.velocity);
+
+
+
+
+
+		//m_minekart.position = Vector2.MoveTowards(m_minekart.position, new Vector2(m_minekartBeginingPos.position.x + m_percentage * m_disntanceToEndPos, m_minekart.position.y), m_speed * Time.deltaTime);
+
+	}
 
 	private float CalculateWeightOnPreassurePlates()
 	{
