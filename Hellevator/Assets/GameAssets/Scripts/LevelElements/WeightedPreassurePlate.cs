@@ -36,7 +36,13 @@ public class WeightedPreassurePlate : MonoBehaviour
 	[SerializeField] private ButtonActivatedBase m_buttonActivatedObject;
     List<SpikesWeightData> m_spikesData;
 
-    private void Awake()
+
+	private float m_percentage = 0f;
+	private float m_positionY = 0f;
+	private float m_LOpositionY = 0f;
+
+
+	private void Awake()
 	{
 		m_enemiesOnPreassurePlate = new List<DemonBase>(0);
 		m_currentWeight = 0;
@@ -74,12 +80,16 @@ public class WeightedPreassurePlate : MonoBehaviour
 				{
 					if (!m_preassurePlateActivated)
 					{
-						float percentage = m_currentWeight / m_weightNeeded;
-						float positionY = m_distanceToEndPosition * percentage;
-						m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - positionY, m_startingPosition.z), m_speed * Time.deltaTime);
+						m_percentage = m_currentWeight / m_weightNeeded;
+						if (m_percentage > 1f)
+						{
+							m_percentage = 1f;
+						}
+						m_positionY = m_distanceToEndPosition * m_percentage;
+						m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
-						float LOpositionY = m_linkedObjectDistanceToEndPosition * percentage;
-						m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y + LOpositionY, m_linkedObjectStartingPosition.z), m_linkedObjectSpeed * Time.deltaTime);
+						m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
+						m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y + m_LOpositionY, m_linkedObjectStartingPosition.z), m_linkedObjectSpeed * Time.deltaTime);
 					}
 				}
 				break;
@@ -89,13 +99,17 @@ public class WeightedPreassurePlate : MonoBehaviour
 				{
 					if (!m_preassurePlateActivated)
 					{
-						float percentage = m_currentWeight / m_weightNeeded;
-						float positionY = m_distanceToEndPosition * percentage;
-						m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - positionY, m_startingPosition.z), m_speed * Time.deltaTime);
+						m_percentage = m_currentWeight / m_weightNeeded;
+						if (m_percentage > 1f)
+						{
+							m_percentage = 1f;
+						}
+						m_positionY = m_distanceToEndPosition * m_percentage;
+						m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
-						float LOpositionY = m_linkedObjectDistanceToEndPosition * percentage;
+						m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
 						//print(LOpositionY);
-						m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - LOpositionY, m_linkedObjectStartingPosition.z), m_linkedObjectSpeed * Time.deltaTime);
+						m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z), m_linkedObjectSpeed * Time.deltaTime);
 					}
 				}
 				break;
@@ -110,10 +124,14 @@ public class WeightedPreassurePlate : MonoBehaviour
 						}
 						else
 						{
-							float percentage = m_currentWeight / m_weightNeeded;
-							float positionY = m_distanceToEndPosition * percentage;
+							m_percentage = m_currentWeight / m_weightNeeded;
+							if (m_percentage > 1f)
+							{
+								m_percentage = 1f;
+							}
+							m_positionY = m_distanceToEndPosition * m_percentage;
 
-							m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - positionY, m_startingPosition.z), m_speed * Time.deltaTime);
+							m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 						}
 					}
 					else if(!m_preassurePlateIsAtLocation)
@@ -133,10 +151,14 @@ public class WeightedPreassurePlate : MonoBehaviour
 				break;
 			case TypeOfPreassurePlate.Elevator:
 				{
-					float percentaje = m_currentWeight / m_weightNeeded;
-					float positionY = m_distanceToEndPosition * percentaje;
+					m_percentage = m_currentWeight / m_weightNeeded;
+					if (m_percentage > 1f)
+					{
+						m_percentage = 1f;
+					}
+					m_positionY = m_distanceToEndPosition * m_percentage;
 
-					if(percentaje != 0)
+					if(m_percentage != 0)
 					{
 						if (m_preassurePlateActivated)
 						{
@@ -147,7 +169,7 @@ public class WeightedPreassurePlate : MonoBehaviour
 						else
 						{
 							//Mover el boton
-							m_parent.localPosition = Vector2.MoveTowards(m_parent.localPosition, new Vector2(m_parent.localPosition.x, m_startingPosition.y - positionY), m_speed * Time.deltaTime);
+							m_parent.localPosition = Vector2.MoveTowards(m_parent.localPosition, new Vector2(m_parent.localPosition.x, m_startingPosition.y - m_positionY), m_speed * Time.deltaTime);
 							if((m_startingPosition.y  - m_parent.localPosition.y) >= m_distanceToEndPosition)
 							{
 								m_preassurePlateActivated = true;
