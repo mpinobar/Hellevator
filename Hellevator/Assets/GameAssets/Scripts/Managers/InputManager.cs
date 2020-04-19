@@ -33,7 +33,7 @@ public class InputManager : PersistentSingleton<InputManager>
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (m_currentDemon != null && m_currentDemon.IsControlledByPlayer)
+        if (m_currentDemon != null)
         {            
             m_currentDemon.Move(m_moveInputValue);
             
