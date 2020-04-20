@@ -34,6 +34,7 @@ public class MinekartActivationPreassurePlate : MonoBehaviour
 		m_currentWeight = 0;
 		m_spikesData = new List<SpikesWeightData>();
 		m_startingPosition = m_parent.position;
+		m_distanceToEndPosition = m_parent.transform.position.y - m_pressurePlateEndPosition.position.y;
 	}
 
     // Update is called once per frame
@@ -44,12 +45,11 @@ public class MinekartActivationPreassurePlate : MonoBehaviour
 		if (m_currentWeight >= m_weightNeeded)
 		{
 			m_currentWeight = m_weightNeeded;
-			m_isActive = true;
 		}
 
 		if (!m_isActive)
 		{
-		m_percentage = m_currentWeight / m_weightNeeded;
+			m_percentage = m_currentWeight / m_weightNeeded;
 			if(m_percentage > 1f)
 			{
 				m_percentage = 1f;
