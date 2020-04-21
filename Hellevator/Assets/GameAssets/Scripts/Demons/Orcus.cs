@@ -121,6 +121,11 @@ public class Orcus : DemonBase
 		}
 	}
 
+	public override void JumpReleaseButton()
+	{
+		print("Pero si no se hacer eso jajajaja");
+	}
+
 	public override void ToggleWalkingParticles(bool active)
 	{
 		if (active)

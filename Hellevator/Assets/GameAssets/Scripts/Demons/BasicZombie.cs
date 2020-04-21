@@ -5,9 +5,11 @@ using UnityEditor;
 
 public class BasicZombie : DemonBase
 {
-    #region Variables
+	#region Variables
 
-    [Header("Movement")]
+	
+
+	[Header("Movement")]
     [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
@@ -19,6 +21,7 @@ public class BasicZombie : DemonBase
     private bool m_hasDoubleJumped;
 	private bool m_coyoteTimeActive = false;
 	private float m_currentCoyoteTimer = 0f;
+	private bool m_isHoldingJump = false;
 
     [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
@@ -28,14 +31,17 @@ public class BasicZombie : DemonBase
     [Range(1,10)]
     [Tooltip("Ascending part of the jump")]
     [SerializeField] private float m_firstGravity = 2.25f;
-    [Range(1, 10)]
+	[Range(1, 10)]
+	[Tooltip("Ascending part of the jump when holding the jump button")]
+	[SerializeField] private float m_firstGravityHoldingJump = 2.25f;
+	[Range(1, 10)]
     [Tooltip("First top part of the jump")]
     [SerializeField] private float m_secondGravity = 2.5f;
 	[Range(1, 10)]
     [Tooltip("First top part of the jump")]
     [SerializeField] private float m_thirdGravity = 2.5f;
     [Range(1, 10)]
-    [Tooltip("Second top part of the jump")]
+    [Tooltip("Second top part of the double jump")]
     [SerializeField] private float m_thirdGravityDoubleJump = 2f;
     [Range(1, 10)]
     [Tooltip("Descending part of the jump")]
@@ -81,7 +87,15 @@ public class BasicZombie : DemonBase
             //ascending part of the jump
             if (MyRgb.velocity.y > 1)
             {
-                MyRgb.gravityScale = m_firstGravity;
+				if (m_isHoldingJump)
+				{
+					MyRgb.gravityScale = m_firstGravityHoldingJump;
+				}
+				else
+				{
+					MyRgb.gravityScale = m_firstGravity;
+				}
+                
             }
             else if (MyRgb.velocity.y > 0)
             {
@@ -131,17 +145,23 @@ public class BasicZombie : DemonBase
                 MyRgb.AddForce(Vector2.up * JumpForce);
                 m_hasJumped = true;
 				m_coyoteTimeActive = false;
+				m_isHoldingJump = true;
             }
             else if(m_canDoubleJump && !m_hasDoubleJumped)
             {
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
                 MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
                 m_hasDoubleJumped = true;
-            }
+			}
         }
     }
-    
-    public override void ToggleWalkingParticles(bool active)
+
+	public override void JumpReleaseButton()
+	{
+		m_isHoldingJump = false;
+	}
+
+	public override void ToggleWalkingParticles(bool active)
     {
         if (active)
         {

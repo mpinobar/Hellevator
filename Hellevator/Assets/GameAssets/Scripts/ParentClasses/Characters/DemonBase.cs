@@ -451,6 +451,11 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public abstract void Jump();
 
+	/// <summary>
+	/// Revert gravity to normal status during a Jump
+	/// </summary>
+	public abstract void JumpReleaseButton();
+
     /// <summary>
     /// Activates or deactivates the walking particles
     /// </summary>
