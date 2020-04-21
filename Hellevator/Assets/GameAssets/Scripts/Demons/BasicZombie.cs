@@ -14,8 +14,11 @@ public class BasicZombie : DemonBase
     [SerializeField] private float m_jumpForceSecond = 10;
 	[SerializeField] private bool m_canJump;
     [SerializeField] private bool m_canDoubleJump;
+	[SerializeField] private float m_coyoteTimeDuration = 0f;//Mirar si hacer cambio a frames
     private bool m_hasJumped;
     private bool m_hasDoubleJumped;
+	private bool m_coyoteTimeActive = false;
+	private float m_currentCoyoteTimer = 0f;
 
     [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
@@ -60,7 +63,21 @@ public class BasicZombie : DemonBase
         //in the air while jumping
         if (!IsGrounded())
         {
-			m_hasJumped = true;
+			if (!m_hasJumped && !m_coyoteTimeActive)
+			{
+				m_coyoteTimeActive = true;
+				m_currentCoyoteTimer = m_coyoteTimeDuration;
+			}
+			else if (m_coyoteTimeActive)
+			{
+				m_currentCoyoteTimer = m_currentCoyoteTimer - Time.deltaTime;
+				if(m_currentCoyoteTimer <= 0)
+				{
+					m_hasJumped = true;
+					m_coyoteTimeActive = false;
+				}
+			}
+			
             //ascending part of the jump
             if (MyRgb.velocity.y > 1)
             {
@@ -92,6 +109,7 @@ public class BasicZombie : DemonBase
         else
         {
             MyRgb.gravityScale = 2;
+			m_coyoteTimeActive = false;
         }
         m_myAnimator.SetBool("Walking", Mathf.Abs(MyRgb.velocity.x) > 0.2f);
     }
@@ -112,6 +130,7 @@ public class BasicZombie : DemonBase
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
                 MyRgb.AddForce(Vector2.up * JumpForce);
                 m_hasJumped = true;
+				m_coyoteTimeActive = false;
             }
             else if(m_canDoubleJump && !m_hasDoubleJumped)
             {
