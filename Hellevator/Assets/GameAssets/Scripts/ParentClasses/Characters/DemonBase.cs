@@ -624,8 +624,8 @@ public abstract class DemonBase : MonoBehaviour
     /// <returns>Boolean determining if it is touching the ground</returns>
     public bool IsGrounded()
     {
-        Debug.DrawRay(transform.position, Vector3.down * 2, Color.red);
-        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.1f, Vector2.down, 3, m_JumpMask);
+        Debug.DrawRay(transform.position, Vector3.down * 1.5f, Color.red);
+        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.1f, Vector2.down, 1.5f, m_JumpMask);
         bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
         {

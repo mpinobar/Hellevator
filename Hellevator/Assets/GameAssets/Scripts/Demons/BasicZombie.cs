@@ -11,7 +11,8 @@ public class BasicZombie : DemonBase
     [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
-    [SerializeField] private bool m_canJump;
+    [SerializeField] private float m_jumpForceSecond = 10;
+	[SerializeField] private bool m_canJump;
     [SerializeField] private bool m_canDoubleJump;
     private bool m_hasJumped;
     private bool m_hasDoubleJumped;
@@ -27,12 +28,16 @@ public class BasicZombie : DemonBase
     [Range(1, 10)]
     [Tooltip("First top part of the jump")]
     [SerializeField] private float m_secondGravity = 2.5f;
+	[Range(1, 10)]
+    [Tooltip("First top part of the jump")]
+    [SerializeField] private float m_thirdGravity = 2.5f;
     [Range(1, 10)]
     [Tooltip("Second top part of the jump")]
-    [SerializeField] private float m_thirdGravity = 2f;
+    [SerializeField] private float m_thirdGravityDoubleJump = 2f;
     [Range(1, 10)]
     [Tooltip("Descending part of the jump")]
     [SerializeField] private float m_fourthGravity = 5f;
+	
     #endregion
 
     #region Properties
@@ -55,7 +60,7 @@ public class BasicZombie : DemonBase
         //in the air while jumping
         if (!IsGrounded())
         {
-            
+			m_hasJumped = true;
             //ascending part of the jump
             if (MyRgb.velocity.y > 1)
             {
@@ -67,7 +72,15 @@ public class BasicZombie : DemonBase
             }
             else if (MyRgb.velocity.y > -1)
             {
-                MyRgb.gravityScale = m_thirdGravity;
+				if (m_hasDoubleJumped)
+				{
+					MyRgb.gravityScale = m_thirdGravityDoubleJump;
+				}
+				else
+				{
+					MyRgb.gravityScale = m_thirdGravity; 
+				}
+                
             }
             else
             {
@@ -103,7 +116,7 @@ public class BasicZombie : DemonBase
             else if(m_canDoubleJump && !m_hasDoubleJumped)
             {
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
-                MyRgb.AddForce(Vector2.up * JumpForce);
+                MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
                 m_hasDoubleJumped = true;
             }
         }
