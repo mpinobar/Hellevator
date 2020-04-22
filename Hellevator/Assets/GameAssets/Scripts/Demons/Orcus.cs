@@ -84,7 +84,6 @@ public class Orcus : DemonBase
 	protected override void Update()
 	{
 		base.Update();
-        print(m_hasJumped);
 		if (m_isControlledByIA)
 		{
 			IAUpdate();
