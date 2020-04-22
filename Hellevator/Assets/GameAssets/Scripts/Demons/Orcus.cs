@@ -11,8 +11,17 @@ public class Orcus : DemonBase
 	[SerializeField] private float m_acceleration = 7;
 	[SerializeField] private float m_jumpForce = 10;
     [SerializeField] private float m_enrageSpeedMultiplier = 3f;
+	[SerializeField] private float m_jumpForceSecond = 10;
+	[SerializeField] private bool m_canJump;
+	[SerializeField] private bool m_canDoubleJump;
+	[SerializeField] private float m_coyoteTimeDuration = 0f;
+	private bool m_hasJumped;
+	private bool m_hasDoubleJumped;
+	private bool m_coyoteTimeActive = false;
+	private float m_currentCoyoteTimer = 0f;
+	private bool m_isHoldingJump = false;
 
-    private bool m_usedSkill;
+	private bool m_usedSkill;
 
 	[Header("References")]
 	[SerializeField] ParticleSystem walkingParticles;
@@ -23,11 +32,17 @@ public class Orcus : DemonBase
 	[Tooltip("Ascending part of the jump")]
 	[SerializeField] private float m_firstGravity = 2.25f;
 	[Range(1, 10)]
+	[Tooltip("Ascending part of the jump when holding the jump button")]
+	[SerializeField] private float m_firstGravityHoldingJump = 2.25f;
+	[Range(1, 10)]
 	[Tooltip("First top part of the jump")]
 	[SerializeField] private float m_secondGravity = 2.5f;
 	[Range(1, 10)]
 	[Tooltip("Second top part of the jump")]
 	[SerializeField] private float m_thirdGravity = 2f;
+	[Range(1, 10)]
+	[Tooltip("Second top part of the double jump")]
+	[SerializeField] private float m_thirdGravityDoubleJump = 2f;
 	[Range(1, 10)]
 	[Tooltip("Descending part of the jump")]
 	[SerializeField] private float m_fourthGravity = 5f;
@@ -76,10 +91,32 @@ public class Orcus : DemonBase
 			//in the air while jumping
 			if (!IsGrounded())
 			{
+				if (!m_hasJumped && !m_coyoteTimeActive)
+				{
+					m_coyoteTimeActive = true;
+					m_currentCoyoteTimer = m_coyoteTimeDuration;
+				}
+				else if (m_coyoteTimeActive)
+				{
+					m_currentCoyoteTimer = m_currentCoyoteTimer - Time.deltaTime;
+					if (m_currentCoyoteTimer <= 0)
+					{
+						m_hasJumped = true;
+						m_coyoteTimeActive = false;
+					}
+				}
+
 				//ascending part of the jump
 				if (MyRgb.velocity.y > 1)
 				{
-					MyRgb.gravityScale = m_firstGravity;
+					if (m_isHoldingJump)
+					{
+						MyRgb.gravityScale = m_firstGravityHoldingJump;
+					}
+					else
+					{
+						MyRgb.gravityScale = m_firstGravity;
+					}
 				}
 				else if (MyRgb.velocity.y > 0)
 				{
@@ -87,7 +124,14 @@ public class Orcus : DemonBase
 				}
 				else if (MyRgb.velocity.y > -1)
 				{
-					MyRgb.gravityScale = m_thirdGravity;
+					if (m_hasDoubleJumped)
+					{
+						MyRgb.gravityScale = m_thirdGravityDoubleJump;
+					}
+					else
+					{
+						MyRgb.gravityScale = m_thirdGravity;
+					}
 				}
 				else
 				{
@@ -99,9 +143,8 @@ public class Orcus : DemonBase
 			else
 			{
 				MyRgb.gravityScale = 2;
+				m_coyoteTimeActive = false;
 			}
-
-			
 		}
 	}
 
@@ -114,16 +157,28 @@ public class Orcus : DemonBase
 
 	public override void Jump()
 	{
-		if (IsGrounded())
+		if (m_canJump)
 		{
-			MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
-			MyRgb.AddForce(Vector2.up * JumpForce);
+			if (!m_hasJumped)
+			{
+				MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
+				MyRgb.AddForce(Vector2.up * JumpForce);
+				m_hasJumped = true;
+				m_coyoteTimeActive = false;
+				m_isHoldingJump = true;
+			}
+			else if (m_canDoubleJump && !m_hasDoubleJumped)
+			{
+				MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
+				MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
+				m_hasDoubleJumped = true;
+			}
 		}
 	}
 
 	public override void JumpReleaseButton()
 	{
-		print("Pero si no se hacer eso jajajaja");
+		m_isHoldingJump = false;
 	}
 
 	public override void ToggleWalkingParticles(bool active)
