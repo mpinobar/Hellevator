@@ -15,7 +15,9 @@ public class Orcus : DemonBase
 	[SerializeField] private bool m_canJump;
 	[SerializeField] private bool m_canDoubleJump;
 	[SerializeField] private float m_coyoteTimeDuration = 0f;
-	private bool m_hasJumped;
+    [SerializeField] private float m_airAccelerationMultiplier = 2;
+
+    private bool m_hasJumped;
 	private bool m_hasDoubleJumped;
 	private bool m_coyoteTimeActive = false;
 	private float m_currentCoyoteTimer = 0f;
@@ -27,7 +29,7 @@ public class Orcus : DemonBase
 	[SerializeField] ParticleSystem walkingParticles;
 
 
-	[Header("Gravity")]
+	[Header("Gravity")]    
 	[Range(1, 10)]
 	[Tooltip("Ascending part of the jump")]
 	[SerializeField] private float m_firstGravity = 2.25f;
@@ -153,7 +155,12 @@ public class Orcus : DemonBase
 
 	public override void Move(float xInput)
 	{
-		MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, Acceleration * Time.deltaTime), MyRgb.velocity.y);
+        float accel = Acceleration;
+        if (m_hasJumped)
+        {
+            accel *= m_airAccelerationMultiplier;
+        }
+		MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, accel * Time.deltaTime), MyRgb.velocity.y);
 	}
 
 	public override void Jump()
@@ -248,10 +255,11 @@ public class Orcus : DemonBase
 	private Vector3 m_IAVelocity = Vector3.zero;
 	
 	private Vector3 m_IAStartingPos = Vector3.zero;
+    
 
-	#endregion Variables
+    #endregion Variables
 
-	void IAAwake()
+    void IAAwake()
 	{
 		m_IACmpRb = this.GetComponent<Rigidbody2D>();
 		m_IACurrentPatrolPoint = 0;
