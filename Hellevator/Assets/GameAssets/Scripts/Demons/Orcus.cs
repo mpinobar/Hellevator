@@ -16,6 +16,7 @@ public class Orcus : DemonBase
 	[SerializeField] private bool m_canDoubleJump;
 	[SerializeField] private float m_coyoteTimeDuration = 0f;
     [SerializeField] private float m_airAccelerationMultiplier = 2;
+    [SerializeField] private float m_groundCorrectionMultiplier = 3;
 
     private bool m_hasJumped;
 	private bool m_hasDoubleJumped;
@@ -158,6 +159,13 @@ public class Orcus : DemonBase
         if (m_hasJumped)
         {
             accel *= m_airAccelerationMultiplier;
+        }
+        if (IsGrounded())
+        {
+            if((MyRgb.velocity.x)*xInput < 0)
+            {
+                accel *= m_groundCorrectionMultiplier;
+            }
         }
 		MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, accel * Time.deltaTime), MyRgb.velocity.y);
 	}
