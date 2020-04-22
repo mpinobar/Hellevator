@@ -24,6 +24,10 @@ public class Orcus : DemonBase
 	private float m_currentCoyoteTimer = 0f;
 	private bool m_isHoldingJump = false;
 
+	private bool m_jumpHasBeenPressOnAir = false;
+	[SerializeField] private float m_jumpHasBeenPressOnAirTimer = 0f;
+	private float m_currentTimerJumpOnAir = 0f;
+
 	private bool m_usedSkill;
 
 	[Header("References")]
@@ -109,6 +113,15 @@ public class Orcus : DemonBase
 					}
 				}
 
+				if (m_jumpHasBeenPressOnAir)
+				{
+					m_currentTimerJumpOnAir = m_currentTimerJumpOnAir - Time.deltaTime;
+					if (m_currentTimerJumpOnAir <= 0)
+					{
+						m_jumpHasBeenPressOnAir = false;
+					}
+				}
+
 				//ascending part of the jump
 				if (MyRgb.velocity.y > 1)
 				{
@@ -191,6 +204,21 @@ public class Orcus : DemonBase
 				MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
 				m_hasDoubleJumped = true;
 			}
+			else if (m_hasJumped)
+			{
+				if (m_canDoubleJump && m_hasDoubleJumped)
+				{
+					m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
+					m_isHoldingJump = true;
+					m_jumpHasBeenPressOnAir = true;
+				}
+				else
+				{
+					m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
+					m_isHoldingJump = true;
+					m_jumpHasBeenPressOnAir = true;
+				}
+			}
 		}
 	}
 
@@ -222,7 +250,22 @@ public class Orcus : DemonBase
                 if (m_canDoubleJump)
                 {
                     m_hasDoubleJumped = false;
-                }
+					if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
+					{
+						Jump();
+						print("A");
+						m_jumpHasBeenPressOnAir = false;
+					}
+				}
+				else
+				{
+					if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
+					{
+						Jump();
+						print("A");
+						m_jumpHasBeenPressOnAir = false;
+					}
+				}
             }
         }
     }

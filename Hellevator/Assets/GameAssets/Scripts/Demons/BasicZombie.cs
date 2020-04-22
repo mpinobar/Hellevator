@@ -89,8 +89,6 @@ public class BasicZombie : DemonBase
 			if (m_jumpHasBeenPressOnAir)
 			{
 				m_currentTimerJumpOnAir = m_currentTimerJumpOnAir - Time.deltaTime;
-				
-				
 				if(m_currentTimerJumpOnAir <= 0)
 				{
 					m_jumpHasBeenPressOnAir = false;
@@ -173,14 +171,11 @@ public class BasicZombie : DemonBase
 			}
 			else if(m_hasJumped)
 			{
-				if (m_canDoubleJump)
+				if (m_canDoubleJump && m_hasDoubleJumped)
 				{
-					if (m_hasDoubleJumped)
-					{
-						m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
-						m_isHoldingJump = true;
-						m_jumpHasBeenPressOnAir = true;
-					}
+					m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
+					m_isHoldingJump = true;
+					m_jumpHasBeenPressOnAir = true;
 				}
 				else
 				{
@@ -219,8 +214,7 @@ public class BasicZombie : DemonBase
                 if (m_canDoubleJump)
                 {
                     m_hasDoubleJumped = false;
-					print("m_jumpHasBeenPressOnAir: " + m_jumpHasBeenPressOnAir);
-					print("m_isHoldingJump: " + m_isHoldingJump);
+					
 					if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
 					{
 						Jump();
@@ -228,7 +222,13 @@ public class BasicZombie : DemonBase
 						m_jumpHasBeenPressOnAir = false;
 					}																														
 				}
-            }
+				if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
+				{
+					Jump();
+					print("A");
+					m_jumpHasBeenPressOnAir = false;
+				}
+			}
         }
     }
 
