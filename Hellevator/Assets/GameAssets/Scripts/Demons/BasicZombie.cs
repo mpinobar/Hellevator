@@ -5,9 +5,7 @@ using UnityEditor;
 
 public class BasicZombie : DemonBase
 {
-	#region Variables
-
-	
+	#region Variables	
 
 	[Header("Movement")]
     [SerializeField] private float m_maxSpeed;
@@ -22,6 +20,10 @@ public class BasicZombie : DemonBase
 	private bool m_coyoteTimeActive = false;
 	private float m_currentCoyoteTimer = 0f;
 	private bool m_isHoldingJump = false;
+
+	private bool m_jumpHasBeenPressOnAir = false;
+	[SerializeField] private float m_jumpHasBeenPressOnAirTimer = 0f;
+	private float m_currentTimerJumpOnAir = 0f;
 
     [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
@@ -83,6 +85,18 @@ public class BasicZombie : DemonBase
 					m_coyoteTimeActive = false;
 				}
 			}
+
+			if (m_jumpHasBeenPressOnAir)
+			{
+				m_currentTimerJumpOnAir = m_currentTimerJumpOnAir - Time.deltaTime;
+				
+				
+				if(m_currentTimerJumpOnAir <= 0)
+				{
+					m_jumpHasBeenPressOnAir = false;
+				}
+			}
+
 			
             //ascending part of the jump
             if (MyRgb.velocity.y > 1)
@@ -110,8 +124,7 @@ public class BasicZombie : DemonBase
 				else
 				{
 					MyRgb.gravityScale = m_thirdGravity; 
-				}
-                
+				}                
             }
             else
             {
@@ -124,6 +137,7 @@ public class BasicZombie : DemonBase
         {
             MyRgb.gravityScale = 2;
 			m_coyoteTimeActive = false;
+			
         }
         m_myAnimator.SetBool("Walking", Mathf.Abs(MyRgb.velocity.x) > 0.2f);
     }
@@ -139,6 +153,10 @@ public class BasicZombie : DemonBase
     {
         if (m_canJump)
         {
+			if (m_jumpHasBeenPressOnAir)
+			{
+				m_jumpHasBeenPressOnAir = false;
+			}
             if (!m_hasJumped)
             {
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
@@ -152,6 +170,24 @@ public class BasicZombie : DemonBase
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
                 MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
                 m_hasDoubleJumped = true;
+			}
+			else if(m_hasJumped)
+			{
+				if (m_canDoubleJump)
+				{
+					if (m_hasDoubleJumped)
+					{
+						m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
+						m_isHoldingJump = true;
+						m_jumpHasBeenPressOnAir = true;
+					}
+				}
+				else
+				{
+					m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
+					m_isHoldingJump = true;
+					m_jumpHasBeenPressOnAir = true;
+				}
 			}
         }
     }
@@ -183,7 +219,15 @@ public class BasicZombie : DemonBase
                 if (m_canDoubleJump)
                 {
                     m_hasDoubleJumped = false;
-                }
+					print("m_jumpHasBeenPressOnAir: " + m_jumpHasBeenPressOnAir);
+					print("m_isHoldingJump: " + m_isHoldingJump);
+					if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
+					{
+						Jump();
+						print("A");
+						m_jumpHasBeenPressOnAir = false;
+					}																														
+				}
             }
         }
     }
