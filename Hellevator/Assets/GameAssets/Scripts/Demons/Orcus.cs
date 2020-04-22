@@ -82,6 +82,7 @@ public class Orcus : DemonBase
 	protected override void Update()
 	{
 		base.Update();
+        print(m_hasJumped);
 		if (m_isControlledByIA)
 		{
 			IAUpdate();
@@ -157,11 +158,13 @@ public class Orcus : DemonBase
 
 	public override void Jump()
 	{
+        print("a");
 		if (m_canJump)
 		{
 			if (!m_hasJumped)
 			{
-				MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
+                print("b");
+                MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
 				MyRgb.AddForce(Vector2.up * JumpForce);
 				m_hasJumped = true;
 				m_coyoteTimeActive = false;
@@ -169,7 +172,8 @@ public class Orcus : DemonBase
 			}
 			else if (m_canDoubleJump && !m_hasDoubleJumped)
 			{
-				MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
+                print("c");
+                MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
 				MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
 				m_hasDoubleJumped = true;
 			}
@@ -194,14 +198,29 @@ public class Orcus : DemonBase
 
 	}
 
-	#endregion PlayerControlled
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (IsGrounded())
+        {
+            if (m_canJump)
+            {
+                m_hasJumped = false;
+                if (m_canDoubleJump)
+                {
+                    m_hasDoubleJumped = false;
+                }
+            }
+        }
+    }
 
-	#region IA
+    #endregion PlayerControlled
+
+    #region IA
 
 
-	#region Variables
+    #region Variables
 
-	[Space]
+    [Space]
 
 	[SerializeField] private float m_IAMaxSpeed = 0f;
 	private float m_IAcurrentSpeed = 0f;
