@@ -19,6 +19,8 @@ public abstract class DemonBase : MonoBehaviour
     private bool    m_hasResetParentPosition;
     private bool    m_isPossessionBlocked;
     protected bool  m_isDead;
+    
+    [SerializeField] Transform m_Torso;
 
     //Weight variables
     [Header("Physicality")]
@@ -53,7 +55,8 @@ public abstract class DemonBase : MonoBehaviour
 
     //Demon references
     private Rigidbody2D     m_myRgb;
-    private Collider2D      m_myCollider;
+    private Collider2D m_GOCollider;
+    [SerializeField] private Collider2D m_myCollider;
     protected Animator      m_myAnimator;
     private SpriteRenderer  m_mySprite;
 
@@ -96,15 +99,15 @@ public abstract class DemonBase : MonoBehaviour
 
     protected virtual void Awake()
     {
-        m_limbsColliders            = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
-        m_limbsRbds                 = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();     
+        m_GOCollider = GetComponent<Collider2D>();
+        m_limbsColliders            = m_Torso.GetComponentsInChildren<Collider2D>();
+        m_limbsRbds                 = m_Torso.GetComponentsInChildren<Rigidbody2D>();     
         m_myRgb                     = GetComponent<Rigidbody2D>();
-        m_myCollider                = transform.GetChild(1).GetComponent<Collider2D>();
         m_childInitialTransforms    = SaveRagdollInitialTransform();
         m_childTransforms           = ReturnComponentsInChildren<Transform>();
         m_myAnimator                = GetComponent<Animator>();
-        m_childSprites              = ReturnComponentsInChildren<SpriteRenderer>();
-        m_mySprite                  = GetComponent<SpriteRenderer>();
+        //m_childSprites              = ReturnComponentsInChildren<SpriteRenderer>();
+        //m_mySprite                  = GetComponent<SpriteRenderer>();
 
         if (m_possessedOnStart)
         {
@@ -233,7 +236,7 @@ public abstract class DemonBase : MonoBehaviour
     private void SetRagdollActive(bool active)
     {
         m_isRagdollActive = active;
-        m_mySprite.enabled = !active;
+        //m_mySprite.enabled = !active;
                
         //activate all the limbs colliders if ragdoll is active, set inactive otherwise
         for (int i = 0; i < m_limbsColliders.Length; i++)
@@ -245,7 +248,7 @@ public abstract class DemonBase : MonoBehaviour
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
             m_limbsRbds[i].isKinematic = !active;
-            m_childSprites[i].enabled = active;
+            //m_childSprites[i].enabled = active;
             
             //reset velocity in case the player will control it
             if (!active)
@@ -256,8 +259,18 @@ public abstract class DemonBase : MonoBehaviour
         }
 
         //toggle the collider and the rigidbody of the parent gameobject
-        m_myCollider.gameObject.SetActive(!active);
+        m_myCollider.enabled = active;
+        m_GOCollider.enabled = !active;
         m_myRgb.isKinematic = active;
+        if (!active)
+        {
+            m_myRgb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+        else
+        {
+            m_myRgb.constraints = RigidbodyConstraints2D.None;
+        }
+        
 
 		//m_isControlledByIA = false;	
 	}
@@ -388,8 +401,8 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     private void OnDrawGizmosSelected()
     {
-        UnityEditor.Handles.color = Color.red;
-        UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
+        //UnityEditor.Handles.color = Color.red;
+        //UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
     }
 
 }
