@@ -662,11 +662,11 @@ public abstract class DemonBase : MonoBehaviour
     /// <summary>
     /// Visualizing the maximum possession range in editor scene
     /// </summary>
-    //private void OnDrawGizmosSelected()
-    //{
-    //    UnityEditor.Handles.color = Color.red;
-    //    UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
-    //}
+    private void OnDrawGizmosSelected()
+    {
+        UnityEditor.Handles.color = Color.red;
+        UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
+    }
 
 	#region AngleCalculations
 	protected Vector3 GetVectorFromAngle(float angle)
