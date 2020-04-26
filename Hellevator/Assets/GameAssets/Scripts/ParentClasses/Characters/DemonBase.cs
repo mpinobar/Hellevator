@@ -61,7 +61,7 @@ public abstract class DemonBase : MonoBehaviour
     private Rigidbody2D     m_myRgb;
     private Collider2D      m_myCollider;
     protected Animator      m_myAnimator;
-    private SpriteRenderer  m_mySprite;
+    [SerializeField] private SpriteRenderer  m_mySprite;
     [SerializeField] SpriteRenderer m_PossessionCircle;
 
 
@@ -141,7 +141,7 @@ public abstract class DemonBase : MonoBehaviour
         m_childTransforms           = ReturnComponentsInChildren<Transform>();
         m_myAnimator                = GetComponent<Animator>();
         m_childSprites              = ReturnComponentsInChildren<SpriteRenderer>();
-        m_mySprite                  = GetComponent<SpriteRenderer>();
+        
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
