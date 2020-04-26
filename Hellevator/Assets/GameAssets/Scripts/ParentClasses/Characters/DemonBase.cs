@@ -94,7 +94,9 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
-    
+    public Transform Torso { get => m_Torso; set => m_Torso = value; }
+
+
     #endregion
 
     protected virtual void Awake()

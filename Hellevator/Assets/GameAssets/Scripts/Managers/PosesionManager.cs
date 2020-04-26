@@ -5,9 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class PosesionManager : TemporalSingleton<PosesionManager>
 {
-
     public DemonBase m_controlledDemon;    
     public DemonBase ControlledDemon { get => m_controlledDemon; set => m_controlledDemon = value; }
+    [SerializeField] GameObject m_PossessionLight;
+    private PossessingLight m_pLight;
 
     private void Start()
     {
@@ -53,17 +54,32 @@ public class PosesionManager : TemporalSingleton<PosesionManager>
     {
         ControlledDemon.SetNotControlledByPlayer();
         DemonBase demonToPossess = LookForNearestDemon(radiusLimit, currentDemon);
-        
+        ControlledDemon = null;
+        InputManager.Instance.UpdateDemonReference();
+
         if (demonToPossess != null)
         {
-            demonToPossess.enabled = true;
-            demonToPossess.SetControlledByPlayer();
-            CameraManager.Instance.ChangeCamTarget();
-            InputManager.Instance.UpdateDemonReference();
+            if(m_pLight == null)
+            {
+                m_pLight = Instantiate(m_PossessionLight, currentDemon.transform.position, Quaternion.identity).GetComponent<PossessingLight>();
+            }
+
+            m_pLight.gameObject.SetActive(true);
+            m_pLight.transform.position = currentDemon.transform.position;
+            m_pLight.Begin(demonToPossess);
         }
         else
         {
             LevelManager.Instance.RestartLevel();
         }
+    }
+
+    public void PossessNewDemon(DemonBase demonToPossess)
+    {
+        demonToPossess.enabled = true;
+        demonToPossess.SetControlledByPlayer();
+        CameraManager.Instance.ChangeCamTarget();
+        InputManager.Instance.UpdateDemonReference();
+        m_pLight.gameObject.SetActive(false);
     }
 }
