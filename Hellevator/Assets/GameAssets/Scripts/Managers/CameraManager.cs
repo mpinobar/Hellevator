@@ -15,6 +15,11 @@ public class CameraManager : TemporalSingleton<CameraManager>
     [SerializeField] GameObject camera3;
     [SerializeField] GameObject camera4;
 
+
+
+    Transform pointToLook;
+    float newOrtographicSize;
+
     bool isCam1;
     bool isCam3;
 
@@ -26,6 +31,8 @@ public class CameraManager : TemporalSingleton<CameraManager>
     public GameObject Camera2 { get => camera2; set => camera2 = value; }
     public GameObject Camera3 { get => camera3; set => camera3 = value; }
     public GameObject Camera4 { get => camera4; set => camera4 = value; }
+    public Transform PointToLook { get => pointToLook; set => pointToLook = value; }
+    public float NewOrtographicSize { get => newOrtographicSize; set => newOrtographicSize = value; }
 
     private void Start()
     {
@@ -48,8 +55,13 @@ public class CameraManager : TemporalSingleton<CameraManager>
         {
             if (isCam3)
             {
-                vcam4.Follow = PosesionManager.Instance.ControlledDemon.transform;
-                vcam4.LookAt = PosesionManager.Instance.ControlledDemon.transform;
+                /*vcam4.Follow = PosesionManager.Instance.ControlledDemon.transform;
+                vcam4.LookAt = PosesionManager.Instance.ControlledDemon.transform;*/
+
+                vcam4.Follow = pointToLook;
+                vcam4.LookAt = pointToLook;
+
+                vcam4.m_Lens.OrthographicSize = NewOrtographicSize;
 
                 Camera3.SetActive(false);
                 Camera4.SetActive(true);
@@ -59,13 +71,18 @@ public class CameraManager : TemporalSingleton<CameraManager>
 
             else
             {
-                vcam3.Follow = PosesionManager.Instance.ControlledDemon.transform;
-                vcam3.LookAt = PosesionManager.Instance.ControlledDemon.transform;
+                /*vcam3.Follow = PosesionManager.Instance.ControlledDemon.transform;
+                vcam3.LookAt = PosesionManager.Instance.ControlledDemon.transform;*/
+
+                vcam3.Follow = pointToLook;
+                vcam3.LookAt = pointToLook;
+
+                vcam3.m_Lens.OrthographicSize = NewOrtographicSize;
 
                 Camera3.SetActive(true);
                 Camera4.SetActive(false);
 
-                IsCam1 = true;
+                isCam3 = true;
             }
         }
 

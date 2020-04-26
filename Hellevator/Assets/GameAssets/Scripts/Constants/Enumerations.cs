@@ -15,9 +15,14 @@ public enum  GameType
 
 public enum TypeOfPreassurePlate
 {
-	PaltformRaiser, PlatformLowerer, ButtonLike, None
+	PaltformRaiser, PlatformLowerer, ButtonLike, Elevator, None
 }
 public enum EnemyState
 {
 	Chasing, Patrol, GoingBack, None
 }
+public enum BalanzaState
+{
+	Equal, RightIsHeavier, LeftIsHeavier
+}
+

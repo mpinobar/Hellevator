@@ -22,8 +22,10 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.InputMove.performed += ctx => m_moveInputValue = ctx.ReadValue<float>(); 
 		m_controls.PlayerControls.InputMove.canceled += ctx => m_moveInputValue = ctx.ReadValue<float>(); 
         m_controls.PlayerControls.InputJump.performed += ctx => Jump();
+        m_controls.PlayerControls.InputJump.canceled+= ctx => JumpButtonReleased();
+
         m_controls.PlayerControls.InputAbility.performed += ctx => UseSkill();
-        //m_controls.PlayerControls.InputInteract.performed += ctx =>;
+        //m_controls.PlayerControls.InputInteract.performed += ctx => Grab();
         m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
         UpdateDemonReference();
 	}
@@ -66,6 +68,10 @@ public class InputManager : PersistentSingleton<InputManager>
         m_currentDemon.ToggleWalkingParticles(false);
 		m_currentDemon.Jump();
 	}
+	void JumpButtonReleased()
+	{
+		m_currentDemon.JumpReleaseButton();
+	}
 
 	void PossesNearestDemon()
 	{
@@ -81,6 +87,11 @@ public class InputManager : PersistentSingleton<InputManager>
     {
         m_currentDemon = PosesionManager.Instance.ControlledDemon;
     }
+    /*
+	public void Grab()
+	{
+		m_currentDemon.Grab();
+	}
 
     /*
 	void ChangeCamera()

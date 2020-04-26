@@ -19,6 +19,7 @@ public abstract class DemonBase : MonoBehaviour
     private bool    m_hasResetParentPosition;
     private bool    m_isPossessionBlocked;
     protected bool  m_isDead;
+    private bool    m_grabbedByRight;
 
     //Weight variables
     [Header("Physicality")]
@@ -37,10 +38,15 @@ public abstract class DemonBase : MonoBehaviour
 	[Space]
 	[Header("IA")]
 	[Tooltip("Where or not the enemy starts controlled by IA behaviour")]
-	[SerializeField] protected bool m_isControlledByIA = false;
+	[SerializeField] protected bool         m_isControlledByIA = false;
+    [SerializeField] protected float        m_IADetectionRange = 0f;
+    [SerializeField] protected float        m_IADetectionAngle = 0f;
+    [SerializeField] protected float        m_IADetectionRayCount = 0f;
+    [SerializeField] protected LayerMask    m_IADetectionLayers;
+    [SerializeField] protected LayerMask    m_IADetectionLayersForForwardVector;
 
-	//Ragdoll child references
-	private Collider2D[]        m_limbsColliders;
+    //Ragdoll child references
+    private Collider2D[]        m_limbsColliders;
     private Rigidbody2D[]       m_limbsRbds;
     private Transform[]         m_childTransforms;
     private RagdollTransform[]  m_childInitialTransforms;
@@ -56,11 +62,25 @@ public abstract class DemonBase : MonoBehaviour
     private Collider2D      m_myCollider;
     protected Animator      m_myAnimator;
     private SpriteRenderer  m_mySprite;
+    [SerializeField] SpriteRenderer m_PossessionCircle;
 
-	
-	#region Properties
 
-	public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
+	//Grab Variables
+	[Space]
+	[Header("Grab variables")]
+	private float m_hi = 0f;
+    private Vector3 m_initialPositionRightGrab;
+    private Vector3 m_initialPositionLeftGrab;
+
+    /*
+    [SerializeField] private Transform m_grabRayStartPositionRight;
+    [SerializeField] private Transform m_grabRayStartPositionLeft;
+
+    private bool m_hasADemonGrabed = false;
+    */
+    #region Properties
+
+    public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
     protected bool      IsRagdollActive { get => m_isRagdollActive; }
 	
 	public Rigidbody2D      MyRgb { get => m_myRgb; }
@@ -70,7 +90,22 @@ public abstract class DemonBase : MonoBehaviour
     public float            MovementDirection { get => m_movementDirection; set => m_movementDirection = value; }
     public SpriteRenderer   MySprite { get => m_mySprite; }
     public bool             IsDead { get => m_isDead; set => m_isDead = value; }
-    public bool             IsInDanger { get => m_isInDanger; set => m_isInDanger = value; }
+    public bool 
+        IsInDanger {
+        get => m_isInDanger;
+        set
+        {
+            if (value)
+            {
+                SetColor(m_tintWhenCantBePossessed);
+            }
+            else
+            {
+                SetColor(Color.white);
+            }
+            m_isInDanger = value;
+        }
+    }
 
 
 
@@ -91,7 +126,9 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
-    
+    public float MaximumPossessionRange { get => m_maximumPossessionRange; set => m_maximumPossessionRange = value; }
+
+
     #endregion
 
     protected virtual void Awake()
@@ -105,7 +142,10 @@ public abstract class DemonBase : MonoBehaviour
         m_myAnimator                = GetComponent<Animator>();
         m_childSprites              = ReturnComponentsInChildren<SpriteRenderer>();
         m_mySprite                  = GetComponent<SpriteRenderer>();
-
+        /*
+        m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
+        m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
+        */
         if (m_possessedOnStart)
         {
             SetControlledByPlayer();
@@ -123,14 +163,226 @@ public abstract class DemonBase : MonoBehaviour
             
         }        
     }
-    
 
-    /// <summary>
-    /// Returns all child component references of specified component, excluding the parent
-    /// </summary>
-    /// <typeparam name="T">The specified component to look for</typeparam>
-    /// <returns>An array with the components</returns>
-    private T[] ReturnComponentsInChildren<T>()
+	protected virtual void Update()
+	{
+		if (m_isLerpingToResetBones)
+		{
+			LerpResetRagdollTransforms();
+		}
+
+        /*
+        if (m_hasADemonGrabed)
+        {
+            if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+            {
+                m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
+            }
+
+            if (m_grabbedByRight)
+            {
+                if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+                {
+                    m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
+                }
+                else
+                {
+                    m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 100;
+                }
+
+                if (MovementDirection == 1)
+                {
+                    //want to push to the right
+                    m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab + Vector3.right * 4f;
+                }
+                else
+                {
+                    //dragging towards the left
+                    m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab;
+                }
+            }
+            else
+            {
+                if (!m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+                {
+                    m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 0;
+                }
+                else
+                {
+                    m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 100;
+                }
+
+
+                if (MovementDirection == 1)
+                {
+                    //dragging towards the right
+                    m_grabRayStartPositionLeft.localPosition= m_initialPositionLeftGrab;
+                }
+                else
+                {
+                    //want to push to the left
+                    m_grabRayStartPositionLeft.localPosition = m_initialPositionLeftGrab - Vector3.right * 4f;
+                }
+            }
+        }
+        */
+	}
+
+	#region Grab
+
+    /*
+	/// <summary>
+	/// The demon tries to grab a dead demon
+	/// </summary>
+	public void Grab()
+	{
+		bool isLookingRight = !m_mySprite.flipX;
+		RaycastHit2D rayNormal;
+		if (isLookingRight)
+		{
+			rayNormal = Physics2D.Raycast(m_grabRayStartPositionRight.position, this.transform.up, 2, m_IADetectionLayersForForwardVector);
+		}
+		else
+		{
+			rayNormal = Physics2D.Raycast(m_grabRayStartPositionLeft.position, this.transform.up, 2, m_IADetectionLayersForForwardVector);
+		}
+
+		float angleIncrease = m_IADetectionAngle / m_IADetectionRayCount;
+		
+		Vector2 forwardVector = Vector2.zero;
+
+		float angle = 0f;
+
+		if (isLookingRight)
+		{
+			if (GetAngleFromVector(rayNormal.normal) >= 90)
+			{
+				forwardVector = -Vector2.Perpendicular(rayNormal.normal);
+				angle = Vector2.Angle(forwardVector, this.transform.right);
+
+				angle = angle - m_IADetectionAngle / 2f;
+			}
+			else
+			{
+				forwardVector = -Vector2.Perpendicular(rayNormal.normal);
+				angle = -Vector2.Angle(forwardVector, this.transform.right);
+
+				angle = angle - m_IADetectionAngle / 2f;
+			}
+		}
+		else
+		{
+
+			if (GetAngleFromVector(rayNormal.normal) >= 90)
+			{
+				forwardVector = -Vector2.Perpendicular(rayNormal.normal);
+				angle = Vector2.Angle(forwardVector, this.transform.right);
+
+				angle = 180 + angle + m_IADetectionAngle / 2f;
+			}
+			else
+			{
+				forwardVector = Vector2.Perpendicular(rayNormal.normal);
+				angle = -Vector2.Angle(forwardVector, -this.transform.right);
+
+				angle = 180 + angle + m_IADetectionAngle / 2f;
+			}
+		}
+
+		for (int i = 0; i <= m_IADetectionRayCount; i++)
+		{
+			Vector3 rayDirection = GetVectorFromAngle(angle);
+
+			RaycastHit2D[] hits;
+
+			if (isLookingRight)
+			{
+				hits = Physics2D.RaycastAll(m_grabRayStartPositionRight.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
+
+				if (i == 0)
+				{
+					Debug.DrawRay(m_grabRayStartPositionRight.position, rayDirection, Color.cyan, 3f);
+				}
+				else
+				{
+					Debug.DrawRay(m_grabRayStartPositionRight.position, rayDirection, Color.blue, 3f);
+				}
+			}
+			else
+			{
+				hits = Physics2D.RaycastAll(m_grabRayStartPositionLeft.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
+
+				if (i == 0)
+				{
+					Debug.DrawRay(m_grabRayStartPositionLeft.position, rayDirection, Color.cyan, 3f);
+				}
+				else
+				{
+					Debug.DrawRay(m_grabRayStartPositionLeft.position, rayDirection, Color.blue, 3f);
+				}
+			}
+
+			for (int y = 0; y < hits.Length; y++)
+			{
+				if (hits[y].collider.GetComponentInParent<DemonBase>() != null)
+				{
+					if(hits[y].collider.transform.root != this.transform)
+					{
+						GameObject parent = hits[y].collider.GetComponentInParent<DemonBase>().gameObject;
+						if (parent.transform.GetChild(0).gameObject == hits[y].collider.gameObject)
+						{
+							//hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = this.m_myRgb;
+
+							m_hasADemonGrabed = true;
+
+							//hits[y].collider.GetComponent<GrabbedTorso>().IsGrabbed = true;
+							if (isLookingRight)
+							{
+								hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = m_grabRayStartPositionRight.GetComponent<Rigidbody2D>();
+                                m_grabbedByRight = true;
+							}
+							else
+							{
+								hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = m_grabRayStartPositionLeft.GetComponent<Rigidbody2D>();
+                                m_grabbedByRight = false;
+							}
+
+
+
+							//hits[y].collider.transform.parent.transform.SetParent(this.transform);
+							//hits[y].collider.transform.SetParent(this.transform);
+
+							//hits[y].collider.GetComponent<DistanceJoint2D>().connectedBody = this.GetComponent<Rigidbody2D>();
+
+							//hits[y].collider.GetComponent<Rigidbody2D>().isKinematic = true;
+
+							break;
+						}
+					}
+				}
+			}
+
+			
+
+			if (isLookingRight)
+			{
+				angle = angle + angleIncrease;
+			}
+			else
+			{
+				angle = angle - angleIncrease;
+			}
+		}
+	}
+    */
+	#endregion Grab
+
+	/// <summary>
+	/// Returns all child component references of specified component, excluding the parent
+	/// </summary>
+	/// <typeparam name="T">The specified component to look for</typeparam>
+	/// <returns>An array with the components</returns>
+	private T[] ReturnComponentsInChildren<T>()
     {
         T[] array = GetComponentsInChildren<T>();
         T[] returnedArray = new T[array.Length - 1];
@@ -166,6 +418,8 @@ public abstract class DemonBase : MonoBehaviour
         m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
+        IsControlledByPlayer = true;
+        m_PossessionCircle.enabled = true;
     }
     
     /// <summary>
@@ -199,19 +453,17 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public abstract void Jump();
 
+	/// <summary>
+	/// Revert gravity to normal status during a Jump
+	/// </summary>
+	public abstract void JumpReleaseButton();
+
     /// <summary>
     /// Activates or deactivates the walking particles
     /// </summary>
     /// <param name="active">True to turn them on, false to turn them off</param>
     public abstract void ToggleWalkingParticles(bool active);
 
-    protected virtual void Update()
-    {
-        if (m_isLerpingToResetBones)
-        {
-            LerpResetRagdollTransforms();
-        }
-    }
 
     /// <summary>
     /// Changes the color of all limbs
@@ -233,7 +485,7 @@ public abstract class DemonBase : MonoBehaviour
     private void SetRagdollActive(bool active)
     {
         m_isRagdollActive = active;
-        m_mySprite.enabled = !active;
+        
                
         //activate all the limbs colliders if ragdoll is active, set inactive otherwise
         for (int i = 0; i < m_limbsColliders.Length; i++)
@@ -244,8 +496,7 @@ public abstract class DemonBase : MonoBehaviour
         //set all the limbs as dynamic if ragdoll is active, kinematic otherwise
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
-            m_limbsRbds[i].isKinematic = !active;
-            m_childSprites[i].enabled = active;
+            m_limbsRbds[i].isKinematic = !active;            
             
             //reset velocity in case the player will control it
             if (!active)
@@ -267,10 +518,22 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetNotControlledByPlayer()
     {
+        //m_mySprite.enabled = false;
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
         this.enabled = false;
+        /*
+        for (int i = 0; i < m_childSprites.Length; i++)
+        {
+            if(m_childSprites[i] != m_PossessionCircle)
+            {
+                m_childSprites[i].enabled = true;
+            }
+            
+        }
+        */
+        m_PossessionCircle.enabled = false;
     }
     
 
@@ -302,7 +565,6 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     private void LerpResetRagdollTransforms()
     {
-        IsControlledByPlayer = true;
         Transform torso = m_limbsColliders[0].transform;
         if (!m_hasResetParentPosition)
         {
@@ -336,6 +598,12 @@ public abstract class DemonBase : MonoBehaviour
             m_isLerpingToResetBones = false;
             
             m_hasResetParentPosition = false;
+            m_mySprite.enabled = true;
+            for (int i = 0; i < m_childSprites.Length; i++)
+            {
+                if (m_childSprites[i] != m_PossessionCircle)
+                    m_childSprites[i].enabled = false;
+            }
         }
     }
 
@@ -371,8 +639,8 @@ public abstract class DemonBase : MonoBehaviour
     /// <returns>Boolean determining if it is touching the ground</returns>
     public bool IsGrounded()
     {
-        Debug.DrawRay(transform.position, Vector3.down * 2, Color.red);
-        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.1f, Vector2.down, 3, m_JumpMask);
+        Debug.DrawRay(transform.position, Vector3.down * 1.5f, Color.red);
+        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.1f, Vector2.down, 1.5f, m_JumpMask);
         bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
         {
@@ -383,13 +651,42 @@ public abstract class DemonBase : MonoBehaviour
         }
         return isGrounded;
     }
-    /// <summary>
-    /// Visualizing the maximum possession range in editor scene
-    /// </summary>
-    private void OnDrawGizmosSelected()
-    {
-        UnityEditor.Handles.color = Color.red;
-        UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
-    }
 
+
+    //public bool IsTorsoGrounded()
+    //{
+    //    Debug.DrawRay(transform.position, Vector3.down * 2, Color.red);
+    //    RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.GetChild(0).position, 0.1f, Vector2.down, 3, m_JumpMask);
+    //    bool isGrounded = false;
+    //    for (int i = 0; i < impact.Length; i++)
+    //    {
+    //        if (impact[i].transform.root != transform)
+    //        {
+    //            isGrounded = true;
+    //        }
+    //    }
+    //    return isGrounded;
+    //}
+
+
+
+
+	#region AngleCalculations
+	protected Vector3 GetVectorFromAngle(float angle)
+	{
+		float angleRad = angle * (Mathf.PI / 180f);
+		return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+	}
+
+	protected float GetAngleFromVector(Vector3 dir)
+	{
+
+		dir = dir.normalized;
+		float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+		if (n < 0) n += 360;
+
+		return n;
+	}
+	#endregion AngleCalculations
 }

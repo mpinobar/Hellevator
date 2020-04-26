@@ -5,16 +5,25 @@ using UnityEditor;
 
 public class BasicZombie : DemonBase
 {
-    #region Variables
+	#region Variables	
 
-    [Header("Movement")]
+	[Header("Movement")]
     [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
-    [SerializeField] private bool m_canJump;
+    [SerializeField] private float m_jumpForceSecond = 10;
+	[SerializeField] private bool m_canJump;
     [SerializeField] private bool m_canDoubleJump;
+	[SerializeField] private float m_coyoteTimeDuration = 0f;//Mirar si hacer cambio a frames
     private bool m_hasJumped;
     private bool m_hasDoubleJumped;
+	private bool m_coyoteTimeActive = false;
+	private float m_currentCoyoteTimer = 0f;
+	private bool m_isHoldingJump = false;
+
+	private bool m_jumpHasBeenPressOnAir = false;
+	[SerializeField] private float m_jumpHasBeenPressOnAirTimer = 0f;
+	private float m_currentTimerJumpOnAir = 0f;
 
     [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
@@ -24,15 +33,22 @@ public class BasicZombie : DemonBase
     [Range(1,10)]
     [Tooltip("Ascending part of the jump")]
     [SerializeField] private float m_firstGravity = 2.25f;
-    [Range(1, 10)]
+	[Range(1, 10)]
+	[Tooltip("Ascending part of the jump when holding the jump button")]
+	[SerializeField] private float m_firstGravityHoldingJump = 2.25f;
+	[Range(1, 10)]
     [Tooltip("First top part of the jump")]
     [SerializeField] private float m_secondGravity = 2.5f;
+	[Range(1, 10)]
+    [Tooltip("First top part of the jump")]
+    [SerializeField] private float m_thirdGravity = 2.5f;
     [Range(1, 10)]
-    [Tooltip("Second top part of the jump")]
-    [SerializeField] private float m_thirdGravity = 2f;
+    [Tooltip("Second top part of the double jump")]
+    [SerializeField] private float m_thirdGravityDoubleJump = 2f;
     [Range(1, 10)]
     [Tooltip("Descending part of the jump")]
     [SerializeField] private float m_fourthGravity = 5f;
+	
     #endregion
 
     #region Properties
@@ -41,10 +57,7 @@ public class BasicZombie : DemonBase
     public float JumpForce { get => m_jumpForce; }
 
     #endregion
-
-
-
-
+	
     public override void UseSkill()
     {
         
@@ -58,11 +71,43 @@ public class BasicZombie : DemonBase
         //in the air while jumping
         if (!IsGrounded())
         {
-            
+			if (!m_hasJumped && !m_coyoteTimeActive)
+			{
+				m_coyoteTimeActive = true;
+				m_currentCoyoteTimer = m_coyoteTimeDuration;
+			}
+			else if (m_coyoteTimeActive)
+			{
+				m_currentCoyoteTimer = m_currentCoyoteTimer - Time.deltaTime;
+				if(m_currentCoyoteTimer <= 0)
+				{
+					m_hasJumped = true;
+					m_coyoteTimeActive = false;
+				}
+			}
+
+			if (m_jumpHasBeenPressOnAir)
+			{
+				m_currentTimerJumpOnAir = m_currentTimerJumpOnAir - Time.deltaTime;
+				if(m_currentTimerJumpOnAir <= 0)
+				{
+					m_jumpHasBeenPressOnAir = false;
+				}
+			}
+
+			
             //ascending part of the jump
             if (MyRgb.velocity.y > 1)
             {
-                MyRgb.gravityScale = m_firstGravity;
+				if (m_isHoldingJump)
+				{
+					MyRgb.gravityScale = m_firstGravityHoldingJump;
+				}
+				else
+				{
+					MyRgb.gravityScale = m_firstGravity;
+				}
+                
             }
             else if (MyRgb.velocity.y > 0)
             {
@@ -70,7 +115,14 @@ public class BasicZombie : DemonBase
             }
             else if (MyRgb.velocity.y > -1)
             {
-                MyRgb.gravityScale = m_thirdGravity;
+				if (m_hasDoubleJumped)
+				{
+					MyRgb.gravityScale = m_thirdGravityDoubleJump;
+				}
+				else
+				{
+					MyRgb.gravityScale = m_thirdGravity; 
+				}                
             }
             else
             {
@@ -82,6 +134,8 @@ public class BasicZombie : DemonBase
         else
         {
             MyRgb.gravityScale = 2;
+			m_coyoteTimeActive = false;
+			
         }
         m_myAnimator.SetBool("Walking", Mathf.Abs(MyRgb.velocity.x) > 0.2f);
     }
@@ -97,22 +151,48 @@ public class BasicZombie : DemonBase
     {
         if (m_canJump)
         {
+			if (m_jumpHasBeenPressOnAir)
+			{
+				m_jumpHasBeenPressOnAir = false;
+			}
             if (!m_hasJumped)
             {
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
                 MyRgb.AddForce(Vector2.up * JumpForce);
                 m_hasJumped = true;
+				m_coyoteTimeActive = false;
+				m_isHoldingJump = true;
             }
             else if(m_canDoubleJump && !m_hasDoubleJumped)
             {
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
-                MyRgb.AddForce(Vector2.up * JumpForce);
+                MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
                 m_hasDoubleJumped = true;
-            }
+			}
+			else if(m_hasJumped)
+			{
+				if (m_canDoubleJump && m_hasDoubleJumped)
+				{
+					m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
+					m_isHoldingJump = true;
+					m_jumpHasBeenPressOnAir = true;
+				}
+				else
+				{
+					m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
+					m_isHoldingJump = true;
+					m_jumpHasBeenPressOnAir = true;
+				}
+			}
         }
     }
-    
-    public override void ToggleWalkingParticles(bool active)
+
+	public override void JumpReleaseButton()
+	{
+		m_isHoldingJump = false;
+	}
+
+	public override void ToggleWalkingParticles(bool active)
     {
         if (active)
         {
@@ -123,6 +203,7 @@ public class BasicZombie : DemonBase
             walkingParticles.Stop();
         }
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (IsGrounded())
@@ -133,8 +214,22 @@ public class BasicZombie : DemonBase
                 if (m_canDoubleJump)
                 {
                     m_hasDoubleJumped = false;
-                }
-            }
+					
+					if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
+					{
+						Jump();
+						print("A");
+						m_jumpHasBeenPressOnAir = false;
+					}																														
+				}
+				if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
+				{
+					Jump();
+					print("A");
+					m_jumpHasBeenPressOnAir = false;
+				}
+			}
         }
     }
+
 }

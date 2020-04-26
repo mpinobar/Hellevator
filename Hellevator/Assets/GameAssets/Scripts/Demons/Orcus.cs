@@ -11,23 +11,45 @@ public class Orcus : DemonBase
 	[SerializeField] private float m_acceleration = 7;
 	[SerializeField] private float m_jumpForce = 10;
     [SerializeField] private float m_enrageSpeedMultiplier = 3f;
+	[SerializeField] private float m_jumpForceSecond = 10;
+	[SerializeField] private bool m_canJump;
+	[SerializeField] private bool m_canDoubleJump;
+	[SerializeField] private float m_coyoteTimeDuration = 0f;
+    [SerializeField] private float m_airAccelerationMultiplier = 2;
+    [SerializeField] private float m_groundCorrectionMultiplier = 3;
 
-    private bool m_usedSkill;
+    private bool m_hasJumped;
+	private bool m_hasDoubleJumped;
+	private bool m_coyoteTimeActive = false;
+	private float m_currentCoyoteTimer = 0f;
+	private bool m_isHoldingJump = false;
+
+	private bool m_jumpHasBeenPressOnAir = false;
+	[SerializeField] private float m_jumpHasBeenPressOnAirTimer = 0f;
+	private float m_currentTimerJumpOnAir = 0f;
+
+	private bool m_usedSkill;
 
 	[Header("References")]
 	[SerializeField] ParticleSystem walkingParticles;
 
 
-	[Header("Gravity")]
+	[Header("Gravity")]    
 	[Range(1, 10)]
 	[Tooltip("Ascending part of the jump")]
 	[SerializeField] private float m_firstGravity = 2.25f;
+	[Range(1, 10)]
+	[Tooltip("Ascending part of the jump when holding the jump button")]
+	[SerializeField] private float m_firstGravityHoldingJump = 2.25f;
 	[Range(1, 10)]
 	[Tooltip("First top part of the jump")]
 	[SerializeField] private float m_secondGravity = 2.5f;
 	[Range(1, 10)]
 	[Tooltip("Second top part of the jump")]
 	[SerializeField] private float m_thirdGravity = 2f;
+	[Range(1, 10)]
+	[Tooltip("Second top part of the double jump")]
+	[SerializeField] private float m_thirdGravityDoubleJump = 2f;
 	[Range(1, 10)]
 	[Tooltip("Descending part of the jump")]
 	[SerializeField] private float m_fourthGravity = 5f;
@@ -63,8 +85,6 @@ public class Orcus : DemonBase
             m_acceleration *= m_enrageSpeedMultiplier;
         }
 	}
-	
-
 
 	protected override void Update()
 	{
@@ -78,10 +98,41 @@ public class Orcus : DemonBase
 			//in the air while jumping
 			if (!IsGrounded())
 			{
+				if (!m_hasJumped && !m_coyoteTimeActive)
+				{
+					m_coyoteTimeActive = true;
+					m_currentCoyoteTimer = m_coyoteTimeDuration;
+				}
+				else if (m_coyoteTimeActive)
+				{
+					m_currentCoyoteTimer = m_currentCoyoteTimer - Time.deltaTime;
+					if (m_currentCoyoteTimer <= 0)
+					{
+						m_hasJumped = true;
+						m_coyoteTimeActive = false;
+					}
+				}
+
+				if (m_jumpHasBeenPressOnAir)
+				{
+					m_currentTimerJumpOnAir = m_currentTimerJumpOnAir - Time.deltaTime;
+					if (m_currentTimerJumpOnAir <= 0)
+					{
+						m_jumpHasBeenPressOnAir = false;
+					}
+				}
+
 				//ascending part of the jump
 				if (MyRgb.velocity.y > 1)
 				{
-					MyRgb.gravityScale = m_firstGravity;
+					if (m_isHoldingJump)
+					{
+						MyRgb.gravityScale = m_firstGravityHoldingJump;
+					}
+					else
+					{
+						MyRgb.gravityScale = m_firstGravity;
+					}
 				}
 				else if (MyRgb.velocity.y > 0)
 				{
@@ -89,7 +140,14 @@ public class Orcus : DemonBase
 				}
 				else if (MyRgb.velocity.y > -1)
 				{
-					MyRgb.gravityScale = m_thirdGravity;
+					if (m_hasDoubleJumped)
+					{
+						MyRgb.gravityScale = m_thirdGravityDoubleJump;
+					}
+					else
+					{
+						MyRgb.gravityScale = m_thirdGravity;
+					}
 				}
 				else
 				{
@@ -101,9 +159,8 @@ public class Orcus : DemonBase
 			else
 			{
 				MyRgb.gravityScale = 2;
+				m_coyoteTimeActive = false;
 			}
-
-			
 		}
 	}
 
@@ -111,16 +168,63 @@ public class Orcus : DemonBase
 
 	public override void Move(float xInput)
 	{
-		MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, Acceleration * Time.deltaTime), MyRgb.velocity.y);
+        float accel = Acceleration;
+        if (m_hasJumped)
+        {
+            accel *= m_airAccelerationMultiplier;
+        }
+        if (IsGrounded())
+        {
+            if((MyRgb.velocity.x)*xInput < 0)
+            {
+                accel *= m_groundCorrectionMultiplier;
+            }
+        }
+		MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, accel * Time.deltaTime), MyRgb.velocity.y);
 	}
 
 	public override void Jump()
 	{
-		if (IsGrounded())
+        print("a");
+		if (m_canJump)
 		{
-			MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
-			MyRgb.AddForce(Vector2.up * JumpForce);
+			if (!m_hasJumped)
+			{
+                print("b");
+                MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
+				MyRgb.AddForce(Vector2.up * JumpForce);
+				m_hasJumped = true;
+				m_coyoteTimeActive = false;
+				m_isHoldingJump = true;
+			}
+			else if (m_canDoubleJump && !m_hasDoubleJumped)
+			{
+                print("c");
+                MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
+				MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
+				m_hasDoubleJumped = true;
+			}
+			else if (m_hasJumped)
+			{
+				if (m_canDoubleJump && m_hasDoubleJumped)
+				{
+					m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
+					m_isHoldingJump = true;
+					m_jumpHasBeenPressOnAir = true;
+				}
+				else
+				{
+					m_currentTimerJumpOnAir = m_jumpHasBeenPressOnAirTimer;
+					m_isHoldingJump = true;
+					m_jumpHasBeenPressOnAir = true;
+				}
+			}
 		}
+	}
+
+	public override void JumpReleaseButton()
+	{
+		m_isHoldingJump = false;
 	}
 
 	public override void ToggleWalkingParticles(bool active)
@@ -136,28 +240,50 @@ public class Orcus : DemonBase
 
 	}
 
-	#endregion PlayerControlled
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (IsGrounded())
+        {
+            if (m_canJump)
+            {
+                m_hasJumped = false;
+                if (m_canDoubleJump)
+                {
+                    m_hasDoubleJumped = false;
+					if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
+					{
+						Jump();
+						print("A");
+						m_jumpHasBeenPressOnAir = false;
+					}
+				}
+				else
+				{
+					if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
+					{
+						Jump();
+						print("A");
+						m_jumpHasBeenPressOnAir = false;
+					}
+				}
+            }
+        }
+    }
 
-	#region IA
+    #endregion PlayerControlled
+
+    #region IA
 
 
-	#region Variables
+    #region Variables
 
-	[Space]
+    [Space]
 
 	[SerializeField] private float m_IAMaxSpeed = 0f;
 	private float m_IAcurrentSpeed = 0f;
 	[SerializeField] private float m_IAcceleration = 0f;
 	[SerializeField] private float m_IAStoppingDistance = 0f;
 	[SerializeField] private EnemyState m_IACurrentState = EnemyState.None;
-
-	[Space]
-
-	[SerializeField] private float m_IADetectionRange = 0f;
-	[SerializeField] private float m_IADetectionAngle = 0f;
-	[SerializeField] private float m_IADetectionRayCount = 0f;
-	[SerializeField] private LayerMask m_IADetectionLayers;
-	[SerializeField] private LayerMask m_IADetectionLayersForForwardVector;
 
 	[Space]
 	[SerializeField] private List<Transform> m_IAPatrolPoints = new List<Transform>(0);
@@ -179,10 +305,11 @@ public class Orcus : DemonBase
 	private Vector3 m_IAVelocity = Vector3.zero;
 	
 	private Vector3 m_IAStartingPos = Vector3.zero;
+    
 
-	#endregion Variables
+    #endregion Variables
 
-	void IAAwake()
+    void IAAwake()
 	{
 		m_IACmpRb = this.GetComponent<Rigidbody2D>();
 		m_IACurrentPatrolPoint = 0;
@@ -201,12 +328,6 @@ public class Orcus : DemonBase
 
 	void IAUpdate()
 	{
-
-		if (Input.GetKeyDown(KeyCode.M))
-		{
-			print(IASenseForPlayer());
-		}
-
 		switch (m_IACurrentState)
 		{
 			case EnemyState.Chasing:
@@ -467,24 +588,5 @@ public class Orcus : DemonBase
 		}
 	}
 
-	#endregion IA
-
-	#region AngleCalculations
-	private Vector3 GetVectorFromAngle(float angle)
-	{
-		float angleRad = angle * (Mathf.PI / 180f);
-		return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-	}
-
-	private float GetAngleFromVector(Vector3 dir)
-	{
-
-		dir = dir.normalized;
-		float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-		if (n < 0) n += 360;
-
-		return n;
-	}
-	#endregion AngleCalculations
+	#endregion IA	
 }
