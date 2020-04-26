@@ -518,11 +518,12 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetNotControlledByPlayer()
     {
-        m_mySprite.enabled = false;
+        //m_mySprite.enabled = false;
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
         this.enabled = false;
+        /*
         for (int i = 0; i < m_childSprites.Length; i++)
         {
             if(m_childSprites[i] != m_PossessionCircle)
@@ -531,6 +532,7 @@ public abstract class DemonBase : MonoBehaviour
             }
             
         }
+        */
         m_PossessionCircle.enabled = false;
     }
     
