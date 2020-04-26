@@ -62,6 +62,7 @@ public abstract class DemonBase : MonoBehaviour
     private Collider2D      m_myCollider;
     protected Animator      m_myAnimator;
     private SpriteRenderer  m_mySprite;
+    [SerializeField] SpriteRenderer m_PossessionCircle;
 
 
 	//Grab Variables
@@ -523,6 +524,7 @@ public abstract class DemonBase : MonoBehaviour
         this.enabled = false;
         for (int i = 0; i < m_childSprites.Length; i++)
         {
+            if(m_childSprites[i] != m_PossessionCircle)
             m_childSprites[i].enabled = true;
         }
     }
@@ -592,7 +594,8 @@ public abstract class DemonBase : MonoBehaviour
             m_mySprite.enabled = true;
             for (int i = 0; i < m_childSprites.Length; i++)
             {
-                m_childSprites[i].enabled = false;
+                if (m_childSprites[i] != m_PossessionCircle)
+                    m_childSprites[i].enabled = false;
             }
         }
     }
