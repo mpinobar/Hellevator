@@ -19,7 +19,7 @@ public abstract class DemonBase : MonoBehaviour
     private bool    m_hasResetParentPosition;
     private bool    m_isPossessionBlocked;
     protected bool  m_isDead;
-    
+    [SerializeField] bool usingLitShader;
     [SerializeField] Transform m_Torso;
 
     //Weight variables
@@ -171,6 +171,14 @@ public abstract class DemonBase : MonoBehaviour
         m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
+        if (usingLitShader)
+        {
+            SpriteRenderer[] spr = ReturnComponentsInChildren<SpriteRenderer>();
+            for (int i = 0; i < spr.Length; i++)
+            {
+                spr[i].material.SetFloat("_Thickness", 0.977f);
+            }
+        }
     }
     
     /// <summary>
@@ -285,6 +293,14 @@ public abstract class DemonBase : MonoBehaviour
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
+        if (usingLitShader)
+        {
+            SpriteRenderer[] spr = ReturnComponentsInChildren<SpriteRenderer>();
+            for (int i = 0; i < spr.Length; i++)
+            {
+                spr[i].material.SetFloat("_Thickness", 0);
+            }
+        }
         this.enabled = false;
     }
     
