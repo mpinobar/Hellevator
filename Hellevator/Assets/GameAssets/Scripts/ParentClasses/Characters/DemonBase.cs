@@ -62,6 +62,7 @@ public abstract class DemonBase : MonoBehaviour
     private Collider2D      m_myCollider;
     protected Animator      m_myAnimator;
     private SpriteRenderer  m_mySprite;
+    [SerializeField] SpriteRenderer m_PossessionCircle;
 
 
 	//Grab Variables
@@ -418,6 +419,7 @@ public abstract class DemonBase : MonoBehaviour
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
+        m_PossessionCircle.enabled = true;
     }
     
     /// <summary>
@@ -523,8 +525,13 @@ public abstract class DemonBase : MonoBehaviour
         this.enabled = false;
         for (int i = 0; i < m_childSprites.Length; i++)
         {
-            m_childSprites[i].enabled = true;
+            if(m_childSprites[i] != m_PossessionCircle)
+            {
+                m_childSprites[i].enabled = true;
+            }
+            
         }
+        m_PossessionCircle.enabled = false;
     }
     
 
@@ -592,7 +599,8 @@ public abstract class DemonBase : MonoBehaviour
             m_mySprite.enabled = true;
             for (int i = 0; i < m_childSprites.Length; i++)
             {
-                m_childSprites[i].enabled = false;
+                if (m_childSprites[i] != m_PossessionCircle)
+                    m_childSprites[i].enabled = false;
             }
         }
     }
@@ -659,14 +667,7 @@ public abstract class DemonBase : MonoBehaviour
     //}
 
 
-    /// <summary>
-    /// Visualizing the maximum possession range in editor scene
-    /// </summary>
-    private void OnDrawGizmosSelected()
-    {
-        UnityEditor.Handles.color = Color.red;
-        UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
-    }
+
 
 	#region AngleCalculations
 	protected Vector3 GetVectorFromAngle(float angle)
