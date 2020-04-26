@@ -1242,11 +1242,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2335811362446178730, guid: 523188113514beb4f9f794a4c089b9ae,
-        type: 3}
-      propertyPath: m_possessedOnStart
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7461956455659220693, guid: 523188113514beb4f9f794a4c089b9ae,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2277,6 +2272,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2335811362446178730, guid: 523188113514beb4f9f794a4c089b9ae,
+        type: 3}
+      propertyPath: m_PossessionCircle
+      value: 
+      objectReference: {fileID: 1923649521}
+    - target: {fileID: 2335811362446178730, guid: 523188113514beb4f9f794a4c089b9ae,
+        type: 3}
+      propertyPath: m_possessedOnStart
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7461956453651909930, guid: 523188113514beb4f9f794a4c089b9ae,
         type: 3}
       propertyPath: m_ConnectedAnchor.x
@@ -11374,6 +11379,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9a79514f35a5644ab43a0eb572c3c84, type: 3}
+--- !u!212 &1923649521 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8766189771945568099, guid: 523188113514beb4f9f794a4c089b9ae,
+    type: 3}
+  m_PrefabInstance: {fileID: 363351277}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1926816330
 PrefabInstance:
   m_ObjectHideFlags: 0

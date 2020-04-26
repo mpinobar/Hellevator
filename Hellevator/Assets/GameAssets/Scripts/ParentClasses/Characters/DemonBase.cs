@@ -419,6 +419,7 @@ public abstract class DemonBase : MonoBehaviour
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
+        m_PossessionCircle.enabled = true;
     }
     
     /// <summary>
@@ -525,8 +526,12 @@ public abstract class DemonBase : MonoBehaviour
         for (int i = 0; i < m_childSprites.Length; i++)
         {
             if(m_childSprites[i] != m_PossessionCircle)
-            m_childSprites[i].enabled = true;
+            {
+                m_childSprites[i].enabled = true;
+            }
+            
         }
+        m_PossessionCircle.enabled = false;
     }
     
 
@@ -662,14 +667,7 @@ public abstract class DemonBase : MonoBehaviour
     //}
 
 
-    /// <summary>
-    /// Visualizing the maximum possession range in editor scene
-    /// </summary>
-    private void OnDrawGizmosSelected()
-    {
-        UnityEditor.Handles.color = Color.red;
-        UnityEditor.Handles.DrawWireDisc(transform.position, transform.forward, m_maximumPossessionRange);
-    }
+
 
 	#region AngleCalculations
 	protected Vector3 GetVectorFromAngle(float angle)
