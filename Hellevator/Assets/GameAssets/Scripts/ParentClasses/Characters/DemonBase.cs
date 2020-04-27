@@ -20,6 +20,8 @@ public abstract class DemonBase : MonoBehaviour
     private bool    m_isPossessionBlocked;
     protected bool  m_isDead;
     private bool    m_grabbedByRight;
+    [SerializeField] bool usingLitShader;
+    [SerializeField] Transform m_Torso;
 
     //Weight variables
     [Header("Physicality")]
@@ -55,18 +57,16 @@ public abstract class DemonBase : MonoBehaviour
     //mask for ground detection
     [Header("Don't touch")]
     [SerializeField] protected LayerMask m_defaultMask;
-    [SerializeField] protected LayerMask m_JumpMask;
 
     //Demon references
     private Rigidbody2D     m_myRgb;
-    private Collider2D      m_myCollider;
+    private Collider2D      m_playerCollider;
     protected Animator      m_myAnimator;
-    [SerializeField] private SpriteRenderer  m_mySprite;
+    private Collider2D      m_ragdollLogicCollider;
     [SerializeField] SpriteRenderer m_PossessionCircle;
 
-
-	//Grab Variables
-	[Space]
+    //Grab Variables
+    [Space]
 	[Header("Grab variables")]
 	private float m_hi = 0f;
     private Vector3 m_initialPositionRightGrab;
@@ -84,11 +84,10 @@ public abstract class DemonBase : MonoBehaviour
     protected bool      IsRagdollActive { get => m_isRagdollActive; }
 	
 	public Rigidbody2D      MyRgb { get => m_myRgb; }
-    public Collider2D       MyCollider { get => m_myCollider; }
+    public Collider2D       PlayerCollider { get => m_playerCollider; }
 	public float            Weight { get => m_weight; }
     public Collider2D[]     LimbsColliders { get => m_limbsColliders; }
     public float            MovementDirection { get => m_movementDirection; set => m_movementDirection = value; }
-    public SpriteRenderer   MySprite { get => m_mySprite; }
     public bool             IsDead { get => m_isDead; set => m_isDead = value; }
     public bool 
         IsInDanger {
@@ -127,20 +126,22 @@ public abstract class DemonBase : MonoBehaviour
     }
 
     public float MaximumPossessionRange { get => m_maximumPossessionRange; set => m_maximumPossessionRange = value; }
+    public Collider2D RagdollLogicCollider { get => m_ragdollLogicCollider; set => m_ragdollLogicCollider = value; }
+    public Transform Torso { get => m_Torso; set => m_Torso = value; }
 
 
     #endregion
 
     protected virtual void Awake()
     {
-        m_limbsColliders            = transform.GetChild(0).GetComponentsInChildren<Collider2D>();
-        m_limbsRbds                 = transform.GetChild(0).GetComponentsInChildren<Rigidbody2D>();     
+        m_limbsColliders            = m_Torso.GetComponentsInChildren<Collider2D>();
+        m_limbsRbds                 = m_Torso.GetComponentsInChildren<Rigidbody2D>();     
         m_myRgb                     = GetComponent<Rigidbody2D>();
-        m_myCollider                = transform.GetChild(1).GetComponent<Collider2D>();
+        m_playerCollider            = GetComponent<Collider2D>();
         m_childInitialTransforms    = SaveRagdollInitialTransform();
         m_childTransforms           = ReturnComponentsInChildren<Transform>();
         m_myAnimator                = GetComponent<Animator>();
-        m_childSprites              = ReturnComponentsInChildren<SpriteRenderer>();
+        m_childSprites              = GetComponentsInChildren<SpriteRenderer>();
         
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
@@ -420,6 +421,15 @@ public abstract class DemonBase : MonoBehaviour
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
         m_PossessionCircle.enabled = true;
+        if (usingLitShader)
+        {
+            for (int i = 0; i < m_childSprites.Length; i++)
+            {
+                m_childSprites[i].material.SetFloat("_Thickness", 0.977f);
+                m_childSprites[i].sortingLayerName = "Player";
+            }
+        }
+
     }
     
     /// <summary>
@@ -471,10 +481,9 @@ public abstract class DemonBase : MonoBehaviour
     /// <param name="color">The new color to be assigned</param>
     public void SetColor(Color color)
     {
-        GetComponent<SpriteRenderer>().color = color;
-        for (int i = 0; i < m_limbsRbds.Length; i++)
+        for (int i = 0; i < m_childSprites.Length; i++)
         {
-            m_limbsRbds[i].GetComponent<SpriteRenderer>().material.color = color;
+            m_childSprites[i].color = color;
         }
     }
 
@@ -506,34 +515,38 @@ public abstract class DemonBase : MonoBehaviour
             }
         }
 
-        //toggle the collider and the rigidbody of the parent gameobject
-        m_myCollider.gameObject.SetActive(!active);
+        m_playerCollider.enabled = !active;
+        m_ragdollLogicCollider.enabled = active;
         m_myRgb.isKinematic = active;
+        if (!active)
+        {
+            m_myRgb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+        else
+        {
+            m_myRgb.constraints = RigidbodyConstraints2D.None;
+        }
 
-		//m_isControlledByIA = false;	
-	}
+    }
 
     /// <summary>
     /// Sets the demon to be no longer controlled by the player and activates ragdoll physics
     /// </summary>
     public void SetNotControlledByPlayer()
     {
-        //m_mySprite.enabled = false;
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
-        this.enabled = false;
-        /*
-        for (int i = 0; i < m_childSprites.Length; i++)
+        if (usingLitShader)
         {
-            if(m_childSprites[i] != m_PossessionCircle)
+            for (int i = 0; i < m_childSprites.Length; i++)
             {
-                m_childSprites[i].enabled = true;
+                m_childSprites[i].material.SetFloat("_Thickness", 0);
+                m_childSprites[i].sortingLayerName = "Default";
             }
-            
         }
-        */
         m_PossessionCircle.enabled = false;
+        this.enabled = false;
     }
     
 
@@ -598,12 +611,6 @@ public abstract class DemonBase : MonoBehaviour
             m_isLerpingToResetBones = false;
             
             m_hasResetParentPosition = false;
-            m_mySprite.enabled = true;
-            for (int i = 0; i < m_childSprites.Length; i++)
-            {
-                if (m_childSprites[i] != m_PossessionCircle)
-                    m_childSprites[i].enabled = false;
-            }
         }
     }
 
@@ -615,6 +622,7 @@ public abstract class DemonBase : MonoBehaviour
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         m_isDead = true;
+        /*
         if (MovementDirection == -1)
         {
             m_childTransforms[0].localScale = new Vector3(-1, 1, 1);
@@ -623,6 +631,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             m_childTransforms[0].localScale = Vector3.one;
         }
+        */
         if (m_isControlledByPlayer)
         {
             PosesionManager.Instance.PossessNearestDemon(m_maximumPossessionRange, this);
@@ -639,8 +648,10 @@ public abstract class DemonBase : MonoBehaviour
     /// <returns>Boolean determining if it is touching the ground</returns>
     public bool IsGrounded()
     {
-        Debug.DrawRay(transform.position, Vector3.down * 1.5f, Color.red);
-        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.1f, Vector2.down, 1.5f, m_JumpMask);
+        Debug.DrawRay(transform.position, Vector3.down * 0.25f, Color.red);
+        Debug.DrawRay(transform.position + Vector3.right * 0.15f, Vector3.down * 0.25f, Color.red);
+        Debug.DrawRay(transform.position - Vector3.right * 0.15f, Vector3.down * 0.25f, Color.red);
+        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.3f, Vector2.down, 0.25f, m_defaultMask);
         bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
         {

@@ -13,7 +13,7 @@ public class DissolvingPit : MonoBehaviour
             if(collision == cmpDemon.LimbsColliders[0])
             {
                 Destroy(cmpDemon.gameObject);
-            }else if(collision == cmpDemon.MyCollider)
+            }else if(collision == cmpDemon.PlayerCollider)
             {
                 cmpDemon.Die();
             }
