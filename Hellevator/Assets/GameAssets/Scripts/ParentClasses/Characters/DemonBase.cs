@@ -21,7 +21,6 @@ public abstract class DemonBase : MonoBehaviour
     protected bool  m_isDead;
     private bool    m_grabbedByRight;
     [SerializeField] bool usingLitShader;
-    [SerializeField] Transform m_Torso;
 
     //Weight variables
     [Header("Physicality")]
@@ -30,14 +29,18 @@ public abstract class DemonBase : MonoBehaviour
     [Tooltip("Speed at which the body recovers from ragdoll to idle pose")]
     [SerializeField] private float m_recomposingSpeed = 3;
     [SerializeField] private float m_recomposingDistanceMargin = 0.05f;
+    [SerializeField] private Collider2D m_ragdollLogicCollider;
+    [SerializeField] private Transform m_Torso;
+
 
 
     [Header("Possession")]
     [SerializeField] private bool     m_possessedOnStart;
     [SerializeField] private float    m_maximumPossessionRange;
     [SerializeField] private Color    m_tintWhenCantBePossessed;
-	//IAReferences
-	[Space]
+    [SerializeField] SpriteRenderer m_PossessionCircle;
+    //IAReferences
+    [Space]
 	[Header("IA")]
 	[Tooltip("Where or not the enemy starts controlled by IA behaviour")]
 	[SerializeField] protected bool         m_isControlledByIA = false;
@@ -62,8 +65,7 @@ public abstract class DemonBase : MonoBehaviour
     private Rigidbody2D     m_myRgb;
     private Collider2D      m_playerCollider;
     protected Animator      m_myAnimator;
-    private Collider2D      m_ragdollLogicCollider;
-    [SerializeField] SpriteRenderer m_PossessionCircle;
+
 
     //Grab Variables
     [Space]

@@ -185,12 +185,10 @@ public class Orcus : DemonBase
 
 	public override void Jump()
 	{
-        print("a");
 		if (m_canJump)
 		{
 			if (!m_hasJumped)
 			{
-                print("b");
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
 				MyRgb.AddForce(Vector2.up * JumpForce);
 				m_hasJumped = true;
@@ -199,7 +197,6 @@ public class Orcus : DemonBase
 			}
 			else if (m_canDoubleJump && !m_hasDoubleJumped)
 			{
-                print("c");
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
 				MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
 				m_hasDoubleJumped = true;
