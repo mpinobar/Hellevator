@@ -30,7 +30,7 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private float m_recomposingSpeed = 3;
     [SerializeField] private float m_recomposingDistanceMargin = 0.05f;
     [SerializeField] private Collider2D m_ragdollLogicCollider;
-    [SerializeField] private Transform m_Torso;
+    [SerializeField] private Transform m_torso;
 
 
 
@@ -66,7 +66,7 @@ public abstract class DemonBase : MonoBehaviour
     private Collider2D      m_playerCollider;
     protected Animator      m_myAnimator;
 
-
+    /*
     //Grab Variables
     [Space]
 	[Header("Grab variables")]
@@ -129,19 +129,19 @@ public abstract class DemonBase : MonoBehaviour
 
     public float MaximumPossessionRange { get => m_maximumPossessionRange; set => m_maximumPossessionRange = value; }
     public Collider2D RagdollLogicCollider { get => m_ragdollLogicCollider; set => m_ragdollLogicCollider = value; }
-    public Transform Torso { get => m_Torso; set => m_Torso = value; }
+    public Transform Torso { get => m_torso; set => m_torso = value; }
 
 
     #endregion
 
     protected virtual void Awake()
     {
-        m_limbsColliders            = m_Torso.GetComponentsInChildren<Collider2D>();
-        m_limbsRbds                 = m_Torso.GetComponentsInChildren<Rigidbody2D>();     
+        m_limbsColliders            = m_torso.GetComponentsInChildren<Collider2D>();
+        m_limbsRbds                 = GetComponentsInChildren<Rigidbody2D>();     
         m_myRgb                     = GetComponent<Rigidbody2D>();
         m_playerCollider            = GetComponent<Collider2D>();
         m_childInitialTransforms    = SaveRagdollInitialTransform();
-        m_childTransforms           = ReturnComponentsInChildren<Transform>();
+        m_childTransforms           = m_torso.GetComponentsInChildren<Transform>();
         m_myAnimator                = GetComponent<Animator>();
         m_childSprites              = GetComponentsInChildren<SpriteRenderer>();
         
@@ -171,7 +171,8 @@ public abstract class DemonBase : MonoBehaviour
 	{
 		if (m_isLerpingToResetBones)
 		{
-			LerpResetRagdollTransforms();
+            //ResetRagdollTransforms();
+            LerpResetRagdollTransforms();
 		}
 
         /*
@@ -396,11 +397,12 @@ public abstract class DemonBase : MonoBehaviour
         }
         return returnedArray;
     }
-    
-	/// <summary>
-	/// Sets the demon to be controlled by the AI and turns off ragdoll physics
-	/// </summary>
-	public void SetControlledByAI()
+
+
+    /// <summary>
+    /// Sets the demon to be controlled by the AI and turns off ragdoll physics
+    /// </summary>
+    public void SetControlledByAI()
 	{
 		SetRagdollActive(false);
 		m_isControlledByIA = true;
@@ -440,7 +442,7 @@ public abstract class DemonBase : MonoBehaviour
     /// <returns>Returns an array of RagdollTransform with the position and rotation of all the child objects</returns>
     private RagdollTransform[] SaveRagdollInitialTransform()
     {
-        Transform[] aux = ReturnComponentsInChildren<Transform>();
+        Transform[] aux = m_torso.GetComponentsInChildren<Transform>();
         RagdollTransform[] rdolls = new RagdollTransform[aux.Length];
         for (int i = 0; i < rdolls.Length; i++)
         {
@@ -557,8 +559,8 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     private void ResetRagdollTransforms()
     {
-        m_childTransforms = ReturnComponentsInChildren<Transform>();
-        transform.rotation = Quaternion.identity;
+        //m_childTransforms = ReturnComponentsInChildren<Transform>();
+        //transform.rotation = Quaternion.identity;
         for (int i = 0; i < m_childTransforms.Length; i++)
         {
             int partId = m_childTransforms[i].name.GetHashCode();
@@ -580,15 +582,14 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     private void LerpResetRagdollTransforms()
     {
-        Transform torso = m_limbsColliders[0].transform;
         if (!m_hasResetParentPosition)
         {
-            torso.parent = null;
+            m_torso.parent = null;
             //Debug.DrawRay(torso.position, Vector2.down*Mathf.Infinity, Color.red, 3);
-            RaycastHit2D impact = Physics2D.Raycast(torso.position, Vector2.down, Mathf.Infinity, m_defaultMask);
-            transform.position = impact.point + Vector2.up * 2;
+            RaycastHit2D impact = Physics2D.Raycast(m_torso.position, Vector2.down, Mathf.Infinity, m_defaultMask);
+            transform.position = impact.point;
             m_hasResetParentPosition = true;
-            torso.parent = transform;
+            m_torso.parent = transform;
         }
 
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, m_recomposingSpeed * Time.deltaTime);
@@ -607,7 +608,7 @@ public abstract class DemonBase : MonoBehaviour
             }
         }
         //print(Vector3.Distance(torso.localPosition, m_childInitialTransforms[0].Position));
-        if(Vector3.Distance(torso.localPosition, m_childInitialTransforms[0].Position) < m_recomposingDistanceMargin)
+        if(Vector3.Distance(m_torso.localPosition, m_childInitialTransforms[0].Position) < m_recomposingDistanceMargin)
         {
             ResetRagdollTransforms();
             m_isLerpingToResetBones = false;
@@ -624,16 +625,7 @@ public abstract class DemonBase : MonoBehaviour
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         m_isDead = true;
-        /*
-        if (MovementDirection == -1)
-        {
-            m_childTransforms[0].localScale = new Vector3(-1, 1, 1);
-        }
-        else
-        {
-            m_childTransforms[0].localScale = Vector3.one;
-        }
-        */
+
         if (m_isControlledByPlayer)
         {
             PosesionManager.Instance.PossessNearestDemon(m_maximumPossessionRange, this);
@@ -650,10 +642,10 @@ public abstract class DemonBase : MonoBehaviour
     /// <returns>Boolean determining if it is touching the ground</returns>
     public bool IsGrounded()
     {
-        Debug.DrawRay(transform.position, Vector3.down * 0.25f, Color.red);
-        Debug.DrawRay(transform.position + Vector3.right * 0.15f, Vector3.down * 0.25f, Color.red);
-        Debug.DrawRay(transform.position - Vector3.right * 0.15f, Vector3.down * 0.25f, Color.red);
-        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.3f, Vector2.down, 0.25f, m_defaultMask);
+        Debug.DrawRay(transform.position, Vector3.down * 0.5f, Color.red);
+        Debug.DrawRay(transform.position + Vector3.right * 0.15f, Vector3.down * 0.5f, Color.red);
+        Debug.DrawRay(transform.position - Vector3.right * 0.15f, Vector3.down * 0.5f, Color.red);
+        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.3f, Vector2.down, 0.5f, m_defaultMask);
         bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
         {
@@ -664,25 +656,6 @@ public abstract class DemonBase : MonoBehaviour
         }
         return isGrounded;
     }
-
-
-    //public bool IsTorsoGrounded()
-    //{
-    //    Debug.DrawRay(transform.position, Vector3.down * 2, Color.red);
-    //    RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.GetChild(0).position, 0.1f, Vector2.down, 3, m_JumpMask);
-    //    bool isGrounded = false;
-    //    for (int i = 0; i < impact.Length; i++)
-    //    {
-    //        if (impact[i].transform.root != transform)
-    //        {
-    //            isGrounded = true;
-    //        }
-    //    }
-    //    return isGrounded;
-    //}
-
-
-
 
 	#region AngleCalculations
 	protected Vector3 GetVectorFromAngle(float angle)

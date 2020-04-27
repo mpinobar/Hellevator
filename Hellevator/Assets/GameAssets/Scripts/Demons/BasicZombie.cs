@@ -137,7 +137,7 @@ public class BasicZombie : DemonBase
 			m_coyoteTimeActive = false;
 			
         }
-        m_myAnimator.SetBool("Walking", Mathf.Abs(MyRgb.velocity.x) > 0.2f);
+        //m_myAnimator.SetBool("Walking", Mathf.Abs(MyRgb.velocity.x) > 0.2f);
     }
 
     
@@ -218,14 +218,12 @@ public class BasicZombie : DemonBase
 					if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
 					{
 						Jump();
-						print("A");
 						m_jumpHasBeenPressOnAir = false;
 					}																														
 				}
 				if (m_jumpHasBeenPressOnAir && m_isHoldingJump)
 				{
 					Jump();
-					print("A");
 					m_jumpHasBeenPressOnAir = false;
 				}
 			}

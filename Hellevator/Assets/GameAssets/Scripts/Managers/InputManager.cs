@@ -67,22 +67,28 @@ public class InputManager : PersistentSingleton<InputManager>
 
 	void Jump()
 	{
-        m_currentDemon.ToggleWalkingParticles(false);
-		m_currentDemon.Jump();
+        if(m_currentDemon != null)
+        {
+            m_currentDemon.ToggleWalkingParticles(false);
+            m_currentDemon.Jump();
+        }
 	}
 	void JumpButtonReleased()
 	{
-		m_currentDemon.JumpReleaseButton();
+        if (m_currentDemon != null)
+            m_currentDemon.JumpReleaseButton();
 	}
 
 	void PossesNearestDemon()
 	{
-        m_currentDemon.Die();
+        if (m_currentDemon != null)
+            m_currentDemon.Die();
     }
 
 	void UseSkill()
 	{
-		m_currentDemon.UseSkill();
+        if (m_currentDemon != null)
+            m_currentDemon.UseSkill();
 	}
 
     public void UpdateDemonReference()
