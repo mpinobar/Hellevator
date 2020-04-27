@@ -99,7 +99,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7779128952978006179}
   m_Bounds:
-    m_Center: {x: 0.014871478, y: 0.30734396, z: 0}
+    m_Center: {x: 0.014871001, y: 0.30734396, z: 0}
     m_Extent: {x: 1.4177765, y: 1.5448589, z: 0}
   m_UseBatching: 1
 --- !u!1 &760808415317905684
@@ -187,7 +187,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 1.5523771, y: -0.030931346}
+  m_ConnectedAnchor: {x: 1.5523771, y: -0.030931406}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -282,7 +282,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.38225767, y: 0.057584897}
+  m_ConnectedAnchor: {x: 0.3822579, y: 0.057585314}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -377,7 +377,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: -0.34190282, y: 0.09028082}
+  m_ConnectedAnchor: {x: -0.34190243, y: 0.09027996}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -515,7 +515,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7763112024062095130}
   m_Bounds:
-    m_Center: {x: -0.0070058703, y: 0.007758796, z: 0}
+    m_Center: {x: -0.007006347, y: 0.007758796, z: 0}
     m_Extent: {x: 0.77995336, y: 0.6007271, z: 0}
   m_UseBatching: 1
 --- !u!1 &1699421186497284929
@@ -617,7 +617,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 2507236774673096924}
   m_Bounds:
-    m_Center: {x: -1.001462, y: 0.280797, z: 0}
+    m_Center: {x: -1.001462, y: 0.28079712, z: 0}
     m_Extent: {x: 1.1917303, y: 0.5435947, z: 0}
   m_UseBatching: 1
 --- !u!1 &2059098860701371269
@@ -718,7 +718,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 5851728810243771546}
   m_Bounds:
-    m_Center: {x: -0.40721464, y: -0.07700026, z: 0}
+    m_Center: {x: -0.40721607, y: -0.07700014, z: 0}
     m_Extent: {x: 0.765208, y: 1.8081383, z: 0}
   m_UseBatching: 1
 --- !u!1 &2527621130554638330
@@ -808,7 +808,7 @@ GameObject:
   - component: {fileID: 3568223931878623129}
   - component: {fileID: 3568223931878623126}
   - component: {fileID: 3568223931878623125}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Orcus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -927,6 +927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9fd8a2b3b1a0204abe6418f221e5927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  usingLitShader: 0
   m_Torso: {fileID: 7428014267113366753}
   m_weight: 10
   m_recomposingSpeed: 1.5
@@ -935,26 +936,6 @@ MonoBehaviour:
   m_maximumPossessionRange: 500
   m_tintWhenCantBePossessed: {r: 0, g: 0, b: 0, a: 0}
   m_isControlledByIA: 0
-  m_defaultMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_JumpMask:
-    serializedVersion: 2
-    m_Bits: 257
-  m_myCollider: {fileID: 3568223931878623124}
-  m_maxSpeed: 5
-  m_acceleration: 25
-  m_jumpForce: 450
-  m_enrageSpeedMultiplier: 3
-  walkingParticles: {fileID: 3568223932266727342}
-  m_firstGravity: 2.25
-  m_secondGravity: 2.5
-  m_thirdGravity: 2
-  m_fourthGravity: 5
-  m_IAMaxSpeed: 5
-  m_IAcceleration: 2
-  m_IAStoppingDistance: 2
-  m_IACurrentState: 1
   m_IADetectionRange: 20
   m_IADetectionAngle: 90
   m_IADetectionRayCount: 3
@@ -964,6 +945,32 @@ MonoBehaviour:
   m_IADetectionLayersForForwardVector:
     serializedVersion: 2
     m_Bits: 1
+  m_defaultMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_PossessionCircle: {fileID: 0}
+  m_maxSpeed: 5
+  m_acceleration: 25
+  m_jumpForce: 450
+  m_enrageSpeedMultiplier: 3
+  m_jumpForceSecond: 10
+  m_canJump: 0
+  m_canDoubleJump: 0
+  m_coyoteTimeDuration: 0
+  m_airAccelerationMultiplier: 2
+  m_groundCorrectionMultiplier: 3
+  m_jumpHasBeenPressOnAirTimer: 0
+  walkingParticles: {fileID: 3568223932266727342}
+  m_firstGravity: 2.25
+  m_firstGravityHoldingJump: 2.25
+  m_secondGravity: 2.5
+  m_thirdGravity: 2
+  m_thirdGravityDoubleJump: 2
+  m_fourthGravity: 5
+  m_IAMaxSpeed: 5
+  m_IAcceleration: 2
+  m_IAStoppingDistance: 2
+  m_IACurrentState: 1
   m_IAPatrolPoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -1070,7 +1077,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3319887390908652365}
   m_Bounds:
-    m_Center: {x: -0.060368657, y: -0.042437553, z: 0}
+    m_Center: {x: -0.060370564, y: -0.042437553, z: 0}
     m_Extent: {x: 0.82899415, y: 1.2227542, z: 0}
   m_UseBatching: 1
 --- !u!1 &3444191485515801445
@@ -1175,8 +1182,8 @@ MonoBehaviour:
   - {fileID: 4244484985305815726}
   - {fileID: 7364774300703437022}
   m_Bounds:
-    m_Center: {x: -4.03216, y: -7.3881493, z: 0}
-    m_Extent: {x: 0.96857953, y: 1.7296298, z: 0}
+    m_Center: {x: -4.0321608, y: -7.3881483, z: 0}
+    m_Extent: {x: 0.96857953, y: 1.7296295, z: 0}
   m_UseBatching: 1
 --- !u!1 &3500606680335998887
 GameObject:
@@ -1264,7 +1271,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 2.4383674, y: -0.0000007152557}
+  m_ConnectedAnchor: {x: 2.438368, y: 0}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -6173,7 +6180,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3207081961724824491}
   m_Bounds:
-    m_Center: {x: 0.94828254, y: -0.5803015, z: 0}
+    m_Center: {x: 0.94828206, y: -0.5803014, z: 0}
     m_Extent: {x: 0.6213202, y: 0.89984214, z: 0}
   m_UseBatching: 1
 --- !u!1 &4336944485091707281
@@ -6262,7 +6269,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 1.9736428, y: 0.0000006258485}
+  m_ConnectedAnchor: {x: 1.973643, y: -0.0000003278254}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -6357,7 +6364,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 1.2836637, y: -0.0000002980231}
+  m_ConnectedAnchor: {x: 1.2836629, y: 0.00000017881388}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -6466,8 +6473,8 @@ MonoBehaviour:
   - {fileID: 8865773064602796456}
   - {fileID: 3619347310274471200}
   m_Bounds:
-    m_Center: {x: 0.0010702014, y: 0.0077071786, z: 0}
-    m_Extent: {x: 0.61944216, y: 0.26137626, z: 0}
+    m_Center: {x: 0.0010691881, y: 0.0077071786, z: 0}
+    m_Extent: {x: 0.6194416, y: 0.26137626, z: 0}
   m_UseBatching: 1
 --- !u!1 &5027852850469159677
 GameObject:
@@ -6540,7 +6547,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.7801398, y: 0.000001013279}
+  m_ConnectedAnchor: {x: 0.78013885, y: -0.000000059604645}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -6678,7 +6685,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3032545440741947769}
   m_Bounds:
-    m_Center: {x: 0.0015830994, y: -0.038993776, z: 0}
+    m_Center: {x: 0.0015821457, y: -0.038993776, z: 0}
     m_Extent: {x: 0.5683601, y: 0.726918, z: 0}
   m_UseBatching: 1
 --- !u!1 &5416571575831952049
@@ -6780,7 +6787,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 6903164779088080876}
   m_Bounds:
-    m_Center: {x: 0.49119478, y: -0.11355817, z: 0}
+    m_Center: {x: 0.49119335, y: -0.113558054, z: 0}
     m_Extent: {x: 0.81022406, y: 1.1143265, z: 0}
   m_UseBatching: 1
 --- !u!1 &5526596428545788868
@@ -6946,7 +6953,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.9342171, y: 0.00000050663954}
+  m_ConnectedAnchor: {x: 0.9342173, y: 0.00000005960465}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -7041,7 +7048,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.3220386, y: 0.06805955}
+  m_ConnectedAnchor: {x: 0.32203883, y: 0.068059966}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -7136,7 +7143,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 1.0285567, y: 0.000000059604616}
+  m_ConnectedAnchor: {x: 1.0285568, y: -0.00000044703464}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -7245,8 +7252,8 @@ MonoBehaviour:
   - {fileID: 8849202978302034541}
   - {fileID: 8230038168173031651}
   m_Bounds:
-    m_Center: {x: -0.029863596, y: -0.007802546, z: 0}
-    m_Extent: {x: 0.61196566, y: 0.2606517, z: 0}
+    m_Center: {x: -0.02986312, y: -0.0078026056, z: 0}
+    m_Extent: {x: 0.61196566, y: 0.26065165, z: 0}
   m_UseBatching: 1
 --- !u!1 &6911207595209356384
 GameObject:
@@ -7364,7 +7371,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.7162872, y: 0.08620399}
+  m_ConnectedAnchor: {x: 0.7162876, y: 0.08620486}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -7459,7 +7466,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: -0.2100785, y: -0.16276532}
+  m_ConnectedAnchor: {x: -0.2100781, y: -0.1627662}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -7537,7 +7544,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 1.5192236, y: 0.0000011920931}
+  m_ConnectedAnchor: {x: 1.5192229, y: -0.00000005960466}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -7615,7 +7622,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.92557865, y: -0.00000074505795}
+  m_ConnectedAnchor: {x: 0.9255789, y: -0.00000032782552}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -7723,8 +7730,8 @@ MonoBehaviour:
   - {fileID: 3619347310274471200}
   - {fileID: 3419670537663139636}
   m_Bounds:
-    m_Center: {x: 0.009140909, y: -0.0055716634, z: 0}
-    m_Extent: {x: 0.6275341, y: 0.727474, z: 0}
+    m_Center: {x: 0.009140015, y: -0.0055716634, z: 0}
+    m_Extent: {x: 0.62753415, y: 0.727474, z: 0}
   m_UseBatching: 1
 --- !u!1 &8903119570848547886
 GameObject:
@@ -7825,7 +7832,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 4025552681282430839}
   m_Bounds:
-    m_Center: {x: -1.2344139, y: 0.5499974, z: 0}
+    m_Center: {x: -1.2344148, y: 0.54999715, z: 0}
     m_Extent: {x: 0.79751116, y: 0.79005426, z: 0}
   m_UseBatching: 1
 --- !u!1 &9083928758779087409
@@ -7928,8 +7935,8 @@ MonoBehaviour:
   - {fileID: 8230038168173031651}
   - {fileID: 7745800845380580319}
   m_Bounds:
-    m_Center: {x: -0.020632088, y: 0.005374551, z: 0}
-    m_Extent: {x: 0.61818886, y: 0.72585624, z: 0}
+    m_Center: {x: -0.02063179, y: 0.005374551, z: 0}
+    m_Extent: {x: 0.6181887, y: 0.72585624, z: 0}
   m_UseBatching: 1
 --- !u!1001 &3568223932699721640
 PrefabInstance:

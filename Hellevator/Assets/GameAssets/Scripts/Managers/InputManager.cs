@@ -43,14 +43,16 @@ public class InputManager : PersistentSingleton<InputManager>
 
             if (m_moveInputValue > 0)
             {
-                m_currentDemon.MovementDirection = 1;
-                m_currentDemon.MySprite.flipX = false;
+                m_currentDemon.MovementDirection = -1;
+
             }
             else if (m_moveInputValue < 0)
             {
-                m_currentDemon.MovementDirection = -1;
-                m_currentDemon.MySprite.flipX = true;
+                m_currentDemon.MovementDirection = 1;
+
             }
+            if (m_currentDemon.MovementDirection != 0)
+                m_currentDemon.transform.localScale = Vector3.one - (Vector3.right * (1 - m_currentDemon.MovementDirection));
         }
         else
         {
