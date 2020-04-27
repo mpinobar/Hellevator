@@ -101,9 +101,7 @@ public class Orcus : DemonBase
 			else
 			{
 				MyRgb.gravityScale = 2;
-			}
-
-			
+			}			
 		}
 	}
 
