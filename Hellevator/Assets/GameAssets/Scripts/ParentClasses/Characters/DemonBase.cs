@@ -21,6 +21,7 @@ public abstract class DemonBase : MonoBehaviour
     protected bool  m_isDead;
     private bool    m_grabbedByRight;
     private Color   m_outlineColorWhenControlledByPlayer;
+    private float   m_initialGlowThickness;
 
     //Weight variables
     [Header("Physicality")]
@@ -40,7 +41,7 @@ public abstract class DemonBase : MonoBehaviour
     [ColorUsage(true, true)]
     [SerializeField] private Color      m_tintWhenCantBePossessed;
     [SerializeField] SpriteRenderer     m_PossessionCircle;
-    [SerializeField] private float      m_distanceStartGlow = 10;
+    private float                       m_distanceStartGlow = 10;
     [ColorUsage(true, true)]
     [SerializeField] private Color      m_colorWhenAvailable;
     private float                       m_distanceMaxGlow = 5;
@@ -150,6 +151,8 @@ public abstract class DemonBase : MonoBehaviour
         m_myAnimator                = GetComponent<Animator>();
         m_childSprites              = GetComponentsInChildren<SpriteRenderer>();
         m_outlineColorWhenControlledByPlayer = m_childSprites[0].material.GetColor("Color_A7D64A79");
+        m_initialGlowThickness = m_childSprites[0].material.GetFloat("_Thickness");
+        print(m_initialGlowThickness);
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
@@ -179,42 +182,53 @@ public abstract class DemonBase : MonoBehaviour
             //ResetRagdollTransforms();
             LerpResetRagdollTransforms();
 		}
-        if (!m_isInDanger && !IsControlledByPlayer)
-        {
 
-            m_distanceStartGlow = PosesionManager.Instance.m_controlledDemon.MaximumPossessionRange;
-            float distanceToPlayer = Vector2.Distance(transform.position, PosesionManager.Instance.m_controlledDemon.transform.position);
-            if (distanceToPlayer < m_distanceStartGlow)
-            {
-                print("player withing glow distance");
 
-                for (int i = 0; i < m_childSprites.Length; i++)
-                {
-                    m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
-
-                }
-                if (distanceToPlayer < m_distanceMaxGlow)
-                {
-                    for (int i = 0; i < m_childSprites.Length; i++)
-                    {
-                        m_childSprites[i].material.SetFloat("_Thickness", 0.977f);
-                    }
-                }
-                else
-                {
-                    float glowPercentage = 1 - ((distanceToPlayer - m_distanceMaxGlow) / (m_distanceStartGlow - m_distanceMaxGlow));
-                    print(glowPercentage);
-                    for (int i = 0; i < m_childSprites.Length; i++)
-                    {
-                        m_childSprites[i].material.SetFloat("_Thickness", glowPercentage);
-
-                    }
-                }
-            }
-        }
 
 
         /*
+         * if (!m_isInDanger && !IsControlledByPlayer)
+        {
+            if(PosesionManager.Instance.ControlledDemon != null)
+            {
+                m_distanceStartGlow = PosesionManager.Instance.ControlledDemon.MaximumPossessionRange;
+                float distanceToPlayer = Vector2.Distance(transform.position, PosesionManager.Instance.m_controlledDemon.transform.position);
+                if (distanceToPlayer < m_distanceStartGlow)
+                {
+                    print("player withing glow distance");
+
+                    for (int i = 0; i < m_childSprites.Length; i++)
+                    {
+                        m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
+
+                    }
+                    if (distanceToPlayer < m_distanceMaxGlow)
+                    {
+                        for (int i = 0; i < m_childSprites.Length; i++)
+                        {
+                            m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
+                        }
+                    }
+                    else
+                    {
+                        float glowPercentage = 1 - ((distanceToPlayer - m_distanceMaxGlow) / (m_distanceStartGlow - m_distanceMaxGlow));
+                        glowPercentage = Mathf.Clamp(glowPercentage, 0, m_initialGlowThickness);                        
+                        for (int i = 0; i < m_childSprites.Length; i++)
+                        {
+                            m_childSprites[i].material.SetFloat("_Thickness", glowPercentage);
+
+                        }
+                    }
+                }            
+            }
+        }
+         * 
+         * 
+         * 
+         * 
+         * 
+         * 
+         * 
         if (m_hasADemonGrabed)
         {
             if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
@@ -271,7 +285,7 @@ public abstract class DemonBase : MonoBehaviour
         */
     }
 
-	#region Grab
+    #region Grab
 
     /*
 	/// <summary>
@@ -418,14 +432,14 @@ public abstract class DemonBase : MonoBehaviour
 		}
 	}
     */
-	#endregion Grab
+    #endregion Grab
 
-	/// <summary>
-	/// Returns all child component references of specified component, excluding the parent
-	/// </summary>
-	/// <typeparam name="T">The specified component to look for</typeparam>
-	/// <returns>An array with the components</returns>
-	private T[] ReturnComponentsInChildren<T>()
+    /// <summary>
+    /// Returns all child component references of specified component, excluding the parent
+    /// </summary>
+    /// <typeparam name="T">The specified component to look for</typeparam>
+    /// <returns>An array with the components</returns>
+    private T[] ReturnComponentsInChildren<T>()
     {
         T[] array = GetComponentsInChildren<T>();
         T[] returnedArray = new T[array.Length - 1];
@@ -466,7 +480,7 @@ public abstract class DemonBase : MonoBehaviour
         m_PossessionCircle.enabled = true;
         for (int i = 0; i < m_childSprites.Length; i++)
         {
-            m_childSprites[i].material.SetFloat("_Thickness", 0.977f);
+            m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
             m_childSprites[i].sortingLayerName = "Player";            
             m_childSprites[i].material.SetColor("Color_A7D64A79", m_outlineColorWhenControlledByPlayer);
         }

@@ -43,7 +43,7 @@ public class Paralax : MonoBehaviour
 			{
 				i = m_backgrounds.Length - 1;
 			}
-			print(i);
+
 			m_backgrounds[i].position = new Vector3(m_backgrounds[i].position.x + m_length * m_backgrounds.Length, m_backgrounds[i].position.y, m_backgrounds[i].position.z);
 			m_indexBackgroundInFront = m_indexBackgroundInFront + 1;
 			if(m_indexBackgroundInFront == m_backgrounds.Length)
