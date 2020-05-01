@@ -27,7 +27,7 @@ public class CheckPoint : MonoBehaviour
     /// </summary>
     public void SpawnPlayer()
     {
-        DemonBase spawnedDemon = Instantiate(demonToSpawn, transform.position, Quaternion.identity);
+        DemonBase spawnedDemon = Instantiate(demonToSpawn, transform.position - Vector3.up*2, Quaternion.identity);
         spawnedDemon.enabled = true;
         spawnedDemon.SetControlledByPlayer();
         ActivateCheckPoint();
