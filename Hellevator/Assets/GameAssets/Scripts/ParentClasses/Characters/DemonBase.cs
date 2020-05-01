@@ -20,7 +20,7 @@ public abstract class DemonBase : MonoBehaviour
     private bool    m_isPossessionBlocked;
     protected bool  m_isDead;
     private bool    m_grabbedByRight;
-    [SerializeField] bool usingLitShader;
+    private Color   m_outlineColorWhenControlledByPlayer;
 
     //Weight variables
     [Header("Physicality")]
@@ -35,10 +35,15 @@ public abstract class DemonBase : MonoBehaviour
 
 
     [Header("Possession")]
-    [SerializeField] private bool     m_possessedOnStart;
-    [SerializeField] private float    m_maximumPossessionRange;
-    [SerializeField] private Color    m_tintWhenCantBePossessed;
-    [SerializeField] SpriteRenderer m_PossessionCircle;
+    [SerializeField] private bool       m_possessedOnStart;
+    [SerializeField] private float      m_maximumPossessionRange;
+    [ColorUsage(true, true)]
+    [SerializeField] private Color      m_tintWhenCantBePossessed;
+    [SerializeField] SpriteRenderer     m_PossessionCircle;
+    [SerializeField] private float      m_distanceStartGlow = 10;
+    [ColorUsage(true, true)]
+    [SerializeField] private Color      m_colorWhenAvailable;
+    private float                       m_distanceMaxGlow = 5;
     //IAReferences
     [Space]
 	[Header("IA")]
@@ -144,7 +149,7 @@ public abstract class DemonBase : MonoBehaviour
         m_childTransforms           = m_torso.GetComponentsInChildren<Transform>();
         m_myAnimator                = GetComponent<Animator>();
         m_childSprites              = GetComponentsInChildren<SpriteRenderer>();
-        
+        m_outlineColorWhenControlledByPlayer = m_childSprites[0].material.GetColor("Color_A7D64A79");
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
@@ -164,16 +169,50 @@ public abstract class DemonBase : MonoBehaviour
 				SetNotControlledByPlayer();
 			}
             
-        }        
+        }
     }
 
 	protected virtual void Update()
-	{
-		if (m_isLerpingToResetBones)
+	{        
+        if (m_isLerpingToResetBones)
 		{
             //ResetRagdollTransforms();
             LerpResetRagdollTransforms();
 		}
+        if (!m_isInDanger && !IsControlledByPlayer)
+        {
+
+            m_distanceStartGlow = PosesionManager.Instance.m_controlledDemon.MaximumPossessionRange;
+            float distanceToPlayer = Vector2.Distance(transform.position, PosesionManager.Instance.m_controlledDemon.transform.position);
+            if (distanceToPlayer < m_distanceStartGlow)
+            {
+                print("player withing glow distance");
+
+                for (int i = 0; i < m_childSprites.Length; i++)
+                {
+                    m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
+
+                }
+                if (distanceToPlayer < m_distanceMaxGlow)
+                {
+                    for (int i = 0; i < m_childSprites.Length; i++)
+                    {
+                        m_childSprites[i].material.SetFloat("_Thickness", 0.977f);
+                    }
+                }
+                else
+                {
+                    float glowPercentage = 1 - ((distanceToPlayer - m_distanceMaxGlow) / (m_distanceStartGlow - m_distanceMaxGlow));
+                    print(glowPercentage);
+                    for (int i = 0; i < m_childSprites.Length; i++)
+                    {
+                        m_childSprites[i].material.SetFloat("_Thickness", glowPercentage);
+
+                    }
+                }
+            }
+        }
+
 
         /*
         if (m_hasADemonGrabed)
@@ -230,7 +269,7 @@ public abstract class DemonBase : MonoBehaviour
             }
         }
         */
-	}
+    }
 
 	#region Grab
 
@@ -425,13 +464,11 @@ public abstract class DemonBase : MonoBehaviour
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
         m_PossessionCircle.enabled = true;
-        if (usingLitShader)
+        for (int i = 0; i < m_childSprites.Length; i++)
         {
-            for (int i = 0; i < m_childSprites.Length; i++)
-            {
-                m_childSprites[i].material.SetFloat("_Thickness", 0.977f);
-                m_childSprites[i].sortingLayerName = "Player";
-            }
+            m_childSprites[i].material.SetFloat("_Thickness", 0.977f);
+            m_childSprites[i].sortingLayerName = "Player";            
+            m_childSprites[i].material.SetColor("Color_A7D64A79", m_outlineColorWhenControlledByPlayer);
         }
 
     }
@@ -541,16 +578,13 @@ public abstract class DemonBase : MonoBehaviour
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
-        if (usingLitShader)
+        for (int i = 0; i < m_childSprites.Length; i++)
         {
-            for (int i = 0; i < m_childSprites.Length; i++)
-            {
-                m_childSprites[i].material.SetFloat("_Thickness", 0);
-                m_childSprites[i].sortingLayerName = "Default";
-            }
+            m_childSprites[i].material.SetFloat("_Thickness", 0);
+            m_childSprites[i].sortingLayerName = "Default";
         }
         m_PossessionCircle.enabled = false;
-        this.enabled = false;
+        //this.enabled = false;
     }
     
 
