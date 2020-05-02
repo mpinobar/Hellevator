@@ -471,7 +471,7 @@ public abstract class DemonBase : MonoBehaviour
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
-        m_PossessionCircle.enabled = true;
+        //m_PossessionCircle.enabled = true;
         
         for (int i = 0; i < m_childSprites.Length; i++)
         {
@@ -592,7 +592,7 @@ public abstract class DemonBase : MonoBehaviour
             m_childSprites[i].material.SetFloat("_Thickness", 0);
             m_childSprites[i].sortingLayerName = "Default";
         }
-        m_PossessionCircle.enabled = false;
+        //m_PossessionCircle.enabled = false;
         m_myAnimator.enabled = false;
         //this.enabled = false;
     }
