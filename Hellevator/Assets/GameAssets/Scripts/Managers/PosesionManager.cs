@@ -12,8 +12,7 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
 
     private void Start()
     {
-        InputManager.Instance.UpdateDemonReference();
-        CameraManager.Instance.ChangeCamTarget();
+        InputManager.Instance.UpdateDemonReference();        
     }
     /// <summary>
     /// Returns the nearest demon to the demon currently controlled by the player, with a distance limit
@@ -80,6 +79,9 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
         demonToPossess.SetControlledByPlayer();
         CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();
-        m_pLight.gameObject.SetActive(false);
+		if(m_pLight != null)
+		{
+			m_pLight.gameObject.SetActive(false);
+		}
     }
 }
