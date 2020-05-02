@@ -7,6 +7,8 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
 {
     public DemonBase m_controlledDemon;
     public DemonBase ControlledDemon { get => m_controlledDemon; set => m_controlledDemon = value; }
+    public PossessingLight PLight { get => m_pLight; set => m_pLight = value; }
+
     [SerializeField] GameObject m_PossessionLight;
     private PossessingLight m_pLight;
 

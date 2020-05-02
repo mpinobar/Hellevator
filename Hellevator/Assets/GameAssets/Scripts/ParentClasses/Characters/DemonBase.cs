@@ -136,6 +136,7 @@ public abstract class DemonBase : MonoBehaviour
     public float MaximumPossessionRange { get => m_maximumPossessionRange; set => m_maximumPossessionRange = value; }
     public Collider2D RagdollLogicCollider { get => m_ragdollLogicCollider; set => m_ragdollLogicCollider = value; }
     public Transform Torso { get => m_torso; set => m_torso = value; }
+    public bool m_hasTurnedOff { get; private set; }
 
 
     #endregion
@@ -190,12 +191,12 @@ public abstract class DemonBase : MonoBehaviour
         {
             if(PosesionManager.Instance.ControlledDemon != null)
             {
+                
                 m_distanceStartGlow = PosesionManager.Instance.ControlledDemon.MaximumPossessionRange;
                 float distanceToPlayer = Vector2.Distance(transform.position, PosesionManager.Instance.m_controlledDemon.transform.position);
                 if (distanceToPlayer < m_distanceStartGlow)
                 {
-                    print("player withing glow distance");
-
+                    m_hasTurnedOff = false;
                     for (int i = 0; i < m_childSprites.Length; i++)
                     {
                         m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
@@ -218,8 +219,18 @@ public abstract class DemonBase : MonoBehaviour
 
                         }
                     }
-                }            
+                }
+                else if (!m_hasTurnedOff)
+                {
+                    for (int i = 0; i < m_childSprites.Length; i++)
+                    {
+                        m_childSprites[i].material.SetFloat("_Thickness", 0);
+                        m_hasTurnedOff = true;
+
+                    }
+                }
             }
+            
         }
         
          /* 

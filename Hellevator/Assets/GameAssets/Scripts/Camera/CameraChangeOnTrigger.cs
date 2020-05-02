@@ -87,7 +87,7 @@ public class CameraChangeOnTrigger : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+        if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon && !PosesionManager.Instance.PLight.gameObject.activeSelf)
         {
 
             /*if (cameraManager.Camera1.activeSelf == true)
