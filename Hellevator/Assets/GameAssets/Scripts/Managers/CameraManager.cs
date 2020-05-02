@@ -15,7 +15,8 @@ public class CameraManager : TemporalSingleton<CameraManager>
     [SerializeField] GameObject camera3;
     [SerializeField] GameObject camera4;
 
-
+	[SerializeField] private bool m_hasCutscene = false;
+	[SerializeField] private Transform m_luz = null;
 
     Transform pointToLook;
     float newOrtographicSize;
@@ -36,8 +37,11 @@ public class CameraManager : TemporalSingleton<CameraManager>
 
     private void Start()
     {
-        vcam1.Follow = PosesionManager.Instance.ControlledDemon.transform;
-        vcam1.LookAt = PosesionManager.Instance.ControlledDemon.transform;
+		if(PosesionManager.Instance.ControlledDemon != null)
+		{
+			vcam1.Follow = PosesionManager.Instance.ControlledDemon.transform;
+			vcam1.LookAt = PosesionManager.Instance.ControlledDemon.transform;
+		}
 
         Camera1.SetActive(true);
         Camera2.SetActive(false);
@@ -47,6 +51,17 @@ public class CameraManager : TemporalSingleton<CameraManager>
         IsCam1 = true;
         isCam3 = true;
 
+		if (m_hasCutscene)
+		{
+			//Activar camara de Cutscene
+			vcam1.Follow = m_luz;
+			vcam1.LookAt = m_luz;
+
+		}
+		else
+		{
+			ChangeCamTarget();
+		}
     }
 
     public void ChangeCamTarget()
