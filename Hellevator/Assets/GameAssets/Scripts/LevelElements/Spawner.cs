@@ -17,7 +17,6 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        m_timer = m_spawnTimer;
         m_spawnedDemons = new List<DemonBase>();
     }
 
