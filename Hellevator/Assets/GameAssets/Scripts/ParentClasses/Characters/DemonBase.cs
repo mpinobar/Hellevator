@@ -152,7 +152,6 @@ public abstract class DemonBase : MonoBehaviour
         m_childSprites              = GetComponentsInChildren<SpriteRenderer>();
         m_outlineColorWhenControlledByPlayer = m_childSprites[0].material.GetColor("Color_A7D64A79");
         m_initialGlowThickness = m_childSprites[0].material.GetFloat("_Thickness");
-        print(m_initialGlowThickness);
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
@@ -186,8 +185,8 @@ public abstract class DemonBase : MonoBehaviour
 
 
 
-        /*
-         * if (!m_isInDanger && !IsControlledByPlayer)
+        
+        if (!m_isInDanger && !IsControlledByPlayer)
         {
             if(PosesionManager.Instance.ControlledDemon != null)
             {
@@ -222,13 +221,8 @@ public abstract class DemonBase : MonoBehaviour
                 }            
             }
         }
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
+        
+         /* 
         if (m_hasADemonGrabed)
         {
             if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
