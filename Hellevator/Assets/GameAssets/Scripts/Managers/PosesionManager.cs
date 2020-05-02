@@ -66,6 +66,7 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
             m_pLight.gameObject.SetActive(true);
             m_pLight.transform.position = currentDemon.transform.position;
             m_pLight.Begin(demonToPossess);
+            CameraManager.Instance.FollowGhost(m_pLight.transform);
         }
         else
         {

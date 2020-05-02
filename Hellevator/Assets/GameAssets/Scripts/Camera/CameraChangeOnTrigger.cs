@@ -24,60 +24,65 @@ public class CameraChangeOnTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(PosesionManager.Instance.ControlledDemon != null)
+        {
+            if (collision.gameObject == PosesionManager.Instance.ControlledDemon.gameObject)
+            {
+                if (insideOtherTrigger)
+                {
+                    triggerToDesactivate.SetActive(false);
+                    if (hasToFollowEnemy)
+                    {
+                        pointToLook = PosesionManager.Instance.ControlledDemon.transform;
 
-		if(collision.gameObject == PosesionManager.Instance.ControlledDemon.gameObject)
-		{
-			if (insideOtherTrigger)
-			{
-				triggerToDesactivate.SetActive(false);
-				if (hasToFollowEnemy)
-				{
-					pointToLook = PosesionManager.Instance.ControlledDemon.transform;
+                        cameraManager.PointToLook = pointToLook;
+                        cameraManager.NewOrtographicSize = ortographicSize;
 
-					cameraManager.PointToLook = pointToLook;
-					cameraManager.NewOrtographicSize = ortographicSize;
+                        cameraManager.IsTriggerFarCamera = true;
 
-					cameraManager.IsTriggerFarCamera = true;
+                        cameraManager.Camera1.SetActive(false);
+                        cameraManager.Camera2.SetActive(false);
 
-					cameraManager.Camera1.SetActive(false);
-					cameraManager.Camera2.SetActive(false);
-
-					cameraManager.ChangeCamTarget();
-				}
+                        cameraManager.ChangeCamTarget();
+                    }
 
 
-				if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
-				{
+                    if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+                    {
 
-				}
-			}
+                    }
+                }
 
-			else
-			{
-				if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
-				{
-					print(collision.transform.root.GetComponent<DemonBase>());
+                else
+                {
+                    if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+                    {
+                        print(collision.transform.root.GetComponent<DemonBase>());
 
-					/*if(cameraManager.Camera1.activeSelf == true)
-					{
-						cam1.SetTrigger("zoom");
-					}
-					else if(cameraManager.Camera2.activeSelf == true)
-					{
-						cam2.SetTrigger("zoom");
-					}*/
-					cameraManager.PointToLook = pointToLook;
-					cameraManager.NewOrtographicSize = ortographicSize;
+                        /*if(cameraManager.Camera1.activeSelf == true)
+                        {
+                            cam1.SetTrigger("zoom");
+                        }
+                        else if(cameraManager.Camera2.activeSelf == true)
+                        {
+                            cam2.SetTrigger("zoom");
+                        }*/
+                        cameraManager.PointToLook = pointToLook;
+                        cameraManager.NewOrtographicSize = ortographicSize;
 
-					cameraManager.IsTriggerFarCamera = true;
+                        cameraManager.IsTriggerFarCamera = true;
 
-					cameraManager.Camera1.SetActive(false);
-					cameraManager.Camera2.SetActive(false);
+                        cameraManager.Camera1.SetActive(false);
+                        cameraManager.Camera2.SetActive(false);
 
-					cameraManager.ChangeCamTarget();
-				}
-			}
-		}           
+                        cameraManager.ChangeCamTarget();
+                    }
+                }
+            }
+
+        }
+
+		
     }
 
     private void OnTriggerExit2D(Collider2D collision)

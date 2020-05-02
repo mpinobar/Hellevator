@@ -22,6 +22,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
     }
 
+
     /// <summary>
     /// Checks if the checkpoint has been already entered
     /// </summary>
@@ -53,7 +54,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             if (m_loadingScene.isDone)
             {
-                PosesionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
+                if(PosesionManager.Instance.ControlledDemon != null)
+                {
+                    PosesionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
+                }
                 UpdateLastCheckPointReference();
                 m_lastCheckPoint.SpawnPlayer();
                 m_isRestarting = false;

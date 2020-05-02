@@ -472,6 +472,7 @@ public abstract class DemonBase : MonoBehaviour
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
         m_PossessionCircle.enabled = true;
+        
         for (int i = 0; i < m_childSprites.Length; i++)
         {
             m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
@@ -592,6 +593,7 @@ public abstract class DemonBase : MonoBehaviour
             m_childSprites[i].sortingLayerName = "Default";
         }
         m_PossessionCircle.enabled = false;
+        m_myAnimator.enabled = false;
         //this.enabled = false;
     }
     
@@ -654,7 +656,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             ResetRagdollTransforms();
             m_isLerpingToResetBones = false;
-            
+            m_myAnimator.enabled = true;
             m_hasResetParentPosition = false;
         }
     }

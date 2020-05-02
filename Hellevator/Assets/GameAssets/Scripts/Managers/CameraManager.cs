@@ -35,6 +35,17 @@ public class CameraManager : TemporalSingleton<CameraManager>
     public Transform PointToLook { get => pointToLook; set => pointToLook = value; }
     public float NewOrtographicSize { get => newOrtographicSize; set => newOrtographicSize = value; }
 
+    public override void Awake()
+    {
+        base.Awake();
+
+        if(LevelManager.Instance.LastCheckPoint != null)
+        {
+            m_hasCutscene = false;
+        }
+    }
+
+
     private void Start()
     {
 		if(PosesionManager.Instance.ControlledDemon != null)
@@ -62,6 +73,31 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		{
 			ChangeCamTarget();
 		}
+    }
+
+
+    public void FollowGhost(Transform light)
+    {
+        if (Camera1.activeSelf)
+        {
+            vcam1.Follow = light;
+            vcam1.LookAt = light;
+        }
+        else if (Camera2.activeSelf)
+        {
+            vcam2.Follow = light;
+            vcam2.LookAt = light;
+        }
+        else if (Camera3.activeSelf)
+        {
+            vcam3.Follow = light;
+            vcam3.LookAt = light;
+        }
+        else if (Camera4.activeSelf)
+        {
+            vcam4.Follow = light;
+            vcam4.LookAt = light;
+        }
     }
 
     public void ChangeCamTarget()

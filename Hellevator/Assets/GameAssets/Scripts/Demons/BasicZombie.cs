@@ -194,14 +194,15 @@ public class BasicZombie : DemonBase
 
 	public override void ToggleWalkingParticles(bool active)
     {
-        if (active)
-        {
-            walkingParticles.Play();
-        }
-        else
-        {
-            walkingParticles.Stop();
-        }
+        walkingParticles.Stop();
+        //if (active)
+        //{
+        //    walkingParticles.Play();
+        //}
+        //else
+        //{
+            
+        //}
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
