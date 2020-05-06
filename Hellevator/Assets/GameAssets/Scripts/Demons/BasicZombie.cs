@@ -15,6 +15,7 @@ public class BasicZombie : DemonBase
 	[SerializeField] private bool m_canJump;
     [SerializeField] private bool m_canDoubleJump;
 	[SerializeField] private float m_coyoteTimeDuration = 0f;//Mirar si hacer cambio a frames
+    [SerializeField] private float m_groundCorrectionMultiplier = 3;
     private bool m_hasJumped;
     private bool m_hasDoubleJumped;
 	private bool m_coyoteTimeActive = false;
@@ -57,7 +58,7 @@ public class BasicZombie : DemonBase
     public float JumpForce { get => m_jumpForce; }
 
     #endregion
-	
+
     public override void UseSkill()
     {
         
@@ -144,7 +145,19 @@ public class BasicZombie : DemonBase
 
     public override void Move(float xInput)
     {
-        MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, Acceleration * Time.deltaTime),MyRgb.velocity.y);
+
+        float accel = m_acceleration;
+       
+        if (IsGrounded())
+        {
+            if ((MyRgb.velocity.x) * xInput < 0)
+            {
+                accel *= m_groundCorrectionMultiplier;
+            }
+        }
+
+
+        MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, accel * Time.deltaTime), MyRgb.velocity.y);
     }
 
     public override void Jump()
