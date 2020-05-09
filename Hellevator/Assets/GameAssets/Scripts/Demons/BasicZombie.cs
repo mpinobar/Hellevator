@@ -138,7 +138,7 @@ public class BasicZombie : DemonBase
 			m_coyoteTimeActive = false;
 			
         }
-        //m_myAnimator.SetBool("Walking", Mathf.Abs(MyRgb.velocity.x) > 0.2f);
+        m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
     }
 
     
@@ -175,13 +175,15 @@ public class BasicZombie : DemonBase
                 m_hasJumped = true;
 				m_coyoteTimeActive = false;
 				m_isHoldingJump = true;
+                m_myAnimator.SetTrigger("Jump");
             }
             else if(m_canDoubleJump && !m_hasDoubleJumped)
             {
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
                 MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
                 m_hasDoubleJumped = true;
-			}
+                m_myAnimator.SetTrigger("Jump");
+            }
 			else if(m_hasJumped)
 			{
 				if (m_canDoubleJump && m_hasDoubleJumped)

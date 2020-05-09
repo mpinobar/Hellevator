@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Experimental.U2D.IK;
 
 /// <summary>
 /// Parent class of any demon that can be controlled by the player
@@ -62,6 +62,7 @@ public abstract class DemonBase : MonoBehaviour
     private Transform[]         m_childTransforms;
     private RagdollTransform[]  m_childInitialTransforms;
     private SpriteRenderer[]    m_childSprites;
+    private IKManager2D         m_IKManager;
 
     //mask for ground detection
     [Header("Don't touch")]
@@ -152,7 +153,9 @@ public abstract class DemonBase : MonoBehaviour
         m_myAnimator                = GetComponent<Animator>();
         m_childSprites              = GetComponentsInChildren<SpriteRenderer>();
         m_outlineColorWhenControlledByPlayer = m_childSprites[0].material.GetColor("Color_A7D64A79");
-        m_initialGlowThickness = m_childSprites[0].material.GetFloat("_Thickness");
+        m_initialGlowThickness      = m_childSprites[0].material.GetFloat("_Thickness");
+        m_IKManager                 = GetComponent<IKManager2D>();
+        
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
@@ -475,6 +478,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetControlledByPlayer()
     {
+        m_IKManager.enabled = true;
         m_isDead = false;
         SetRagdollActive(false);
         PosesionManager.Instance.ControlledDemon = this;
@@ -595,6 +599,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetNotControlledByPlayer()
     {
+        m_IKManager.enabled = false;
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
