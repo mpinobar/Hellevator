@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class CameraManager : TemporalSingleton<CameraManager>
+public class CameraManagerOUTDATED : TemporalSingleton<CameraManagerOUTDATED>
 {
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam2;

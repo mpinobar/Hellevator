@@ -13,13 +13,25 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
 	private int m_currentDestination = 0;
 
 
-    private void Start()
+	private void Start()
     {
-        if (LevelManager.Instance.LastCheckPoint != null)
-        {
-            DestroyCutscene();
-        }
+		if (LevelManager.Instance.IsRestarting)
+		{
+			if (LevelManager.Instance.CheckPoints.Count != 0)
+			{
+				DestroyCutscene();
+			}
+			else
+			{
+				CameraManager.Instance.ChangeFocusOfMainCameraTo(this.transform);
+			}
+		}
+		else
+		{
+			CameraManager.Instance.ChangeFocusOfMainCameraTo(this.transform);
+		}
     }
+
 
     // Update is called once per frame
     void Update()
@@ -39,6 +51,7 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
                 if (m_currentDestination == m_lightRoute.Length)
                 {
                     PosesionManager.Instance.PossessNewDemon(m_demonToPosesAfterCutscene);
+					CameraManager.Instance.ChangeFocusOfMainCameraTo(m_demonToPosesAfterCutscene.transform);
                     Destroy(this.gameObject);
                 }
             }

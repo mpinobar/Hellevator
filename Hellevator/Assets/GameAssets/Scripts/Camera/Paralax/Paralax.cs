@@ -72,7 +72,6 @@ public class Paralax : MonoBehaviour
 		float dist = (m_camera.position.x * m_parallaxSpeed);
 		this.transform.position = new Vector3(m_startingPosX + dist, transform.position.y, transform.position.z);
 		m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);
-		print(m_backgrounds[m_indexBackgroundInFront].localPosition);
 
 		float halfNumberOfBackgrounds = m_backgrounds.Length / 2;
 

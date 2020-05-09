@@ -31,7 +31,7 @@ public class CheckPoint : MonoBehaviour
         spawnedDemon.enabled = true;
         spawnedDemon.SetControlledByPlayer();
         ActivateCheckPoint();
-        CameraManager.Instance.ChangeCamTarget();
+        //CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();
     }
 }
