@@ -6,13 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : PersistentSingleton<LevelManager>
 {
-    public List<Vector3> m_checkPoints;
+	private List<Vector3> m_checkPoints;
 
-    public CheckPoint m_lastCheckPoint;
+	public CheckPoint m_lastCheckPoint;
 
     private bool m_isRestarting;
 
     AsyncOperation m_loadingScene;
+	
+	[SerializeField] private GameObject m_fade = null;
 
     public CheckPoint LastCheckPoint { get => m_lastCheckPoint;
 
@@ -22,12 +24,15 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
     }
 
+	public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
+	public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
 
-    /// <summary>
-    /// Checks if the checkpoint has been already entered
-    /// </summary>
-    /// <param name="value">The checkpoint to check</param>
-    public void SetLastCheckPoint(CheckPoint value)
+
+	/// <summary>
+	/// Checks if the checkpoint has been already entered
+	/// </summary>
+	/// <param name="value">The checkpoint to check</param>
+	public void SetLastCheckPoint(CheckPoint value)
     {
         if (m_checkPoints == null)
         {
@@ -50,16 +55,25 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void Update()
     {
+		
+
         if (m_isRestarting)
         {
             if (m_loadingScene.isDone)
             {
-                if(PosesionManager.Instance.ControlledDemon != null)
+				UpdateLastCheckPointReference();
+
+
+				CameraManager.Instance.CurrentCamera.enabled = false;
+				CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
+				CameraManager.Instance.CurrentCamera.enabled = true;
+
+				if (PosesionManager.Instance.ControlledDemon != null)
                 {
                     PosesionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
                 }
-                UpdateLastCheckPointReference();
                 m_lastCheckPoint.SpawnPlayer();
+
                 m_isRestarting = false;
                 Time.timeScale = 1;
             }
@@ -78,7 +92,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
             if(m_checkPoints[m_checkPoints.Count-1] == cps[i].transform.position)
             {
                 m_lastCheckPoint = cps[i];
-                return;
+				print("CP pos = " + cps[i].transform.position);
+				print("Number of CPs = " + m_checkPoints.Count);
+
+				return;
             }
         }
         
@@ -87,13 +104,17 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// <summary>
     /// Resets the level and spawns the player at the checkpoints
     /// </summary>
-    public void RestartLevel()
+    public void StartRestartingLevel()
     {
+		FadeManager.Instance.StartFadingIn();
+    }
+	public void RestartLevel()
+	{
         m_loadingScene = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+		
         if( m_checkPoints != null && m_checkPoints.Count > 0)
         {
             m_isRestarting = true;
         }
-        
-    }
+	}
 }

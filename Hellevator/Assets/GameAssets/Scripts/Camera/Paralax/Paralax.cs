@@ -31,7 +31,9 @@ public class Paralax : MonoBehaviour
 		m_indexBackgroundInFront = 1;
 		m_startingPosX = this.transform.position.x;
 		pruebas = m_startingPosX;
+		
 
+		//Variables necesarias para escalado automático con la ortographic size.
 		m_camera = Camera.main.transform;
 		m_cmpCamera = Camera.main;
 
@@ -52,6 +54,8 @@ public class Paralax : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
+		//Calculo de la nueva escala del fondo segun el ortographic size de la cámara 
 		m_length = this.GetComponentInChildren<SpriteRenderer>().bounds.size.x;
 		m_height = this.GetComponentInChildren<SpriteRenderer>().bounds.size.y;
 
@@ -68,14 +72,22 @@ public class Paralax : MonoBehaviour
 			m_backgrounds[i].transform.localScale = localScale;
 		}
 
-		float temp = (m_camera.position.x * (1 - m_parallaxSpeed));
-		float dist = (m_camera.position.x * m_parallaxSpeed);
-		this.transform.position = new Vector3(m_startingPosX + dist, transform.position.y, transform.position.z);
+
+		//Movimiento del fondo. 
+		float temp = (m_camera.position.x * (1 - m_parallaxSpeed)); //Relativo al mundo
+
+		float dist = (m_camera.position.x * m_parallaxSpeed); //Relativo a la camara. 
+
+
+		/*->>>>>>>>>>>>>>>>*/this.transform.position = new Vector3(m_startingPosX + dist, transform.position.y, transform.position.z);
+
 		m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);
-		print(m_backgrounds[m_indexBackgroundInFront].localPosition);
 
 		float halfNumberOfBackgrounds = m_backgrounds.Length / 2;
 
+
+
+		//Coloca los fondos a length de distancia el uno del otro. (Derecha)
 		for (int i = 1; i < halfNumberOfBackgrounds + 1; i++)
 		{
 			int index = m_indexBackgroundInFront - i;
@@ -92,6 +104,9 @@ public class Paralax : MonoBehaviour
 				m_backgrounds[index].localPosition = new Vector3(newXPos, 0, 0);
 			}
 		}
+
+
+		//Coloca los fondos a length de distancia el uno del otro. (Izquierda)
 
 		for (int i = 1; i < halfNumberOfBackgrounds + 1; i++)
 		{
@@ -115,8 +130,10 @@ public class Paralax : MonoBehaviour
 				m_backgrounds[index].localPosition = new Vector3(newXPos, 0,0);
 			}
 		}
+		
 
 
+		// Comprueba si necesita que los fondos cambien del sitio para que no se quede un hueco sin fondo. 
 		if (temp > pruebas + m_length)
 		{
 			pruebas += m_length;

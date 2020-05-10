@@ -68,11 +68,13 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
             m_pLight.gameObject.SetActive(true);
             m_pLight.transform.position = currentDemon.transform.position;
             m_pLight.Begin(demonToPossess);
-            CameraManager.Instance.FollowGhost(m_pLight.transform);
+
+			CameraManager.Instance.ChangeFocusOfMainCameraTo(m_pLight.transform);
+            //CameraManager.Instance.FollowGhost(m_pLight.transform);
         }
         else
         {
-            LevelManager.Instance.RestartLevel();
+            LevelManager.Instance.StartRestartingLevel();
         }
     }
 
@@ -80,7 +82,8 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
     {
         demonToPossess.enabled = true;
         demonToPossess.SetControlledByPlayer();
-        CameraManager.Instance.ChangeCamTarget();
+
+        //CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();
 		if(m_pLight != null)
 		{

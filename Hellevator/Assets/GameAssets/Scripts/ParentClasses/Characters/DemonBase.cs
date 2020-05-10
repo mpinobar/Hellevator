@@ -478,7 +478,10 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetControlledByPlayer()
     {
-        m_IKManager.enabled = true;
+		if(m_IKManager != null)
+		{
+			m_IKManager.enabled = true;
+		}
         m_isDead = false;
         SetRagdollActive(false);
         PosesionManager.Instance.ControlledDemon = this;
@@ -486,6 +489,7 @@ public abstract class DemonBase : MonoBehaviour
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
+		CameraManager.Instance.ChangeFocusOfMainCameraTo(PosesionManager.Instance.ControlledDemon.transform);
         //m_PossessionCircle.enabled = true;
         
         for (int i = 0; i < m_childSprites.Length; i++)
@@ -599,7 +603,10 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetNotControlledByPlayer()
     {
-        m_IKManager.enabled = false;
+		if(m_IKManager != null)
+		{
+			m_IKManager.enabled = false;
+		}
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
