@@ -15,12 +15,4 @@ public class CameraChangeTrigger : MonoBehaviour
 		}
 	}
 
-	private void OnTriggerExit2D(Collider2D collision) //Camera goes back to being the player camera
-	{
-		if (collision.gameObject == PosesionManager.Instance.ControlledDemon.gameObject)
-		{
-			CameraManager.Instance.ChangeCameraPriority(true, null);
-		}
-	}
-
 }

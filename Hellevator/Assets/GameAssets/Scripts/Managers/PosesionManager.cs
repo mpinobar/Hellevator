@@ -70,6 +70,9 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
             m_pLight.Begin(demonToPossess);
 
 			CameraManager.Instance.ChangeFocusOfMainCameraTo(m_pLight.transform);
+			if(CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
+			{
+			}
             //CameraManager.Instance.FollowGhost(m_pLight.transform);
         }
         else

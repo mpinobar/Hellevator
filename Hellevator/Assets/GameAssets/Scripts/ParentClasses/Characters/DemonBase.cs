@@ -490,6 +490,10 @@ public abstract class DemonBase : MonoBehaviour
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
 		CameraManager.Instance.ChangeFocusOfMainCameraTo(PosesionManager.Instance.ControlledDemon.transform);
+
+		if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
+		{
+		}
         //m_PossessionCircle.enabled = true;
         
         for (int i = 0; i < m_childSprites.Length; i++)

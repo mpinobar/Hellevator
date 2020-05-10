@@ -9,7 +9,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	[SerializeField] private CinemachineVirtualCamera m_playerCamera = null;
 	private CinemachineVirtualCamera m_cameraWithHigherPriority = null;
 
-	private CinemachineVirtualCamera m_currentCamera = null;
+	[SerializeField] private CinemachineVirtualCamera m_currentCamera = null;
 
 	[SerializeField] private int m_cameraHighPriorityValue = 0;
 	[SerializeField] private int m_cameraLowPriorityValue = 0;
@@ -23,6 +23,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	public float StartingOrtographicSize { get => m_startingOrtographicSize; }
 	public CinemachineVirtualCamera CurrentCamera { get => m_currentCamera; set => m_currentCamera = value; }
 	public Transform ElVacio { get => elVacio; set => elVacio = value; }
+	public CinemachineVirtualCamera PlayerCamera { get => m_playerCamera; set => m_playerCamera = value; }
 
 	[SerializeField] private Transform elVacio = null;
 
@@ -58,8 +59,8 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	{
 		if(newCameraFocus != null)
 		{
-			m_currentCamera.LookAt = newCameraFocus;
-			m_currentCamera.Follow = newCameraFocus;
+			m_playerCamera.LookAt = newCameraFocus;
+			m_playerCamera.Follow = newCameraFocus;
 		}
 	}
 	
