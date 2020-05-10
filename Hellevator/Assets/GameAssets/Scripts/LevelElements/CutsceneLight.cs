@@ -38,23 +38,26 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
     {
         if(LevelManager.Instance.LastCheckPoint == null)
         {
-            if (m_currentDestination == m_lightRoute.Length)
-            {
-                PosesionManager.Instance.PossessNewDemon(m_demonToPosesAfterCutscene);
-                Destroy(this.gameObject);
-            }
-            this.transform.position = Vector3.MoveTowards(this.transform.position, m_lightRoute[m_currentDestination].position, m_lightSpeed * Time.deltaTime);
+			if (FadeManager.Instance.PlayerCanMove)
+			{
+				if (m_currentDestination == m_lightRoute.Length)
+				{
+					PosesionManager.Instance.PossessNewDemon(m_demonToPosesAfterCutscene);
+					Destroy(this.gameObject);
+				}
+				this.transform.position = Vector3.MoveTowards(this.transform.position, m_lightRoute[m_currentDestination].position, m_lightSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(this.transform.position, m_lightRoute[m_currentDestination].position) <= m_stopingDistance)
-            {
-                m_currentDestination = m_currentDestination + 1;
-                if (m_currentDestination == m_lightRoute.Length)
-                {
-                    PosesionManager.Instance.PossessNewDemon(m_demonToPosesAfterCutscene);
-					CameraManager.Instance.ChangeFocusOfMainCameraTo(m_demonToPosesAfterCutscene.transform);
-                    Destroy(this.gameObject);
-                }
-            }
+				if (Vector3.Distance(this.transform.position, m_lightRoute[m_currentDestination].position) <= m_stopingDistance)
+				{
+					m_currentDestination = m_currentDestination + 1;
+					if (m_currentDestination == m_lightRoute.Length)
+					{
+						PosesionManager.Instance.PossessNewDemon(m_demonToPosesAfterCutscene);
+						CameraManager.Instance.ChangeFocusOfMainCameraTo(m_demonToPosesAfterCutscene.transform);
+						Destroy(this.gameObject);
+					}
+				}
+			}
         }
         else
         {

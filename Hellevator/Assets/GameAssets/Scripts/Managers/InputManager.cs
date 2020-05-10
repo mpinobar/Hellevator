@@ -35,7 +35,7 @@ public class InputManager : PersistentSingleton<InputManager>
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (m_currentDemon != null)
+        if (m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
         {            
             m_currentDemon.Move(m_moveInputValue);
             
@@ -61,13 +61,13 @@ public class InputManager : PersistentSingleton<InputManager>
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            LevelManager.Instance.RestartLevel();
+            LevelManager.Instance.StartRestartingLevel();
         }
     }
 
 	void Jump()
 	{
-        if(m_currentDemon != null)
+        if(m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
         {
             m_currentDemon.ToggleWalkingParticles(false);
             m_currentDemon.Jump();
@@ -75,19 +75,19 @@ public class InputManager : PersistentSingleton<InputManager>
 	}
 	void JumpButtonReleased()
 	{
-        if (m_currentDemon != null)
+        if (m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
             m_currentDemon.JumpReleaseButton();
 	}
 
 	void PossesNearestDemon()
 	{
-        if (m_currentDemon != null)
+        if (m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
             m_currentDemon.Die();
     }
 
 	void UseSkill()
 	{
-        if (m_currentDemon != null)
+        if (m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
             m_currentDemon.UseSkill();
 	}
 

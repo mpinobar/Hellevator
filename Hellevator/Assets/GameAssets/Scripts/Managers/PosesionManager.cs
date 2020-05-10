@@ -74,7 +74,7 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
         }
         else
         {
-            LevelManager.Instance.RestartLevel();
+            LevelManager.Instance.StartRestartingLevel();
         }
     }
 

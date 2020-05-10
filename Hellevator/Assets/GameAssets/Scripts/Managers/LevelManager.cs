@@ -13,10 +13,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
     private bool m_isRestarting;
 
     AsyncOperation m_loadingScene;
-
-	bool cacaDeVaca = false;
-
-
+	
+	[SerializeField] private GameObject m_fade = null;
 
     public CheckPoint LastCheckPoint { get => m_lastCheckPoint;
 
@@ -64,9 +62,12 @@ public class LevelManager : PersistentSingleton<LevelManager>
             if (m_loadingScene.isDone)
             {
 				UpdateLastCheckPointReference();
+
+
 				CameraManager.Instance.CurrentCamera.enabled = false;
 				CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
 				CameraManager.Instance.CurrentCamera.enabled = true;
+
 				if (PosesionManager.Instance.ControlledDemon != null)
                 {
                     PosesionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
@@ -75,7 +76,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
                 m_isRestarting = false;
                 Time.timeScale = 1;
-				cacaDeVaca = true;
             }
         }
     }
@@ -104,15 +104,17 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// <summary>
     /// Resets the level and spawns the player at the checkpoints
     /// </summary>
-    public void RestartLevel()
+    public void StartRestartingLevel()
     {
+		FadeManager.Instance.StartFadingIn();
+    }
+	public void RestartLevel()
+	{
         m_loadingScene = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
 		
         if( m_checkPoints != null && m_checkPoints.Count > 0)
         {
-			cacaDeVaca = false;
             m_isRestarting = true;
         }
-        
-    }
+	}
 }
