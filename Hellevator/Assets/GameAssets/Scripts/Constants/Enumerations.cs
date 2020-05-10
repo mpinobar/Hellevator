@@ -25,4 +25,8 @@ public enum BalanzaState
 {
 	Equal, RightIsHeavier, LeftIsHeavier
 }
+public enum FadeState
+{
+	FadingIn, FadingOut, None
+}
 
