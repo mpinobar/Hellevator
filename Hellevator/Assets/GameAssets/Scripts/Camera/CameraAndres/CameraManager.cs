@@ -63,6 +63,20 @@ public class CameraManager : TemporalSingleton<CameraManager>
 			m_playerCamera.Follow = newCameraFocus;
 		}
 	}
+
+	public void SetCameraFocus(Transform newCameraFocus)
+	{
+		if(newCameraFocus != null)
+		{
+			m_playerCamera.LookAt = newCameraFocus;
+			m_playerCamera.Follow = newCameraFocus;
+
+			m_playerCamera.enabled = false;
+			m_playerCamera.transform.position = new Vector3(newCameraFocus.transform.position.x, newCameraFocus.transform.position.y, this.transform.position.z);
+			m_playerCamera.enabled = true;
+		}
+	}
+
 	
 	/// <summary>
 	/// 
