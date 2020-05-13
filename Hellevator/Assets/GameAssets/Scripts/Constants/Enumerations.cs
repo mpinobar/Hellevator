@@ -30,3 +30,8 @@ public enum FadeState
 	FadingIn, FadingOut, None
 }
 
+public enum TransportDirection
+{
+    Left, Right
+}
+

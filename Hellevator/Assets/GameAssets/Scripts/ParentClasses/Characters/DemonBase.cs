@@ -32,6 +32,7 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private float m_recomposingDistanceMargin = 0.05f;
     [SerializeField] private Collider2D m_ragdollLogicCollider;
     [SerializeField] private Transform m_torso;
+    private float m_dragMovement = 0f;
 
 
 
@@ -138,6 +139,7 @@ public abstract class DemonBase : MonoBehaviour
     public Collider2D RagdollLogicCollider { get => m_ragdollLogicCollider; set => m_ragdollLogicCollider = value; }
     public Transform Torso { get => m_torso; set => m_torso = value; }
     public bool m_hasTurnedOff { get; private set; }
+    public Transform[] ChildTransforms { get => m_childTransforms; set => m_childTransforms = value; }
 
 
     #endregion
@@ -179,7 +181,7 @@ public abstract class DemonBase : MonoBehaviour
     }
 
 	protected virtual void Update()
-	{        
+	{
         if (m_isLerpingToResetBones)
 		{
             //ResetRagdollTransforms();
@@ -559,6 +561,20 @@ public abstract class DemonBase : MonoBehaviour
             m_childSprites[i].color = color;
         }
     }
+
+    public void DragMovement(float amount)
+    {   
+        if(m_dragMovement == 0 && amount != 0) {
+
+            m_dragMovement = amount;            
+        }
+        if(amount == 0)
+        {
+            m_dragMovement = 0;
+        }
+        transform.position = Vector2.MoveTowards(transform.position, transform.position + Vector3.right, m_dragMovement * Time.deltaTime);
+    }
+
 
     /// <summary>
     /// Toggles the ragdoll physics of the demon

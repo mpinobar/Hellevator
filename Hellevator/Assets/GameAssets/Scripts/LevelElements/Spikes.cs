@@ -12,28 +12,8 @@ public class Spikes : MonoBehaviour
         m_spikesData = new List<SpikesWeightData>();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            LogBodiesInside();
-        }
-    }
 
 				
-    private void LogBodiesInside()
-    {
-        print("Number of demons inside: " + m_spikesData.Count);
-        for (int i = 0; i < m_spikesData.Count; i++)
-        {
-            print("Demon number " + i + " with name: " + m_spikesData[i].AssociatedDemon.name + " has " + m_spikesData[i].Colliders.Count + " limbs inside.");
-            for (int j = 0; j < m_spikesData[i].Colliders.Count; j++)
-            {
-                print(m_spikesData[i].Colliders[j].name);
-            }
-        }
-    }
-
     // On trigger enter kill the character that collided. 
     private void OnTriggerEnter2D(Collider2D collision)
 	{
@@ -73,12 +53,8 @@ public class Spikes : MonoBehaviour
 
                         m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                         cmpDemon.IsInDanger = true;                        
-                        //Create the method for enemy death
-                        print("Create the method for enemy death");
                         cmpDemon.Die();
                     }
-
-
                 }
             }
 

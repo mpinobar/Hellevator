@@ -2,71 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HorizontalPeriodicPlatform : MonoBehaviour
+public class HorizontalTransport : MonoBehaviour
 {
-    [SerializeField] Transform m_endPosition;
-    [SerializeField] float m_period = 2f;
-    [SerializeField] float m_waitTimeOnArrival = 0.25f;
-
-    private Vector3 m_initialPosition;
-    private Vector3 m_endPos;
-    private bool    m_returningToInitialPosition;
-    private float   m_waitTimer;
-    private Vector3 m_lastPosition;
-    private float   m_speed;
-
-    private List<DemonBase> m_enemiesOnPreassurePlate;
+    [SerializeField] private float m_speed = 2f;
+    [SerializeField] private TransportDirection direction = TransportDirection.Right;
+    public List<DemonBase> m_enemiesOnPreassurePlate;
     [SerializeField] private LayerMask m_enemyLayerMask;
     List<SpikesWeightData> m_spikesData;
-
+    List<HorizontalTransportData> m_charactersRgbs;
+    private float dir;
+    private List<Transform> m_bonesTransforms;
+    private List<Vector3> m_bonesPositions;
+    private List<Quaternion> m_bonesRotations;
     private void Awake()
     {
         m_enemiesOnPreassurePlate = new List<DemonBase>();
         m_spikesData = new List<SpikesWeightData>();
-        m_endPos = m_endPosition.position;
-        m_waitTimer = m_waitTimeOnArrival;
-        m_initialPosition = transform.position;
-        m_returningToInitialPosition = false;
-        m_speed = Vector2.Distance(m_initialPosition, m_endPos) / m_period;
-     
+        m_charactersRgbs = new List<HorizontalTransportData>();
+        dir = (int) direction * 2 - 1;
+        m_bonesTransforms = new List<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (m_returningToInitialPosition)
+        for (int i = 0; i < m_enemiesOnPreassurePlate.Count; i++)
         {
-            transform.position = Vector3.MoveTowards(transform.position, m_initialPosition, m_speed * Time.deltaTime);
-
-            if(Vector2.Distance(transform.position, m_initialPosition) < 0.001f)
-            {
-                m_waitTimer -= Time.deltaTime;
-                if(m_waitTimer <= 0)
-                {
-                    m_returningToInitialPosition = false;
-                    m_waitTimer = m_waitTimeOnArrival;
-                }
-            }
+            m_enemiesOnPreassurePlate[i].DragMovement(dir*m_speed);
         }
-        else
-        {
-            transform.position = Vector3.MoveTowards(transform.position,m_endPos, m_speed * Time.deltaTime);
 
-            if (Vector2.Distance(transform.position, m_endPos) < 0.001f)
-            {
-                m_waitTimer -= Time.deltaTime;
-                if (m_waitTimer <= 0)
-                {
-                    m_returningToInitialPosition = true;
-                    m_waitTimer = m_waitTimeOnArrival;
-                }
-            }
-        } 
+
+        for (int i = 0; i < m_spikesData.Count; i++)
+        {
+            
+        }
+
     }
-    
+
+
+
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-       
+
         DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
 
         if (cmpDemon != null)
@@ -84,21 +62,23 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
                     if (!m_spikesData[i].Colliders.Contains(collision.collider) && collision.gameObject.tag != "BodyCollider")
                     {
                         m_spikesData[i].Colliders.Add(collision.collider);
+                        
                     }
                 }
             }
             if (!isCounted)
             {
-
                 m_spikesData.Add(new SpikesWeightData(cmpDemon, collision.collider));
+                m_charactersRgbs.Add(new HorizontalTransportData(cmpDemon.Torso.GetComponent<Rigidbody2D>(),false));
+                cmpDemon.DragMovement(m_speed * dir);
                 m_enemiesOnPreassurePlate.Add(cmpDemon);
-                cmpDemon.transform.parent = transform;
+                
 
             }
 
         }
     }
-    
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
@@ -117,21 +97,22 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
 
                         //all the limbs have exited the spikes
                         if (m_spikesData[i].Colliders.Count == 0)
-                        {                            
+                        {
+                            cmpDemon.DragMovement(0);
                             m_spikesData.RemoveAt(i);
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);
-                            cmpDemon.transform.parent = null;
                         }
                         else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
                         {
-                            m_enemiesOnPreassurePlate.Remove(cmpDemon);                            
+                            cmpDemon.DragMovement(0);
+                            m_enemiesOnPreassurePlate.Remove(cmpDemon);
                             m_spikesData.RemoveAt(i);
-                            cmpDemon.transform.parent = null;
                         }
                     }
                 }
             }
         }
     }
-    
+
+
 }
