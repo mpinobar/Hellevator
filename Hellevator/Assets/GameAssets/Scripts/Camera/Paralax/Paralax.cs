@@ -11,6 +11,7 @@ public class Paralax : MonoBehaviour
 	[Tooltip("Cuanto más cerca de 1 menos paralax habra, si es 1 no habrá")]
 	[Range(0,1)]
 	[SerializeField] private float m_parallaxSpeed = 0f;
+	[SerializeField] private float m_interpolationSpeed = 0f;
 	[SerializeField] private Transform[] m_backgrounds = new Transform[3];
 	private int m_indexBackgroundInFront = 0;
 
@@ -32,7 +33,7 @@ public class Paralax : MonoBehaviour
 
 	private bool m_paralaxIsSetUp = false;
 
-
+	Vector3 finalPos = Vector3.zero;
 
 	void Awake()
 	{
@@ -83,8 +84,14 @@ public class Paralax : MonoBehaviour
 
 			// Calcular la diferencia entre la posicion en X de la camara entre este frame y el anterior
 			cameraDistMoved = m_camera.transform.position.x - previousCameraPosition;
+			
+			//this.transform.position = Vector3.MoveTowards(this.transform.position, new Vector3(this.transform.position.x + cameraDistMoved * m_parallaxSpeed, this.transform.position.y, this.transform.position.z), Time.deltaTime * m_interpolationSpeed);
+
+
 
 			this.transform.Translate(new Vector3(cameraDistMoved * m_parallaxSpeed, 0, 0));
+
+
 			m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);
 
 			previousCameraPosition = m_camera.transform.position.x;
@@ -204,21 +211,11 @@ public class Paralax : MonoBehaviour
 			previousCameraPosition = m_startingPosX;
 
 			m_paralaxIsSetUp = true;
+			
 
 			//Make it so that the backgrounds are in the right position
 
-			print("starting pos: " + m_startingPosX);
-			print("posX: " + posX);
-			float diff = m_startingPosX - posX;
-
-
-			print("diff: " + diff);
-			print("size: " + this.GetComponentInChildren<SpriteRenderer>().bounds.size.x);
-
-
-			float correctionsNeeded = diff / this.GetComponentInChildren<SpriteRenderer>().bounds.size.x;
-			print("correctionsNeeded: " + (int)correctionsNeeded);
-
+			
 			//if(diff < 0)
 			//{
 			//	for(int i = 0; i < (int)correctionsNeeded; i++)
