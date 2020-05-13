@@ -30,18 +30,8 @@ public class HorizontalTransport : MonoBehaviour
         {
             m_enemiesOnPreassurePlate[i].DragMovement(dir*m_speed);
         }
-
-
-        for (int i = 0; i < m_spikesData.Count; i++)
-        {
-            
-        }
-
     }
-
-
-
-
+         
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
