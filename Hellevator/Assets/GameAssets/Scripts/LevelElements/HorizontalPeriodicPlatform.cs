@@ -5,15 +5,15 @@ using UnityEngine;
 public class HorizontalPeriodicPlatform : MonoBehaviour
 {
     [SerializeField] Transform m_endPosition;
-    [SerializeField] float m_speed = 1f;
+    [SerializeField] float m_period = 2f;
     [SerializeField] float m_waitTimeOnArrival = 0.25f;
 
     private Vector3 m_initialPosition;
     private Vector3 m_endPos;
-    private bool m_returningToInitialPosition;
-    private float m_waitTimer;
+    private bool    m_returningToInitialPosition;
+    private float   m_waitTimer;
     private Vector3 m_lastPosition;
-    private float m_lastMovedHorizontalDelta;
+    private float   m_speed;
 
     private List<DemonBase> m_enemiesOnPreassurePlate;
     [SerializeField] private LayerMask m_enemyLayerMask;
@@ -27,6 +27,8 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
         m_waitTimer = m_waitTimeOnArrival;
         m_initialPosition = transform.position;
         m_returningToInitialPosition = false;
+        m_speed = Vector2.Distance(m_initialPosition, m_endPos) / m_period;
+     
     }
 
     // Update is called once per frame
@@ -36,7 +38,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, m_initialPosition, m_speed * Time.deltaTime);
 
-            if(Vector2.Distance(transform.position, m_initialPosition) < 0.1f)
+            if(Vector2.Distance(transform.position, m_initialPosition) < 0.001f)
             {
                 m_waitTimer -= Time.deltaTime;
                 if(m_waitTimer <= 0)
@@ -50,7 +52,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position,m_endPos, m_speed * Time.deltaTime);
 
-            if (Vector2.Distance(transform.position, m_endPos) < 0.1f)
+            if (Vector2.Distance(transform.position, m_endPos) < 0.001f)
             {
                 m_waitTimer -= Time.deltaTime;
                 if (m_waitTimer <= 0)
