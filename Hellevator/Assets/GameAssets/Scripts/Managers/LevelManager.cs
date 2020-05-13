@@ -67,6 +67,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 				CameraManager.Instance.CurrentCamera.enabled = false;
 				CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
 				CameraManager.Instance.CurrentCamera.enabled = true;
+				ParalaxManager.Instance.SetUpSceneParalax();
 
 				if (PosesionManager.Instance.ControlledDemon != null)
                 {

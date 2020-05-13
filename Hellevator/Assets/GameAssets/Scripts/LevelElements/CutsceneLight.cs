@@ -23,12 +23,14 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
 			}
 			else
 			{
-				CameraManager.Instance.ChangeFocusOfMainCameraTo(this.transform);
+				CameraManager.Instance.SetCameraFocus(this.transform);
+				ParalaxManager.Instance.SetUpSceneParalax();
 			}
 		}
 		else
 		{
-			CameraManager.Instance.ChangeFocusOfMainCameraTo(this.transform);
+			CameraManager.Instance.SetCameraFocus(this.transform);
+			ParalaxManager.Instance.SetUpSceneParalax();
 		}
     }
 
