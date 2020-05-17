@@ -16,9 +16,13 @@ public class ActivateSpanwer : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        collision.transform.root.GetComponent<DemonBase>().MaximumPossessionRange = newMaxRangePossesion;
-
-        m_spawnerToActivate.enabled = true;
-        m_spawnerToActivate.MaxRange = newMaxRangePossesion;
+        DemonBase demon = collision.transform.root.GetComponent<DemonBase>();
+        if(demon != null)
+        {
+            demon.MaximumPossessionRange = newMaxRangePossesion;
+            m_spawnerToActivate.enabled = true;
+            m_spawnerToActivate.MaxRange = newMaxRangePossesion;
+        }
+        
     }
 }
