@@ -11,13 +11,11 @@ public abstract class DemonBase : MonoBehaviour
 {
     //Member variables
     private bool    m_isRagdollActive;
-    private bool    m_isControlledByPlayer;
     private bool    m_isInDanger;
     private bool    m_isJumping;
     private float   m_movementDirection;
     private bool    m_isLerpingToResetBones;
     private bool    m_hasResetParentPosition;
-    private bool    m_isPossessionBlocked;
     protected bool  m_isDead;
     private bool    m_grabbedByRight;
     private Color   m_outlineColorWhenControlledByPlayer;
@@ -26,13 +24,13 @@ public abstract class DemonBase : MonoBehaviour
     //Weight variables
     [Header("Physicality")]
     [Tooltip("Weight of the body for puzzles")]
-    [SerializeField] protected float m_weight;
+    [SerializeField] protected float    m_weight;
     [Tooltip("Speed at which the body recovers from ragdoll to idle pose")]
-    [SerializeField] private float m_recomposingSpeed = 3;
-    [SerializeField] private float m_recomposingDistanceMargin = 0.05f;
+    [SerializeField] private float      m_recomposingSpeed = 3;
+    [SerializeField] private float      m_recomposingDistanceMargin = 0.05f;
     [SerializeField] private Collider2D m_ragdollLogicCollider;
-    [SerializeField] private Transform m_torso;
-    private float m_dragMovement = 0f;
+    [SerializeField] private Transform  m_torso;
+    private float                       m_dragMovement = 0f;
 
 
 
@@ -47,6 +45,10 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private Color      m_colorWhenAvailable;
     private GameObject                  m_spiritFire;
     private float                       m_distanceMaxGlow = 5;
+    private bool                        m_isPossessionBlocked;
+    private bool                        m_isControlledByPlayer;
+
+
     //IAReferences
     [Space]
 	[Header("IA")]
@@ -673,7 +675,7 @@ public abstract class DemonBase : MonoBehaviour
 
 
     /// <summary>
-    /// Resets the position and rotation of all ragdoll parts lerping
+    /// Lerps all bones to their initial positions
     /// </summary>
     private void LerpResetRagdollTransforms()
     {
@@ -681,8 +683,16 @@ public abstract class DemonBase : MonoBehaviour
         {
             m_torso.parent = null;
             //Debug.DrawRay(torso.position, Vector2.down*Mathf.Infinity, Color.red, 3);
-            RaycastHit2D impact = Physics2D.Raycast(m_torso.position, Vector2.down, Mathf.Infinity, m_defaultMask);
-            transform.position = impact.point;
+            RaycastHit2D impact = Physics2D.Raycast(m_torso.position, Vector2.down, 3f, m_defaultMask);
+            if(impact.transform != null)
+            {
+                transform.position = impact.point;
+            }
+            else
+            {
+                //HARDCODED NUMBER FOR WHEN POSSESSING A CORPSE WHILE SAID CORPSE IS IN THE AIR
+                transform.position = m_torso.transform.position - Vector3.up * 2f;
+            }
             m_hasResetParentPosition = true;
             m_torso.parent = transform;
         }
