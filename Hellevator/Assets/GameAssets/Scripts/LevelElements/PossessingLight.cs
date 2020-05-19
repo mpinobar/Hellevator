@@ -7,6 +7,7 @@ public class PossessingLight : MonoBehaviour
 
     bool m_travelling;
     DemonBase m_target;
+    DemonBase m_originDemon;
     float m_lastDemonPossessionRange;
     [SerializeField] float m_speed = 3.5f;
     // Start is called before the first frame update
@@ -23,7 +24,7 @@ public class PossessingLight : MonoBehaviour
             if(m_target == null)
             {
                 Debug.Log("DEMON DIED WHILE TRAVELING TO POSSESS IT, LOOKING FOR ANOTHER DEMON");
-                m_target = PosesionManager.Instance.LookForNearestDemon(m_lastDemonPossessionRange, transform);
+                m_target = PosesionManager.Instance.LookForNearestDemon(m_lastDemonPossessionRange, transform, m_originDemon);
                 if(m_target == null)
                 {
                     Debug.Log("DEMON DIED WHILE TRAVELING TO POSSESS IT AND COULDN'T FIND A NEW ONE TO POSSESS, RESTARTING LEVEL");
@@ -42,9 +43,10 @@ public class PossessingLight : MonoBehaviour
         
     }
 
-    public void Begin(DemonBase d, float lastDemonPossessionRange)
+    public void Begin(DemonBase d, float lastDemonPossessionRange, DemonBase originDemon)
     {
         m_target = d;
+        m_originDemon = originDemon;
         m_lastDemonPossessionRange = lastDemonPossessionRange;
         m_travelling = true;
     }

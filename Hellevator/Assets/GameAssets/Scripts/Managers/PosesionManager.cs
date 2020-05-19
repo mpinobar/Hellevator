@@ -23,7 +23,7 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
     /// </summary>
     /// <param name="radiusLimit">Maximum radius to look for a demon to possess</param>
     /// <param name="currentDemon">Transform of the currently possessed demon</param>
-    /// <returns></returns>
+    /// <returns>Reference to the found demon</returns>
     public DemonBase LookForNearestDemon(float radiusLimit, Transform currentDemon)
     {
         int lookForRadius = 1;
@@ -48,6 +48,39 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
         return null;
     }
 
+
+    /// <summary>
+    /// Returns the nearest demon to the demon currently controlled by the player, with a distance limit
+    /// </summary>
+    /// <param name="radiusLimit">Maximum radius to look for a demon to possess</param>
+    /// <param name="currentDemon">Transform of the currently possessed demon</param>
+    /// <param name="excluding">A demon to filter out of the search</param>
+    /// <returns>Reference to the found demon</returns>
+    public DemonBase LookForNearestDemon(float radiusLimit, Transform currentDemon, DemonBase excluding)
+    {
+        int lookForRadius = 1;
+
+        while (lookForRadius <= radiusLimit)
+        {
+            Collider2D[] other = Physics2D.OverlapCircleAll(currentDemon.transform.position, lookForRadius, m_ragdollBodyMask);
+            for (int i = 0; i < other.Length; i++)
+            {
+                DemonBase foundDemon = other[i].transform.root.GetComponent<DemonBase>();
+
+                if (foundDemon != null && foundDemon != ControlledDemon && foundDemon != excluding)
+                {
+                    if (!foundDemon.IsInDanger && foundDemon.IsDead && !foundDemon.IsPossessionBlocked)
+                    {
+                        return foundDemon;
+                    }
+                }
+            }
+            lookForRadius++;
+        }
+        return null;
+    }
+
+
     /// <summary>
     /// Switches the player controls to a new demon
     /// </summary>
@@ -69,7 +102,7 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
 
             m_pLight.gameObject.SetActive(true);
             m_pLight.transform.position = currentDemon.transform.position;
-            m_pLight.Begin(demonToPossess, currentDemon.MaximumPossessionRange);
+            m_pLight.Begin(demonToPossess, currentDemon.MaximumPossessionRange, currentDemon);
 
 			CameraManager.Instance.ChangeFocusOfMainCameraTo(m_pLight.transform);
 			if(CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
