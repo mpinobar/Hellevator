@@ -84,7 +84,9 @@ public class Paralax : MonoBehaviour
 			// Calcular la diferencia entre la posicion en X de la camara entre este frame y el anterior
 			cameraDistMoved = m_camera.transform.position.x - previousCameraPosition;
 
-			this.transform.Translate(new Vector3(cameraDistMoved * m_parallaxSpeed, 0, 0));
+			this.transform.position = new Vector3(this.transform.position.x + cameraDistMoved * m_parallaxSpeed, m_camera.position.y, this.transform.position.z);
+
+			//this.transform.Translate(new Vector3(cameraDistMoved * m_parallaxSpeed, 0, 0));
 			m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);
 
 			previousCameraPosition = m_camera.transform.position.x;

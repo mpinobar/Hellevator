@@ -11,13 +11,11 @@ public abstract class DemonBase : MonoBehaviour
 {
     //Member variables
     private bool    m_isRagdollActive;
-    private bool    m_isControlledByPlayer;
     private bool    m_isInDanger;
     private bool    m_isJumping;
     private float   m_movementDirection;
     private bool    m_isLerpingToResetBones;
     private bool    m_hasResetParentPosition;
-    private bool    m_isPossessionBlocked;
     protected bool  m_isDead;
     private bool    m_grabbedByRight;
     private Color   m_outlineColorWhenControlledByPlayer;
@@ -26,13 +24,13 @@ public abstract class DemonBase : MonoBehaviour
     //Weight variables
     [Header("Physicality")]
     [Tooltip("Weight of the body for puzzles")]
-    [SerializeField] protected float m_weight;
+    [SerializeField] protected float    m_weight;
     [Tooltip("Speed at which the body recovers from ragdoll to idle pose")]
-    [SerializeField] private float m_recomposingSpeed = 3;
-    [SerializeField] private float m_recomposingDistanceMargin = 0.05f;
+    [SerializeField] private float      m_recomposingSpeed = 3;
+    [SerializeField] private float      m_recomposingDistanceMargin = 0.05f;
     [SerializeField] private Collider2D m_ragdollLogicCollider;
-    [SerializeField] private Transform m_torso;
-    private float m_dragMovement = 0f;
+    [SerializeField] private Transform  m_torso;
+    private float                       m_dragMovement = 0f;
 
 
 
@@ -45,7 +43,12 @@ public abstract class DemonBase : MonoBehaviour
     private float                       m_distanceStartGlow = 10;
     [ColorUsage(true, true)]
     [SerializeField] private Color      m_colorWhenAvailable;
+    private GameObject                  m_spiritFire;
     private float                       m_distanceMaxGlow = 5;
+    private bool                        m_isPossessionBlocked;
+    private bool                        m_isControlledByPlayer;
+
+
     //IAReferences
     [Space]
 	[Header("IA")]
@@ -145,7 +148,7 @@ public abstract class DemonBase : MonoBehaviour
     #endregion
 
     protected virtual void Awake()
-    {
+    {        
         m_limbsColliders            = m_torso.GetComponentsInChildren<Collider2D>();
         m_limbsRbds                 = GetComponentsInChildren<Rigidbody2D>();     
         m_myRgb                     = GetComponent<Rigidbody2D>();
@@ -154,10 +157,10 @@ public abstract class DemonBase : MonoBehaviour
         m_childTransforms           = m_torso.GetComponentsInChildren<Transform>();
         m_myAnimator                = GetComponent<Animator>();
         m_childSprites              = GetComponentsInChildren<SpriteRenderer>();
-        m_outlineColorWhenControlledByPlayer = m_childSprites[0].material.GetColor("Color_A7D64A79");
-        m_initialGlowThickness      = m_childSprites[0].material.GetFloat("_Thickness");
+        m_outlineColorWhenControlledByPlayer = m_childSprites[1].material.GetColor("Color_A7D64A79");
+        m_initialGlowThickness      = m_childSprites[1].material.GetFloat("_Thickness");
         m_IKManager                 = GetComponent<IKManager2D>();
-        
+        m_spiritFire                = m_childSprites[0].gameObject;
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
@@ -190,7 +193,7 @@ public abstract class DemonBase : MonoBehaviour
 
 
 
-
+        m_spiritFire.transform.rotation = Quaternion.identity;
         
         if (!m_isInDanger && !IsControlledByPlayer)
         {
@@ -198,18 +201,21 @@ public abstract class DemonBase : MonoBehaviour
             {
                 
                 m_distanceStartGlow = PosesionManager.Instance.ControlledDemon.MaximumPossessionRange;
-                float distanceToPlayer = Vector2.Distance(transform.position, PosesionManager.Instance.m_controlledDemon.transform.position);
+                float distanceToPlayer = Vector2.Distance(transform.position, PosesionManager.Instance.ControlledDemon.transform.position);
                 if (distanceToPlayer < m_distanceStartGlow)
                 {
                     m_hasTurnedOff = false;
-                    for (int i = 0; i < m_childSprites.Length; i++)
+
+                    //START ON 1 BECAUSE NUMBER 0 IS FIRE SPRITE
+                    for (int i = 1; i < m_childSprites.Length; i++)
                     {
+
                         m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
 
                     }
                     if (distanceToPlayer < m_distanceMaxGlow)
                     {
-                        for (int i = 0; i < m_childSprites.Length; i++)
+                        for (int i = 1; i < m_childSprites.Length; i++)
                         {
                             m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
                         }
@@ -218,7 +224,7 @@ public abstract class DemonBase : MonoBehaviour
                     {
                         float glowPercentage = 1 - ((distanceToPlayer - m_distanceMaxGlow) / (m_distanceStartGlow - m_distanceMaxGlow));
                         glowPercentage = Mathf.Clamp(glowPercentage, 0, m_initialGlowThickness);                        
-                        for (int i = 0; i < m_childSprites.Length; i++)
+                        for (int i = 1; i < m_childSprites.Length; i++)
                         {
                             m_childSprites[i].material.SetFloat("_Thickness", glowPercentage);
 
@@ -227,7 +233,7 @@ public abstract class DemonBase : MonoBehaviour
                 }
                 else if (!m_hasTurnedOff)
                 {
-                    for (int i = 0; i < m_childSprites.Length; i++)
+                    for (int i = 1; i < m_childSprites.Length; i++)
                     {
                         m_childSprites[i].material.SetFloat("_Thickness", 0);
                         m_hasTurnedOff = true;
@@ -491,6 +497,8 @@ public abstract class DemonBase : MonoBehaviour
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
+        m_spiritFire.SetActive(false);
+        
 		CameraManager.Instance.ChangeFocusOfMainCameraTo(PosesionManager.Instance.ControlledDemon.transform);
 
 		if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
@@ -498,7 +506,7 @@ public abstract class DemonBase : MonoBehaviour
 		}
         //m_PossessionCircle.enabled = true;
         
-        for (int i = 0; i < m_childSprites.Length; i++)
+        for (int i = 1; i < m_childSprites.Length; i++)
         {
             m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
             m_childSprites[i].sortingLayerName = "Player";            
@@ -556,7 +564,7 @@ public abstract class DemonBase : MonoBehaviour
     /// <param name="color">The new color to be assigned</param>
     public void SetColor(Color color)
     {
-        for (int i = 0; i < m_childSprites.Length; i++)
+        for (int i = 1; i < m_childSprites.Length; i++)
         {
             m_childSprites[i].color = color;
         }
@@ -630,11 +638,13 @@ public abstract class DemonBase : MonoBehaviour
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
-        for (int i = 0; i < m_childSprites.Length; i++)
+        for (int i = 1; i < m_childSprites.Length; i++)
         {
             m_childSprites[i].material.SetFloat("_Thickness", 0);
             m_childSprites[i].sortingLayerName = "Default";
         }
+        
+        m_spiritFire.SetActive(true);
         //m_PossessionCircle.enabled = false;
         m_myAnimator.enabled = false;
         //this.enabled = false;
@@ -665,7 +675,7 @@ public abstract class DemonBase : MonoBehaviour
 
 
     /// <summary>
-    /// Resets the position and rotation of all ragdoll parts lerping
+    /// Lerps all bones to their initial positions
     /// </summary>
     private void LerpResetRagdollTransforms()
     {
@@ -673,8 +683,16 @@ public abstract class DemonBase : MonoBehaviour
         {
             m_torso.parent = null;
             //Debug.DrawRay(torso.position, Vector2.down*Mathf.Infinity, Color.red, 3);
-            RaycastHit2D impact = Physics2D.Raycast(m_torso.position, Vector2.down, Mathf.Infinity, m_defaultMask);
-            transform.position = impact.point;
+            RaycastHit2D impact = Physics2D.Raycast(m_torso.position, Vector2.down, 3f, m_defaultMask);
+            if(impact.transform != null)
+            {
+                transform.position = impact.point;
+            }
+            else
+            {
+                //HARDCODED NUMBER FOR WHEN POSSESSING A CORPSE WHILE SAID CORPSE IS IN THE AIR
+                transform.position = m_torso.transform.position - Vector3.up * 2f;
+            }
             m_hasResetParentPosition = true;
             m_torso.parent = transform;
         }
@@ -694,7 +712,6 @@ public abstract class DemonBase : MonoBehaviour
                 }
             }
         }
-        //print(Vector3.Distance(torso.localPosition, m_childInitialTransforms[0].Position));
         if(Vector3.Distance(m_torso.localPosition, m_childInitialTransforms[0].Position) < m_recomposingDistanceMargin)
         {
             ResetRagdollTransforms();
