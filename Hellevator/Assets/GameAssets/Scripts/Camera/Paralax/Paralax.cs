@@ -208,19 +208,11 @@ public class Paralax : MonoBehaviour
 			m_paralaxIsSetUp = true;
 
 			//Make it so that the backgrounds are in the right position
-
-			print("starting pos: " + m_startingPosX);
-			print("posX: " + posX);
+			
 			float diff = m_startingPosX - posX;
-
-
-			print("diff: " + diff);
-			print("size: " + this.GetComponentInChildren<SpriteRenderer>().bounds.size.x);
-
+			
 
 			float correctionsNeeded = diff / this.GetComponentInChildren<SpriteRenderer>().bounds.size.x;
-			print("correctionsNeeded: " + (int)correctionsNeeded);
-
 			//if(diff < 0)
 			//{
 			//	for(int i = 0; i < (int)correctionsNeeded; i++)

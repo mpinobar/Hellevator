@@ -11,10 +11,19 @@ public class InputManager : PersistentSingleton<InputManager>
     DemonBase m_currentDemon;
 	float m_moveInputValue = 0f;
     bool m_jumped;
+	bool m_canMove = false;
+	bool m_isInInteactionTrigger = false;
+
+	public delegate void OnButtonPress();
+
+	public event OnButtonPress OnInteract;
+
 
     public Controls Controls { get => m_controls; }
+	public bool CanMove { get => m_canMove; set => m_canMove = value; }
+	public bool IsInInteactionTrigger { get => m_isInInteactionTrigger; set => m_isInInteactionTrigger = value; }
 
-    public override void Awake()
+	public override void Awake()
 	{
 		base.Awake();
 
@@ -35,7 +44,7 @@ public class InputManager : PersistentSingleton<InputManager>
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
+        if (m_currentDemon != null && m_canMove)
         {            
             m_currentDemon.Move(m_moveInputValue);
             
@@ -54,6 +63,10 @@ public class InputManager : PersistentSingleton<InputManager>
             if (m_currentDemon.MovementDirection != 0)
                 m_currentDemon.transform.localScale = Vector3.one - (Vector3.right * (1 - m_currentDemon.MovementDirection));
         }
+		else if(m_currentDemon != null && !m_canMove)
+		{
+			m_currentDemon.Move(0);
+		}
         else
         {
             UpdateDemonReference();
@@ -67,27 +80,34 @@ public class InputManager : PersistentSingleton<InputManager>
 
 	void Jump()
 	{
-        if(m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
+        if(m_currentDemon != null && m_canMove && !m_isInInteactionTrigger)
         {
             m_currentDemon.ToggleWalkingParticles(false);
             m_currentDemon.Jump();
         }
+		if(m_isInInteactionTrigger)
+		{
+			OnInteract();
+		}
 	}
 	void JumpButtonReleased()
 	{
-        if (m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
+        if (m_currentDemon != null && m_canMove) 
             m_currentDemon.JumpReleaseButton();
+			
 	}
+
+	
 
 	void PossesNearestDemon()
 	{
-        if (m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
+        if (m_currentDemon != null && m_canMove)
             m_currentDemon.Die();
     }
 
 	void UseSkill()
 	{
-        if (m_currentDemon != null && FadeManager.Instance.PlayerCanMove)
+        if (m_currentDemon != null && m_canMove)
             m_currentDemon.UseSkill();
 	}
 

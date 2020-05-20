@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class FadeManager : TemporalSingleton<FadeManager>
 {
-
 	[SerializeField] private Image m_blackPanel = null;
 	[SerializeField] private float m_fadeSpeed = 0f;
 	[SerializeField] private float m_timeFullBlackWhenOpenedScene = 0f;
@@ -57,7 +56,7 @@ public class FadeManager : TemporalSingleton<FadeManager>
 
 						if(m_newAlpha <= m_percentajeOfFadeForPlayerToMove && !m_playerCanMove)
 						{
-							m_playerCanMove = true;
+							InputManager.Instance.CanMove = true;
 						}
 
 						if(m_newAlpha <= 0)
@@ -87,14 +86,14 @@ public class FadeManager : TemporalSingleton<FadeManager>
 	public void StartFadingIn()
 	{
 		m_currentFadeState = FadeState.FadingIn;
-		m_playerCanMove = false;
+		InputManager.Instance.CanMove = false;
 	}
 
 	public void StartFadingOut()
 	{
 		m_currentFadeState = FadeState.FadingOut;
 		m_currentStartingTimer = m_timeFullBlackWhenOpenedScene;
-		m_startingTimerDone = false;
+		InputManager.Instance.CanMove = false;
 	}
 
 
