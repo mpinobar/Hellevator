@@ -16,7 +16,8 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
     private float   m_speed;
 
     private List<DemonBase> m_enemiesOnPreassurePlate;
-    [SerializeField] private LayerMask m_enemyLayerMask;
+    [SerializeField] private LayerMask m_playerLayer;
+    [SerializeField] private LayerMask m_bodyLayer;
     List<SpikesWeightData> m_spikesData;
 
     private void Awake()
@@ -110,6 +111,16 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
                 //if the demon is already inside the spikes
                 if (cmpDemon == m_spikesData[i].AssociatedDemon)
                 {
+
+                    if(collision.gameObject.layer == m_playerLayer || collision.gameObject.layer == m_bodyLayer)
+                    {
+                        m_spikesData.RemoveAt(i);
+                        m_enemiesOnPreassurePlate.Remove(cmpDemon);
+                        cmpDemon.transform.parent = null;
+                        return;
+                    }
+
+
                     //remove the collider from the associated demon's collider list 
                     if (m_spikesData[i].Colliders.Contains(collision.collider))
                     {
