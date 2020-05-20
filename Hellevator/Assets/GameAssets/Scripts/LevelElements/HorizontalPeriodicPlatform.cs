@@ -35,6 +35,20 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
+        if (Input.GetKeyDown(KeyCode.Y) && m_spikesData.Count > 0)
+        {
+            for (int i = 0; i < m_spikesData.Count; i++)
+            {
+                for (int j = 0; j < m_spikesData[i].Colliders.Count; j++)
+                {
+                    print(m_spikesData[i].Colliders[j].name);
+                }
+            }
+        }
+
+
         if (m_returningToInitialPosition)
         {
             transform.position = Vector3.MoveTowards(transform.position, m_initialPosition, m_speed * Time.deltaTime);
@@ -103,7 +117,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
-        if (cmpDemon != null && collision.gameObject.tag != "BodyCollider")
+        if (cmpDemon != null)
         {
 
             for (int i = 0; i < m_spikesData.Count; i++)
@@ -112,8 +126,9 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
                 if (cmpDemon == m_spikesData[i].AssociatedDemon)
                 {
 
-                    if(collision.gameObject.layer == m_playerLayer || collision.gameObject.layer == m_bodyLayer)
+                    if(cmpDemon.IsControlledByPlayer)
                     {
+                        print("DEMON LEAVING AS PLAYER OR FELL OFF THE PLATFORM");
                         m_spikesData.RemoveAt(i);
                         m_enemiesOnPreassurePlate.Remove(cmpDemon);
                         cmpDemon.transform.parent = null;
@@ -133,7 +148,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);
                             cmpDemon.transform.parent = null;
                         }
-                        else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
+                        else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].gameObject.layer == m_bodyLayer)
                         {
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);                            
                             m_spikesData.RemoveAt(i);
@@ -142,7 +157,6 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
                     }
                 }
             }
-        }
-    }
-    
+        }        
+    }    
 }
