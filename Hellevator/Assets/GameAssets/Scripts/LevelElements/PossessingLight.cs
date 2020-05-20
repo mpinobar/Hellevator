@@ -53,7 +53,7 @@ public class PossessingLight : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.transform.root.GetComponent<DemonBase>() == m_target)
+        if(collision.GetComponentInParent<DemonBase>() == m_target)
         {
             PosesionManager.Instance.PossessNewDemon(m_target);
         }

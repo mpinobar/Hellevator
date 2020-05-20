@@ -33,7 +33,7 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
             Collider2D[] other = Physics2D.OverlapCircleAll(currentDemon.transform.position, lookForRadius, m_ragdollBodyMask);
             for (int i = 0; i < other.Length; i++)
             {
-                DemonBase foundDemon = other[i].transform.root.GetComponent<DemonBase>();
+                DemonBase foundDemon = other[i].GetComponentInParent<DemonBase>();
 
                 if (foundDemon != null && foundDemon != ControlledDemon)
                 {
