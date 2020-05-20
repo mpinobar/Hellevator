@@ -38,9 +38,10 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
     // Update is called once per frame
     void Update()
     {
+		print(m_lightSpeed * Time.deltaTime);
         if(LevelManager.Instance.LastCheckPoint == null)
         {
-			if (FadeManager.Instance.PlayerCanMove)
+			if (InputManager.Instance.CanMove)
 			{
 				if (m_currentDestination == m_lightRoute.Length)
 				{
