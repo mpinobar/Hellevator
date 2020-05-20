@@ -48808,7 +48808,7 @@ PrefabInstance:
     - target: {fileID: 4918470802045936299, guid: 961456454fe425e4ab7124bb60821cc8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.74
+      value: 19.51
       objectReference: {fileID: 0}
     - target: {fileID: 4918470802059833809, guid: 961456454fe425e4ab7124bb60821cc8,
         type: 3}
@@ -48848,7 +48848,7 @@ PrefabInstance:
     - target: {fileID: 4918470803270696566, guid: 961456454fe425e4ab7124bb60821cc8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 258.1
+      value: 261.29
       objectReference: {fileID: 0}
     - target: {fileID: 4918470803270696566, guid: 961456454fe425e4ab7124bb60821cc8,
         type: 3}
@@ -48899,6 +48899,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4918470803270696567, guid: 961456454fe425e4ab7124bb60821cc8,
+        type: 3}
+      propertyPath: m_playerLayer.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 4918470803270696567, guid: 961456454fe425e4ab7124bb60821cc8,
+        type: 3}
+      propertyPath: m_bodyLayer.m_Bits
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 4918470803571522970, guid: 961456454fe425e4ab7124bb60821cc8,
         type: 3}
@@ -88169,7 +88179,7 @@ PrefabInstance:
     - target: {fileID: 513433051147655237, guid: 905a1b148fd7d324baa0dc5e08356aaa,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 219.45
+      value: 222.29
       objectReference: {fileID: 0}
     - target: {fileID: 513433051147655237, guid: 905a1b148fd7d324baa0dc5e08356aaa,
         type: 3}
@@ -88235,6 +88245,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.48371994
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339292995483683963, guid: 905a1b148fd7d324baa0dc5e08356aaa,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.6335471
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339292995483683963, guid: 905a1b148fd7d324baa0dc5e08356aaa,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.15523499
       objectReference: {fileID: 0}
     - target: {fileID: 8430181125261326373, guid: 905a1b148fd7d324baa0dc5e08356aaa,
         type: 3}
@@ -111350,7 +111370,10 @@ MonoBehaviour:
   m_endPosition: {fileID: 4918470803075482567}
   m_period: 4
   m_waitTimeOnArrival: 3
-  m_enemyLayerMask:
+  m_playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  m_bodyLayer:
     serializedVersion: 2
     m_Bits: 0
 --- !u!1 &4918470802779422736
