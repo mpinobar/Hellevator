@@ -102,7 +102,7 @@ public class InputManager : PersistentSingleton<InputManager>
 	void PossesNearestDemon()
 	{
         if (m_currentDemon != null && m_canMove)
-            m_currentDemon.Die();
+            m_currentDemon.Die(true);
     }
 
 	void UseSkill()
