@@ -30,13 +30,26 @@ public class MusicManager : PersistentSingleton<MusicManager>
         if (!m_BGM.isPlaying)
         {
             int aux = m_currentBGMClip;
-            while (aux == m_currentBGMClip)
+            while (aux == m_currentBGMClip && m_backgroundMusicClips.Count > 1)
             {
                 m_currentBGMClip = Random.Range(0, m_backgroundMusicClips.Count);
             }
             m_BGM.clip = m_backgroundMusicClips[m_currentBGMClip];
             m_BGM.Play();
         }
+
+
+        int d = 0;
+        for (int i = 0; i < m_sourcesList.Count; i++)
+        {
+            if (!m_sourcesList[i].isPlaying)
+            {
+                d++;
+            }
+        }
+        print(d);
+
+
     }
     public void PlayAudioMusic(AudioClip clip)
     {
@@ -66,13 +79,14 @@ public class MusicManager : PersistentSingleton<MusicManager>
         if (!foundFreeSource)
         {
             m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
-            m_sourcesList[m_sourcesList.Count].clip = clip;
-            m_sourcesList[m_sourcesList.Count].volume = m_musicVolume;
-            m_sourcesList[m_sourcesList.Count].Play();
+            m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
+            m_sourcesList[m_sourcesList.Count-1].clip = clip;
+            m_sourcesList[m_sourcesList.Count-1].volume = m_musicVolume;
+            m_sourcesList[m_sourcesList.Count-1].Play();
         }
     }
 
-    public AudioSource PlayAudioSFX(AudioClip clip)
+    public AudioSource PlayAudioSFX(AudioClip clip, bool looping)
     {
         if(m_sourcesList == null)
         {
@@ -82,14 +96,15 @@ public class MusicManager : PersistentSingleton<MusicManager>
         if(m_sourcesList.Count == 0)
         {
             m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
+            m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
             m_sourcesList[m_sourcesList.Count - 1].clip = clip;
             m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
+            m_sourcesList[m_sourcesList.Count - 1].loop = looping;
             m_sourcesList[m_sourcesList.Count - 1].Play();
             return m_sourcesList[m_sourcesList.Count - 1];
         }
         else
-        {
-            bool foundFreeSource = false;
+        {           
 
             for (int i = 0; i < m_sourcesList.Count; i++)
             {
@@ -97,23 +112,20 @@ public class MusicManager : PersistentSingleton<MusicManager>
                 {
                     m_sourcesList[i].clip = clip;
                     m_sourcesList[i].volume = m_sfxVolume;
+                    m_sourcesList[i].loop = looping;
                     m_sourcesList[i].Play();
-                    foundFreeSource = true;
+                    
                     return m_sourcesList[i];
                 }                
             }
-            if (!foundFreeSource)
-            {
-                m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
-                m_sourcesList[m_sourcesList.Count - 1].clip = clip;
-                m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
-                m_sourcesList[m_sourcesList.Count - 1].Play();
-                return m_sourcesList[m_sourcesList.Count - 1];
-            }
-            else
-            {
-                return null;
-            }
+
+            m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
+            m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
+            m_sourcesList[m_sourcesList.Count - 1].clip = clip;
+            m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
+            m_sourcesList[m_sourcesList.Count - 1].loop = looping;
+            m_sourcesList[m_sourcesList.Count - 1].Play();
+            return m_sourcesList[m_sourcesList.Count - 1];
         }        
     }
 }

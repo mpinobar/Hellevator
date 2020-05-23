@@ -36,6 +36,10 @@ public class WeightedPreassurePlate : MonoBehaviour
 	[SerializeField] private ButtonActivatedBase m_buttonActivatedObject;
     List<SpikesWeightData> m_spikesData;
 
+    //Sound variables
+    [SerializeField] private AudioClip m_machineClip;
+    private AudioSource m_audioSource;
+
 
 	private float m_percentage = 0f;
 	private float m_positionY = 0f;
@@ -89,7 +93,14 @@ public class WeightedPreassurePlate : MonoBehaviour
 						m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
 						m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
-						m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y + m_LOpositionY, m_linkedObjectStartingPosition.z), m_linkedObjectSpeed * Time.deltaTime);
+
+                        Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y + m_LOpositionY, m_linkedObjectStartingPosition.z);
+                        if(Vector3.Distance(m_linkedObjectPosition.position,destination) < 0.1f && m_audioSource)
+                        {
+                            m_audioSource.Stop();
+                        }
+
+                        m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination , m_linkedObjectSpeed * Time.deltaTime);
 					}
 				}
 				break;
@@ -108,8 +119,15 @@ public class WeightedPreassurePlate : MonoBehaviour
 						m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
 						m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
-						//print(LOpositionY);
-						m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z), m_linkedObjectSpeed * Time.deltaTime);
+                        //print(LOpositionY);
+
+                        Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
+                        if (Vector3.Distance(m_linkedObjectPosition.position, destination) < 0.1f && m_audioSource)
+                        {
+                            m_audioSource.Stop();
+                        }
+
+                        m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
 					}
 				}
 				break;
@@ -121,7 +139,8 @@ public class WeightedPreassurePlate : MonoBehaviour
 						if (m_currentWeight >= m_weightNeeded)
 						{
 							m_preassurePlateActivated = true;
-						}
+                            m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
+                        }
 						else
 						{
 							m_percentage = m_currentWeight / m_weightNeeded;
@@ -131,7 +150,13 @@ public class WeightedPreassurePlate : MonoBehaviour
 							}
 							m_positionY = m_distanceToEndPosition * m_percentage;
 
-							m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
+                            Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
+                            if (Vector3.Distance(m_linkedObjectPosition.position, destination) < 0.1f && m_audioSource)
+                            {
+                                m_audioSource.Stop();
+                            }
+
+                            m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 						}
 					}
 					else if(!m_preassurePlateIsAtLocation)
@@ -178,6 +203,10 @@ public class WeightedPreassurePlate : MonoBehaviour
 					}
 					else
 					{
+                        if (m_audioSource)
+                        {
+                            m_audioSource.Stop();
+                        }
 						m_preassurePlateActivated = false;
 						//Mover el boton a su posicion local original
 						m_parent.localPosition = Vector2.MoveTowards(m_parent.localPosition, m_startingPosition, m_speed * Time.deltaTime);
@@ -222,6 +251,10 @@ public class WeightedPreassurePlate : MonoBehaviour
             }
             if (!isCounted)
             {
+                //if (m_type != TypeOfPreassurePlate.ButtonLike)
+                //{                    
+                //    m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
+                //}
 
                 m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                 m_enemiesOnPreassurePlate.Add(cmpDemon);
@@ -251,6 +284,15 @@ public class WeightedPreassurePlate : MonoBehaviour
                         //all the limbs have exited the spikes
                         if (m_spikesData[i].Colliders.Count == 0)
                         {
+                            if (m_type != TypeOfPreassurePlate.ButtonLike)
+                            {
+                                //if (!m_audioSource)
+                                //{
+                                //    //m_audioSource.Stop();
+                                //    m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
+                                //}
+                            }
+
                             m_currentWeight -= cmpDemon.Weight;
                             m_spikesData.RemoveAt(i);
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);
@@ -258,6 +300,17 @@ public class WeightedPreassurePlate : MonoBehaviour
                         }
                         else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
                         {
+
+                            if (m_type != TypeOfPreassurePlate.ButtonLike)
+                            {
+                                //if (!m_audioSource)
+                                //{
+                                //    //m_audioSource.Stop();
+                                //    m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
+                                //}
+                                
+                            }
+
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);
                             m_currentWeight -= cmpDemon.Weight;
                             m_spikesData.RemoveAt(i);
@@ -301,12 +354,12 @@ public class WeightedPreassurePlate : MonoBehaviour
         float distanceToCast = 0.5f;
 
         //cast a circle upwards to see if there is a different body on top
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(demon.LimbsColliders[0].transform.position, 0.3f, Vector2.up, distanceToCast, m_enemyLayerMask);
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(demon.Torso.transform.position, 0.3f, Vector2.up, distanceToCast, m_enemyLayerMask);
 
         for (int j = 0; j < hits.Length; j++)
         {
             //check if the collider on top is a demon
-            DemonBase demonOnTop = hits[j].transform.root.GetComponent<DemonBase>();
+            DemonBase demonOnTop = hits[j].transform.GetComponentInParent<DemonBase>();
             if (demonOnTop != null)
             {
                 //add it to a list of demons that are on top of this one, making sure not to add it twice

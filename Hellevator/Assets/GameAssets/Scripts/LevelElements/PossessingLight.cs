@@ -53,7 +53,7 @@ public class PossessingLight : MonoBehaviour
         m_originDemon = originDemon;
         m_lastDemonPossessionRange = lastDemonPossessionRange;
         m_travelling = true;
-        m_lightSound = MusicManager.Instance.PlayAudioSFX(m_lightTravelClip);
+        m_lightSound = MusicManager.Instance.PlayAudioSFX(m_lightTravelClip, false);
         m_initialDistance = Vector2.Distance(transform.position, m_target.transform.position);
     }
 

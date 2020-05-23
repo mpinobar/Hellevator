@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Balanza : MonoBehaviour
 {
+    [SerializeField] private AudioClip m_machineClip;
+    private AudioSource m_audioSource;
+
 	[SerializeField] private Transform m_minHeight = null;
 	[SerializeField] private Transform m_maxHeight = null;
 	private float m_maxY = 0;
@@ -31,6 +34,14 @@ public class Balanza : MonoBehaviour
 		m_midPointY = (m_maxY + m_minY) / 2f;
 	}
 
+    private void Start()
+    {
+        //if(m_machineClip == null)
+        //{
+        //    throw new System.Exception("FALTA CONFIGURAR AUDIO");
+        //}
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -41,15 +52,17 @@ public class Balanza : MonoBehaviour
 		if(weightDiference == 0)
 		{
 			m_currentState = BalanzaState.Equal;
-		}
+            //if (m_audioSource)
+            //    m_audioSource.Stop();
+        }
 		else if(weightDiference > 0)
 		{
-			m_currentState = BalanzaState.RightIsHeavier;
+			m_currentState = BalanzaState.RightIsHeavier;            
 		}
 		else
 		{
-			m_currentState = BalanzaState.LeftIsHeavier;
-		}
+			m_currentState = BalanzaState.LeftIsHeavier;            
+        }
 
 		weightDiference = Mathf.Abs(weightDiference);
 		
@@ -69,19 +82,58 @@ public class Balanza : MonoBehaviour
 			case BalanzaState.Equal:
 				{
 					m_leftScale.transform.position = Vector2.MoveTowards(m_leftScale.transform.position, new Vector2(m_leftScale.transform.position.x, m_midPointY), m_speed * Time.deltaTime);
-					m_rightScale.transform.position = Vector2.MoveTowards(m_rightScale.transform.position, new Vector2(m_rightScale.transform.position.x, m_midPointY), m_speed * Time.deltaTime);
+
+                    Vector3 rightScaleDestination = new Vector2(m_rightScale.transform.position.x, m_midPointY);
+                    //print(Vector3.Distance(m_rightScale.transform.position, rightScaleDestination));
+                    //if (Vector3.Distance(m_rightScale.transform.position, rightScaleDestination) < 0.1f)
+                    //{
+                    //    if (!m_audioSource)
+                    //        m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
+                    //}
+                    //else
+                    //{                        
+                    //        m_audioSource.Stop();
+                    //}
+
+                    m_rightScale.transform.position = Vector2.MoveTowards(m_rightScale.transform.position, rightScaleDestination, m_speed * Time.deltaTime);
 				}
 				break;
 			case BalanzaState.RightIsHeavier:
 				{
 					m_leftScale.transform.position = Vector2.MoveTowards(m_leftScale.transform.position, new Vector2(m_leftScale.transform.position.x, m_midPointY + yToMove), m_speed * 2* Time.deltaTime);
-					m_rightScale.transform.position = Vector2.MoveTowards(m_rightScale.transform.position, new Vector2(m_rightScale.transform.position.x, m_midPointY - yToMove), m_speed * 2 * Time.deltaTime);
+
+                    Vector3 rightScaleDestination = new Vector2(m_rightScale.transform.position.x, m_midPointY - yToMove);
+
+                    //if (Vector3.Distance(m_rightScale.transform.position, rightScaleDestination) > 0.1f)
+                    //{
+                    //    if (!m_audioSource || !m_audioSource.isPlaying)
+                    //        m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
+                    //}
+                    //else
+                    //{
+                    //    if (m_audioSource)
+                    //        m_audioSource.Stop();
+                    //}
+
+                    m_rightScale.transform.position = Vector2.MoveTowards(m_rightScale.transform.position, rightScaleDestination, m_speed * 2 * Time.deltaTime);
 				}
 				break;
 			case BalanzaState.LeftIsHeavier:
 				{
 					m_leftScale.transform.position = Vector2.MoveTowards(m_leftScale.transform.position, new Vector2(m_leftScale.transform.position.x, m_midPointY - yToMove), m_speed * 2 * Time.deltaTime);
-					m_rightScale.transform.position = Vector2.MoveTowards(m_rightScale.transform.position, new Vector2(m_rightScale.transform.position.x, m_midPointY + yToMove), m_speed * 2 * Time.deltaTime);
+
+                    Vector3 rightScaleDestination = new Vector2(m_rightScale.transform.position.x, m_midPointY + yToMove);
+                    //if (Vector3.Distance(m_rightScale.transform.position, rightScaleDestination) > 0.1f)
+                    //{
+                    //    if (!m_audioSource || !m_audioSource.isPlaying)
+                    //        m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
+                    //}
+                    //else
+                    //{
+                    //    if(m_audioSource)
+                    //    m_audioSource.Stop();
+                    //}
+                    m_rightScale.transform.position = Vector2.MoveTowards(m_rightScale.transform.position, rightScaleDestination, m_speed * 2 * Time.deltaTime);
 				}
 				break;
 			default:
