@@ -6,13 +6,11 @@ public class Spikes : MonoBehaviour
 {
 
     List<SpikesWeightData> m_spikesData;
-    
+
     private void Awake()
     {
         m_spikesData = new List<SpikesWeightData>();
     }
-
-
 				
     // On trigger enter kill the character that collided. 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -31,7 +29,7 @@ public class Spikes : MonoBehaviour
                     isCounted = true;
 
                     //add the collider to the associated demon's collider list if it isnt already included
-                    if (!m_spikesData[i].Colliders.Contains(collision) && collision.gameObject.tag != "BodyCollider")
+                    if (!m_spikesData[i].Colliders.Contains(collision))
                     {
                         m_spikesData[i].Colliders.Add(collision);
                     }
@@ -42,15 +40,14 @@ public class Spikes : MonoBehaviour
                 if (cmpDemon.IsControlledByPlayer)
                 {
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
-                    cmpDemon.IsInDanger = true;                    
+                    cmpDemon.IsInDanger = true;                                        
                     cmpDemon.Die();
                     collision.GetComponentInParent<BloodInstantiate>().InstantiateBlood();
                 }
                 else
                 {
-                    if (collision.gameObject.tag != "BodyCollider")
+                    if (!cmpDemon.IsInDanger)
                     {
-
                         m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                         cmpDemon.IsInDanger = true;                        
                         cmpDemon.Die();

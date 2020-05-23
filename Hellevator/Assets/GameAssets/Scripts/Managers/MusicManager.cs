@@ -4,19 +4,44 @@ using UnityEngine;
 
 public class MusicManager : PersistentSingleton<MusicManager>
 {
-    [SerializeField] float m_sfxVolume;
-    [SerializeField] float m_musicVolume;
+    [Range (0,1)]
+    [SerializeField] float m_sfxVolume = 1;
+    [Range(0, 1)]
+    [SerializeField] float m_musicVolume = 1;
     List<AudioSource> m_sourcesList;
+
+    [SerializeField] List<AudioClip> m_backgroundMusicClips;
+    AudioSource m_BGM;
+    int m_currentBGMClip;
 
     public override void Awake()
     {
         base.Awake();
         m_sourcesList = new List<AudioSource>();
+        m_BGM = gameObject.AddComponent<AudioSource>();
+        m_BGM.volume = m_musicVolume;
     }
 
-
+    private void Update()
+    {
+        if (!m_BGM.isPlaying)
+        {
+            int aux = m_currentBGMClip;
+            while (aux == m_currentBGMClip)
+            {
+                m_currentBGMClip = Random.Range(0, m_backgroundMusicClips.Count);
+            }
+            m_BGM.clip = m_backgroundMusicClips[m_currentBGMClip];
+            m_BGM.Play();
+        }
+    }
     public void PlayAudioMusic(AudioClip clip)
     {
+        if (m_sourcesList == null)
+        {
+            m_sourcesList = new List<AudioSource>();
+        }
+
         if (m_sourcesList.Count == 0)
         {
             m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
@@ -46,30 +71,41 @@ public class MusicManager : PersistentSingleton<MusicManager>
 
     public void PlayAudioSFX(AudioClip clip)
     {
+        if(m_sourcesList == null)
+        {
+            m_sourcesList = new List<AudioSource>();
+        }
+
         if(m_sourcesList.Count == 0)
         {
             m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
+            m_sourcesList[m_sourcesList.Count - 1].clip = clip;
+            m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
+            m_sourcesList[m_sourcesList.Count - 1].Play();
+            return;
         }
-
-        bool foundFreeSource = false;
-
-        for (int i = 0; i < m_sourcesList.Count; i++)
+        else
         {
-            if (!m_sourcesList[i].isPlaying)
+            bool foundFreeSource = false;
+
+            for (int i = 0; i < m_sourcesList.Count; i++)
             {
-                m_sourcesList[i].clip = clip;
-                m_sourcesList[i].volume = m_sfxVolume;
-                m_sourcesList[i].Play();
-                foundFreeSource = true;
-                return;
+                if (!m_sourcesList[i].isPlaying)
+                {
+                    m_sourcesList[i].clip = clip;
+                    m_sourcesList[i].volume = m_sfxVolume;
+                    m_sourcesList[i].Play();
+                    foundFreeSource = true;
+                    return;
+                }
             }
-        }
-        if (!foundFreeSource)
-        {
-            m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
-            m_sourcesList[m_sourcesList.Count].clip = clip;
-            m_sourcesList[m_sourcesList.Count].volume = m_sfxVolume;
-            m_sourcesList[m_sourcesList.Count].Play();
-        }
+            if (!foundFreeSource)
+            {
+                m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
+                m_sourcesList[m_sourcesList.Count - 1].clip = clip;
+                m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
+                m_sourcesList[m_sourcesList.Count - 1].Play();
+            }
+        }        
     }
 }
