@@ -727,13 +727,13 @@ public abstract class DemonBase : MonoBehaviour
     /// <summary>
     /// Die method for characters
     /// </summary>
-    public virtual void Die()
+    public virtual void Die(bool playDeathSound)
     {
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
-        if (!m_isDead)
+        if (!m_isDead && playDeathSound)
         {
-            MusicManager.Instance.PlayAudioSFX(m_deathClip);
+            MusicManager.Instance.PlayAudioSFX(m_deathClip, false);
             m_isDead = true;
         }
         

@@ -5,6 +5,9 @@ using UnityEngine;
 [RequireComponent (typeof (Collider2D))]
 public class CheckPoint : MonoBehaviour
 {
+
+    [SerializeField] AudioClip m_lightUpClip;
+    bool m_active;
     bool m_opening;
     [SerializeField] private DemonBase m_demonToSpawn;
     private float m_openingValue;
@@ -24,6 +27,11 @@ public class CheckPoint : MonoBehaviour
         {
             ActivateCheckPoint();
             m_opening = true;
+            if (!m_active)
+            {
+                MusicManager.Instance.PlayAudioSFX(m_lightUpClip, false);
+                m_active = true;
+            }
         }
     }
 
@@ -33,6 +41,7 @@ public class CheckPoint : MonoBehaviour
         if (m_opening)
         {
             m_openingValue -= Time.deltaTime;
+            m_openingValue = Mathf.Clamp01(m_openingValue);
             m_spr.material.SetFloat("_Opening", m_openingValue);
             if(m_openingValue <= 0)
             {
