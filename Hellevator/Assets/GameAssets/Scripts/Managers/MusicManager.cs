@@ -14,6 +14,9 @@ public class MusicManager : PersistentSingleton<MusicManager>
     AudioSource m_BGM;
     int m_currentBGMClip;
 
+    public float MusicVolume { get => m_musicVolume; set => m_musicVolume = value; }
+    public float SfxVolume { get => m_sfxVolume; set => m_sfxVolume = value; }
+
     public override void Awake()
     {
         base.Awake();
@@ -69,7 +72,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
         }
     }
 
-    public void PlayAudioSFX(AudioClip clip)
+    public AudioSource PlayAudioSFX(AudioClip clip)
     {
         if(m_sourcesList == null)
         {
@@ -82,7 +85,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
             m_sourcesList[m_sourcesList.Count - 1].clip = clip;
             m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
             m_sourcesList[m_sourcesList.Count - 1].Play();
-            return;
+            return m_sourcesList[m_sourcesList.Count - 1];
         }
         else
         {
@@ -96,8 +99,8 @@ public class MusicManager : PersistentSingleton<MusicManager>
                     m_sourcesList[i].volume = m_sfxVolume;
                     m_sourcesList[i].Play();
                     foundFreeSource = true;
-                    return;
-                }
+                    return m_sourcesList[i];
+                }                
             }
             if (!foundFreeSource)
             {
@@ -105,6 +108,11 @@ public class MusicManager : PersistentSingleton<MusicManager>
                 m_sourcesList[m_sourcesList.Count - 1].clip = clip;
                 m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
                 m_sourcesList[m_sourcesList.Count - 1].Play();
+                return m_sourcesList[m_sourcesList.Count - 1];
+            }
+            else
+            {
+                return null;
             }
         }        
     }
