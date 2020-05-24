@@ -19,7 +19,8 @@ public class AppScenes
 {
 	public static readonly string 	MAIN_SCENE    = "Menu";
 	public static readonly string 	LOADING_SCENE = "Loading";
-	public static readonly string 	GAME_SCENE    = "Game";
+	public static readonly string 	LEVEL_01    = "5.FinalLevel";
+    public static readonly string   LEVEL_COMPLETED = "LevelCompleted";
 }
 
 public class AppPlayerPrefKeys

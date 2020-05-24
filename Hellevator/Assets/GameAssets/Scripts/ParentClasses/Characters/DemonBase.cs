@@ -32,7 +32,10 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private Transform  m_torso;
     private float                       m_dragMovement = 0f;
 
-
+    [Header("Audio")]
+    [SerializeField] protected AudioClip m_deathClip;
+    [SerializeField] protected AudioClip m_jumpClip;
+    [SerializeField] protected AudioClip m_landingClip;
 
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
@@ -724,12 +727,16 @@ public abstract class DemonBase : MonoBehaviour
     /// <summary>
     /// Die method for characters
     /// </summary>
-    public virtual void Die()
+    public virtual void Die(bool playDeathSound)
     {
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
-        m_isDead = true;
-
+        if (!m_isDead && playDeathSound)
+        {
+            MusicManager.Instance.PlayAudioSFX(m_deathClip, false);
+            m_isDead = true;
+        }
+        
         if (m_isControlledByPlayer)
         {
             PosesionManager.Instance.PossessNearestDemon(m_maximumPossessionRange, this);

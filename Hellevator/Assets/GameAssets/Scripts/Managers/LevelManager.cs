@@ -55,8 +55,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void Update()
     {
-		
-
         if (m_isRestarting)
         {
             if (m_loadingScene.isDone)
@@ -118,4 +116,14 @@ public class LevelManager : PersistentSingleton<LevelManager>
             m_isRestarting = true;
         }
 	}
+
+    public void LoadLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+    
+    public void LoadLevel(string levelName)
+    {
+        SceneManager.LoadScene(levelName);
+    }
 }

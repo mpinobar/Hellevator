@@ -5,9 +5,13 @@ using UnityEditor;
 
 public class BasicZombie : DemonBase
 {
-	#region Variables	
+    #region Variables	
 
-	[Header("Movement")]
+    [Header("Audio")]
+    
+
+
+    [Header("Movement")]
     [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_acceleration = 7;
     [SerializeField] private float m_jumpForce = 10;
@@ -176,6 +180,7 @@ public class BasicZombie : DemonBase
 				m_coyoteTimeActive = false;
 				m_isHoldingJump = true;
                 m_myAnimator.SetTrigger("Jump");
+                MusicManager.Instance.PlayAudioSFX(m_jumpClip,false);
             }
             else if(m_canDoubleJump && !m_hasDoubleJumped)
             {
@@ -183,6 +188,7 @@ public class BasicZombie : DemonBase
                 MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
                 m_hasDoubleJumped = true;
                 m_myAnimator.SetTrigger("Jump");
+                MusicManager.Instance.PlayAudioSFX(m_jumpClip, false);
             }
 			else if(m_hasJumped)
 			{
@@ -226,7 +232,12 @@ public class BasicZombie : DemonBase
         {
             if (m_canJump)
             {
+                if (m_hasJumped)
+                {
+                    MusicManager.Instance.PlayAudioSFX(m_landingClip, false);
+                }
                 m_hasJumped = false;
+                
                 if (m_canDoubleJump)
                 {
                     m_hasDoubleJumped = false;
