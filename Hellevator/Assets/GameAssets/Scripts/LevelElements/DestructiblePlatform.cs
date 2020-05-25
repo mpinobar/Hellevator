@@ -81,8 +81,11 @@ public class DestructiblePlatform : MonoBehaviour
                     Color c = rnd.color;                    
                     c.a = 1;
                     rnd.color = c;
-                    m_decorado.color = c;
-                    m_decorado.transform.position = m_initPos;
+                    if (m_decorado)
+                    {
+                        m_decorado.color = c;
+                        m_decorado.transform.position = m_initPos;
+                    }
                 }
             }
         }
