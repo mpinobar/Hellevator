@@ -9,7 +9,9 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
 	[SerializeField] private float m_lightSpeed = 0f;
 	[SerializeField] private DemonBase m_demonToPosesAfterCutscene = null;
 	[SerializeField] private float m_stopingDistance = 0f;
+    [SerializeField] private float m_angularVelocity = 30f;
 
+    private Vector3 m_currentDirection;
 	private int m_currentDestination = 0;
 
 
@@ -47,7 +49,10 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
 					PosesionManager.Instance.PossessNewDemon(m_demonToPosesAfterCutscene);
 					Destroy(this.gameObject);
 				}
-				this.transform.position = Vector3.MoveTowards(this.transform.position, m_lightRoute[m_currentDestination].position, m_lightSpeed * Time.deltaTime);
+
+                m_currentDirection = Vector3.MoveTowards(m_currentDirection, m_lightRoute[m_currentDestination].position - transform.position, m_angularVelocity * Time.deltaTime);
+				//this.transform.position = Vector3.MoveTowards(this.transform.position, m_lightRoute[m_currentDestination].position, m_lightSpeed * Time.deltaTime);
+                this.transform.position += m_currentDirection.normalized * m_lightSpeed * Time.deltaTime;
 
 				if (Vector3.Distance(this.transform.position, m_lightRoute[m_currentDestination].position) <= m_stopingDistance)
 				{
