@@ -47,10 +47,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
                 d++;
             }
         }
-        print(d);
-
-
-    }
+	}
     public void PlayAudioMusic(AudioClip clip)
     {
         if (m_sourcesList == null)

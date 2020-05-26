@@ -11,6 +11,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
     [SerializeField] private TextMeshProUGUI dialogueTxt;
     [SerializeField] private GameObject m_playerPortrait;
     [SerializeField] private GameObject m_boxImage;
+	[SerializeField] private Image m_playerIcon;
 
 	[SerializeField] private GameObject m_pressXToTalk = null;
 	//[SerializeField] private GameObject cuadroDialogo;
@@ -37,6 +38,10 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
         currentDialogue = dialogue;
 
 		dialogueTxt.gameObject.SetActive(true);
+		if(dialogue.CurrentIcon != null)
+		{
+			m_playerIcon.sprite = dialogue.CurrentIcon;
+		}
 		m_playerPortrait.SetActive(true);
 		m_boxImage.SetActive(true);
 
@@ -86,6 +91,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
 	{
 		dialogueTxt.gameObject.SetActive(false);
 		m_playerPortrait.SetActive(false);
+		m_playerIcon.sprite = null;
 		m_boxImage.SetActive(false);
 		currentDialogue.Triggerer.DestroyTrigger();
 	}
