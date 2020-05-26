@@ -29,6 +29,7 @@ public class Balanza : MonoBehaviour
         m_audioSource = GetComponent<AudioSource>();
         m_audioSource.clip = m_machineClip;
         m_audioSource.loop = true;
+        m_audioSource.playOnAwake = false;
         m_audioSource.volume = MusicManager.SfxVolume;
 		m_weightLeft = m_leftScale.GetComponent<PesoBalanza>();
 		m_weightRight = m_rightScale.GetComponent<PesoBalanza>();
@@ -36,7 +37,10 @@ public class Balanza : MonoBehaviour
 		m_maxY = m_maxHeight.position.y;
 		m_minY = m_minHeight.position.y;
 		m_midPointY = (m_maxY + m_minY) / 2f;
-	}
+        m_weightLeft.transform.position = new Vector2(m_leftScale.transform.position.x, m_midPointY);
+        m_weightRight.transform.position = new Vector2(m_rightScale.transform.position.x, m_midPointY);
+
+    }
 
 
 
