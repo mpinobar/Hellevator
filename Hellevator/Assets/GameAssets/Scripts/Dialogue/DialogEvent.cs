@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogEvent : MonoBehaviour
+public abstract class DialogEvent : MonoBehaviour
 {
-    public virtual void ActivateEvent()
-    {
-        
-    }
+	public abstract void ActivateEvent();
 }

@@ -37,6 +37,10 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
         currentDialogue = dialogue;
 
 		dialogueTxt.gameObject.SetActive(true);
+		if(dialogue.CurrentIcon != null)
+		{
+			m_playerPortrait.GetComponent<Image>().sprite = dialogue.CurrentIcon;
+		}
 		m_playerPortrait.SetActive(true);
 		m_boxImage.SetActive(true);
 
@@ -86,6 +90,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
 	{
 		dialogueTxt.gameObject.SetActive(false);
 		m_playerPortrait.SetActive(false);
+		m_playerPortrait.GetComponent<Image>().sprite = null;
 		m_boxImage.SetActive(false);
 		currentDialogue.Triggerer.DestroyTrigger();
 	}

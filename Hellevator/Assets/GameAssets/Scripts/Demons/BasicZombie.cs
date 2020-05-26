@@ -30,6 +30,9 @@ public class BasicZombie : DemonBase
 	[SerializeField] private float m_jumpHasBeenPressOnAirTimer = 0f;
 	private float m_currentTimerJumpOnAir = 0f;
 
+	private float m_previousGravityScale = 0f;
+	private Vector3 m_previousVelocity = Vector3.zero;
+
     [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
     
@@ -71,78 +74,83 @@ public class BasicZombie : DemonBase
 
     protected override void Update()
     {
+
+		
         base.Update();
-
-        //in the air while jumping
-        if (!IsGrounded())
-        {
-			if (!m_hasJumped && !m_coyoteTimeActive)
+		if (InputManager.Instance.CanMove)
+		{
+			if (!IsGrounded())
 			{
-				m_coyoteTimeActive = true;
-				m_currentCoyoteTimer = m_coyoteTimeDuration;
-			}
-			else if (m_coyoteTimeActive)
-			{
-				m_currentCoyoteTimer = m_currentCoyoteTimer - Time.deltaTime;
-				if(m_currentCoyoteTimer <= 0)
+				//in the air while jumping
+				if (!m_hasJumped && !m_coyoteTimeActive)
 				{
-					m_hasJumped = true;
-					m_coyoteTimeActive = false;
+					m_coyoteTimeActive = true;
+					m_currentCoyoteTimer = m_coyoteTimeDuration;
 				}
-			}
-
-			if (m_jumpHasBeenPressOnAir)
-			{
-				m_currentTimerJumpOnAir = m_currentTimerJumpOnAir - Time.deltaTime;
-				if(m_currentTimerJumpOnAir <= 0)
+				else if (m_coyoteTimeActive)
 				{
-					m_jumpHasBeenPressOnAir = false;
+					m_currentCoyoteTimer = m_currentCoyoteTimer - Time.deltaTime;
+					if (m_currentCoyoteTimer <= 0)
+					{
+						m_hasJumped = true;
+						m_coyoteTimeActive = false;
+					}
 				}
-			}
 
-			
-            //ascending part of the jump
-            if (MyRgb.velocity.y > 1)
-            {
-				if (m_isHoldingJump)
+				if (m_jumpHasBeenPressOnAir)
 				{
-					MyRgb.gravityScale = m_firstGravityHoldingJump;
+					m_currentTimerJumpOnAir = m_currentTimerJumpOnAir - Time.deltaTime;
+					if (m_currentTimerJumpOnAir <= 0)
+					{
+						m_jumpHasBeenPressOnAir = false;
+					}
+				}
+
+
+				//ascending part of the jump
+				if (MyRgb.velocity.y > 1)
+				{
+					if (m_isHoldingJump)
+					{
+						MyRgb.gravityScale = m_firstGravityHoldingJump;
+					}
+					else
+					{
+						MyRgb.gravityScale = m_firstGravity;
+					}
+
+				}
+				else if (MyRgb.velocity.y > 0)
+				{
+					MyRgb.gravityScale = m_secondGravity;
+				}
+				else if (MyRgb.velocity.y > -1)
+				{
+					if (m_hasDoubleJumped)
+					{
+						MyRgb.gravityScale = m_thirdGravityDoubleJump;
+					}
+					else
+					{
+						MyRgb.gravityScale = m_thirdGravity;
+					}
 				}
 				else
 				{
-					MyRgb.gravityScale = m_firstGravity;
+					MyRgb.gravityScale = m_fourthGravity;
 				}
-                
-            }
-            else if (MyRgb.velocity.y > 0)
-            {
-                MyRgb.gravityScale = m_secondGravity;
-            }
-            else if (MyRgb.velocity.y > -1)
-            {
-				if (m_hasDoubleJumped)
-				{
-					MyRgb.gravityScale = m_thirdGravityDoubleJump;
-				}
-				else
-				{
-					MyRgb.gravityScale = m_thirdGravity; 
-				}                
-            }
-            else
-            {
-                MyRgb.gravityScale = m_fourthGravity;
-            }
 
-            ToggleWalkingParticles(false);
-        }
-        else
-        {
-            MyRgb.gravityScale = 2;
-			m_coyoteTimeActive = false;
-			
-        }
-        m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
+				ToggleWalkingParticles(false);
+			}
+			else
+			{
+				MyRgb.gravityScale = 2;
+				m_coyoteTimeActive = false;
+
+			}
+		}
+		m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
+        
     }
 
     
@@ -256,5 +264,17 @@ public class BasicZombie : DemonBase
 			}
         }
     }
+
+	public override void StopMovement()
+	{
+		MyRgb.velocity = Vector3.zero;
+		m_previousGravityScale = MyRgb.gravityScale;
+		MyRgb.gravityScale = 0;
+	}
+
+	public override void ContinueMovement()
+	{
+		MyRgb.gravityScale = m_previousGravityScale;
+	}
 
 }

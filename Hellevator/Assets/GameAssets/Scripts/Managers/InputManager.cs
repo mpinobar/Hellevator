@@ -13,6 +13,7 @@ public class InputManager : PersistentSingleton<InputManager>
     bool m_jumped;
 	bool m_canMove = false;
 	bool m_isInInteactionTrigger = false;
+	
 
 	public delegate void OnButtonPress();
 
@@ -94,7 +95,6 @@ public class InputManager : PersistentSingleton<InputManager>
 	{
         if (m_currentDemon != null && m_canMove) 
             m_currentDemon.JumpReleaseButton();
-			
 	}
 
 	

@@ -62,12 +62,6 @@ public class MineKart : MonoBehaviour
 
 		m_cmpRbMinekart.velocity = new Vector2(m_speed * Time.deltaTime * speedModifier, 0);
 
-		print(m_cmpRbMinekart.velocity);
-
-
-
-
-
 		//m_minekart.position = Vector2.MoveTowards(m_minekart.position, new Vector2(m_minekartBeginingPos.position.x + m_percentage * m_disntanceToEndPos, m_minekart.position.y), m_speed * Time.deltaTime);
 
 	}

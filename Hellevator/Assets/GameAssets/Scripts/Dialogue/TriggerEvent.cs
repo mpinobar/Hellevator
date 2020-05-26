@@ -2,28 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerEvent : MonoBehaviour
+public abstract class TriggerEvent : MonoBehaviour
 {
-	
+	[SerializeField] protected bool m_startsOnEnter = false;
 	protected bool isInTrigger = false;
-
-	protected void Start()
-	{
-		InputManager.Instance.OnInteract += Event;
-	}
 
 	protected void OnTriggerEnter2D(Collider2D collision)
 	{
-		if(collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+		if((collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon) && (PosesionManager.Instance.ControlledDemon != null))
 		{
+			print(collision.transform.root.name);
 			isInTrigger = true;
 			InputManager.Instance.IsInInteactionTrigger = true;
-			DialogueManager.Instance.PressXToTalk.SetActive(true);
+			if (m_startsOnEnter)
+			{
+				Event();
+			}
+			else
+			{
+				DialogueManager.Instance.PressXToTalk.SetActive(true);
+			}
 		}
 	}
 	protected void OnTriggerExit2D(Collider2D collision)
 	{
-		if (collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+		if ((collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon) && (PosesionManager.Instance.ControlledDemon != null))
 		{
 			InputManager.Instance.IsInInteactionTrigger = false;
 			DialogueManager.Instance.PressXToTalk.SetActive(false);
@@ -31,10 +34,8 @@ public class TriggerEvent : MonoBehaviour
 		}
 	}
 
-	protected virtual void Event()
-	{
-
-	}
+	protected abstract void Event();
+	
 	public virtual void DestroyTrigger()
 	{
 		

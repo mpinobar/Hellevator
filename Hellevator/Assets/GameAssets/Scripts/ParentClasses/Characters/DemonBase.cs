@@ -767,6 +767,16 @@ public abstract class DemonBase : MonoBehaviour
         }
         return isGrounded;
     }
+	
+	public virtual void StopMovement()
+	{
+		
+	}
+
+	public virtual void ContinueMovement()
+	{
+
+	}
 
 	#region AngleCalculations
 	protected Vector3 GetVectorFromAngle(float angle)
