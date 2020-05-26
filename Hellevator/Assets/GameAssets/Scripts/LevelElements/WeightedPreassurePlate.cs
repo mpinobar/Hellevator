@@ -71,6 +71,16 @@ public class WeightedPreassurePlate : MonoBehaviour
 		{
 			print("The preassureplate " + this.gameObject.name + " needs to have a Linked Object");
 		}
+
+        m_audioSource = GetComponent<AudioSource>();
+
+        if (m_audioSource)
+        {
+            m_audioSource.clip = m_machineClip;
+            m_audioSource.loop = true;
+            m_audioSource.playOnAwake = false;
+            m_audioSource.volume = MusicManager.SfxVolume;
+        }
 	}
 
 	private void Update()
@@ -251,10 +261,10 @@ public class WeightedPreassurePlate : MonoBehaviour
             }
             if (!isCounted)
             {
-                //if (m_type != TypeOfPreassurePlate.ButtonLike)
-                //{                    
-                //    m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
-                //}
+                if (m_type != TypeOfPreassurePlate.ButtonLike && m_audioSource)
+                {
+                    m_audioSource.Play();
+                }
 
                 m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                 m_enemiesOnPreassurePlate.Add(cmpDemon);
@@ -286,11 +296,11 @@ public class WeightedPreassurePlate : MonoBehaviour
                         {
                             if (m_type != TypeOfPreassurePlate.ButtonLike)
                             {
-                                //if (!m_audioSource)
-                                //{
-                                //    //m_audioSource.Stop();
-                                //    m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
-                                //}
+                                if (m_audioSource)
+                                {
+                                    m_audioSource.Play();
+                                }
+
                             }
 
                             m_currentWeight -= cmpDemon.Weight;
@@ -303,12 +313,11 @@ public class WeightedPreassurePlate : MonoBehaviour
 
                             if (m_type != TypeOfPreassurePlate.ButtonLike)
                             {
-                                //if (!m_audioSource)
-                                //{
-                                //    //m_audioSource.Stop();
-                                //    m_audioSource = MusicManager.Instance.PlayAudioSFX(m_machineClip, true);
-                                //}
-                                
+                                if (m_audioSource)
+                                {
+                                    m_audioSource.Play();
+                                }
+
                             }
 
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);

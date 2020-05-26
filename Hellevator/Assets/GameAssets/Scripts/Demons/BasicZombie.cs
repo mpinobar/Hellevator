@@ -6,11 +6,8 @@ using UnityEditor;
 public class BasicZombie : DemonBase
 {
     #region Variables	
-
-    [Header("Audio")]
+          
     
-
-
     [Header("Movement")]
     [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_acceleration = 7;
@@ -35,6 +32,7 @@ public class BasicZombie : DemonBase
 
     [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
+    [SerializeField] bool m_SoyUnNiñoDeVerdad;
     
     
     [Header("Gravity")]
@@ -63,6 +61,7 @@ public class BasicZombie : DemonBase
     public float MaxSpeed { get => m_maxSpeed; }
     public float Acceleration { get => m_acceleration; }
     public float JumpForce { get => m_jumpForce; }
+    public bool SoyUnNiñoDeVerdad { get => m_SoyUnNiñoDeVerdad; set => m_SoyUnNiñoDeVerdad = value; }
 
     #endregion
 
@@ -153,7 +152,6 @@ public class BasicZombie : DemonBase
         
     }
 
-    
 
     public override void Move(float xInput)
     {
@@ -167,8 +165,7 @@ public class BasicZombie : DemonBase
                 accel *= m_groundCorrectionMultiplier;
             }
         }
-
-
+        
         MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, accel * Time.deltaTime), MyRgb.velocity.y);
     }
 

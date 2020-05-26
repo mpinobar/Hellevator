@@ -53,12 +53,27 @@ public class InputManager : PersistentSingleton<InputManager>
 
             if (m_moveInputValue > 0)
             {
-                m_currentDemon.MovementDirection = -1;
+                if (((BasicZombie)m_currentDemon).SoyUnNiñoDeVerdad)
+                {
+                    m_currentDemon.MovementDirection = 1;
+                }
+                else
+                {
+                    m_currentDemon.MovementDirection = -1;
+                }
 
             }
             else if (m_moveInputValue < 0)
             {
-                m_currentDemon.MovementDirection = 1;
+
+                if (((BasicZombie)m_currentDemon).SoyUnNiñoDeVerdad)
+                {
+                    m_currentDemon.MovementDirection = -1;
+                }
+                else
+                {
+                    m_currentDemon.MovementDirection = 1;
+                }
 
             }
             if (m_currentDemon.MovementDirection != 0)
