@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.U2D.IK;
 
+[SelectionBase]
 /// <summary>
 /// Parent class of any demon that can be controlled by the player
 /// </summary>
@@ -79,7 +80,7 @@ public abstract class DemonBase : MonoBehaviour
     private Rigidbody2D     m_myRgb;
     private Collider2D      m_playerCollider;
     protected Animator      m_myAnimator;
-
+    
     /*
     //Grab Variables
     [Space]
@@ -193,7 +194,7 @@ public abstract class DemonBase : MonoBehaviour
             //ResetRagdollTransforms();
             LerpResetRagdollTransforms();
 		}
-
+        
 
 
         m_spiritFire.transform.rotation = Quaternion.identity;

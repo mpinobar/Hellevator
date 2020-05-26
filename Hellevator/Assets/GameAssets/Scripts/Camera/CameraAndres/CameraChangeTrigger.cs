@@ -9,7 +9,7 @@ public class CameraChangeTrigger : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision) //The current camera changes to this m_newCamera
 	{
-		if(collision.gameObject == PosesionManager.Instance.ControlledDemon.gameObject)
+		if(PosesionManager.Instance.ControlledDemon != null && collision.gameObject == PosesionManager.Instance.ControlledDemon.gameObject)
 		{
 			CameraManager.Instance.ChangeCameraPriority(false, m_newCamera);
 		}
