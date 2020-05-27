@@ -117,7 +117,7 @@ public abstract class DemonBase : MonoBehaviour
             }
             else
             {
-                SetColor(Color.white);
+                SetColor(Color.black);
             }
             m_isInDanger = value;
         }
@@ -136,7 +136,7 @@ public abstract class DemonBase : MonoBehaviour
             }
             else
             {
-                SetColor(Color.white);
+                SetColor(Color.black);
             }
             m_isPossessionBlocked = value;
         }
@@ -165,6 +165,7 @@ public abstract class DemonBase : MonoBehaviour
         m_initialGlowThickness      = m_childSprites[1].material.GetFloat("_Thickness");
         m_IKManager                 = GetComponent<IKManager2D>();
         m_spiritFire                = m_childSprites[0].gameObject;
+        IsInDanger                  = false;
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;

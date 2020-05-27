@@ -21,7 +21,8 @@ public class MinekartActivationPreassurePlate : MonoBehaviour
 	
 	List<SpikesWeightData> m_spikesData;
 
-	private bool m_isActive = false;
+
+    private bool m_isActive = false;
 	private float m_percentage = 0f;
 	private float m_positionY = 0f;
 
@@ -32,7 +33,8 @@ public class MinekartActivationPreassurePlate : MonoBehaviour
 	{
 		m_enemiesOnPreassurePlate = new List<DemonBase>(0);
 		m_currentWeight = 0;
-		m_spikesData = new List<SpikesWeightData>();
+
+        m_spikesData = new List<SpikesWeightData>();
 		m_startingPosition = m_parent.position;
 		m_distanceToEndPosition = m_parent.transform.position.y - m_pressurePlateEndPosition.position.y;
 	}
@@ -55,6 +57,9 @@ public class MinekartActivationPreassurePlate : MonoBehaviour
 				m_percentage = 1f;
 			}
 			m_positionY = m_distanceToEndPosition * m_percentage;
+
+            
+
 			m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 		}
 	}
