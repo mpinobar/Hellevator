@@ -15,13 +15,26 @@ public class MineKart : MonoBehaviour
 	[SerializeField] private float m_speed = 0f;
 	[SerializeField] private float m_stoppingDistance = 0f;
 
-	private float m_currentWeight = 0;
+
+    //Sound variables
+    [SerializeField] private AudioClip m_machineClip;
+    private AudioSource m_audioSource;
+
+
+
+    private float m_currentWeight = 0;
 	private float m_disntanceToEndPos = 0f;
 	private float m_percentage = 0f;
 
 	private void Awake()
 	{
-		m_cmpRbMinekart = m_minekart.GetComponent<Rigidbody2D>();
+        m_audioSource = GetComponent<AudioSource>();
+        m_audioSource.clip = m_machineClip;
+        m_audioSource.loop = true;
+        m_audioSource.playOnAwake = false;
+        m_audioSource.volume = MusicManager.SfxVolume;
+
+        m_cmpRbMinekart = m_minekart.GetComponent<Rigidbody2D>();
 	}
 
 	// Start is called before the first frame update
@@ -48,16 +61,27 @@ public class MineKart : MonoBehaviour
 
 		if(currentDestination.x < m_minekart.position.x)
 		{
+            if (!m_audioSource.isPlaying)
+            {
+                m_audioSource.Play();
+            }
 			speedModifier = -1;
 		}
 		else if(currentDestination.x > m_minekart.position.x)
 		{
-			speedModifier = 1;
+            if (!m_audioSource.isPlaying)
+            {
+                m_audioSource.Play();
+            }
+            speedModifier = 1;
 		}
-
 		if (Vector2.Distance(m_minekart.position, currentDestination) <= m_stoppingDistance)
 		{
-			speedModifier = 0f;
+            if (m_audioSource.isPlaying)
+            {
+                m_audioSource.Stop();
+            }
+            speedModifier = 0f;
 		}
 
 		m_cmpRbMinekart.velocity = new Vector2(m_speed * Time.deltaTime * speedModifier, 0);
