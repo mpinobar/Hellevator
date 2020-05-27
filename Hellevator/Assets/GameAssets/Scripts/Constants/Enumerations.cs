@@ -35,3 +35,8 @@ public enum TransportDirection
     Left, Right
 }
 
+public enum MenuCameraState
+{
+    Default, LevelSelection, Options
+}
+
