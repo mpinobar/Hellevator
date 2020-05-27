@@ -34,6 +34,10 @@ public class Paralax : MonoBehaviour
 
 
 
+	private bool countingTransition = false;
+	private float distMoved = 0f;
+
+
 	void Awake()
 	{
 		m_indexBackgroundInFront = 1;		
@@ -61,6 +65,8 @@ public class Paralax : MonoBehaviour
     {
 		if (m_paralaxIsSetUp)
 		{
+			m_camera = Camera.main.transform;
+
 			//Calculo de la nueva escala del fondo segun el ortographic size de la cámara 
 			m_length = this.GetComponentInChildren<SpriteRenderer>().bounds.size.x;
 			m_height = this.GetComponentInChildren<SpriteRenderer>().bounds.size.y;
@@ -83,15 +89,32 @@ public class Paralax : MonoBehaviour
 
 			// Calcular la diferencia entre la posicion en X de la camara entre este frame y el anterior
 			cameraDistMoved = m_camera.transform.position.x - previousCameraPosition;
+			previousCameraPosition = m_camera.transform.position.x;
 
 			this.transform.position = new Vector3(this.transform.position.x + cameraDistMoved * m_parallaxSpeed, m_camera.position.y, this.transform.position.z);
 
 			//this.transform.Translate(new Vector3(cameraDistMoved * m_parallaxSpeed, 0, 0));
-			m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);
+			//m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);
 
-			previousCameraPosition = m_camera.transform.position.x;
 
 			movedDistance = movedDistance + cameraDistMoved * (1 - m_parallaxSpeed);
+
+
+			if (Input.GetKeyDown(KeyCode.L))
+			{
+				//print(this.gameObject.name + " movedDistance: " + movedDistance);
+				print(m_camera.transform.position.x);
+				countingTransition = !countingTransition;
+				if (!countingTransition)
+				{
+					//print(this.gameObject.name + " distancia de la transicion: " + distMoved);
+				}
+			}
+
+			if (countingTransition)
+			{
+				distMoved = distMoved + cameraDistMoved;
+			}
 
 
 			//Coloca los fondos a length de distancia el uno del otro. (Derecha)
@@ -105,11 +128,13 @@ public class Paralax : MonoBehaviour
 				{
 					index = m_backgrounds.Length + index;
 					float newXPos = m_backgrounds[m_indexBackgroundInFront].localPosition.x - i * m_length;
+					//float newXPos = indexParalax * m_length - i * m_length;
 					m_backgrounds[index].localPosition = new Vector3(newXPos, 0, 0);
 				}
 				else
 				{
 					float newXPos = m_backgrounds[m_indexBackgroundInFront].localPosition.x - i * m_length;
+					//float newXPos = indexParalax * m_length - i * m_length;
 					m_backgrounds[index].localPosition = new Vector3(newXPos, 0, 0);
 				}
 			}
@@ -125,17 +150,20 @@ public class Paralax : MonoBehaviour
 				{
 					index = 0;
 					float newXPos = m_backgrounds[m_indexBackgroundInFront].localPosition.x + i * m_length;
+					//float newXPos = indexParalax * m_length + i * m_length;
 					m_backgrounds[index].localPosition = new Vector3(newXPos, 0, 0);
 				}
 				else if (index > m_backgrounds.Length)
 				{
 					index = index - m_backgrounds.Length;
 					float newXPos = m_backgrounds[m_indexBackgroundInFront].localPosition.x + i * m_length;
+					//float newXPos = indexParalax * m_length + i * m_length;
 					m_backgrounds[index].localPosition = new Vector3(newXPos, 0, 0);
 				}
 				else
 				{
 					float newXPos = m_backgrounds[m_indexBackgroundInFront].localPosition.x + i * m_length;
+					//float newXPos = indexParalax * m_length + i * m_length;
 					m_backgrounds[index].localPosition = new Vector3(newXPos, 0, 0);
 				}
 			}
