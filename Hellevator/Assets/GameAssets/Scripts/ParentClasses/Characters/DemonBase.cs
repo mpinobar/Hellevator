@@ -51,8 +51,10 @@ public abstract class DemonBase : MonoBehaviour
     private float                       m_distanceMaxGlow = 5;
     private bool                        m_isPossessionBlocked;
     private bool                        m_isControlledByPlayer;
-
-
+    [ColorUsage(true,true)]
+    [SerializeField] private Color      m_fireColorWhenPossessed;
+    [SerializeField] private Color      m_spritesColor;
+    [ColorUsage(true, true)] Color      m_fireColorWhenNotPossessed;
     //IAReferences
     [Space]
 	[Header("IA")]
@@ -117,7 +119,7 @@ public abstract class DemonBase : MonoBehaviour
             }
             else
             {
-                SetColor(Color.black);
+                SetColor(m_spritesColor);
             }
             m_isInDanger = value;
         }
@@ -136,7 +138,7 @@ public abstract class DemonBase : MonoBehaviour
             }
             else
             {
-                SetColor(Color.black);
+                SetColor(m_spritesColor);
             }
             m_isPossessionBlocked = value;
         }
@@ -166,6 +168,7 @@ public abstract class DemonBase : MonoBehaviour
         m_IKManager                 = GetComponent<IKManager2D>();
         m_spiritFire                = m_childSprites[0].gameObject;
         IsInDanger                  = false;
+        m_fireColorWhenNotPossessed = m_spiritFire.GetComponent<SpriteRenderer>().material.GetColor("Color_7F039FD4");
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
@@ -248,62 +251,71 @@ public abstract class DemonBase : MonoBehaviour
             }
             
         }
-        
-         /* 
-        if (m_hasADemonGrabed)
+        else if (IsControlledByPlayer)
         {
-            if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+            for (int i = 1; i < m_childSprites.Length; i++)
             {
-                m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
-            }
+                m_childSprites[i].material.SetFloat("_Thickness", 0);
+                m_hasTurnedOff = true;
 
-            if (m_grabbedByRight)
-            {
-                if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
-                {
-                    m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
-                }
-                else
-                {
-                    m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 100;
-                }
-
-                if (MovementDirection == 1)
-                {
-                    //want to push to the right
-                    m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab + Vector3.right * 4f;
-                }
-                else
-                {
-                    //dragging towards the left
-                    m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab;
-                }
-            }
-            else
-            {
-                if (!m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
-                {
-                    m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 0;
-                }
-                else
-                {
-                    m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 100;
-                }
-
-
-                if (MovementDirection == 1)
-                {
-                    //dragging towards the right
-                    m_grabRayStartPositionLeft.localPosition= m_initialPositionLeftGrab;
-                }
-                else
-                {
-                    //want to push to the left
-                    m_grabRayStartPositionLeft.localPosition = m_initialPositionLeftGrab - Vector3.right * 4f;
-                }
             }
         }
-        */
+
+        /* 
+       if (m_hasADemonGrabed)
+       {
+           if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+           {
+               m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
+           }
+
+           if (m_grabbedByRight)
+           {
+               if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+               {
+                   m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
+               }
+               else
+               {
+                   m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 100;
+               }
+
+               if (MovementDirection == 1)
+               {
+                   //want to push to the right
+                   m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab + Vector3.right * 4f;
+               }
+               else
+               {
+                   //dragging towards the left
+                   m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab;
+               }
+           }
+           else
+           {
+               if (!m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+               {
+                   m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 0;
+               }
+               else
+               {
+                   m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 100;
+               }
+
+
+               if (MovementDirection == 1)
+               {
+                   //dragging towards the right
+                   m_grabRayStartPositionLeft.localPosition= m_initialPositionLeftGrab;
+               }
+               else
+               {
+                   //want to push to the left
+                   m_grabRayStartPositionLeft.localPosition = m_initialPositionLeftGrab - Vector3.right * 4f;
+               }
+           }
+       }
+       */
     }
 
     #region Grab
@@ -484,6 +496,7 @@ public abstract class DemonBase : MonoBehaviour
 		m_hasResetParentPosition = false;
         m_isControlledByPlayer = false;
         m_isDead = false;
+        m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenNotPossessed);
     }
 
     /// <summary>
@@ -502,7 +515,7 @@ public abstract class DemonBase : MonoBehaviour
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
-        m_spiritFire.SetActive(false);
+        m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
         
 		CameraManager.Instance.ChangeFocusOfMainCameraTo(PosesionManager.Instance.ControlledDemon.transform);
 
@@ -648,8 +661,8 @@ public abstract class DemonBase : MonoBehaviour
             m_childSprites[i].material.SetFloat("_Thickness", 0);
             m_childSprites[i].sortingLayerName = "Default";
         }
-        
-        m_spiritFire.SetActive(true);
+        m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenNotPossessed);
+        //m_spiritFire.SetActive(true);
         //m_PossessionCircle.enabled = false;
         m_myAnimator.enabled = false;
         //this.enabled = false;
