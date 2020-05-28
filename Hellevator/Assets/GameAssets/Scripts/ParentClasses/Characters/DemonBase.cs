@@ -212,7 +212,7 @@ public abstract class DemonBase : MonoBehaviour
                 float distanceToPlayer = Vector2.Distance(transform.position, PosesionManager.Instance.ControlledDemon.transform.position);
                 if (distanceToPlayer < m_distanceStartGlow)
                 {
-                    m_hasTurnedOff = false;
+                    //m_hasTurnedOff = false;
 
                     //START ON 1 BECAUSE NUMBER 0 IS FIRE SPRITE
                     for (int i = 1; i < m_childSprites.Length; i++)
@@ -221,25 +221,13 @@ public abstract class DemonBase : MonoBehaviour
                         m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
 
                     }
-                    if (distanceToPlayer < m_distanceMaxGlow)
-                    {
-                        for (int i = 1; i < m_childSprites.Length; i++)
-                        {
-                            m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
-                        }
-                    }
-                    else
-                    {
-                        float glowPercentage = 1 - ((distanceToPlayer - m_distanceMaxGlow) / (m_distanceStartGlow - m_distanceMaxGlow));
-                        glowPercentage = Mathf.Clamp(glowPercentage, 0, m_initialGlowThickness);                        
-                        for (int i = 1; i < m_childSprites.Length; i++)
-                        {
-                            m_childSprites[i].material.SetFloat("_Thickness", glowPercentage);
 
-                        }
-                    }
+                    for (int i = 1; i < m_childSprites.Length; i++)
+                    {
+                        m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
+                    }                    
                 }
-                else if (!m_hasTurnedOff)
+                else //if (!m_hasTurnedOff)
                 {
                     for (int i = 1; i < m_childSprites.Length; i++)
                     {
