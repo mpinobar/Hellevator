@@ -37,6 +37,6 @@ public enum TransportDirection
 
 public enum MenuCameraState
 {
-    Default, LevelSelection, Options
+    Default, LevelSelection, Options, Loading
 }
 

@@ -14,6 +14,9 @@ public class MainMenuCanvasController : MonoBehaviour
     bool m_fadingIn;
     [SerializeField] float m_fadeTime;
     private float m_tmp;
+    private bool m_hasFadedWhenLoading;
+
+    public bool HasFadedWhenLoading { get => m_hasFadedWhenLoading; set => m_hasFadedWhenLoading = value; }
 
     private void Start()
     {
@@ -39,8 +42,15 @@ public class MainMenuCanvasController : MonoBehaviour
                 if (m_tmp <= 0)
                 {
                     SetMenuActive();
-                    m_tmp = m_fadeTime*0.5f;
-                    m_fadingIn = false;
+                    if(m_state != MenuCameraState.Loading)
+                    {
+                        m_tmp = m_fadeTime*0.5f;
+                        m_fadingIn = false;
+                    }
+                    else
+                    {
+                        m_hasFadedWhenLoading = true;
+                    }
                 }
             }
             else
@@ -87,6 +97,11 @@ public class MainMenuCanvasController : MonoBehaviour
                 m_options.SetActive(true);
                 m_levels.SetActive(false);
                 break;
+            //case MenuCameraState.Loading:
+            //    m_default.SetActive(false);
+            //    m_options.SetActive(false);
+            //    m_levels.SetActive(false);
+            //    break;
             default:
                 break;
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MusicManager : PersistentSingleton<MusicManager>
+public class MusicManager : TemporalSingleton<MusicManager>
 {
     [Range (0,1)]
     [SerializeField] static float m_sfxVolume = 0.5f;
