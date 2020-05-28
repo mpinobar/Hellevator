@@ -23,6 +23,11 @@ public class MusicManager : PersistentSingleton<MusicManager>
     }
     public static float SfxVolume { get => m_sfxVolume; set => m_sfxVolume = value; }
 
+    public void ChangeBGMVolume(float v)
+    {
+        m_BGM.volume = v;
+    }
+
     public override void Awake()
     {
         base.Awake();
