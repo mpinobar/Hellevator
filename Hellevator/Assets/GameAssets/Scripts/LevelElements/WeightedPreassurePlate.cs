@@ -53,7 +53,7 @@ public class WeightedPreassurePlate : MonoBehaviour
         m_audioSource = GetComponent<AudioSource>();
         m_audioSource.clip = m_machineClip;
         m_audioSource.loop = true;
-        m_audioSource.volume = MusicManager.SfxVolume;
+        m_audioSource.volume = MusicManager.Instance.SfxVolume;
         if (m_type == TypeOfPreassurePlate.Elevator)
         {
             m_startingPosition = m_parent.localPosition;

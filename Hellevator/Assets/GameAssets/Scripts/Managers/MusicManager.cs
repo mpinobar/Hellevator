@@ -5,17 +5,23 @@ using UnityEngine;
 public class MusicManager : PersistentSingleton<MusicManager>
 {
     [Range (0,1)]
-    [SerializeField] static float m_sfxVolume = 1;
+    [SerializeField] float m_sfxVolume = 0.5f;
     [Range(0, 1)]
-    [SerializeField] static float m_musicVolume = 1;
+    [SerializeField] float m_musicVolume = 0.5f;
     List<AudioSource> m_sourcesList;
 
     [SerializeField] List<AudioClip> m_backgroundMusicClips;
     AudioSource m_BGM;
     int m_currentBGMClip;
 
-    public static float MusicVolume { get => m_musicVolume; set => m_musicVolume = value; }
-    public static float SfxVolume { get => m_sfxVolume; set => m_sfxVolume = value; }
+    public float MusicVolume { get => m_musicVolume;
+        set {
+            m_BGM.volume = value;
+            m_musicVolume = value;
+            
+        }
+    }
+    public float SfxVolume { get => m_sfxVolume; set => m_sfxVolume = value; }
 
     public override void Awake()
     {
@@ -48,7 +54,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
             }
         }
 	}
-    public void PlayAudioMusic(AudioClip clip)
+    public void PlayAudioMusic(AudioClip clip, bool looping)
     {
         if (m_sourcesList == null)
         {
@@ -67,6 +73,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
             if (!m_sourcesList[i].isPlaying)
             {
                 m_sourcesList[i].clip = clip;
+                m_sourcesList[i].loop = looping;
                 m_sourcesList[i].volume = m_musicVolume;
                 m_sourcesList[i].Play();
                 foundFreeSource = true;
@@ -78,6 +85,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
             m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
             m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
             m_sourcesList[m_sourcesList.Count-1].clip = clip;
+            m_sourcesList[m_sourcesList.Count - 1].loop = looping;
             m_sourcesList[m_sourcesList.Count-1].volume = m_musicVolume;
             m_sourcesList[m_sourcesList.Count-1].Play();
         }

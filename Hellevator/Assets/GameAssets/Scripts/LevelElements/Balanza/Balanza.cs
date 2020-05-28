@@ -30,7 +30,7 @@ public class Balanza : MonoBehaviour
         m_audioSource.clip = m_machineClip;
         m_audioSource.loop = true;
         m_audioSource.playOnAwake = false;
-        m_audioSource.volume = MusicManager.SfxVolume;
+        m_audioSource.volume = MusicManager.Instance.SfxVolume;
 		m_weightLeft = m_leftScale.GetComponent<PesoBalanza>();
 		m_weightRight = m_rightScale.GetComponent<PesoBalanza>();
 

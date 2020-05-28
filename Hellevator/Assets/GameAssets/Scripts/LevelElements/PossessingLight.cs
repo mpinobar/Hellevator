@@ -40,7 +40,7 @@ public class PossessingLight : MonoBehaviour
             else
             {
                 m_distancePercentage = Vector2.Distance(transform.position, m_target.transform.position) / m_initialDistance;
-                m_lightSound.volume = m_distancePercentage * MusicManager.SfxVolume;
+                m_lightSound.volume = m_distancePercentage * MusicManager.Instance.SfxVolume;
                 transform.position = Vector3.MoveTowards(transform.position, m_target.Torso.position, m_speed * Time.deltaTime);
             }
         }
