@@ -128,7 +128,6 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
 
                     if(cmpDemon.IsControlledByPlayer)
                     {
-                        print("DEMON LEAVING AS PLAYER OR FELL OFF THE PLATFORM");
                         m_spikesData.RemoveAt(i);
                         m_enemiesOnPreassurePlate.Remove(cmpDemon);
                         cmpDemon.transform.parent = null;

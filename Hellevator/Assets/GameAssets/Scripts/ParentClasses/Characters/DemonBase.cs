@@ -115,7 +115,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             if (value)
             {
-                SetColor(m_tintWhenCantBePossessed);
+                //SetColor(m_tintWhenCantBePossessed);
             }
             else
             {
@@ -134,7 +134,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             if (value)
             {
-                SetColor(m_tintWhenCantBePossessed);
+                //SetColor(m_tintWhenCantBePossessed);
             }
             else
             {
@@ -203,7 +203,7 @@ public abstract class DemonBase : MonoBehaviour
 
         m_spiritFire.transform.rotation = Quaternion.identity;
         
-        if (!m_isInDanger && !IsControlledByPlayer)
+        if (!IsControlledByPlayer)
         {
             if(PosesionManager.Instance.ControlledDemon != null)
             {
@@ -217,8 +217,14 @@ public abstract class DemonBase : MonoBehaviour
                     //START ON 1 BECAUSE NUMBER 0 IS FIRE SPRITE
                     for (int i = 1; i < m_childSprites.Length; i++)
                     {
-
-                        m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
+                        if (!m_isInDanger && !m_isPossessionBlocked)
+                        {
+                            m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
+                        }
+                        else if(m_isInDanger || m_isPossessionBlocked)
+                        {
+                            m_childSprites[i].material.SetColor("Color_A7D64A79", m_tintWhenCantBePossessed);
+                        }
 
                     }
 
@@ -241,12 +247,24 @@ public abstract class DemonBase : MonoBehaviour
         }
         else if (IsControlledByPlayer)
         {
-            for (int i = 1; i < m_childSprites.Length; i++)
+            if(!m_isInDanger && !m_isPossessionBlocked)
             {
-                m_childSprites[i].material.SetFloat("_Thickness", 0);
-                m_hasTurnedOff = true;
+                for (int i = 1; i < m_childSprites.Length; i++)
+                {
+                    m_childSprites[i].material.SetFloat("_Thickness", 0);
+                    m_hasTurnedOff = true;
 
+                }
             }
+            else if (m_isInDanger || m_isPossessionBlocked)
+            {
+                for (int i = 1; i < m_childSprites.Length; i++)
+                {
+                    m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
+                    m_childSprites[i].material.SetColor("Color_A7D64A79", m_tintWhenCantBePossessed);
+                }                
+            }
+
         }
 
         /* 
