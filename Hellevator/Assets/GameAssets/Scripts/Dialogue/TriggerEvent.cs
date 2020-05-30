@@ -10,8 +10,7 @@ public abstract class TriggerEvent : MonoBehaviour
 	protected void OnTriggerEnter2D(Collider2D collision)
 	{
 		if((collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon) && (PosesionManager.Instance.ControlledDemon != null))
-		{
-			print(collision.transform.root.name);
+		{			
 			isInTrigger = true;
 			InputManager.Instance.IsInInteactionTrigger = true;
 			if (m_startsOnEnter)

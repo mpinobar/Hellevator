@@ -43,7 +43,6 @@ public class DestructiblePlatform : MonoBehaviour
             tmp -= Time.deltaTime;
             m_percentageOfDestruction = tmp / m_timeToDestroy;
             Color c = rnd.color;
-            print(c.a);
             c.a = m_percentageOfDestruction;
             rnd.color = c;
             if (m_decorado)

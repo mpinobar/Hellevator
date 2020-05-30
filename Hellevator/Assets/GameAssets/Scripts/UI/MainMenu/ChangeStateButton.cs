@@ -18,7 +18,6 @@ public class ChangeStateButton : MonoBehaviour
 
     void ChangeState()
     {
-        print("hoola");
         FindObjectOfType<MainMenuCanvasController>().ChangeState(m_nextState);
     }
 

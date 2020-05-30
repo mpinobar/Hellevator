@@ -8,7 +8,6 @@ public class MainMenuCanvasController : MonoBehaviour
     private MenuCameraState m_state = MenuCameraState.Default;
     [SerializeField] private GameObject m_default;
     [SerializeField] private GameObject m_options;
-    [SerializeField] private GameObject m_levels;
     [SerializeField] private Image      m_fade; 
     bool m_hasChanged;
     bool m_fadingIn;
@@ -85,17 +84,17 @@ public class MainMenuCanvasController : MonoBehaviour
             case MenuCameraState.Default:
                 m_default.SetActive(true);
                 m_options.SetActive(false);
-                m_levels.SetActive(false);
+                //m_levels.SetActive(false);
                 break;
-            case MenuCameraState.LevelSelection:
-                m_default.SetActive(false);
-                m_options.SetActive(false);
-                m_levels.SetActive(true);
-                break;
+            //case MenuCameraState.LevelSelection:
+            //    m_default.SetActive(false);
+            //    m_options.SetActive(false);
+            //    m_levels.SetActive(true);
+            //    break;
             case MenuCameraState.Options:
                 m_default.SetActive(false);
                 m_options.SetActive(true);
-                m_levels.SetActive(false);
+                //m_levels.SetActive(false);
                 break;
             //case MenuCameraState.Loading:
             //    m_default.SetActive(false);
