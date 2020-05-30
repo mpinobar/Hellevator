@@ -16,6 +16,8 @@ public class ElevatorLevelStart : MonoBehaviour
     void Start()
     {
         m_travelling = true;
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame

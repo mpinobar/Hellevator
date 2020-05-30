@@ -29,6 +29,8 @@ public class IntroCanvas : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
         m_tmpro.gameObject.SetActive(false);
         m_fadingIn = true;
         m_tmp = m_fadeTime;

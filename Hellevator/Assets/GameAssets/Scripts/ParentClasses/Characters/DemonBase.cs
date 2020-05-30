@@ -209,7 +209,7 @@ public abstract class DemonBase : MonoBehaviour
             {
                 
                 m_distanceStartGlow = PosesionManager.Instance.ControlledDemon.MaximumPossessionRange;
-                float distanceToPlayer = Vector2.Distance(transform.position, PosesionManager.Instance.ControlledDemon.transform.position);
+                float distanceToPlayer = Vector2.Distance(transform.position, PosesionManager.Instance.ControlledDemon.Torso.transform.position);
                 if (distanceToPlayer < m_distanceStartGlow)
                 {
                     //m_hasTurnedOff = false;
