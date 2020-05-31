@@ -36,7 +36,7 @@ public class InputManager : PersistentSingleton<InputManager>
 
         m_controls.PlayerControls.InputAbility.performed += ctx => UseSkill();
         //m_controls.PlayerControls.InputInteract.performed += ctx => Grab();
-        m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
+        //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
         UpdateDemonReference();
 	}
 
