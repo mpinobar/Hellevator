@@ -119,6 +119,7 @@ public class PosesionManager : PersistentSingleton<PosesionManager>
     public void PossessNewDemon(DemonBase demonToPossess)
     {
         demonToPossess.enabled = true;
+        demonToPossess.transform.parent = null;
         demonToPossess.SetControlledByPlayer();
 
         //CameraManager.Instance.ChangeCamTarget();
