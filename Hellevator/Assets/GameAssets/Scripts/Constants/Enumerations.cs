@@ -39,4 +39,7 @@ public enum MenuCameraState
 {
     Default, Options, Loading
 }
-
+public enum LevelDecoration
+{
+    TopRight, Top, TopLeft, Left, BottomLeft, Bottom, BottomRight, Right
+}
