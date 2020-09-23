@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PosesionManager : PersistentSingleton<PosesionManager>
+public class PossessionManager : PersistentSingleton<PossessionManager>
 {
     private DemonBase m_controlledDemon;
     public DemonBase ControlledDemon { get => m_controlledDemon; set => m_controlledDemon = value; }

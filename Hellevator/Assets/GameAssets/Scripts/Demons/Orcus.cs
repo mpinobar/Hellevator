@@ -416,7 +416,7 @@ public class Orcus : DemonBase
 			{
 				if (hits[y].collider.GetComponentInParent<DemonBase>() != null)
 				{
-					if (hits[y].collider.GetComponentInParent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+					if (hits[y].collider.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
 					{
 						return true;
 					}
@@ -460,18 +460,18 @@ public class Orcus : DemonBase
 			return true;
 		}
 
-		distance = Mathf.Abs(this.transform.position.x - PosesionManager.Instance.ControlledDemon.transform.position.x);
+		distance = Mathf.Abs(this.transform.position.x - PossessionManager.Instance.ControlledDemon.transform.position.x);
 		if(distance >= m_maxDistanceChasingFromPlayerX)
 		{
 			return true;
 		}
 
-		distance = Mathf.Abs(this.transform.position.y - PosesionManager.Instance.ControlledDemon.transform.position.y);
+		distance = Mathf.Abs(this.transform.position.y - PossessionManager.Instance.ControlledDemon.transform.position.y);
 		if (distance >= m_maxDistanceChasingFromPlayerY)
 		{
 			return true;
 		}
-		distance = Vector3.Distance(this.transform.position, PosesionManager.Instance.ControlledDemon.transform.position);
+		distance = Vector3.Distance(this.transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
 		if (distance >= m_maxDistanceChasingFromPlayer)
 		{
 			return true;
@@ -486,7 +486,7 @@ public class Orcus : DemonBase
 		ToggleWalkingParticles(true);
 		//Set Char being Chased 
 
-		m_IACharacterBeingChased = PosesionManager.Instance.ControlledDemon.transform;
+		m_IACharacterBeingChased = PossessionManager.Instance.ControlledDemon.transform;
 
 		//Check Direction Of Movement
 
