@@ -23,7 +23,7 @@ public class CheckPoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.GetComponentInParent<DemonBase>() == PosesionManager.Instance.ControlledDemon)
+        if(collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
         {
             ActivateCheckPoint();
             m_opening = true;

@@ -48,10 +48,10 @@ public class CameraManagerOUTDATED : TemporalSingleton<CameraManagerOUTDATED>
 
     private void Start()
     {
-		if(PosesionManager.Instance.ControlledDemon != null)
+		if(PossessionManager.Instance.ControlledDemon != null)
 		{
-			vcam1.Follow = PosesionManager.Instance.ControlledDemon.transform;
-			vcam1.LookAt = PosesionManager.Instance.ControlledDemon.transform;
+			vcam1.Follow = PossessionManager.Instance.ControlledDemon.transform;
+			vcam1.LookAt = PossessionManager.Instance.ControlledDemon.transform;
 		}
 
         Camera1.SetActive(true);
@@ -141,8 +141,8 @@ public class CameraManagerOUTDATED : TemporalSingleton<CameraManagerOUTDATED>
         {
             if (IsCam1)
             {
-                vcam2.Follow = PosesionManager.Instance.ControlledDemon.transform;
-                vcam2.LookAt = PosesionManager.Instance.ControlledDemon.transform;
+                vcam2.Follow = PossessionManager.Instance.ControlledDemon.transform;
+                vcam2.LookAt = PossessionManager.Instance.ControlledDemon.transform;
 
                 Camera1.SetActive(false);
                 Camera2.SetActive(true);
@@ -152,8 +152,8 @@ public class CameraManagerOUTDATED : TemporalSingleton<CameraManagerOUTDATED>
 
             else
             {
-                vcam1.Follow = PosesionManager.Instance.ControlledDemon.transform;
-                vcam1.LookAt = PosesionManager.Instance.ControlledDemon.transform;
+                vcam1.Follow = PossessionManager.Instance.ControlledDemon.transform;
+                vcam1.LookAt = PossessionManager.Instance.ControlledDemon.transform;
 
                 Camera1.SetActive(true);
                 Camera2.SetActive(false);

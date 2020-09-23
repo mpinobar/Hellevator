@@ -27,7 +27,7 @@ public class PossessingLight : MonoBehaviour
         {
             if(m_target == null)
             {
-                m_target = PosesionManager.Instance.LookForNearestDemon(m_lastDemonPossessionRange, transform, m_originDemon);
+                m_target = PossessionManager.Instance.LookForNearestDemon(m_lastDemonPossessionRange, transform, m_originDemon);
                 if(m_target == null)
                 {
                     LevelManager.Instance.StartRestartingLevel();
@@ -61,7 +61,7 @@ public class PossessingLight : MonoBehaviour
     {
         if(collision.GetComponentInParent<DemonBase>() == m_target)
         {
-            PosesionManager.Instance.PossessNewDemon(m_target);
+            PossessionManager.Instance.PossessNewDemon(m_target);
             m_lightSound.Stop();
         }
     }

@@ -205,11 +205,11 @@ public abstract class DemonBase : MonoBehaviour
         
         if (!IsControlledByPlayer)
         {
-            if(PosesionManager.Instance.ControlledDemon != null)
+            if(PossessionManager.Instance.ControlledDemon != null)
             {
                 
-                m_distanceStartGlow = PosesionManager.Instance.ControlledDemon.MaximumPossessionRange;
-                float distanceToPlayer = Vector2.Distance(Torso.position, PosesionManager.Instance.ControlledDemon.transform.position);
+                m_distanceStartGlow = PossessionManager.Instance.ControlledDemon.MaximumPossessionRange;
+                float distanceToPlayer = Vector2.Distance(Torso.position, PossessionManager.Instance.ControlledDemon.transform.position);
                 if (distanceToPlayer < m_distanceStartGlow)
                 {
                     //m_hasTurnedOff = false;
@@ -516,14 +516,14 @@ public abstract class DemonBase : MonoBehaviour
 		}
         m_isDead = false;
         SetRagdollActive(false);
-        PosesionManager.Instance.ControlledDemon = this;
+        PossessionManager.Instance.ControlledDemon = this;
         m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
 		m_isControlledByIA = false;
         IsControlledByPlayer = true;
         m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
         
-		CameraManager.Instance.ChangeFocusOfMainCameraTo(PosesionManager.Instance.ControlledDemon.transform);
+		CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
 
 		if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
 		{
@@ -760,7 +760,7 @@ public abstract class DemonBase : MonoBehaviour
         
         if (m_isControlledByPlayer)
         {
-            PosesionManager.Instance.PossessNearestDemon(m_maximumPossessionRange, this);
+            PossessionManager.Instance.PossessNearestDemon(m_maximumPossessionRange, this);
         }
         else if (m_isControlledByIA)
         {

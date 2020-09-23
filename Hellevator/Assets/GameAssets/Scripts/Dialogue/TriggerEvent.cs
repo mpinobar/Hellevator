@@ -9,7 +9,7 @@ public abstract class TriggerEvent : MonoBehaviour
 
 	protected void OnTriggerEnter2D(Collider2D collision)
 	{
-		if((collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon) && (PosesionManager.Instance.ControlledDemon != null))
+		if((collision.transform.root.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon) && (PossessionManager.Instance.ControlledDemon != null))
 		{			
 			isInTrigger = true;
 			InputManager.Instance.IsInInteactionTrigger = true;
@@ -25,7 +25,7 @@ public abstract class TriggerEvent : MonoBehaviour
 	}
 	protected void OnTriggerExit2D(Collider2D collision)
 	{
-		if ((collision.transform.root.GetComponent<DemonBase>() == PosesionManager.Instance.ControlledDemon) && (PosesionManager.Instance.ControlledDemon != null))
+		if ((collision.transform.root.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon) && (PossessionManager.Instance.ControlledDemon != null))
 		{
 			InputManager.Instance.IsInInteactionTrigger = false;
 			DialogueManager.Instance.PressXToTalk.SetActive(false);

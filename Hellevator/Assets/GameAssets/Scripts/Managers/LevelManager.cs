@@ -67,9 +67,9 @@ public class LevelManager : PersistentSingleton<LevelManager>
 				CameraManager.Instance.CurrentCamera.enabled = true;
 				ParalaxManager.Instance.SetUpSceneParalax();
 
-				if (PosesionManager.Instance.ControlledDemon != null)
+				if (PossessionManager.Instance.ControlledDemon != null)
                 {
-                    PosesionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
+                    PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
                 }
                 m_lastCheckPoint.SpawnPlayer();
 

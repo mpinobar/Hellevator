@@ -17,7 +17,7 @@ public class TriggerDialogueStopMovement : TriggerEvent
 	{
 		if (!conversationStarted && isInTrigger)
 		{
-			PosesionManager.Instance.ControlledDemon.StopMovement();
+			PossessionManager.Instance.ControlledDemon.StopMovement();
 			DialogueManager.Instance.PressXToTalk.SetActive(false);
 			InputManager.Instance.CanMove = false;
 

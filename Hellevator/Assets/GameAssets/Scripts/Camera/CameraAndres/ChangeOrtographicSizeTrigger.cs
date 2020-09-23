@@ -8,7 +8,7 @@ public class ChangeOrtographicSizeTrigger : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision) //The current ortographic size of the camera changes to m_newOrtographicSize
 	{
-		if (collision.gameObject == PosesionManager.Instance.ControlledDemon.gameObject)
+		if (collision.gameObject == PossessionManager.Instance.ControlledDemon.gameObject)
 		{
 			CameraManager.Instance.ChangeOrtographicSizOfCurrentCamera(m_newOrtographicSize);
 		}
@@ -16,7 +16,7 @@ public class ChangeOrtographicSizeTrigger : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision) //Camera goes back to starting ortographic size
 	{
-		if (collision.gameObject == PosesionManager.Instance.ControlledDemon.gameObject)
+		if (collision.gameObject == PossessionManager.Instance.ControlledDemon.gameObject)
 		{
 			CameraManager.Instance.ChangeOrtographicSizOfCurrentCamera(CameraManager.Instance.StartingOrtographicSize);
 		}
