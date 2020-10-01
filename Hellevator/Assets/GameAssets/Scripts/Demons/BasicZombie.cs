@@ -66,8 +66,8 @@ public class BasicZombie : DemonBase
     #endregion
 
     public override void UseSkill()
-    {
-        
+    {		
+		PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
     }
         
 
@@ -76,7 +76,7 @@ public class BasicZombie : DemonBase
 
 		
         base.Update();
-		if (InputManager.Instance.CanMove)
+		if (CanMove)
 		{
 			if (!IsGrounded())
 			{

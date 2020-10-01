@@ -7,6 +7,6 @@ public class EventoTerminarConversacion : DialogEvent
 	public override void ActivateEvent()
 	{
 		DialogueManager.Instance.DeactivateTextAndImage();
-		InputManager.Instance.CanMove = true;
+		PossessionManager.Instance.ControlledDemon.CanMove = true;
 	}
 }

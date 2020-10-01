@@ -56,7 +56,7 @@ public class FadeManager : TemporalSingleton<FadeManager>
 
 						if(m_newAlpha <= m_percentajeOfFadeForPlayerToMove && !m_playerCanMove)
 						{
-							InputManager.Instance.CanMove = true;
+							PossessionManager.Instance.ControlledDemon.CanMove = true;
 						}
 
 						if(m_newAlpha <= 0)
@@ -86,14 +86,14 @@ public class FadeManager : TemporalSingleton<FadeManager>
 	public void StartFadingIn()
 	{
 		m_currentFadeState = FadeState.FadingIn;
-		InputManager.Instance.CanMove = false;
+		PossessionManager.Instance.ControlledDemon.CanMove = false;
 	}
 
 	public void StartFadingOut()
 	{
 		m_currentFadeState = FadeState.FadingOut;
 		m_currentStartingTimer = m_timeFullBlackWhenOpenedScene;
-		InputManager.Instance.CanMove = false;
+		PossessionManager.Instance.ControlledDemon.CanMove = false;
 	}
 
 
