@@ -15,6 +15,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         get => m_pLight; set => m_pLight = value;
     }
     public LayerMask RagdollBodyMask { get => m_ragdollBodyMask; }
+    public bool ControllingMultipleDemons { get => controllingMultipleDemons; }
 
     [SerializeField] LayerMask m_ragdollBodyMask;
     [SerializeField] GameObject m_PossessionLight;
@@ -66,14 +67,29 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
         if (ControlledDemon == demonCmp)
         {
-            PossessNearestDemon(demonCmp.MaximumPossessionRange, demonCmp);
+            if(extraDemonsControlled == null || extraDemonsControlled.Count == 0)
+            {
+                ControlledDemon.SetNotControlledByPlayer();
+                PossessNearestDemon(demonCmp.MaximumPossessionRange, demonCmp);
+            }
+            else
+            {
+                ControlledDemon.SetNotControlledByPlayer();
+                ControlledDemon = extraDemonsControlled[Random.Range(0, extraDemonsControlled.Count)];
+                extraDemonsControlled.Remove(ControlledDemon);
+
+                InputManager.Instance.RemoveExtraDemonControlled(ControlledDemon);
+                InputManager.Instance.UpdateDemonReference();
+            }
         }
         else
         {
             if (extraDemonsControlled.Contains(demonCmp))
             {
                 extraDemonsControlled.Remove(demonCmp);
-                if(extraDemonsControlled.Count == 0)
+                InputManager.Instance.RemoveExtraDemonControlled(demonCmp);
+                demonCmp.SetNotControlledByPlayer();
+                if (extraDemonsControlled.Count == 0)
                 {
                     controllingMultipleDemons = false;
                 }
@@ -107,9 +123,9 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             if (extraDemonsControlled.Count > 0)
             {
                 controllingMultipleDemons = true;
+                InputManager.Instance.UpdateExtraDemonsControlled(extraDemonsControlled);
             }
-        }
-        
+        }        
     }
 
     /// <summary>
@@ -151,7 +167,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     /// <param name="currentDemon">Currently possessed demon</param>
     public void PossessNearestDemon(float radiusLimit, DemonBase currentDemon)
     {
-        ControlledDemon.SetNotControlledByPlayer();
+        
         DemonBase demonToPossess = LookForNearestDemon(radiusLimit, currentDemon.transform);
         ControlledDemon = null;
         InputManager.Instance.UpdateDemonReference();

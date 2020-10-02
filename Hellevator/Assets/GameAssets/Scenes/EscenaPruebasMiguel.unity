@@ -523,6 +523,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &625835546 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1245259626704491916, guid: 905a1b148fd7d324baa0dc5e08356aaa,
+    type: 3}
+  m_PrefabInstance: {fileID: 384796260}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &625835554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625835546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cd7d32c77efe044fa6db13669af8aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionRadius: 10
+  explosionForce: 0
+  explosionInteractionLayerMask:
+    serializedVersion: 2
+    m_Bits: 1280
 --- !u!1 &691405791
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,7 +848,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1360491242
+--- !u!84 &1192424389
 RenderTexture:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -972,7 +995,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 3072
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 1360491242}
+  m_TargetTexture: {fileID: 1192424389}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1

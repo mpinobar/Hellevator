@@ -5737,6 +5737,8 @@ GameObject:
   - component: {fileID: 2128582852748796359}
   - component: {fileID: 2128582852748796358}
   - component: {fileID: 2128582852748796357}
+  - component: {fileID: 798499587}
+  - component: {fileID: 798499588}
   m_Layer: 10
   m_Name: Penitente_1
   m_TagString: Untagged
@@ -5932,6 +5934,37 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &798499587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245259626704491916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc76bbbec85dbe4b963de4dc239e2cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToConvertInto: {fileID: 8867378372886464869, guid: 32e5648c477de3247b7ff5063e7e11e4,
+    type: 3}
+--- !u!114 &798499588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245259626704491916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cd7d32c77efe044fa6db13669af8aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionRadius: 10
+  explosionForce: 0
+  explosionInteractionLayerMask:
+    serializedVersion: 2
+    m_Bits: 1280
 --- !u!1 &1701058446145837199
 GameObject:
   m_ObjectHideFlags: 0

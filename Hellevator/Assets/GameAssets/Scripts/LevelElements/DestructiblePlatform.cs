@@ -20,6 +20,9 @@ public class DestructiblePlatform : MonoBehaviour
     private float tmpReappear;
     private int tmpShake;
     private Vector2 m_targetShakePosition;
+    private bool willReappear = true;
+
+    public bool WillReappear { get => willReappear; set => willReappear = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -67,7 +70,7 @@ public class DestructiblePlatform : MonoBehaviour
                 m_destroying = false;
             }
         }
-        else
+        else if (willReappear)
         {
             if(tmp <= 0)
             {
@@ -97,6 +100,14 @@ public class DestructiblePlatform : MonoBehaviour
         if (demon && demon.IsControlledByPlayer)
         {
             m_destroying = true;
+
+        }
+        else
+        {
+            if (!willReappear)
+            {
+                GetComponent<Rigidbody2D>().isKinematic = true;
+            }
         }
     }
 }

@@ -68,6 +68,7 @@ public class BasicZombie : DemonBase
     public override void UseSkill()
     {		
 		PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
+		//GetComponent<Petrification>().Petrify();
     }
         
 

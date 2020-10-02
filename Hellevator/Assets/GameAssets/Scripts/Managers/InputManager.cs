@@ -18,6 +18,7 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public event OnButtonPress OnInteract;
 
+    List<DemonBase> extraDemonsControlled;
 
     public Controls Controls
     {
@@ -48,6 +49,66 @@ public class InputManager : PersistentSingleton<InputManager>
 
     // Update is called once per frame
     protected virtual void Update()
+    {
+        FeedInputToMainDemon();
+
+        if (PossessionManager.Instance.ControllingMultipleDemons)
+        {
+            FeedInputToExtraDemons();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            LevelManager.Instance.StartRestartingLevel();
+        }
+    }
+
+    private void FeedInputToExtraDemons()
+    {
+        for (int i = 0; i < extraDemonsControlled.Count; i++)
+        {
+            if (extraDemonsControlled[i].CanMove)
+            {
+                extraDemonsControlled[i].Move(m_moveInputValue);
+
+                extraDemonsControlled[i].ToggleWalkingParticles(m_moveInputValue != 0 && extraDemonsControlled[i].IsGrounded());
+
+                if (m_moveInputValue > 0)
+                {
+                    if (((BasicZombie)extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
+                    {
+                        extraDemonsControlled[i].MovementDirection = 1;
+                    }
+                    else
+                    {
+                        extraDemonsControlled[i].MovementDirection = -1;
+                    }
+
+                }
+                else if (m_moveInputValue < 0)
+                {
+
+                    if (((BasicZombie)extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
+                    {
+                        extraDemonsControlled[i].MovementDirection = -1;
+                    }
+                    else
+                    {
+                        extraDemonsControlled[i].MovementDirection = 1;
+                    }
+
+                }
+                if (extraDemonsControlled[i].MovementDirection != 0)
+                    extraDemonsControlled[i].transform.localScale = Vector3.one - (Vector3.right * (1 - extraDemonsControlled[i].MovementDirection));
+            }
+            else if (!extraDemonsControlled[i].CanMove)
+            {
+                extraDemonsControlled[i].Move(0);
+            }
+        }
+    }
+
+    private void FeedInputToMainDemon()
     {
         if (m_currentDemon != null && m_currentDemon.CanMove)
         {
@@ -91,11 +152,6 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             UpdateDemonReference();
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            LevelManager.Instance.StartRestartingLevel();
-        }
     }
 
     void Jump()
@@ -104,16 +160,43 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             m_currentDemon.ToggleWalkingParticles(false);
             m_currentDemon.Jump();
+
         }
         if (m_isInInteactionTrigger)
         {
             OnInteract();
         }
+        if (PossessionManager.Instance.ControllingMultipleDemons)
+        {
+            for (int i = 0; i < extraDemonsControlled.Count; i++)
+            {
+                if (extraDemonsControlled[i].CanMove)
+                {
+                    extraDemonsControlled[i].Jump();
+                }
+            }
+        }
+
+
+
     }
     void JumpButtonReleased()
     {
         if (m_currentDemon != null && m_currentDemon.CanMove)
             m_currentDemon.JumpReleaseButton();
+
+        if (PossessionManager.Instance.ControllingMultipleDemons)
+        {
+
+            for (int i = 0; i < extraDemonsControlled.Count; i++)
+            {
+                if (extraDemonsControlled[i].CanMove)
+                {
+                    extraDemonsControlled[i].JumpReleaseButton();
+                }
+            }
+        }
+
     }
 
 
@@ -122,18 +205,68 @@ public class InputManager : PersistentSingleton<InputManager>
     {
         if (m_currentDemon != null && m_currentDemon.CanMove)
             m_currentDemon.Die(true);
+
+        if (PossessionManager.Instance.ControllingMultipleDemons)
+        {
+            for (int i = 0; i < extraDemonsControlled.Count; i++)
+            {
+                if (extraDemonsControlled[i].CanMove)
+                {
+                    extraDemonsControlled[i].Die(true);
+                }
+            }
+        }
+
     }
 
     void UseSkill()
     {
         if (m_currentDemon != null && m_currentDemon.CanMove)
             m_currentDemon.UseSkill();
+
+        if (PossessionManager.Instance.ControllingMultipleDemons)
+        {
+            for (int i = 0; i < extraDemonsControlled.Count; i++)
+            {
+                if (extraDemonsControlled[i].CanMove)
+                {
+                    extraDemonsControlled[i].UseSkill();
+                }
+            }
+        }
+
     }
 
     public void UpdateDemonReference()
     {
         m_currentDemon = PossessionManager.Instance.ControlledDemon;
     }
+
+    public void UpdateExtraDemonsControlled(List<DemonBase> controlledDemons)
+    {
+        if (extraDemonsControlled == null)
+        {
+            extraDemonsControlled = new List<DemonBase>();
+        }
+
+        for (int i = 0; i < controlledDemons.Count; i++)
+        {
+            extraDemonsControlled.Add(controlledDemons[i]);
+        }
+    }
+
+    public void RemoveExtraDemonControlled(DemonBase demonToRemove)
+    {
+        if (extraDemonsControlled.Contains(demonToRemove))
+        {
+            extraDemonsControlled.Remove(demonToRemove);
+        }
+        else
+        {
+            Debug.LogError("Trying to remove a demon that wasn't possessed. Demon is " + demonToRemove.name);
+        }
+    }
+
     /*
 	public void Grab()
 	{

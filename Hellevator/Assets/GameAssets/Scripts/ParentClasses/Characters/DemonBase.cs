@@ -232,6 +232,11 @@ public abstract class DemonBase : MonoBehaviour
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
         */
+        
+    }
+
+    private void Start()
+    {
         if (m_possessedOnStart)
         {
             PossessionManager.Instance.ControlledDemon = this;
@@ -576,14 +581,14 @@ public abstract class DemonBase : MonoBehaviour
         }
         m_isDead = false;
         SetRagdollActive(false);
-
+        CanMove = true;
         m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
         m_isControlledByIA = false;
         IsControlledByPlayer = true;
         m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
 
-        CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+        //CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
 
         if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
         {
@@ -812,6 +817,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public virtual void Die(bool playDeathSound)
     {
+        
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         if (!m_isDead && playDeathSound)
