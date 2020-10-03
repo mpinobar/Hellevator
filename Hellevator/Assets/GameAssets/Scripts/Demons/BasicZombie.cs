@@ -66,8 +66,9 @@ public class BasicZombie : DemonBase
     #endregion
 
     public override void UseSkill()
-    {		
-		PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
+    {
+		ShowPossessionRange();
+		//PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
 		//GetComponent<Petrification>().Petrify();
     }
         
@@ -185,7 +186,7 @@ public class BasicZombie : DemonBase
                 m_hasJumped = true;
 				m_coyoteTimeActive = false;
 				m_isHoldingJump = true;
-                m_myAnimator.SetTrigger("Jump");
+                m_myAnimator.SetTrigger("Jump");				
                 MusicManager.Instance.PlayAudioSFX(m_jumpClip,false);
             }
             else if(m_canDoubleJump && !m_hasDoubleJumped)

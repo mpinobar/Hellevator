@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PossessionManager : PersistentSingleton<PossessionManager>
 {
@@ -24,10 +25,12 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     List<DemonBase> extraDemonsControlled;
 
     bool controllingMultipleDemons;
+   
 
     private void Start()
     {
         InputManager.Instance.UpdateDemonReference();
+        
     }
 
     /// <summary>
@@ -43,6 +46,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         while (lookForRadius <= radiusLimit)
         {
             Collider2D[] other = Physics2D.OverlapCircleAll(currentDemon.transform.position, lookForRadius, m_ragdollBodyMask);
+            Debug.LogError(other.Length);
             for (int i = 0; i < other.Length; i++)
             {
                 DemonBase foundDemon = other[i].GetComponentInParent<DemonBase>();
@@ -67,7 +71,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
         if (ControlledDemon == demonCmp)
         {
-            if(extraDemonsControlled == null || extraDemonsControlled.Count == 0)
+            if (extraDemonsControlled == null || extraDemonsControlled.Count == 0)
             {
                 ControlledDemon.SetNotControlledByPlayer();
                 PossessNearestDemon(demonCmp.MaximumPossessionRange, demonCmp);
@@ -125,7 +129,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 controllingMultipleDemons = true;
                 InputManager.Instance.UpdateExtraDemonsControlled(extraDemonsControlled);
             }
-        }        
+        }
     }
 
     /// <summary>
@@ -167,8 +171,9 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     /// <param name="currentDemon">Currently possessed demon</param>
     public void PossessNearestDemon(float radiusLimit, DemonBase currentDemon)
     {
-        
+
         DemonBase demonToPossess = LookForNearestDemon(radiusLimit, currentDemon.transform);
+
         ControlledDemon = null;
         InputManager.Instance.UpdateDemonReference();
 

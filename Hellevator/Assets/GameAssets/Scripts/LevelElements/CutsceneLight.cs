@@ -45,7 +45,7 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
     {
         if (LevelManager.Instance.LastCheckPoint == null)
         {
-            if (PossessionManager.Instance.ControlledDemon.CanMove && !m_elevator.Travelling)
+            if (PossessionManager.Instance.ControlledDemon == null && !m_elevator.Travelling)
             {
                 if (m_currentDestination == m_lightRoute.Length)
                 {
