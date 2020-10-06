@@ -33,7 +33,7 @@ public class BasicZombie : DemonBase
     [Header("References")]
     [SerializeField] ParticleSystem walkingParticles;
     [SerializeField] bool m_SoyUnNiñoDeVerdad;
-    
+	[SerializeField] GameObject skullIndicator;
     
     [Header("Gravity")]
     [Range(1,10)]
@@ -67,7 +67,9 @@ public class BasicZombie : DemonBase
 
     public override void UseSkill()
     {
-        
+		ShowPossessionRange();
+		//PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
+		//GetComponent<Petrification>().Petrify();
     }
         
 
@@ -76,7 +78,10 @@ public class BasicZombie : DemonBase
 
 		
         base.Update();
-		if (InputManager.Instance.CanMove)
+
+        
+
+		if (CanMove)
 		{
 			if (!IsGrounded())
 			{
@@ -149,8 +154,24 @@ public class BasicZombie : DemonBase
 			}
 		}
 		m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
-        
-    }
+
+		if (IsDead && PossessionManager.Instance.ControlledDemon != null)
+		{
+
+			if (Vector2.Distance(transform.position, PossessionManager.Instance.ControlledDemon.transform.position) <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
+			{
+				skullIndicator.SetActive(true);
+			}
+			else
+			{
+				skullIndicator.SetActive(false);
+			}
+		}
+		else
+		{
+			skullIndicator.SetActive(false);
+		}
+	}
 
 
     public override void Move(float xInput)
@@ -184,7 +205,7 @@ public class BasicZombie : DemonBase
                 m_hasJumped = true;
 				m_coyoteTimeActive = false;
 				m_isHoldingJump = true;
-                m_myAnimator.SetTrigger("Jump");
+                m_myAnimator.SetTrigger("Jump");				
                 MusicManager.Instance.PlayAudioSFX(m_jumpClip,false);
             }
             else if(m_canDoubleJump && !m_hasDoubleJumped)

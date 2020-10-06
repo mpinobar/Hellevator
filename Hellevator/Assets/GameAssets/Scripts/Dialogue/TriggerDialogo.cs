@@ -19,7 +19,7 @@ public class TriggerDialogo : TriggerEvent
 	{
 		if (!conversationStarted && isInTrigger)
 		{
-			InputManager.Instance.CanMove = false;
+			PossessionManager.Instance.ControlledDemon.CanMove = false;
 			DialogueManager.Instance.PressXToTalk.SetActive(false);
 			questDialogue.StartTalking(this);
 			conversationStarted = true;

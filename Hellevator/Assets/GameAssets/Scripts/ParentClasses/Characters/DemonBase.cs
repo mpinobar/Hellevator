@@ -10,6 +10,8 @@ using UnityEngine.Experimental.U2D.IK;
 /// </summary>
 public abstract class DemonBase : MonoBehaviour
 {
+    #region Variables
+
     //Member variables
     private bool    m_isRagdollActive;
     private bool    m_isInDanger;
@@ -21,7 +23,8 @@ public abstract class DemonBase : MonoBehaviour
     private bool    m_grabbedByRight;
     private Color   m_outlineColorWhenControlledByPlayer;
     private float   m_initialGlowThickness;
-
+    private bool    m_canMove;
+    [Space]
     //Weight variables
     [Header("Physicality")]
     [Tooltip("Weight of the body for puzzles")]
@@ -32,12 +35,12 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private Collider2D m_ragdollLogicCollider;
     [SerializeField] private Transform  m_torso;
     private float                       m_dragMovement = 0f;
-
+    [Space]
     [Header("Audio")]
     [SerializeField] protected AudioClip m_deathClip;
     [SerializeField] protected AudioClip m_jumpClip;
     [SerializeField] protected AudioClip m_landingClip;
-
+    [Space]
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
     [SerializeField] private float      m_maximumPossessionRange;
@@ -55,11 +58,13 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private Color      m_fireColorWhenPossessed;
     [SerializeField] private Color      m_spritesColor;
     [ColorUsage(true, true)] Color      m_fireColorWhenNotPossessed;
+    [SerializeField] GameObject         overlay;
+
     //IAReferences
     [Space]
-	[Header("IA")]
-	[Tooltip("Where or not the enemy starts controlled by IA behaviour")]
-	[SerializeField] protected bool         m_isControlledByIA = false;
+    [Header("IA")]
+    [Tooltip("Where or not the enemy starts controlled by IA behaviour")]
+    [SerializeField] protected bool         m_isControlledByIA = false;
     [SerializeField] protected float        m_IADetectionRange = 0f;
     [SerializeField] protected float        m_IADetectionAngle = 0f;
     [SerializeField] protected float        m_IADetectionRayCount = 0f;
@@ -73,16 +78,19 @@ public abstract class DemonBase : MonoBehaviour
     private RagdollTransform[]  m_childInitialTransforms;
     private SpriteRenderer[]    m_childSprites;
     private IKManager2D         m_IKManager;
-
+    [Space]
     //mask for ground detection
     [Header("Don't touch")]
-    [SerializeField] protected LayerMask m_defaultMask;
+    [SerializeField] protected LayerMask    m_defaultMask;
+    [SerializeField] protected GameObject   m_demonMaskSprite;
 
     //Demon references
     private Rigidbody2D     m_myRgb;
     private Collider2D      m_playerCollider;
     protected Animator      m_myAnimator;
-    
+
+
+
     /*
     //Grab Variables
     [Space]
@@ -97,19 +105,49 @@ public abstract class DemonBase : MonoBehaviour
 
     private bool m_hasADemonGrabed = false;
     */
+    #endregion
+
     #region Properties
 
-    public bool         IsControlledByPlayer { get => m_isControlledByPlayer; set { m_isControlledByPlayer = value; } }
-    protected bool      IsRagdollActive { get => m_isRagdollActive; }
-	
-	public Rigidbody2D      MyRgb { get => m_myRgb; }
-    public Collider2D       PlayerCollider { get => m_playerCollider; }
-	public float            Weight { get => m_weight; }
-    public Collider2D[]     LimbsColliders { get => m_limbsColliders; }
-    public float            MovementDirection { get => m_movementDirection; set => m_movementDirection = value; }
-    public bool             IsDead { get => m_isDead; set => m_isDead = value; }
-    public bool 
-        IsInDanger {
+    public bool IsControlledByPlayer
+    {
+        get => m_isControlledByPlayer; set
+        {
+            m_isControlledByPlayer = value;
+        }
+    }
+    protected bool IsRagdollActive
+    {
+        get => m_isRagdollActive;
+    }
+
+    public Rigidbody2D MyRgb
+    {
+        get => m_myRgb;
+    }
+    public Collider2D PlayerCollider
+    {
+        get => m_playerCollider;
+    }
+    public float Weight
+    {
+        get => m_weight;
+    }
+    public Collider2D[] LimbsColliders
+    {
+        get => m_limbsColliders;
+    }
+    public float MovementDirection
+    {
+        get => m_movementDirection; set => m_movementDirection = value;
+    }
+    public bool IsDead
+    {
+        get => m_isDead; set => m_isDead = value;
+    }
+    public bool
+        IsInDanger
+    {
         get => m_isInDanger;
         set
         {
@@ -119,7 +157,7 @@ public abstract class DemonBase : MonoBehaviour
             }
             else
             {
-                SetColor(m_spritesColor);
+                //SetColor(m_spritesColor);
             }
             m_isInDanger = value;
         }
@@ -138,43 +176,84 @@ public abstract class DemonBase : MonoBehaviour
             }
             else
             {
-                SetColor(m_spritesColor);
+                //SetColor(m_spritesColor);
             }
             m_isPossessionBlocked = value;
         }
     }
 
-    public float MaximumPossessionRange { get => m_maximumPossessionRange; set => m_maximumPossessionRange = value; }
-    public Collider2D RagdollLogicCollider { get => m_ragdollLogicCollider; set => m_ragdollLogicCollider = value; }
-    public Transform Torso { get => m_torso; set => m_torso = value; }
-    public bool m_hasTurnedOff { get; private set; }
-    public Transform[] ChildTransforms { get => m_childTransforms; set => m_childTransforms = value; }
+    public float MaximumPossessionRange
+    {
+        get => m_maximumPossessionRange; set => m_maximumPossessionRange = value;
+    }
+    public Collider2D RagdollLogicCollider
+    {
+        get => m_ragdollLogicCollider; set => m_ragdollLogicCollider = value;
+    }
+    public Transform Torso
+    {
+        get => m_torso; set => m_torso = value;
+    }
+    public bool m_hasTurnedOff
+    {
+        get; private set;
+    }
+    public Transform[] ChildTransforms
+    {
+        get => m_childTransforms; set => m_childTransforms = value;
+    }
+    public bool CanMove
+    {
+        get => m_canMove; set => m_canMove = value;
+    }
 
 
     #endregion
 
     protected virtual void Awake()
-    {        
-        m_limbsColliders            = m_torso.GetComponentsInChildren<Collider2D>();
-        m_limbsRbds                 = GetComponentsInChildren<Rigidbody2D>();     
-        m_myRgb                     = GetComponent<Rigidbody2D>();
-        m_playerCollider            = GetComponent<Collider2D>();
-        m_childInitialTransforms    = SaveRagdollInitialTransform();
-        m_childTransforms           = m_torso.GetComponentsInChildren<Transform>();
-        m_myAnimator                = GetComponent<Animator>();
-        m_childSprites              = GetComponentsInChildren<SpriteRenderer>();
-        m_outlineColorWhenControlledByPlayer = m_childSprites[1].material.GetColor("Color_A7D64A79");
-        m_initialGlowThickness      = m_childSprites[1].material.GetFloat("_Thickness");
-        m_IKManager                 = GetComponent<IKManager2D>();
-        m_spiritFire                = m_childSprites[0].gameObject;
-        IsInDanger                  = false;
+    {
+        m_limbsColliders = m_torso.GetComponentsInChildren<Collider2D>();
+        m_limbsRbds = GetComponentsInChildren<Rigidbody2D>();
+        m_myRgb = GetComponent<Rigidbody2D>();
+        m_playerCollider = GetComponent<Collider2D>();
+        m_childInitialTransforms = SaveRagdollInitialTransform();
+        m_childTransforms = m_torso.GetComponentsInChildren<Transform>();
+
+        m_myAnimator = GetComponent<Animator>();
+        //m_childSprites = GetComponentsInChildren<SpriteRenderer>(true);
+        //m_outlineColorWhenControlledByPlayer = m_childSprites[3].material.GetColor("Color_A7D64A79");
+        //m_initialGlowThickness = m_childSprites[3].material.GetFloat("_Thickness");
+        m_IKManager = GetComponent<IKManager2D>();
+
+        overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+
+        
+        overlay.SetActive(false);
+        if(m_demonMaskSprite)
+            m_demonMaskSprite.SetActive(true);
+        //for (int i = 0; i < m_childTransforms.Length; i++)
+        //{
+        //    if (m_childTransforms[i].CompareTag("FireSpirit"))
+        //    {
+        //        m_spiritFire = m_childTransforms[i].gameObject;
+        //    }
+        //}
+        m_spiritFire = m_torso.GetChild(m_torso.childCount - 1).gameObject;
+        m_spiritFire.SetActive(true);
+        IsInDanger = false;
         m_fireColorWhenNotPossessed = m_spiritFire.GetComponent<SpriteRenderer>().material.GetColor("Color_7F039FD4");
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
         */
+        
+    }
+
+    private void Start()
+    {        
         if (m_possessedOnStart)
         {
+            PossessionManager.Instance.ControlledDemon = this;
             SetControlledByPlayer();
         }
         else
@@ -184,292 +263,311 @@ public abstract class DemonBase : MonoBehaviour
                 SetControlledByAI();
             }
             else
-			{
-				SetNotControlledByPlayer();
-			}
-            
+            {
+                SetNotControlledByPlayer();
+            }
+
         }
     }
 
-	protected virtual void Update()
-	{
+    protected virtual void Update()
+    {
+        
         if (m_isLerpingToResetBones)
-		{
+        {
             //ResetRagdollTransforms();
             LerpResetRagdollTransforms();
-		}
-        
-
-
-        m_spiritFire.transform.rotation = Quaternion.identity;
-        
-        if (!IsControlledByPlayer)
-        {
-            if(PossessionManager.Instance.ControlledDemon != null)
-            {
-                
-                m_distanceStartGlow = PossessionManager.Instance.ControlledDemon.MaximumPossessionRange;
-                float distanceToPlayer = Vector2.Distance(Torso.position, PossessionManager.Instance.ControlledDemon.transform.position);
-                if (distanceToPlayer < m_distanceStartGlow)
-                {
-                    //m_hasTurnedOff = false;
-
-                    //START ON 1 BECAUSE NUMBER 0 IS FIRE SPRITE
-                    for (int i = 1; i < m_childSprites.Length; i++)
-                    {
-                        if (!m_isInDanger && !m_isPossessionBlocked)
-                        {
-                            m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
-                        }
-                        else if(m_isInDanger || m_isPossessionBlocked)
-                        {
-                            m_childSprites[i].material.SetColor("Color_A7D64A79", m_tintWhenCantBePossessed);
-                        }
-
-                    }
-
-                    for (int i = 1; i < m_childSprites.Length; i++)
-                    {
-                        m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
-                    }                    
-                }
-                else //if (!m_hasTurnedOff)
-                {
-                    for (int i = 1; i < m_childSprites.Length; i++)
-                    {
-                        m_childSprites[i].material.SetFloat("_Thickness", 0);
-                        m_hasTurnedOff = true;
-
-                    }
-                }
-            }
-            
-        }
-        else if (IsControlledByPlayer)
-        {
-            if(!m_isInDanger && !m_isPossessionBlocked)
-            {
-                for (int i = 1; i < m_childSprites.Length; i++)
-                {
-                    m_childSprites[i].material.SetFloat("_Thickness", 0);
-                    m_hasTurnedOff = true;
-
-                }
-            }
-            else if (m_isInDanger || m_isPossessionBlocked)
-            {
-                for (int i = 1; i < m_childSprites.Length; i++)
-                {
-                    m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
-                    m_childSprites[i].material.SetColor("Color_A7D64A79", m_tintWhenCantBePossessed);
-                }                
-            }
-
         }
 
-        /* 
-       if (m_hasADemonGrabed)
+        if (IsControlledByPlayer)
+        {
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                HidePossessionRange();
+            }
+        }
+            m_spiritFire.transform.rotation = Quaternion.identity;
+
+        #region Shader outline
+
+        //if (!IsControlledByPlayer)
+        //{
+        //    if (PossessionManager.Instance.ControlledDemon != null)
+        //    {
+
+        //        m_distanceStartGlow = PossessionManager.Instance.ControlledDemon.MaximumPossessionRange;
+        //        float distanceToPlayer = Vector2.Distance(Torso.position, PossessionManager.Instance.ControlledDemon.transform.position);
+        //        if (distanceToPlayer < m_distanceStartGlow)
+        //        {
+        //            //m_hasTurnedOff = false;
+
+        //            //START ON 1 BECAUSE NUMBER 0 IS FIRE SPRITE
+        //            for (int i = 1; i < m_childSprites.Length; i++)
+        //            {
+        //                if (!m_isInDanger && !m_isPossessionBlocked)
+        //                {
+        //                    m_childSprites[i].material.SetColor("Color_A7D64A79", m_colorWhenAvailable);
+        //                }
+        //                else if (m_isInDanger || m_isPossessionBlocked)
+        //                {
+        //                    m_childSprites[i].material.SetColor("Color_A7D64A79", m_tintWhenCantBePossessed);
+        //                }
+
+        //            }
+
+        //            for (int i = 1; i < m_childSprites.Length; i++)
+        //            {
+        //                m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
+        //            }
+        //        }
+        //        else //if (!m_hasTurnedOff)
+        //        {
+        //            for (int i = 1; i < m_childSprites.Length; i++)
+        //            {
+        //                m_childSprites[i].material.SetFloat("_Thickness", 0);
+        //                m_hasTurnedOff = true;
+
+        //            }
+        //        }
+        //    }
+
+        //}
+        //else if (IsControlledByPlayer)
+        //{
+
+        //    if (Input.GetKeyDown(KeyCode.Q))
+        //    {
+        //        HidePossessionRange();
+        //    }
+
+        //    if (!m_isInDanger && !m_isPossessionBlocked)
+        //    {
+        //        for (int i = 1; i < m_childSprites.Length; i++)
+        //        {
+        //            m_childSprites[i].material.SetFloat("_Thickness", 0);
+        //            m_hasTurnedOff = true;
+
+        //        }
+        //    }
+        //    else if (m_isInDanger || m_isPossessionBlocked)
+        //    {
+        //        for (int i = 1; i < m_childSprites.Length; i++)
+        //        {
+        //            m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
+        //            m_childSprites[i].material.SetColor("Color_A7D64A79", m_tintWhenCantBePossessed);
+        //        }
+        //    }
+
+        //}
+
+        #endregion
+    }
+
+    #region Grab
+    /* 
+   if (m_hasADemonGrabed)
+   {
+       if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+       {
+           m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
+       }
+
+       if (m_grabbedByRight)
        {
            if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
            {
                m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
            }
-
-           if (m_grabbedByRight)
+           else
            {
-               if (!m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
-               {
-                   m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 0;
-               }
-               else
-               {
-                   m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 100;
-               }
+               m_grabRayStartPositionRight.GetComponent<SpringJoint2D>().frequency = 100;
+           }
 
-               if (MovementDirection == 1)
-               {
-                   //want to push to the right
-                   m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab + Vector3.right * 4f;
-               }
-               else
-               {
-                   //dragging towards the left
-                   m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab;
-               }
+           if (MovementDirection == 1)
+           {
+               //want to push to the right
+               m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab + Vector3.right * 4f;
            }
            else
            {
-               if (!m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
-               {
-                   m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 0;
-               }
-               else
-               {
-                   m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 100;
-               }
-
-
-               if (MovementDirection == 1)
-               {
-                   //dragging towards the right
-                   m_grabRayStartPositionLeft.localPosition= m_initialPositionLeftGrab;
-               }
-               else
-               {
-                   //want to push to the left
-                   m_grabRayStartPositionLeft.localPosition = m_initialPositionLeftGrab - Vector3.right * 4f;
-               }
+               //dragging towards the left
+               m_grabRayStartPositionRight.localPosition = m_initialPositionRightGrab;
            }
        }
-       */
-    }
+       else
+       {
+           if (!m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().connectedBody.GetComponentInParent<DemonBase>().IsTorsoGrounded())
+           {
+               m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 0;
+           }
+           else
+           {
+               m_grabRayStartPositionLeft.GetComponent<SpringJoint2D>().frequency = 100;
+           }
 
-    #region Grab
+
+           if (MovementDirection == 1)
+           {
+               //dragging towards the right
+               m_grabRayStartPositionLeft.localPosition= m_initialPositionLeftGrab;
+           }
+           else
+           {
+               //want to push to the left
+               m_grabRayStartPositionLeft.localPosition = m_initialPositionLeftGrab - Vector3.right * 4f;
+           }
+       }
+   }
+
+    INCLUDE UP TO HERE IN UPDATE
+    */
+
 
     /*
-	/// <summary>
-	/// The demon tries to grab a dead demon
-	/// </summary>
-	public void Grab()
-	{
-		bool isLookingRight = !m_mySprite.flipX;
-		RaycastHit2D rayNormal;
-		if (isLookingRight)
-		{
-			rayNormal = Physics2D.Raycast(m_grabRayStartPositionRight.position, this.transform.up, 2, m_IADetectionLayersForForwardVector);
-		}
-		else
-		{
-			rayNormal = Physics2D.Raycast(m_grabRayStartPositionLeft.position, this.transform.up, 2, m_IADetectionLayersForForwardVector);
-		}
+    /// <summary>
+    /// The demon tries to grab a dead demon
+    /// </summary>
+    public void Grab()
+    {
+        bool isLookingRight = !m_mySprite.flipX;
+        RaycastHit2D rayNormal;
+        if (isLookingRight)
+        {
+            rayNormal = Physics2D.Raycast(m_grabRayStartPositionRight.position, this.transform.up, 2, m_IADetectionLayersForForwardVector);
+        }
+        else
+        {
+            rayNormal = Physics2D.Raycast(m_grabRayStartPositionLeft.position, this.transform.up, 2, m_IADetectionLayersForForwardVector);
+        }
 
-		float angleIncrease = m_IADetectionAngle / m_IADetectionRayCount;
-		
-		Vector2 forwardVector = Vector2.zero;
+        float angleIncrease = m_IADetectionAngle / m_IADetectionRayCount;
 
-		float angle = 0f;
+        Vector2 forwardVector = Vector2.zero;
 
-		if (isLookingRight)
-		{
-			if (GetAngleFromVector(rayNormal.normal) >= 90)
-			{
-				forwardVector = -Vector2.Perpendicular(rayNormal.normal);
-				angle = Vector2.Angle(forwardVector, this.transform.right);
+        float angle = 0f;
 
-				angle = angle - m_IADetectionAngle / 2f;
-			}
-			else
-			{
-				forwardVector = -Vector2.Perpendicular(rayNormal.normal);
-				angle = -Vector2.Angle(forwardVector, this.transform.right);
+        if (isLookingRight)
+        {
+            if (GetAngleFromVector(rayNormal.normal) >= 90)
+            {
+                forwardVector = -Vector2.Perpendicular(rayNormal.normal);
+                angle = Vector2.Angle(forwardVector, this.transform.right);
 
-				angle = angle - m_IADetectionAngle / 2f;
-			}
-		}
-		else
-		{
+                angle = angle - m_IADetectionAngle / 2f;
+            }
+            else
+            {
+                forwardVector = -Vector2.Perpendicular(rayNormal.normal);
+                angle = -Vector2.Angle(forwardVector, this.transform.right);
 
-			if (GetAngleFromVector(rayNormal.normal) >= 90)
-			{
-				forwardVector = -Vector2.Perpendicular(rayNormal.normal);
-				angle = Vector2.Angle(forwardVector, this.transform.right);
+                angle = angle - m_IADetectionAngle / 2f;
+            }
+        }
+        else
+        {
 
-				angle = 180 + angle + m_IADetectionAngle / 2f;
-			}
-			else
-			{
-				forwardVector = Vector2.Perpendicular(rayNormal.normal);
-				angle = -Vector2.Angle(forwardVector, -this.transform.right);
+            if (GetAngleFromVector(rayNormal.normal) >= 90)
+            {
+                forwardVector = -Vector2.Perpendicular(rayNormal.normal);
+                angle = Vector2.Angle(forwardVector, this.transform.right);
 
-				angle = 180 + angle + m_IADetectionAngle / 2f;
-			}
-		}
+                angle = 180 + angle + m_IADetectionAngle / 2f;
+            }
+            else
+            {
+                forwardVector = Vector2.Perpendicular(rayNormal.normal);
+                angle = -Vector2.Angle(forwardVector, -this.transform.right);
 
-		for (int i = 0; i <= m_IADetectionRayCount; i++)
-		{
-			Vector3 rayDirection = GetVectorFromAngle(angle);
+                angle = 180 + angle + m_IADetectionAngle / 2f;
+            }
+        }
 
-			RaycastHit2D[] hits;
+        for (int i = 0; i <= m_IADetectionRayCount; i++)
+        {
+            Vector3 rayDirection = GetVectorFromAngle(angle);
 
-			if (isLookingRight)
-			{
-				hits = Physics2D.RaycastAll(m_grabRayStartPositionRight.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
+            RaycastHit2D[] hits;
 
-				if (i == 0)
-				{
-					Debug.DrawRay(m_grabRayStartPositionRight.position, rayDirection, Color.cyan, 3f);
-				}
-				else
-				{
-					Debug.DrawRay(m_grabRayStartPositionRight.position, rayDirection, Color.blue, 3f);
-				}
-			}
-			else
-			{
-				hits = Physics2D.RaycastAll(m_grabRayStartPositionLeft.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
+            if (isLookingRight)
+            {
+                hits = Physics2D.RaycastAll(m_grabRayStartPositionRight.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
 
-				if (i == 0)
-				{
-					Debug.DrawRay(m_grabRayStartPositionLeft.position, rayDirection, Color.cyan, 3f);
-				}
-				else
-				{
-					Debug.DrawRay(m_grabRayStartPositionLeft.position, rayDirection, Color.blue, 3f);
-				}
-			}
+                if (i == 0)
+                {
+                    Debug.DrawRay(m_grabRayStartPositionRight.position, rayDirection, Color.cyan, 3f);
+                }
+                else
+                {
+                    Debug.DrawRay(m_grabRayStartPositionRight.position, rayDirection, Color.blue, 3f);
+                }
+            }
+            else
+            {
+                hits = Physics2D.RaycastAll(m_grabRayStartPositionLeft.position, rayDirection, m_IADetectionRange, m_IADetectionLayers);
 
-			for (int y = 0; y < hits.Length; y++)
-			{
-				if (hits[y].collider.GetComponentInParent<DemonBase>() != null)
-				{
-					if(hits[y].collider.transform.root != this.transform)
-					{
-						GameObject parent = hits[y].collider.GetComponentInParent<DemonBase>().gameObject;
-						if (parent.transform.GetChild(0).gameObject == hits[y].collider.gameObject)
-						{
-							//hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = this.m_myRgb;
+                if (i == 0)
+                {
+                    Debug.DrawRay(m_grabRayStartPositionLeft.position, rayDirection, Color.cyan, 3f);
+                }
+                else
+                {
+                    Debug.DrawRay(m_grabRayStartPositionLeft.position, rayDirection, Color.blue, 3f);
+                }
+            }
 
-							m_hasADemonGrabed = true;
+            for (int y = 0; y < hits.Length; y++)
+            {
+                if (hits[y].collider.GetComponentInParent<DemonBase>() != null)
+                {
+                    if(hits[y].collider.transform.root != this.transform)
+                    {
+                        GameObject parent = hits[y].collider.GetComponentInParent<DemonBase>().gameObject;
+                        if (parent.transform.GetChild(0).gameObject == hits[y].collider.gameObject)
+                        {
+                            //hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = this.m_myRgb;
 
-							//hits[y].collider.GetComponent<GrabbedTorso>().IsGrabbed = true;
-							if (isLookingRight)
-							{
-								hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = m_grabRayStartPositionRight.GetComponent<Rigidbody2D>();
+                            m_hasADemonGrabed = true;
+
+                            //hits[y].collider.GetComponent<GrabbedTorso>().IsGrabbed = true;
+                            if (isLookingRight)
+                            {
+                                hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = m_grabRayStartPositionRight.GetComponent<Rigidbody2D>();
                                 m_grabbedByRight = true;
-							}
-							else
-							{
-								hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = m_grabRayStartPositionLeft.GetComponent<Rigidbody2D>();
+                            }
+                            else
+                            {
+                                hits[y].collider.GetComponent<SpringJoint2D>().connectedBody = m_grabRayStartPositionLeft.GetComponent<Rigidbody2D>();
                                 m_grabbedByRight = false;
-							}
+                            }
 
 
 
-							//hits[y].collider.transform.parent.transform.SetParent(this.transform);
-							//hits[y].collider.transform.SetParent(this.transform);
+                            //hits[y].collider.transform.parent.transform.SetParent(this.transform);
+                            //hits[y].collider.transform.SetParent(this.transform);
 
-							//hits[y].collider.GetComponent<DistanceJoint2D>().connectedBody = this.GetComponent<Rigidbody2D>();
+                            //hits[y].collider.GetComponent<DistanceJoint2D>().connectedBody = this.GetComponent<Rigidbody2D>();
 
-							//hits[y].collider.GetComponent<Rigidbody2D>().isKinematic = true;
+                            //hits[y].collider.GetComponent<Rigidbody2D>().isKinematic = true;
 
-							break;
-						}
-					}
-				}
-			}
+                            break;
+                        }
+                    }
+                }
+            }
 
-			
 
-			if (isLookingRight)
-			{
-				angle = angle + angleIncrease;
-			}
-			else
-			{
-				angle = angle - angleIncrease;
-			}
-		}
-	}
+
+            if (isLookingRight)
+            {
+                angle = angle + angleIncrease;
+            }
+            else
+            {
+                angle = angle - angleIncrease;
+            }
+        }
+    }
     */
     #endregion Grab
 
@@ -490,16 +588,42 @@ public abstract class DemonBase : MonoBehaviour
         return returnedArray;
     }
 
+    #region ControlAssignment
+
+    /// <summary>
+    /// Sets the demon to be no longer controlled by the player and activates ragdoll physics
+    /// </summary>
+    public void SetNotControlledByPlayer()
+    {
+        if (m_IKManager != null)
+        {
+            m_IKManager.enabled = false;
+        }
+        IsControlledByPlayer = false;
+        m_isDead = true;
+        SetRagdollActive(true);
+        //for (int i = 1; i < m_childSprites.Length; i++)
+        //{
+        //    m_childSprites[i].material.SetFloat("_Thickness", 0);
+        //    m_childSprites[i].sortingLayerName = "Default";
+        //}
+        m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenNotPossessed);
+        //m_spiritFire.SetActive(true);
+        //m_PossessionCircle.enabled = false;
+        m_myAnimator.enabled = false;
+        //this.enabled = false;
+    }
+
 
     /// <summary>
     /// Sets the demon to be controlled by the AI and turns off ragdoll physics
     /// </summary>
     public void SetControlledByAI()
-	{
-		SetRagdollActive(false);
-		m_isControlledByIA = true;
-		//m_isLerpingToResetBones = true;
-		m_hasResetParentPosition = false;
+    {
+        SetRagdollActive(false);
+        m_isControlledByIA = true;
+        //m_isLerpingToResetBones = true;
+        m_hasResetParentPosition = false;
         m_isControlledByPlayer = false;
         m_isDead = false;
         m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenNotPossessed);
@@ -510,49 +634,36 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public void SetControlledByPlayer()
     {
-		if(m_IKManager != null)
-		{
-			m_IKManager.enabled = true;
-		}
+        if (m_IKManager != null)
+        {
+            m_IKManager.enabled = true;
+        }
         m_isDead = false;
         SetRagdollActive(false);
-        PossessionManager.Instance.ControlledDemon = this;
+        CanMove = true;
         m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
-		m_isControlledByIA = false;
+        m_isControlledByIA = false;
         IsControlledByPlayer = true;
         m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
-        
-		CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
 
-		if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
-		{
-		}
+        CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+
+        if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
+        {
+        }
         //m_PossessionCircle.enabled = true;
-        
-        for (int i = 1; i < m_childSprites.Length; i++)
-        {
-            m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
-            m_childSprites[i].sortingLayerName = "Player";            
-            m_childSprites[i].material.SetColor("Color_A7D64A79", m_outlineColorWhenControlledByPlayer);
-        }
+
+        //for (int i = 1; i < m_childSprites.Length; i++)
+        //{
+        //    m_childSprites[i].material.SetFloat("_Thickness", m_initialGlowThickness);
+        //    m_childSprites[i].sortingLayerName = "Player";
+        //    m_childSprites[i].material.SetColor("Color_A7D64A79", m_outlineColorWhenControlledByPlayer);
+        //}
 
     }
-    
-    /// <summary>
-    /// Saves the position and rotation of each ragdoll part with an identifier by hashed name
-    /// </summary>
-    /// <returns>Returns an array of RagdollTransform with the position and rotation of all the child objects</returns>
-    private RagdollTransform[] SaveRagdollInitialTransform()
-    {
-        Transform[] aux = m_torso.GetComponentsInChildren<Transform>();
-        RagdollTransform[] rdolls = new RagdollTransform[aux.Length];
-        for (int i = 0; i < rdolls.Length; i++)
-        {
-            rdolls[i] = new RagdollTransform(aux[i].name.GetHashCode(), aux[i].localPosition, aux[i].localRotation);
-        }
-        return rdolls;
-    }
+
+    #endregion
 
     /// <summary>
     /// Uses the active skill of the demon
@@ -570,10 +681,10 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public abstract void Jump();
 
-	/// <summary>
-	/// Revert gravity to normal status during a Jump
-	/// </summary>
-	public abstract void JumpReleaseButton();
+    /// <summary>
+    /// Revert gravity to normal status during a Jump
+    /// </summary>
+    public abstract void JumpReleaseButton();
 
     /// <summary>
     /// Activates or deactivates the walking particles
@@ -594,19 +705,63 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
-    public void DragMovement(float amount)
-    {   
-        if(m_dragMovement == 0 && amount != 0) {
+    public void ShowPossessionRange()
+    {
+        StopAllCoroutines();
+        StartCoroutine(LerpPossessionOverlay(true));
+    }
 
-            m_dragMovement = amount;            
+    IEnumerator LerpPossessionOverlay(bool active)
+    {
+        overlay.transform.localScale = Vector3.one * MaximumPossessionRange * 5;
+        SpriteRenderer spr = overlay.GetComponent<SpriteRenderer>();
+        Color aux = spr.color;
+        Color endColor = Color.black;
+        
+        overlay.SetActive(true);
+        if (active)
+        {            
+            endColor.a = 1;
         }
-        if(amount == 0)
+        else
+        {
+            endColor.a = 0;
+        }
+        while (Mathf.Abs(aux.a - endColor.a) > 0.05f)
+        {
+            aux = Color.Lerp(aux, endColor, 2 * Time.unscaledDeltaTime);
+            spr.color = aux;
+            yield return null;
+        }
+        
+        spr.color = endColor;
+        if (!active)
+        {
+            overlay.SetActive(false);
+        }
+    }
+
+    public void HidePossessionRange()
+    {
+        StopAllCoroutines();
+        StartCoroutine(LerpPossessionOverlay(false));
+    }
+
+    public void DragMovement(float amount)
+    {
+        if (m_dragMovement == 0 && amount != 0)
+        {
+
+            m_dragMovement = amount;
+        }
+        if (amount == 0)
         {
             m_dragMovement = 0;
         }
         transform.position = Vector2.MoveTowards(transform.position, transform.position + Vector3.right, m_dragMovement * Time.deltaTime);
     }
 
+    #region Ragdolls
 
     /// <summary>
     /// Toggles the ragdoll physics of the demon
@@ -615,19 +770,19 @@ public abstract class DemonBase : MonoBehaviour
     private void SetRagdollActive(bool active)
     {
         m_isRagdollActive = active;
-        
-               
+
+
         //activate all the limbs colliders if ragdoll is active, set inactive otherwise
         for (int i = 0; i < m_limbsColliders.Length; i++)
         {
             m_limbsColliders[i].enabled = active;
         }
-        
+
         //set all the limbs as dynamic if ragdoll is active, kinematic otherwise
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
-            m_limbsRbds[i].isKinematic = !active;            
-            
+            m_limbsRbds[i].isKinematic = !active;
+
             //reset velocity in case the player will control it
             if (!active)
             {
@@ -651,29 +806,20 @@ public abstract class DemonBase : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets the demon to be no longer controlled by the player and activates ragdoll physics
+    /// Saves the position and rotation of each ragdoll part with an identifier by hashed name
     /// </summary>
-    public void SetNotControlledByPlayer()
+    /// <returns>Returns an array of RagdollTransform with the position and rotation of all the child objects</returns>
+    private RagdollTransform[] SaveRagdollInitialTransform()
     {
-		if(m_IKManager != null)
-		{
-			m_IKManager.enabled = false;
-		}
-        IsControlledByPlayer = false;
-        m_isDead = true;
-        SetRagdollActive(true);
-        for (int i = 1; i < m_childSprites.Length; i++)
+        Transform[] aux = m_torso.GetComponentsInChildren<Transform>();
+        RagdollTransform[] rdolls = new RagdollTransform[aux.Length];
+        for (int i = 0; i < rdolls.Length; i++)
         {
-            m_childSprites[i].material.SetFloat("_Thickness", 0);
-            m_childSprites[i].sortingLayerName = "Default";
+            if (!aux[i].CompareTag("Mask"))
+                rdolls[i] = new RagdollTransform(aux[i].name.GetHashCode(), aux[i].localPosition, aux[i].localRotation);
         }
-        m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenNotPossessed);
-        //m_spiritFire.SetActive(true);
-        //m_PossessionCircle.enabled = false;
-        m_myAnimator.enabled = false;
-        //this.enabled = false;
+        return rdolls;
     }
-    
 
     /// <summary>
     /// Resets the position and rotation of all ragdoll parts immediately
@@ -688,7 +834,7 @@ public abstract class DemonBase : MonoBehaviour
 
             for (int j = 0; j < m_childInitialTransforms.Length; j++)
             {
-                if(partId == m_childInitialTransforms[j].Id)
+                if (partId == m_childInitialTransforms[j].Id)
                 {
                     m_childTransforms[i].localPosition = m_childInitialTransforms[j].Position;
                     m_childTransforms[i].localRotation = m_childInitialTransforms[j].Rotation;
@@ -708,7 +854,7 @@ public abstract class DemonBase : MonoBehaviour
             m_torso.parent = null;
             //Debug.DrawRay(torso.position, Vector2.down*Mathf.Infinity, Color.red, 3);
             RaycastHit2D impact = Physics2D.Raycast(m_torso.position, Vector2.down, 3f, m_defaultMask);
-            if(impact.transform != null)
+            if (impact.transform != null)
             {
                 transform.position = impact.point;
             }
@@ -732,11 +878,11 @@ public abstract class DemonBase : MonoBehaviour
                 {
                     m_childTransforms[i].localPosition = Vector3.Lerp(m_childTransforms[i].localPosition, m_childInitialTransforms[j].Position, m_recomposingSpeed * Time.deltaTime);
                     m_childTransforms[i].localRotation = Quaternion.Lerp(m_childTransforms[i].localRotation, m_childInitialTransforms[j].Rotation, m_recomposingSpeed * Time.deltaTime);
-                    
+
                 }
             }
         }
-        if(Vector3.Distance(m_torso.localPosition, m_childInitialTransforms[0].Position) < m_recomposingDistanceMargin)
+        if (Vector3.Distance(m_torso.localPosition, m_childInitialTransforms[0].Position) < m_recomposingDistanceMargin)
         {
             ResetRagdollTransforms();
             m_isLerpingToResetBones = false;
@@ -745,11 +891,14 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
+    #endregion
+
     /// <summary>
     /// Die method for characters
     /// </summary>
     public virtual void Die(bool playDeathSound)
     {
+        
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         if (!m_isDead && playDeathSound)
@@ -757,10 +906,11 @@ public abstract class DemonBase : MonoBehaviour
             MusicManager.Instance.PlayAudioSFX(m_deathClip, false);
             m_isDead = true;
         }
-        
+
         if (m_isControlledByPlayer)
         {
-            PossessionManager.Instance.PossessNearestDemon(m_maximumPossessionRange, this);
+            Debug.LogError("Player died");
+            PossessionManager.Instance.RemoveDemonPossession(transform);
         }
         else if (m_isControlledByIA)
         {
@@ -788,33 +938,34 @@ public abstract class DemonBase : MonoBehaviour
         }
         return isGrounded;
     }
-	
-	public virtual void StopMovement()
-	{
-		
-	}
 
-	public virtual void ContinueMovement()
-	{
+    public virtual void StopMovement()
+    {
 
-	}
+    }
 
-	#region AngleCalculations
-	protected Vector3 GetVectorFromAngle(float angle)
-	{
-		float angleRad = angle * (Mathf.PI / 180f);
-		return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-	}
+    public virtual void ContinueMovement()
+    {
 
-	protected float GetAngleFromVector(Vector3 dir)
-	{
+    }
 
-		dir = dir.normalized;
-		float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+    #region AngleCalculations
+    protected Vector3 GetVectorFromAngle(float angle)
+    {
+        float angleRad = angle * (Mathf.PI / 180f);
+        return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+    }
 
-		if (n < 0) n += 360;
+    protected float GetAngleFromVector(Vector3 dir)
+    {
 
-		return n;
-	}
-	#endregion AngleCalculations
+        dir = dir.normalized;
+        float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        if (n < 0)
+            n += 360;
+
+        return n;
+    }
+    #endregion AngleCalculations
 }
