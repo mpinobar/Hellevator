@@ -34,24 +34,25 @@ public class BasicZombie : DemonBase
     [SerializeField] ParticleSystem walkingParticles;
     [SerializeField] bool m_SoyUnNiñoDeVerdad;
 	[SerializeField] GameObject skullIndicator;
+	float skullOffset;
     
     [Header("Gravity")]
-    [Range(1,10)]
+    [Range(1,20)]
     [Tooltip("Ascending part of the jump")]
     [SerializeField] private float m_firstGravity = 2.25f;
-	[Range(1, 10)]
+	[Range(1, 20)]
 	[Tooltip("Ascending part of the jump when holding the jump button")]
 	[SerializeField] private float m_firstGravityHoldingJump = 2.25f;
-	[Range(1, 10)]
+	[Range(1, 20)]
     [Tooltip("First top part of the jump")]
     [SerializeField] private float m_secondGravity = 2.5f;
-	[Range(1, 10)]
+	[Range(1, 20)]
     [Tooltip("First top part of the jump")]
     [SerializeField] private float m_thirdGravity = 2.5f;
-    [Range(1, 10)]
+    [Range(1, 20)]
     [Tooltip("Second top part of the double jump")]
     [SerializeField] private float m_thirdGravityDoubleJump = 2f;
-    [Range(1, 10)]
+    [Range(1, 20)]
     [Tooltip("Descending part of the jump")]
     [SerializeField] private float m_fourthGravity = 5f;
 	
@@ -71,7 +72,12 @@ public class BasicZombie : DemonBase
 		//PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
 		//GetComponent<Petrification>().Petrify();
     }
-        
+    protected override void Awake()
+    {
+        base.Awake();
+
+		skullOffset = skullIndicator.transform.position.y - m_torso.transform.position.y;
+    }
 
     protected override void Update()
     {
@@ -93,7 +99,7 @@ public class BasicZombie : DemonBase
 				}
 				else if (m_coyoteTimeActive)
 				{
-					m_currentCoyoteTimer = m_currentCoyoteTimer - Time.deltaTime;
+					m_currentCoyoteTimer -= Time.deltaTime;
 					if (m_currentCoyoteTimer <= 0)
 					{
 						m_hasJumped = true;
@@ -161,6 +167,7 @@ public class BasicZombie : DemonBase
 			if (Vector2.Distance(transform.position, PossessionManager.Instance.ControlledDemon.transform.position) <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
 			{
 				skullIndicator.SetActive(true);
+				skullIndicator.transform.position = m_torso.transform.position + Vector3.up * skullOffset;
 			}
 			else
 			{
@@ -241,7 +248,7 @@ public class BasicZombie : DemonBase
 
 	public override void ToggleWalkingParticles(bool active)
     {
-        walkingParticles.Stop();
+        //walkingParticles.Stop();
         //if (active)
         //{
         //    walkingParticles.Play();

@@ -13,7 +13,8 @@ public class InputManager : PersistentSingleton<InputManager>
     bool m_jumped;
     bool m_isInInteactionTrigger = false;
 
-
+    Vector3 direction = Vector3.one;
+     
     public delegate void OnButtonPress();
 
     public event OnButtonPress OnInteract;
@@ -61,6 +62,11 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             LevelManager.Instance.StartRestartingLevel();
         }
+    }
+
+    private void LateUpdate()
+    {
+        SetMainCharacterDirection();
     }
 
     private void FeedInputToExtraDemons()
@@ -114,7 +120,7 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             m_currentDemon.Move(m_moveInputValue);
 
-            m_currentDemon.ToggleWalkingParticles(m_moveInputValue != 0 && m_currentDemon.IsGrounded());
+            //m_currentDemon.ToggleWalkingParticles(m_moveInputValue != 0 && m_currentDemon.IsGrounded());
 
             if (m_moveInputValue > 0)
             {
@@ -141,8 +147,8 @@ public class InputManager : PersistentSingleton<InputManager>
                 }
 
             }
-            if (m_currentDemon.MovementDirection != 0)
-                m_currentDemon.transform.localScale = Vector3.one - (Vector3.right * (1 - m_currentDemon.MovementDirection));
+            
+            //m_currentDemon.transform.localScale = direction; //Vector3.one - (Vector3.right * (1 - m_currentDemon.MovementDirection));
         }
         else if (m_currentDemon != null && !m_currentDemon.CanMove)
         {
@@ -151,6 +157,16 @@ public class InputManager : PersistentSingleton<InputManager>
         else
         {
             UpdateDemonReference();
+        }
+    }
+
+    private void SetMainCharacterDirection()
+    {
+        if (m_currentDemon.MovementDirection != 0)
+        {
+            direction = transform.localScale;
+            direction.x = m_currentDemon.transform.localScale.x * m_currentDemon.MovementDirection;
+            m_currentDemon.transform.localScale = direction;
         }
     }
 
