@@ -24,22 +24,25 @@ public abstract class DemonBase : MonoBehaviour
     private Color   m_outlineColorWhenControlledByPlayer;
     private float   m_initialGlowThickness;
     private bool    m_canMove;
+
     [Space]
     //Weight variables
     [Header("Physicality")]
     [Tooltip("Weight of the body for puzzles")]
-    [SerializeField] protected float    m_weight;
+    [SerializeField] protected float        m_weight;
     [Tooltip("Speed at which the body recovers from ragdoll to idle pose")]
-    [SerializeField] private float      m_recomposingSpeed = 3;
-    [SerializeField] private float      m_recomposingDistanceMargin = 0.05f;
-    [SerializeField] private Collider2D m_ragdollLogicCollider;
-    [SerializeField] private Transform  m_torso;
-    private float                       m_dragMovement = 0f;
+    [SerializeField] private float          m_recomposingSpeed = 3;
+    [SerializeField] private float          m_recomposingDistanceMargin = 0.05f;
+    [SerializeField] private Collider2D     m_ragdollLogicCollider;
+    [SerializeField] protected Transform    m_torso;
+    private float                           m_dragMovement = 0f;
+
     [Space]
     [Header("Audio")]
     [SerializeField] protected AudioClip m_deathClip;
     [SerializeField] protected AudioClip m_jumpClip;
     [SerializeField] protected AudioClip m_landingClip;
+    
     [Space]
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
@@ -218,12 +221,11 @@ public abstract class DemonBase : MonoBehaviour
         m_playerCollider = GetComponent<Collider2D>();
         m_childInitialTransforms = SaveRagdollInitialTransform();
         m_childTransforms = m_torso.GetComponentsInChildren<Transform>();
-
         m_myAnimator = GetComponent<Animator>();
         //m_childSprites = GetComponentsInChildren<SpriteRenderer>(true);
         //m_outlineColorWhenControlledByPlayer = m_childSprites[3].material.GetColor("Color_A7D64A79");
         //m_initialGlowThickness = m_childSprites[3].material.GetFloat("_Thickness");
-        m_IKManager = GetComponent<IKManager2D>();
+        //m_IKManager = GetComponent<IKManager2D>();
 
         overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
 
@@ -834,7 +836,7 @@ public abstract class DemonBase : MonoBehaviour
 
             for (int j = 0; j < m_childInitialTransforms.Length; j++)
             {
-                if (partId == m_childInitialTransforms[j].Id)
+                if (!m_childTransforms[j].CompareTag("Mask") && partId == m_childInitialTransforms[j].Id)
                 {
                     m_childTransforms[i].localPosition = m_childInitialTransforms[j].Position;
                     m_childTransforms[i].localRotation = m_childInitialTransforms[j].Rotation;
@@ -868,13 +870,13 @@ public abstract class DemonBase : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, m_recomposingSpeed * Time.deltaTime);
-        for (int i = 0; i < m_childTransforms.Length; i++)
+        for (int i = 0; i < m_childInitialTransforms.Length; i++)
         {
             int partId = m_childTransforms[i].name.GetHashCode();
 
             for (int j = 0; j < m_childInitialTransforms.Length; j++)
             {
-                if (partId == m_childInitialTransforms[j].Id)
+                if (!m_childTransforms[j].CompareTag("Mask") && partId == m_childInitialTransforms[j].Id)
                 {
                     m_childTransforms[i].localPosition = Vector3.Lerp(m_childTransforms[i].localPosition, m_childInitialTransforms[j].Position, m_recomposingSpeed * Time.deltaTime);
                     m_childTransforms[i].localRotation = Quaternion.Lerp(m_childTransforms[i].localRotation, m_childInitialTransforms[j].Rotation, m_recomposingSpeed * Time.deltaTime);
