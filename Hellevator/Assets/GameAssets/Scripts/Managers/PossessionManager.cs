@@ -17,6 +17,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     }
     public LayerMask RagdollBodyMask { get => m_ragdollBodyMask; }
     public bool ControllingMultipleDemons { get => controllingMultipleDemons; }
+    public DemonBase DemonShowingSkull { get => demonShowingSkull; set => demonShowingSkull = value; }
 
     [SerializeField] LayerMask m_ragdollBodyMask;
     [SerializeField] GameObject m_PossessionLight;
@@ -25,7 +26,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     List<DemonBase> extraDemonsControlled;
 
     bool controllingMultipleDemons;
-   
+
+    DemonBase demonShowingSkull;
 
     private void Start()
     {
@@ -46,7 +48,6 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         while (lookForRadius <= radiusLimit)
         {
             Collider2D[] other = Physics2D.OverlapCircleAll(currentDemon.transform.position, lookForRadius, m_ragdollBodyMask);
-            Debug.LogError(other.Length);
             for (int i = 0; i < other.Length; i++)
             {
                 DemonBase foundDemon = other[i].GetComponentInParent<DemonBase>();

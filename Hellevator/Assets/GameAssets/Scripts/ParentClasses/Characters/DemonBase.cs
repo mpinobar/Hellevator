@@ -24,6 +24,7 @@ public abstract class DemonBase : MonoBehaviour
     private Color   m_outlineColorWhenControlledByPlayer;
     private float   m_initialGlowThickness;
     private bool    m_canMove;
+    private float   m_distanceToPlayer;
 
     [Space]
     //Weight variables
@@ -209,6 +210,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         get => m_canMove; set => m_canMove = value;
     }
+    public float DistanceToPlayer { get => m_distanceToPlayer; set => m_distanceToPlayer = value; }
 
 
     #endregion

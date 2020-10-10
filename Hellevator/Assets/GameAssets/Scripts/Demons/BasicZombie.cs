@@ -68,9 +68,10 @@ public class BasicZombie : DemonBase
 
     public override void UseSkill()
     {
-		ShowPossessionRange();
+		//ShowPossessionRange();
 		//PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
 		//GetComponent<Petrification>().Petrify();
+		GetComponent<Explosion>().CreateExplosion();
     }
     protected override void Awake()
     {
@@ -163,14 +164,24 @@ public class BasicZombie : DemonBase
 
 		if (IsDead && PossessionManager.Instance.ControlledDemon != null)
 		{
-
-			if (Vector2.Distance(transform.position, PossessionManager.Instance.ControlledDemon.transform.position) <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
+			DistanceToPlayer = Vector2.Distance(transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
+			if (DistanceToPlayer <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
 			{
-				skullIndicator.SetActive(true);
-				skullIndicator.transform.position = m_torso.transform.position + Vector3.up * skullOffset;
+				if (PossessionManager.Instance.DemonShowingSkull == null || PossessionManager.Instance.DemonShowingSkull == this || (PossessionManager.Instance.DemonShowingSkull != this && PossessionManager.Instance.DemonShowingSkull.DistanceToPlayer > DistanceToPlayer))
+                {
+					PossessionManager.Instance.DemonShowingSkull = this;
+					skullIndicator.SetActive(true);
+					skullIndicator.transform.position = m_torso.transform.position + Vector3.up * skullOffset;
+                }
+                else
+                {
+					skullIndicator.SetActive(false);
+				}
+				
 			}
 			else
 			{
+				
 				skullIndicator.SetActive(false);
 			}
 		}

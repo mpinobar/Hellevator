@@ -162,10 +162,10 @@ public class InputManager : PersistentSingleton<InputManager>
 
     private void SetMainCharacterDirection()
     {
-        if (m_currentDemon.MovementDirection != 0)
+        if (m_currentDemon != null && m_currentDemon.MovementDirection != 0)
         {
             direction = transform.localScale;
-            direction.x = m_currentDemon.transform.localScale.x * m_currentDemon.MovementDirection;
+            direction.x = m_currentDemon.MovementDirection;
             m_currentDemon.transform.localScale = direction;
         }
     }
