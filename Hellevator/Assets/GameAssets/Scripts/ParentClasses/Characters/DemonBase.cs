@@ -43,7 +43,7 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] protected AudioClip m_deathClip;
     [SerializeField] protected AudioClip m_jumpClip;
     [SerializeField] protected AudioClip m_landingClip;
-    
+
     [Space]
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
@@ -229,11 +229,17 @@ public abstract class DemonBase : MonoBehaviour
         //m_initialGlowThickness = m_childSprites[3].material.GetFloat("_Thickness");
         //m_IKManager = GetComponent<IKManager2D>();
 
-        overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+        if (overlay)
+        {
+            overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
 
-        
-        overlay.SetActive(false);
-        if(m_demonMaskSprite)
+            overlay.SetActive(false);
+        }else {
+            Debug.LogError("No se ha asignado la referencia al overlay para mostrar rango de posesión. Nombre de cuerpo: " + name);
+        }
+
+
+        if (m_demonMaskSprite)
             m_demonMaskSprite.SetActive(true);
         //for (int i = 0; i < m_childTransforms.Length; i++)
         //{
@@ -250,11 +256,11 @@ public abstract class DemonBase : MonoBehaviour
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
         */
-        
+
     }
 
     private void Start()
-    {        
+    {
         if (m_possessedOnStart)
         {
             PossessionManager.Instance.ControlledDemon = this;
@@ -276,7 +282,7 @@ public abstract class DemonBase : MonoBehaviour
 
     protected virtual void Update()
     {
-        
+
         if (m_isLerpingToResetBones)
         {
             //ResetRagdollTransforms();
@@ -291,7 +297,7 @@ public abstract class DemonBase : MonoBehaviour
                 HidePossessionRange();
             }
         }
-            m_spiritFire.transform.rotation = Quaternion.identity;
+        m_spiritFire.transform.rotation = Quaternion.identity;
 
         #region Shader outline
 
@@ -721,10 +727,10 @@ public abstract class DemonBase : MonoBehaviour
         SpriteRenderer spr = overlay.GetComponent<SpriteRenderer>();
         Color aux = spr.color;
         Color endColor = Color.black;
-        
+
         overlay.SetActive(true);
         if (active)
-        {            
+        {
             endColor.a = 1;
         }
         else
@@ -737,7 +743,7 @@ public abstract class DemonBase : MonoBehaviour
             spr.color = aux;
             yield return null;
         }
-        
+
         spr.color = endColor;
         if (!active)
         {
@@ -902,7 +908,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public virtual void Die(bool playDeathSound)
     {
-        
+
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         if (!m_isDead && playDeathSound)

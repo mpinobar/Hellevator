@@ -76,8 +76,15 @@ public class BasicZombie : DemonBase
     protected override void Awake()
     {
         base.Awake();
+        if (skullIndicator)
+        {
 
-		skullOffset = skullIndicator.transform.position.y - m_torso.transform.position.y;
+			skullOffset = skullIndicator.transform.position.y - m_torso.transform.position.y;
+        }
+        else
+        {
+			Debug.LogError("No se ha asgnado la referencia a la calavera que muestra el cadáver a poseer. Nombre de cuerpo: " + name);
+        }
     }
 
     protected override void Update()
@@ -162,33 +169,37 @@ public class BasicZombie : DemonBase
 		}
 		m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
 
-		if (IsDead && PossessionManager.Instance.ControlledDemon != null)
-		{
-			DistanceToPlayer = Vector2.Distance(transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
-			if (DistanceToPlayer <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
+        if (skullIndicator)
+        {
+			if (IsDead && PossessionManager.Instance.ControlledDemon != null && !IsInDanger)
 			{
-				if (PossessionManager.Instance.DemonShowingSkull == null || PossessionManager.Instance.DemonShowingSkull == this || (PossessionManager.Instance.DemonShowingSkull != this && PossessionManager.Instance.DemonShowingSkull.DistanceToPlayer > DistanceToPlayer))
-                {
-					PossessionManager.Instance.DemonShowingSkull = this;
-					skullIndicator.SetActive(true);
-					skullIndicator.transform.position = m_torso.transform.position + Vector3.up * skullOffset;
-                }
-                else
-                {
+				DistanceToPlayer = Vector2.Distance(transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
+				if (DistanceToPlayer <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
+				{
+					if (PossessionManager.Instance.DemonShowingSkull == null || PossessionManager.Instance.DemonShowingSkull == this || (PossessionManager.Instance.DemonShowingSkull != this && PossessionManager.Instance.DemonShowingSkull.DistanceToPlayer > DistanceToPlayer))
+					{
+						PossessionManager.Instance.DemonShowingSkull = this;
+						skullIndicator.SetActive(true);
+						skullIndicator.transform.position = m_torso.transform.position + Vector3.up * skullOffset;
+					}
+					else
+					{
+						skullIndicator.SetActive(false);
+					}
+
+				}
+				else
+				{
+
 					skullIndicator.SetActive(false);
 				}
-				
 			}
 			else
 			{
-				
 				skullIndicator.SetActive(false);
 			}
 		}
-		else
-		{
-			skullIndicator.SetActive(false);
-		}
+		
 	}
 
 
