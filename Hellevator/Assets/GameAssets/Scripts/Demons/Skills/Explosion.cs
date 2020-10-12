@@ -17,16 +17,22 @@ public class Explosion : MonoBehaviour
         ExplosionVisuals();
         Collider2D [] colliders = Physics2D.OverlapCircleAll(transform.position,explosionRadius,explosionInteractionLayerMask);
         DemonBase demonInRange;
+        DestructibleWall explodingWall;
         for (int i = 0; i < colliders.Length; i++)
         {
             demonInRange = colliders[i].GetComponentInParent<DemonBase>();
-            if ( demonInRange && demonInRange != GetComponentInParent<DemonBase>())
+            explodingWall = colliders[i].GetComponentInParent<DestructibleWall>();
+            if (demonInRange && demonInRange != GetComponentInParent<DemonBase>())
             {
                 demonInRange.Die(true);
             }
+            if (explodingWall)
+            {
+                explodingWall.Explode(transform.position, explosionForce);
+            }
         }
         PossessionManager.Instance.RemoveDemonPossession(transform);
-        
+
         UnparentLimbs();
         GetComponent<DemonBase>().enabled = false;
     }
