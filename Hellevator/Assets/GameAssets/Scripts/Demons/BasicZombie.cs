@@ -17,6 +17,7 @@ public class BasicZombie : DemonBase
     [SerializeField] private bool m_canDoubleJump;
 	[SerializeField] private float m_coyoteTimeDuration = 0f;//Mirar si hacer cambio a frames
     [SerializeField] private float m_groundCorrectionMultiplier = 3;
+	private bool m_isOnLadder = false;
     private bool m_hasJumped;
     private bool m_hasDoubleJumped;
 	private bool m_coyoteTimeActive = false;
@@ -97,6 +98,7 @@ public class BasicZombie : DemonBase
 
 		if (CanMove)
 		{
+			
 			if (!IsGrounded())
 			{
 				//in the air while jumping
@@ -168,8 +170,8 @@ public class BasicZombie : DemonBase
 			}
 		}
 		m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
-
-        if (skullIndicator)
+		VerticalMovementOnLadder(InputManager.Instance.VerticalInputValue);
+		if (skullIndicator)
         {
 			if (IsDead && PossessionManager.Instance.ControlledDemon != null && !IsInDanger)
 			{
@@ -202,10 +204,21 @@ public class BasicZombie : DemonBase
 		
 	}
 
+	public void VerticalMovementOnLadder(float verticalInput)
+    {
+        if (m_isOnLadder)
+        {
+			if(!m_isJumping || (m_isJumping && MyRgb.velocity.y < 0))
+            {
+				MyRgb.gravityScale = 0f;
+				MyRgb.velocity = new Vector2(MyRgb.velocity.x, verticalInput * MaxSpeed);
+			}
+			
+        }
+    }
 
     public override void Move(float xInput)
-    {
-
+    {		       
         float accel = m_acceleration;
        
         if (IsGrounded())
@@ -229,6 +242,7 @@ public class BasicZombie : DemonBase
 			}
             if (!m_hasJumped)
             {
+				m_isJumping = true;
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
                 MyRgb.AddForce(Vector2.up * JumpForce);
                 m_hasJumped = true;
@@ -290,6 +304,7 @@ public class BasicZombie : DemonBase
                 if (m_hasJumped)
                 {
                     MusicManager.Instance.PlayAudioSFX(m_landingClip, false);
+					m_isJumping = false;
                 }
                 m_hasJumped = false;
                 
@@ -324,4 +339,10 @@ public class BasicZombie : DemonBase
 		MyRgb.gravityScale = m_previousGravityScale;
 	}
 
+
+	public void SetOnLadder(bool onLadder)
+    {
+		m_isOnLadder = onLadder;
+    }
+    
 }

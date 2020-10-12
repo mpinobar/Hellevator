@@ -13,24 +13,26 @@ public abstract class DemonBase : MonoBehaviour
     #region Variables
 
     //Member variables
-    private bool    m_isRagdollActive;
-    private bool    m_isInDanger;
-    private bool    m_isJumping;
-    private float   m_movementDirection;
-    private bool    m_isLerpingToResetBones;
-    private bool    m_hasResetParentPosition;
-    protected bool  m_isDead;
-    private bool    m_grabbedByRight;
-    private Color   m_outlineColorWhenControlledByPlayer;
-    private float   m_initialGlowThickness;
-    private bool    m_canMove;
-    private float   m_distanceToPlayer;
+    private bool        m_isRagdollActive;
+    private bool        m_isInDanger;
+    protected bool      m_isJumping;
+    private float       m_movementDirection;
+    private bool        m_isLerpingToResetBones;
+    private bool        m_hasResetParentPosition;
+    protected bool      m_isDead;
+    private bool        m_grabbedByRight;
+    private Color       m_outlineColorWhenControlledByPlayer;
+    private float       m_initialGlowThickness;
+    private bool        m_canMove;
+    private float       m_distanceToPlayer;
 
     [Space]
     //Weight variables
     [Header("Physicality")]
+    
     [Tooltip("Weight of the body for puzzles")]
     [SerializeField] protected float        m_weight;
+
     [Tooltip("Speed at which the body recovers from ragdoll to idle pose")]
     [SerializeField] private float          m_recomposingSpeed = 3;
     [SerializeField] private float          m_recomposingDistanceMargin = 0.05f;
@@ -48,16 +50,20 @@ public abstract class DemonBase : MonoBehaviour
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
     [SerializeField] private float      m_maximumPossessionRange;
+
     [ColorUsage(true, true)]
     [SerializeField] private Color      m_tintWhenCantBePossessed;
     [SerializeField] SpriteRenderer     m_PossessionCircle;
     private float                       m_distanceStartGlow = 10;
+
     [ColorUsage(true, true)]
     [SerializeField] private Color      m_colorWhenAvailable;
+
     private GameObject                  m_spiritFire;
     private float                       m_distanceMaxGlow = 5;
     private bool                        m_isPossessionBlocked;
     private bool                        m_isControlledByPlayer;
+
     [ColorUsage(true,true)]
     [SerializeField] private Color      m_fireColorWhenPossessed;
     [SerializeField] private Color      m_spritesColor;
@@ -85,7 +91,7 @@ public abstract class DemonBase : MonoBehaviour
     [Space]
     //mask for ground detection
     [Header("Don't touch")]
-    [SerializeField] protected LayerMask    m_defaultMask;
+    [SerializeField] protected LayerMask    m_groundedDetectionLayers;
     [SerializeField] protected GameObject   m_demonMaskSprite;
 
     //Demon references
@@ -863,7 +869,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             m_torso.parent = null;
             //Debug.DrawRay(torso.position, Vector2.down*Mathf.Infinity, Color.red, 3);
-            RaycastHit2D impact = Physics2D.Raycast(m_torso.position, Vector2.down, 3f, m_defaultMask);
+            RaycastHit2D impact = Physics2D.Raycast(m_torso.position, Vector2.down, 3f, m_groundedDetectionLayers);
             if (impact.transform != null)
             {
                 transform.position = impact.point;
@@ -933,11 +939,8 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     /// <returns>Boolean determining if it is touching the ground</returns>
     public bool IsGrounded()
-    {
-        Debug.DrawRay(transform.position, Vector3.down * 0.5f, Color.red);
-        Debug.DrawRay(transform.position + Vector3.right * 0.15f, Vector3.down * 0.5f, Color.red);
-        Debug.DrawRay(transform.position - Vector3.right * 0.15f, Vector3.down * 0.5f, Color.red);
-        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.3f, Vector2.down, 0.5f, m_defaultMask);
+    {        
+        RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.3f, Vector2.down, 0.5f, m_groundedDetectionLayers);
         bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
         {

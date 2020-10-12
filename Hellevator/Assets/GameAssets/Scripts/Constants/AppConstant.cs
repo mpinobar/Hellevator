@@ -36,5 +36,11 @@ public class AppSounds
     public static readonly string	BUTTON_SFX       = "Click_Soft_01";
 }
 
+public enum Key
+{
+	Kitchen, Restaurant, Storage
+}
+
+
 
 

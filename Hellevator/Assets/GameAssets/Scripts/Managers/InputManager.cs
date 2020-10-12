@@ -12,6 +12,7 @@ public class InputManager : PersistentSingleton<InputManager>
     float m_moveInputValue = 0f;
     bool m_jumped;
     bool m_isInInteactionTrigger = false;
+    float m_verticalInputValue;
 
     Vector3 direction = Vector3.one;
      
@@ -29,6 +30,7 @@ public class InputManager : PersistentSingleton<InputManager>
     {
         get => m_isInInteactionTrigger; set => m_isInInteactionTrigger = value;
     }
+    public float VerticalInputValue { get => m_verticalInputValue; set => m_verticalInputValue = value; }
 
     public override void Awake()
     {
@@ -39,6 +41,8 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.InputMove.canceled += ctx => m_moveInputValue = ctx.ReadValue<float>();
         m_controls.PlayerControls.InputJump.performed += ctx => Jump();
         m_controls.PlayerControls.InputJump.canceled += ctx => JumpButtonReleased();
+        m_controls.PlayerControls.VerticalMovement.performed += ctx => m_verticalInputValue = ctx.ReadValue<float>();
+        m_controls.PlayerControls.VerticalMovement.canceled += ctx => m_verticalInputValue = ctx.ReadValue<float>();
 
         m_controls.PlayerControls.InputAbility.performed += ctx => UseSkill();
         //m_controls.PlayerControls.InputInteract.performed += ctx => Grab();
