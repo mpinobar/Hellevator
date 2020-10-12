@@ -20,7 +20,8 @@ public class KeyActivatedDoor : MonoBehaviour
 
     public void OpenDoor()
     {
-        Debug.LogError("DOOR OPENING USING KEY " + key.ToString());
+        gameObject.SetActive(false);
+        //Debug.LogError("DOOR OPENING USING KEY " + key.ToString());
     }
 
 }

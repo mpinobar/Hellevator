@@ -1152,7 +1152,7 @@ GameObject:
   - component: {fileID: 7512485476673363479}
   - component: {fileID: 4071509794707372890}
   m_Layer: 0
-  m_Name: Mask
+  m_Name: MaskRandomSprites
   m_TagString: Mask
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1651,7 +1651,7 @@ GameObject:
   - component: {fileID: 584932251178124805}
   - component: {fileID: 2967022142152205511}
   m_Layer: 0
-  m_Name: Mask (1)
+  m_Name: BodyRandomSprites
   m_TagString: Mask
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1666,7 +1666,7 @@ Transform:
   m_GameObject: {fileID: 8455746610744173754}
   m_LocalRotation: {x: -0, y: -0, z: 0.7017305, w: 0.7124425}
   m_LocalPosition: {x: 0.45700037, y: 0, z: 0}
-  m_LocalScale: {x: 0.6600389, y: 0.6600389, z: 0.6600388}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1014715455083192252}
   m_RootOrder: 6
@@ -1899,7 +1899,7 @@ MonoBehaviour:
   m_IADetectionLayersForForwardVector:
     serializedVersion: 2
     m_Bits: 0
-  m_defaultMask:
+  m_groundedDetectionLayers:
     serializedVersion: 2
     m_Bits: 1
   m_demonMaskSprite: {fileID: 6503473911029235946}
@@ -1921,6 +1921,8 @@ MonoBehaviour:
   m_thirdGravity: 4
   m_thirdGravityDoubleJump: 2
   m_fourthGravity: 5.5
+  colorSkullIndicatorExplosive: {r: 1.6226416, g: 0.57733166, b: 0.0688857, a: 1}
+  colorSkullIndicatorPetrification: {r: 0.051886797, g: 0.50669, b: 1, a: 1}
 --- !u!95 &1000432697154048387
 Animator:
   serializedVersion: 3
@@ -1949,7 +1951,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 9032155453379708232}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 23853c5d6a288f74db93db9671a43140, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -2022,7 +2024,7 @@ MonoBehaviour:
   explosionForce: 3.5
   explosionInteractionLayerMask:
     serializedVersion: 2
-    m_Bits: 1280
+    m_Bits: 9472
   limbsToUnparent:
   - {fileID: 2523376367460445207}
   - {fileID: 7876538221899107236}
