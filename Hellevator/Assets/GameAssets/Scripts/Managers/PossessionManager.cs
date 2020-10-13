@@ -30,7 +30,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     DemonBase demonShowingSkull;
 
     private void Start()
-    {
+    {        
         InputManager.Instance.UpdateDemonReference();
         
     }
