@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class LevelLoadManager : MonoBehaviour
 {
-    [SerializeField] string thisSceneName;
-    [SerializeField] List<string> adjacentScenes;
+    string thisSceneName;
+    [SerializeField] List<string> adjacentScenes;   
 
     public List<string> AdjacentScenes { get => adjacentScenes; }
     public string ThisSceneName { get => thisSceneName; set => thisSceneName = value; }
 
     private void OnEnable()
     {
+        ThisSceneName = gameObject.scene.name;
         if(LevelManager.Instance.CentralScene == null)
         {
             LevelManager.Instance.LoadCentralSceneFirstTime(this);

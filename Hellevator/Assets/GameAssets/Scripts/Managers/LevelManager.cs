@@ -148,6 +148,9 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
         }
+
+        if(!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
     }
 
     public void ChangeCentralScene(LevelLoadManager newCentralScene)
@@ -164,53 +167,44 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
             //la que ahora es central ya no es adyacente
             adjacentScenes.Remove(centralScene.ThisSceneName);
-            //for (int i = 0; i < adjacentScenes.Count; i++)
-            //{
-            //    if (adjacentScenes[i] == newCentralScene.ThisSceneName)
-            //    {
-            //        //la que antes era la central ahora es una adyacente
-            //        adjacentScenes.Add(centralScene.ThisSceneName);
-            //        centralScene = newCentralScene;
 
-            //        //la que ahora es central ya no es adyacente
-            //        adjacentScenes.Remove(centralScene.ThisSceneName);
-            //        break;
-            //    }
-            //}
+            PossessionManager.Instance.MoveDemonsToCentralScene(SceneManager.GetSceneByName(centralScene.ThisSceneName));
 
-            Debug.LogError("New central scene is " + newCentralScene.ThisSceneName);
+            //Debug.LogError("New central scene is " + newCentralScene.ThisSceneName);
+
+            //Descargar las escenas que ya no se necesitan porque no se encuentran entre las adyacentes de la nueva central
             for (int i = 0; i < adjacentScenes.Count; i++)
             {
                 if (!centralScene.AdjacentScenes.Contains(adjacentScenes[i]))
                 {
-                    Debug.LogError("Removing from loaded scenes: " + adjacentScenes[i]);
+                    //Debug.LogError("Removing from loaded scenes: " + adjacentScenes[i]);
                     SceneManager.UnloadSceneAsync(adjacentScenes[i]);
                     adjacentScenes.Remove(adjacentScenes[i]);
                     i--;
                 }
                 else
                 {
-                    Debug.LogError("Keeping scene: " + adjacentScenes[i]);
+                    //Debug.LogError("Keeping scene: " + adjacentScenes[i]);
                 }
             }
 
+            //Cargar las escenas que se necesitan por ser adyacentes a la nueva central y que no están cargadas
             for (int i = 0; i < centralScene.AdjacentScenes.Count; i++)
             {
-                bool isNewAdjacentSceneToCentralLoaded = false;
-                for (int j = 0; j < adjacentScenes.Count; j++)
+                if (!adjacentScenes.Contains(centralScene.AdjacentScenes[i]))
                 {
-                    if (adjacentScenes[j] == centralScene.AdjacentScenes[i])
+                    if (!SceneManager.GetSceneByName(centralScene.AdjacentScenes[i]).isLoaded)
                     {
-                        isNewAdjacentSceneToCentralLoaded = true;
+                        SceneManager.LoadSceneAsync(centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
+                        adjacentScenes.Add(centralScene.AdjacentScenes[i]);
                     }
-                }
-                if (!isNewAdjacentSceneToCentralLoaded)
-                {
-                    SceneManager.LoadSceneAsync(centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
+                    else
+                    {
+                        //Debug.LogError("Scene already loaded: " + centralScene.AdjacentScenes[i]);
+                    }                    
                 }
             }
-        }        
-
+        }       
     }
 
 
