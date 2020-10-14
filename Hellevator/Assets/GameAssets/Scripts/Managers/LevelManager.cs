@@ -16,6 +16,11 @@ public class LevelManager : PersistentSingleton<LevelManager>
 	
 	[SerializeField] private GameObject m_fade = null;
 
+    List<string> adjacentScenes;
+    LevelLoadManager centralScene;
+
+
+
     public CheckPoint LastCheckPoint { get => m_lastCheckPoint;
 
         set
@@ -26,13 +31,14 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
 	public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
 	public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
+    public LevelLoadManager CentralScene { get => centralScene; set => centralScene = value; }
 
 
-	/// <summary>
-	/// Checks if the checkpoint has been already entered
-	/// </summary>
-	/// <param name="value">The checkpoint to check</param>
-	public void SetLastCheckPoint(CheckPoint value)
+    /// <summary>
+    /// Checks if the checkpoint has been already entered
+    /// </summary>
+    /// <param name="value">The checkpoint to check</param>
+    public void SetLastCheckPoint(CheckPoint value)
     {
         if (m_checkPoints == null)
         {
@@ -126,4 +132,80 @@ public class LevelManager : PersistentSingleton<LevelManager>
     {
         SceneManager.LoadScene(levelName);
     }
+
+    public void LoadCentralSceneFirstTime(LevelLoadManager newCentralScene)
+    {
+        CentralScene = newCentralScene;
+        for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
+        {
+            SceneManager.LoadSceneAsync(centralScene.AdjacentScenes[i], LoadSceneMode.Additive);            
+        }
+        if (adjacentScenes == null)
+        {
+            adjacentScenes = new List<string>();
+        }
+        for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
+        {
+            adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
+        }
+
+        if(!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+    }
+
+    public void ChangeCentralScene(LevelLoadManager newCentralScene)
+    {
+        if(centralScene != newCentralScene)
+        {
+            if (adjacentScenes == null)
+            {
+                adjacentScenes = new List<string>();
+            }
+
+            adjacentScenes.Add(centralScene.ThisSceneName);
+            centralScene = newCentralScene;
+
+            //la que ahora es central ya no es adyacente
+            adjacentScenes.Remove(centralScene.ThisSceneName);
+
+            PossessionManager.Instance.MoveDemonsToCentralScene(SceneManager.GetSceneByName(centralScene.ThisSceneName));
+
+            //Debug.LogError("New central scene is " + newCentralScene.ThisSceneName);
+
+            //Descargar las escenas que ya no se necesitan porque no se encuentran entre las adyacentes de la nueva central
+            for (int i = 0; i < adjacentScenes.Count; i++)
+            {
+                if (!centralScene.AdjacentScenes.Contains(adjacentScenes[i]))
+                {
+                    //Debug.LogError("Removing from loaded scenes: " + adjacentScenes[i]);
+                    SceneManager.UnloadSceneAsync(adjacentScenes[i]);
+                    adjacentScenes.Remove(adjacentScenes[i]);
+                    i--;
+                }
+                else
+                {
+                    //Debug.LogError("Keeping scene: " + adjacentScenes[i]);
+                }
+            }
+
+            //Cargar las escenas que se necesitan por ser adyacentes a la nueva central y que no están cargadas
+            for (int i = 0; i < centralScene.AdjacentScenes.Count; i++)
+            {
+                if (!adjacentScenes.Contains(centralScene.AdjacentScenes[i]))
+                {
+                    if (!SceneManager.GetSceneByName(centralScene.AdjacentScenes[i]).isLoaded)
+                    {
+                        SceneManager.LoadSceneAsync(centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
+                        adjacentScenes.Add(centralScene.AdjacentScenes[i]);
+                    }
+                    else
+                    {
+                        //Debug.LogError("Scene already loaded: " + centralScene.AdjacentScenes[i]);
+                    }                    
+                }
+            }
+        }       
+    }
+
+
 }

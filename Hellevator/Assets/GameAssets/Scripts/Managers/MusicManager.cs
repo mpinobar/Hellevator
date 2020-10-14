@@ -38,7 +38,7 @@ public class MusicManager : TemporalSingleton<MusicManager>
 
     private void Update()
     {
-        if (!m_BGM.isPlaying)
+        if (!m_BGM.isPlaying && m_backgroundMusicClips != null)
         {
             int aux = m_currentBGMClip;
             while (aux == m_currentBGMClip && m_backgroundMusicClips.Count > 1)
