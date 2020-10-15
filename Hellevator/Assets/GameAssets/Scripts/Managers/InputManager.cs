@@ -51,6 +51,11 @@ public class InputManager : PersistentSingleton<InputManager>
     }
 
 
+    public void ResetPlayerInput()
+    {
+        m_moveInputValue = 0;
+        m_verticalInputValue = 0;
+    }
 
     // Update is called once per frame
     protected virtual void Update()
