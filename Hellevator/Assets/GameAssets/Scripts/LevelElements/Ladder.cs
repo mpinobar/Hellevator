@@ -12,14 +12,15 @@ public class Ladder : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.LogError("Player entered ladder");
-        collision.GetComponent<BasicZombie>().SetOnLadder(true);
+        if (collision.GetComponent<BasicZombie>().TryingToGrabLadder)
+        {
+            collision.GetComponent<BasicZombie>().SetOnLadder(true);
+        }
         demonsInside.Add(collision.GetComponent<BasicZombie>());
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.LogError("Player exited ladder");
         demonsInside.Remove(collision.GetComponent<BasicZombie>());
         collision.GetComponent<BasicZombie>().SetOnLadder(false);
     }

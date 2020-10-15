@@ -39,6 +39,7 @@ public class ProjectileSpawner : MonoBehaviour
         }
         GameObject newProjectile = Instantiate(projectileToShoot, transform.position, Quaternion.identity,transform);
         projectilePool.Add(newProjectile);
+        newProjectile.GetComponent<Projectile>().Speed = projectileSpeed;
     }
 
 }
