@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class CameraManager : PersistentSingleton<CameraManager>
+public class CameraManager : TemporalSingleton<CameraManager>
 {
 
 	[SerializeField] private CinemachineVirtualCamera m_playerCamera = null;

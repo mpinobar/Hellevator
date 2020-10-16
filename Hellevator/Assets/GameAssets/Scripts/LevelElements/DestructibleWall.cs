@@ -5,7 +5,7 @@ using UnityEngine;
 public class DestructibleWall : MonoBehaviour
 {
     Collider2D[] m_parts;
-    [SerializeField] float timeToDestroyPartAfterExplosion = 4f;
+    [SerializeField] float m_timeToDestroyPartAfterExplosion = 4f;
     private void Awake()
     {
         m_parts = ReturnComponentsInChildren<Collider2D>();
@@ -42,7 +42,7 @@ public class DestructibleWall : MonoBehaviour
             m_parts[i].GetComponent<Rigidbody2D>().isKinematic = false;
             //m_parts[i].GetComponent<Rigidbody2D>().velocity = (m_parts[i].transform.position - origin).normalized * force;
             m_parts[i].GetComponent<Rigidbody2D>().AddForce((m_parts[i].transform.position - origin).normalized * force, ForceMode2D.Impulse);
-            Destroy(m_parts[i].gameObject, timeToDestroyPartAfterExplosion);
+            Destroy(m_parts[i].gameObject, m_timeToDestroyPartAfterExplosion);
         }
         Destroy(gameObject);
     }

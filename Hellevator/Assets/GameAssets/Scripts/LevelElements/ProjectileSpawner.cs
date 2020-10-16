@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileSpawner : MonoBehaviour
+public class ProjectileSpawner : ButtonActivatedBase
 {
 
-    [SerializeField] GameObject projectileToShoot;
-    [SerializeField] float initialWaitTimeBeforeShooting = 0f;
-    [SerializeField] float timeIntervalBetweenShots = 2f;
-    [SerializeField] float projectileSpeed = 4f;
+    [SerializeField] GameObject m_projectileToShoot;
+    [SerializeField] float m_initialWaitTimeBeforeShooting = 0f;
+    [SerializeField] float m_timeIntervalBetweenShots = 2f;
+    [SerializeField] float m_projectileSpeed = 4f;
+    [SerializeField] bool m_activatedWithButton;
 
     int maxNumberOfProjectiles = 5;
     List<GameObject> projectilePool;
@@ -19,11 +20,13 @@ public class ProjectileSpawner : MonoBehaviour
         projectilePool = new List<GameObject>();
         for (int i = 0; i < maxNumberOfProjectiles; i++)
         {
-            projectilePool.Add(Instantiate(projectileToShoot, transform.position, Quaternion.identity, transform));
+            projectilePool.Add(Instantiate(m_projectileToShoot, transform.position, transform.rotation, transform));
             projectilePool[i].SetActive(false);
         }
-
-        InvokeRepeating(nameof(ShootProjectile), initialWaitTimeBeforeShooting, timeIntervalBetweenShots);
+        if (!m_activatedWithButton)
+        {
+            Activate();
+        }
     }
 
     private void ShootProjectile()
@@ -33,12 +36,17 @@ public class ProjectileSpawner : MonoBehaviour
             if (!projectilePool[i].activeSelf)
             {
                 projectilePool[i].SetActive(true);
-                projectilePool[i].GetComponent<Projectile>().Speed = projectileSpeed;
+                projectilePool[i].GetComponent<Projectile>().Speed = m_projectileSpeed;
                 return;
             }
         }
-        GameObject newProjectile = Instantiate(projectileToShoot, transform.position, Quaternion.identity,transform);
+        GameObject newProjectile = Instantiate(m_projectileToShoot, transform.position, transform.rotation,transform);
         projectilePool.Add(newProjectile);
+        newProjectile.GetComponent<Projectile>().Speed = m_projectileSpeed;
     }
 
+    public override void Activate()
+    {
+        InvokeRepeating(nameof(ShootProjectile), m_initialWaitTimeBeforeShooting, m_timeIntervalBetweenShots);
+    }
 }

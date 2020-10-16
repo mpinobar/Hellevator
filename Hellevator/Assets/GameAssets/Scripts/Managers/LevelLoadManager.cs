@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class LevelLoadManager : MonoBehaviour
 {
-    string thisSceneName;
-    [SerializeField] List<string> adjacentScenes;   
+    string m_thisSceneName;
+    [SerializeField] List<string> m_adjacentScenes;   
 
-    public List<string> AdjacentScenes { get => adjacentScenes; }
-    public string ThisSceneName { get => thisSceneName; set => thisSceneName = value; }
+    public List<string> AdjacentScenes { get => m_adjacentScenes; }
+    public string ThisSceneName { get => m_thisSceneName; set => m_thisSceneName = value; }
 
     private void OnEnable()
     {

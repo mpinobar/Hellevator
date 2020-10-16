@@ -49,6 +49,7 @@ public abstract class DemonBase : MonoBehaviour
     [Space]
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
+    [SerializeField] private bool       m_multiplePossessionWhenDead;
     [SerializeField] private float      m_maximumPossessionRange;
 
     [ColorUsage(true, true)]
@@ -217,6 +218,7 @@ public abstract class DemonBase : MonoBehaviour
         get => m_canMove; set => m_canMove = value;
     }
     public float DistanceToPlayer { get => m_distanceToPlayer; set => m_distanceToPlayer = value; }
+    public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
 
 
     #endregion
@@ -285,6 +287,8 @@ public abstract class DemonBase : MonoBehaviour
 
         }
     }
+
+    
 
     protected virtual void Update()
     {
@@ -618,6 +622,7 @@ public abstract class DemonBase : MonoBehaviour
         IsControlledByPlayer = false;
         m_isDead = true;
         SetRagdollActive(true);
+        CanMove = false;
         //for (int i = 1; i < m_childSprites.Length; i++)
         //{
         //    m_childSprites[i].material.SetFloat("_Thickness", 0);
@@ -658,11 +663,13 @@ public abstract class DemonBase : MonoBehaviour
         SetRagdollActive(false);
         CanMove = true;
         m_isLerpingToResetBones = true;
+        m_playerCollider.enabled = false;
         m_hasResetParentPosition = false;
         m_isControlledByIA = false;
         IsControlledByPlayer = true;
         m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
-
+        
+        if (PossessionManager.Instance.ControlledDemon) 
         CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
 
         if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
@@ -707,7 +714,6 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     /// <param name="active">True to turn them on, false to turn them off</param>
     public abstract void ToggleWalkingParticles(bool active);
-
 
     /// <summary>
     /// Changes the color of all limbs
@@ -881,6 +887,7 @@ public abstract class DemonBase : MonoBehaviour
             }
             m_hasResetParentPosition = true;
             m_torso.parent = transform;
+            m_playerCollider.enabled = true;
         }
 
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, m_recomposingSpeed * Time.deltaTime);
@@ -914,7 +921,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public virtual void Die(bool playDeathSound)
     {
-
+        
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         if (!m_isDead && playDeathSound)
@@ -925,12 +932,15 @@ public abstract class DemonBase : MonoBehaviour
 
         if (m_isControlledByPlayer)
         {
-            Debug.LogError("Player died");
+            //Debug.LogError("Player died: " + name);
             PossessionManager.Instance.RemoveDemonPossession(transform);
+            m_isDead = true;
+            UseSkill();
         }
         else if (m_isControlledByIA)
         {
             m_isControlledByIA = false;
+            m_isDead = true;
             SetRagdollActive(true);
         }
     }
