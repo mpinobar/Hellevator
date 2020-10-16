@@ -5,7 +5,7 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] DemonBase m_demonToSpawn;
-
+    [SerializeField] bool spawnWhenPlayerPossesses;
     private List<DemonBase> m_spawnedDemons;
     [SerializeField] float m_spawnTimer = 6f;
     [SerializeField] int m_maxSpawnedDemons;
@@ -29,7 +29,7 @@ public class Spawner : MonoBehaviour
             if (m_timer <= 0)
             {
                 m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity));
-                if(maxRange != 0)
+                if (maxRange != 0)
                 {
                     m_spawnedDemons[m_spawnedDemons.Count - 1].MaximumPossessionRange = maxRange;
                 }
@@ -39,14 +39,31 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Calcula cuántos demonios activos hay pertenecientes al spawner
+    /// </summary>
+    /// <returns>El numero de demonios que hay activos que haya spawneado este spawner</returns>
     private int ActiveDemons()
     {
         int d = 0;
         for (int i = 0; i < m_spawnedDemons.Count; i++)
         {
-            if(m_spawnedDemons[i] != null)
+            if (m_spawnedDemons[i] != null)
             {
-                d++;
+                if (spawnWhenPlayerPossesses)
+                {
+                    if (!m_spawnedDemons[i].IsControlledByPlayer)
+                    {
+                        d++;
+                    }
+                    else
+                    {
+                        m_spawnedDemons.RemoveAt(i);
+                        i--;
+                    }
+                }
+                else
+                    d++;
             }
         }
         return d;

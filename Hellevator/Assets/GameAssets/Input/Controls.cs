@@ -57,6 +57,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""VerticalMovement"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""222cdac1-ddd3-4dde-be52-825e4662fe49"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -224,6 +232,39 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""InputInteract"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""VerticalInput"",
+                    ""id"": ""ee39b059-bc06-4853-966d-70051c00765d"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""VerticalMovement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""db1a6475-cdc4-4ce9-a423-76bfff1d5eb4"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""VerticalMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""98450c12-c3d1-46af-8893-bdd7d7c6c941"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""VerticalMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -237,6 +278,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_PlayerControls_InputAbility = m_PlayerControls.FindAction("InputAbility", throwIfNotFound: true);
         m_PlayerControls_InputSuicide = m_PlayerControls.FindAction("InputSuicide", throwIfNotFound: true);
         m_PlayerControls_InputInteract = m_PlayerControls.FindAction("InputInteract", throwIfNotFound: true);
+        m_PlayerControls_VerticalMovement = m_PlayerControls.FindAction("VerticalMovement", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -291,6 +333,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_PlayerControls_InputAbility;
     private readonly InputAction m_PlayerControls_InputSuicide;
     private readonly InputAction m_PlayerControls_InputInteract;
+    private readonly InputAction m_PlayerControls_VerticalMovement;
     public struct PlayerControlsActions
     {
         private @Controls m_Wrapper;
@@ -300,6 +343,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @InputAbility => m_Wrapper.m_PlayerControls_InputAbility;
         public InputAction @InputSuicide => m_Wrapper.m_PlayerControls_InputSuicide;
         public InputAction @InputInteract => m_Wrapper.m_PlayerControls_InputInteract;
+        public InputAction @VerticalMovement => m_Wrapper.m_PlayerControls_VerticalMovement;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -324,6 +368,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @InputInteract.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputInteract;
                 @InputInteract.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputInteract;
                 @InputInteract.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputInteract;
+                @VerticalMovement.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnVerticalMovement;
+                @VerticalMovement.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnVerticalMovement;
+                @VerticalMovement.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnVerticalMovement;
             }
             m_Wrapper.m_PlayerControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -343,6 +390,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @InputInteract.started += instance.OnInputInteract;
                 @InputInteract.performed += instance.OnInputInteract;
                 @InputInteract.canceled += instance.OnInputInteract;
+                @VerticalMovement.started += instance.OnVerticalMovement;
+                @VerticalMovement.performed += instance.OnVerticalMovement;
+                @VerticalMovement.canceled += instance.OnVerticalMovement;
             }
         }
     }
@@ -354,5 +404,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnInputAbility(InputAction.CallbackContext context);
         void OnInputSuicide(InputAction.CallbackContext context);
         void OnInputInteract(InputAction.CallbackContext context);
+        void OnVerticalMovement(InputAction.CallbackContext context);
     }
 }

@@ -32,7 +32,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     private void Start()
     {
         InputManager.Instance.UpdateDemonReference();
-        
+
     }
 
     /// <summary>
@@ -65,6 +65,19 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         return null;
     }
 
+
+    public void MoveDemonsToCentralScene(Scene centralScene)
+    {
+        SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, centralScene);
+
+        if (extraDemonsControlled != null && extraDemonsControlled.Count > 0)
+        {
+            for (int i = 0; i < extraDemonsControlled.Count; i++)
+            {
+                SceneManager.MoveGameObjectToScene(extraDemonsControlled[i].gameObject, centralScene);
+            }
+        }
+    }
 
     public void RemoveDemonPossession(Transform currentDemon)
     {
