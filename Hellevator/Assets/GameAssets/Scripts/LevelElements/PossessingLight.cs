@@ -55,7 +55,7 @@ public class PossessingLight : MonoBehaviour
         m_travelling = true;
         m_lightSound = MusicManager.Instance.PlayAudioSFX(m_lightTravelClip, false);
         m_initialDistance = Vector2.Distance(transform.position, m_target.transform.position);
-        Debug.LogError("Possessing light towards " + destinationDemon.name + " from " + originDemon);
+        //Debug.LogError("Possessing light towards " + destinationDemon.name + " from " + originDemon);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

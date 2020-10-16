@@ -243,16 +243,17 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     /// <param name="currentDemon">Currently possessed demon</param>
     public void PossessNearestDemon(float radiusLimit, DemonBase currentDemon)
     {
-        Debug.LogError("Possessing nearest demon to " + currentDemon.name);
-        DemonBase demonToPossess = demonShowingSkull;//LookForNearestDemon(radiusLimit, currentDemon.transform);
+        //Debug.LogError("Possessing nearest demon to " + currentDemon.name);
+        DemonBase demonToPossess = LookForNearestDemon(radiusLimit, currentDemon.transform);//demonShowingSkull;//
 
         ControlledDemon = null;
         InputManager.Instance.UpdateDemonReference();
 
-        Debug.LogError("Trying to possess: " + demonToPossess.name);
+        
 
         if (demonToPossess != null)
         {
+            //Debug.LogError("Trying to possess: " + demonToPossess.name);
             if (m_pLight == null)
             {
                 m_pLight = Instantiate(m_PossessionLight, currentDemon.transform.position, Quaternion.identity).GetComponent<PossessingLight>();
@@ -276,7 +277,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     public void PossessNewDemon(DemonBase demonToPossess)
     {
-        Debug.LogError("Single possession of demon: " + demonToPossess.name);
+       // Debug.LogError("Single possession of demon: " + demonToPossess.name);
         demonToPossess.enabled = true;
         demonToPossess.transform.parent = null;
         ControlledDemon = demonToPossess;

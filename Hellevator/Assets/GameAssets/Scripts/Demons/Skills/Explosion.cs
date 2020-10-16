@@ -12,9 +12,13 @@ public class Explosion : MonoBehaviour
 
     public void CreateExplosion()
     {
+        Debug.DrawLine(transform.position, transform.up * m_explosionRadius, Color.red, 2f);
         GetComponent<DemonBase>().RagdollLogicCollider.gameObject.SetActive(false);
 
         ExplosionVisuals();
+        GetComponent<DemonBase>().enabled = false;
+        
+        PossessionManager.Instance.RemoveDemonPossession(transform);
         Collider2D [] colliders = Physics2D.OverlapCircleAll(transform.position,m_explosionRadius,m_explosionInteractionLayerMask);
         DemonBase demonInRange;
         DestructibleWall explodingWall;
@@ -31,10 +35,10 @@ public class Explosion : MonoBehaviour
                 explodingWall.Explode(transform.position, m_explosionForce);
             }
         }
-        PossessionManager.Instance.RemoveDemonPossession(transform);
 
         UnparentLimbs();
-        GetComponent<DemonBase>().enabled = false;
+        
+        
     }
 
     public void ExplosionVisuals()
