@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class WeightedPreassurePlate : MonoBehaviour
 {
+    [Header("Weight and type variables")]
     //Weight and type variables
     [SerializeField] private TypeOfPreassurePlate m_type = TypeOfPreassurePlate.None;
     [SerializeField] private float m_weightNeeded;
@@ -14,6 +15,7 @@ public class WeightedPreassurePlate : MonoBehaviour
     private List<DemonBase> m_enemiesOnPreassurePlate;
     [SerializeField] private LayerMask m_enemyLayerMask;
 
+    [Header("Position variables")]
     //Position Variables
     [SerializeField] private float m_speed;
     [SerializeField] private Transform m_pressurePlateEndPosition;
@@ -22,6 +24,7 @@ public class WeightedPreassurePlate : MonoBehaviour
     private float m_distanceToEndPosition;
 
 
+    [Header("Linked objects variables")]
     //Linked Object variables (just for platform type preasureplates)
     [SerializeField] private Transform m_linkedObjectPosition;
     private Vector3 m_linkedObjectStartingPosition;
@@ -30,11 +33,13 @@ public class WeightedPreassurePlate : MonoBehaviour
 
     private float m_linkedObjectDistanceToEndPosition;
 
+    [Header("Button variables")]
     //Button variables
     private bool m_preassurePlateActivated;
     private bool m_preassurePlateIsAtLocation;
     [SerializeField] private ButtonActivatedBase m_buttonActivatedObject;
     List<SpikesWeightData> m_spikesData;
+    [SerializeField] private bool m_activatesProjectileSpawner;
 
     //Sound variables
     [SerializeField] private AudioClip m_machineClip;
@@ -51,9 +56,13 @@ public class WeightedPreassurePlate : MonoBehaviour
         m_enemiesOnPreassurePlate = new List<DemonBase>(0);
         m_currentWeight = 0;
         m_audioSource = GetComponent<AudioSource>();
-        m_audioSource.clip = m_machineClip;
-        m_audioSource.loop = true;
-        m_audioSource.volume = MusicManager.SfxVolume;
+        if (m_audioSource)
+        {
+            m_audioSource.clip = m_machineClip;
+            m_audioSource.loop = true;
+            m_audioSource.volume = MusicManager.SfxVolume;
+        }
+        
         if (m_type == TypeOfPreassurePlate.Elevator)
         {
             m_startingPosition = m_parent.localPosition;
@@ -150,12 +159,12 @@ public class WeightedPreassurePlate : MonoBehaviour
                         if (m_currentWeight >= m_weightNeeded)
                         {
                             m_preassurePlateActivated = true;
-                            if (!m_audioSource.isPlaying)
+                            if (m_audioSource && !m_audioSource.isPlaying)
                             {
                                 m_audioSource.Play();
                             }
                         }
-                        else
+                        else if(!m_activatesProjectileSpawner)
                         {
                             m_percentage = m_currentWeight / m_weightNeeded;
                             if (m_percentage > 1f)
@@ -173,9 +182,9 @@ public class WeightedPreassurePlate : MonoBehaviour
                             m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
                         }
                     }
-                    else if (!m_preassurePlateIsAtLocation)
+                    else if (!m_preassurePlateIsAtLocation || m_activatesProjectileSpawner)
                     {
-                        if (Vector3.Distance(m_parent.transform.position, m_pressurePlateEndPosition.position) != 0)
+                        if (Vector3.Distance(m_parent.transform.position, m_pressurePlateEndPosition.position) != 0 && !m_activatesProjectileSpawner)
                         {
                             m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, m_pressurePlateEndPosition.position, m_speed * Time.deltaTime);
                         }

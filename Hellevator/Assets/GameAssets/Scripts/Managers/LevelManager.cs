@@ -16,8 +16,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
 	
 	[SerializeField] private GameObject m_fade = null;
 
-    List<string> adjacentScenes;
-    LevelLoadManager centralScene;
+    List<string> m_adjacentScenes;
+    LevelLoadManager m_centralScene;
 
 
 
@@ -31,7 +31,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
 	public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
 	public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
-    public LevelLoadManager CentralScene { get => centralScene; set => centralScene = value; }
+    public LevelLoadManager CentralScene { get => m_centralScene; set => m_centralScene = value; }
 
 
     /// <summary>
@@ -111,6 +111,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// </summary>
     public void StartRestartingLevel()
     {
+        Debug.LogError("Restarting");
 		FadeManager.Instance.StartFadingIn();
     }
 	public void RestartLevel()
@@ -138,15 +139,15 @@ public class LevelManager : PersistentSingleton<LevelManager>
         CentralScene = newCentralScene;
         for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
         {
-            SceneManager.LoadSceneAsync(centralScene.AdjacentScenes[i], LoadSceneMode.Additive);            
+            SceneManager.LoadSceneAsync(m_centralScene.AdjacentScenes[i], LoadSceneMode.Additive);            
         }
-        if (adjacentScenes == null)
+        if (m_adjacentScenes == null)
         {
-            adjacentScenes = new List<string>();
+            m_adjacentScenes = new List<string>();
         }
         for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
         {
-            adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
+            m_adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
         }
 
         if(!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
@@ -155,31 +156,32 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     public void ChangeCentralScene(LevelLoadManager newCentralScene)
     {
-        if(centralScene != newCentralScene)
+        if(m_centralScene != newCentralScene)
         {
-            if (adjacentScenes == null)
+            if (m_adjacentScenes == null)
             {
-                adjacentScenes = new List<string>();
+                m_adjacentScenes = new List<string>();
             }
 
-            adjacentScenes.Add(centralScene.ThisSceneName);
-            centralScene = newCentralScene;
+            m_adjacentScenes.Add(m_centralScene.ThisSceneName);
+            m_centralScene = newCentralScene;
 
             //la que ahora es central ya no es adyacente
-            adjacentScenes.Remove(centralScene.ThisSceneName);
+            m_adjacentScenes.Remove(m_centralScene.ThisSceneName);
 
-            PossessionManager.Instance.MoveDemonsToCentralScene(SceneManager.GetSceneByName(centralScene.ThisSceneName));
-
+            PossessionManager.Instance.MoveDemonsToCentralScene(SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
+            SceneManager.MoveGameObjectToScene(CameraManager.Instance.gameObject, SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
+            
             //Debug.LogError("New central scene is " + newCentralScene.ThisSceneName);
 
             //Descargar las escenas que ya no se necesitan porque no se encuentran entre las adyacentes de la nueva central
-            for (int i = 0; i < adjacentScenes.Count; i++)
+            for (int i = 0; i < m_adjacentScenes.Count; i++)
             {
-                if (!centralScene.AdjacentScenes.Contains(adjacentScenes[i]))
+                if (!m_centralScene.AdjacentScenes.Contains(m_adjacentScenes[i]))
                 {
                     //Debug.LogError("Removing from loaded scenes: " + adjacentScenes[i]);
-                    SceneManager.UnloadSceneAsync(adjacentScenes[i]);
-                    adjacentScenes.Remove(adjacentScenes[i]);
+                    SceneManager.UnloadSceneAsync(m_adjacentScenes[i]);
+                    m_adjacentScenes.Remove(m_adjacentScenes[i]);
                     i--;
                 }
                 else
@@ -189,14 +191,14 @@ public class LevelManager : PersistentSingleton<LevelManager>
             }
 
             //Cargar las escenas que se necesitan por ser adyacentes a la nueva central y que no están cargadas
-            for (int i = 0; i < centralScene.AdjacentScenes.Count; i++)
+            for (int i = 0; i < m_centralScene.AdjacentScenes.Count; i++)
             {
-                if (!adjacentScenes.Contains(centralScene.AdjacentScenes[i]))
+                if (!m_adjacentScenes.Contains(m_centralScene.AdjacentScenes[i]))
                 {
-                    if (!SceneManager.GetSceneByName(centralScene.AdjacentScenes[i]).isLoaded)
+                    if (!SceneManager.GetSceneByName(m_centralScene.AdjacentScenes[i]).isLoaded)
                     {
-                        SceneManager.LoadSceneAsync(centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
-                        adjacentScenes.Add(centralScene.AdjacentScenes[i]);
+                        SceneManager.LoadSceneAsync(m_centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
+                        m_adjacentScenes.Add(m_centralScene.AdjacentScenes[i]);
                     }
                     else
                     {

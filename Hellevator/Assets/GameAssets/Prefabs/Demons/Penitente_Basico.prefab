@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 1130024741348160167}
   m_Layer: 8
   m_Name: LogicalRagdollCollider
-  m_TagString: BodyCollider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -232,8 +232,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.11, y: 0}
-  m_Size: {x: 1.23, y: 0.8}
+  m_Offset: {x: -0.0037788157, y: 0.017165544}
+  m_Size: {x: 2.128728, y: 1.1948131}
   m_Direction: 1
 --- !u!1 &1879121604080691324
 GameObject:
@@ -283,7 +283,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.51, y: 0}
-  m_Size: {x: 0.52, y: 1.06}
+  m_Size: {x: 1.06, y: 1.06}
   m_Direction: 1
 --- !u!50 &8995062469342668135
 Rigidbody2D:
@@ -328,8 +328,8 @@ HingeJoint2D:
     m_MaximumMotorForce: 10000
   m_UseLimits: 1
   m_AngleLimits:
-    m_LowerAngle: 94.7
-    m_UpperAngle: 263.5
+    m_LowerAngle: 129.51
+    m_UpperAngle: 230.52
 --- !u!1 &2523376367460445207
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,8 +376,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.29, y: 0}
-  m_Size: {x: 0.52, y: 0.22}
+  m_Offset: {x: 0.25975317, y: -0.0065644863}
+  m_Size: {x: 0.45950726, y: 0.12229825}
   m_Direction: 1
 --- !u!50 &3951209312653199082
 Rigidbody2D:
@@ -572,8 +572,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.24, y: 0}
-  m_Size: {x: 0.52, y: 0.22}
+  m_Offset: {x: 0.204987, y: -0.0033958012}
+  m_Size: {x: 0.44997358, y: 0.12401055}
   m_Direction: 1
 --- !u!50 &4071547310748812505
 Rigidbody2D:
@@ -973,8 +973,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.24, y: 0}
-  m_Size: {x: 0.52, y: 0.22}
+  m_Offset: {x: 0.18284021, y: -0.002601025}
+  m_Size: {x: 0.4056815, y: 0.13994023}
   m_Direction: 1
 --- !u!50 &7436933180804865593
 Rigidbody2D:
@@ -1181,8 +1181,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.34310567, y: 0.030000005}
-  m_Size: {x: 0.9062157, y: 0.31000036}
+  m_Offset: {x: 0.34310564, y: 0.0010923446}
+  m_Size: {x: 0.90621597, y: 0.36781615}
   m_Direction: 1
 --- !u!50 &8542932351200088446
 Rigidbody2D:
@@ -1370,8 +1370,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.29, y: 0}
-  m_Size: {x: 0.52, y: 0.22}
+  m_Offset: {x: 0.23013525, y: 0.0072987764}
+  m_Size: {x: 0.40027162, y: 0.12844765}
   m_Direction: 1
 --- !u!50 &3614793860146872299
 Rigidbody2D:
@@ -1691,8 +1691,8 @@ HingeJoint2D:
     m_MaximumMotorForce: 10000
   m_UseLimits: 1
   m_AngleLimits:
-    m_LowerAngle: -20.4
-    m_UpperAngle: 20.28
+    m_LowerAngle: -71.17
+    m_UpperAngle: 72.4
 --- !u!1 &9032155453379708232
 GameObject:
   m_ObjectHideFlags: 0
@@ -1762,6 +1762,7 @@ MonoBehaviour:
   m_jumpClip: {fileID: 8300000, guid: 29f144196248c0640ad9c1838325f594, type: 3}
   m_landingClip: {fileID: 8300000, guid: c24f8018d13cf9546a3ce60b8f37459e, type: 3}
   m_possessedOnStart: 0
+  m_multiplePossessionWhenDead: 0
   m_maximumPossessionRange: 30
   m_tintWhenCantBePossessed: {r: 4, g: 0.09411765, b: 0.09411765, a: 1}
   m_PossessionCircle: {fileID: 0}
@@ -1884,9 +1885,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc76bbbec85dbe4b963de4dc239e2cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToConvertInto: {fileID: 8867378372886464869, guid: 32e5648c477de3247b7ff5063e7e11e4,
-    type: 3}
-  usesGravity: 0
+  m_prefabToConvertInto: {fileID: 0}
+  m_usesGravity: 0
 --- !u!114 &9003010718298764056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1899,18 +1899,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cd7d32c77efe044fa6db13669af8aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionParticles: {fileID: 1994286666195178269}
-  explosionRadius: 10
-  explosionForce: 3.5
-  explosionInteractionLayerMask:
+  m_explosionParticles: {fileID: 0}
+  m_explosionRadius: 0
+  m_explosionForce: 0
+  m_explosionInteractionLayerMask:
     serializedVersion: 2
-    m_Bits: 9472
-  limbsToUnparent:
-  - {fileID: 2523376367460445207}
-  - {fileID: 7876538221899107236}
-  - {fileID: 3484962589859891395}
-  - {fileID: 6019722100231935459}
-  - {fileID: 1879121604080691324}
+    m_Bits: 0
+  m_limbsToUnparent: []
 --- !u!1001 &4894900859349458597
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2063,12 +2058,6 @@ PrefabInstance:
 --- !u!4 &1994286666195178266 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6359943925026508223, guid: d1bb3b8ffedc56c46af8f1795495361b,
-    type: 3}
-  m_PrefabInstance: {fileID: 4894900859349458597}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &1994286666195178269 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 6359943925026508216, guid: d1bb3b8ffedc56c46af8f1795495361b,
     type: 3}
   m_PrefabInstance: {fileID: 4894900859349458597}
   m_PrefabAsset: {fileID: 0}

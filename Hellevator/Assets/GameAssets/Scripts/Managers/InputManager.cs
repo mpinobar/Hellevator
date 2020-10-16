@@ -7,20 +7,19 @@ using UnityEngine.InputSystem;
 public class InputManager : PersistentSingleton<InputManager>
 {
 
-    Controls m_controls = null;
-    DemonBase m_currentDemon;
-    float m_moveInputValue = 0f;
-    bool m_jumped;
-    bool m_isInInteactionTrigger = false;
-    float m_verticalInputValue;
-
-    Vector3 direction = Vector3.one;
+    Controls    m_controls = null;
+    DemonBase   m_currentDemon;
+    float       m_moveInputValue = 0f;
+    bool        m_jumped;
+    bool        m_isInInteactionTrigger = false;
+    float       m_verticalInputValue;
+    Vector3     m_direction = Vector3.one;
      
     public delegate void OnButtonPress();
 
     public event OnButtonPress OnInteract;
 
-    List<DemonBase> extraDemonsControlled;
+    List<DemonBase> m_extraDemonsControlled;
 
     public Controls Controls
     {
@@ -76,49 +75,50 @@ public class InputManager : PersistentSingleton<InputManager>
     private void LateUpdate()
     {
         SetMainCharacterDirection();
+        SetExtraCharactersDirections();
     }
 
     private void FeedInputToExtraDemons()
     {
-        for (int i = 0; i < extraDemonsControlled.Count; i++)
+        for (int i = 0; i < m_extraDemonsControlled.Count; i++)
         {
-            if (extraDemonsControlled[i].CanMove)
+            if (m_extraDemonsControlled[i].CanMove)
             {
-                extraDemonsControlled[i].Move(m_moveInputValue);
+                m_extraDemonsControlled[i].Move(m_moveInputValue);
 
-                extraDemonsControlled[i].ToggleWalkingParticles(m_moveInputValue != 0 && extraDemonsControlled[i].IsGrounded());
+                m_extraDemonsControlled[i].ToggleWalkingParticles(m_moveInputValue != 0 && m_extraDemonsControlled[i].IsGrounded());
 
                 if (m_moveInputValue > 0)
                 {
-                    if (((BasicZombie)extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
+                    if (((BasicZombie)m_extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
                     {
-                        extraDemonsControlled[i].MovementDirection = 1;
+                        m_extraDemonsControlled[i].MovementDirection = 1;
                     }
                     else
                     {
-                        extraDemonsControlled[i].MovementDirection = -1;
+                        m_extraDemonsControlled[i].MovementDirection = -1;
                     }
 
                 }
                 else if (m_moveInputValue < 0)
                 {
 
-                    if (((BasicZombie)extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
+                    if (((BasicZombie)m_extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
                     {
-                        extraDemonsControlled[i].MovementDirection = -1;
+                        m_extraDemonsControlled[i].MovementDirection = -1;
                     }
                     else
                     {
-                        extraDemonsControlled[i].MovementDirection = 1;
+                        m_extraDemonsControlled[i].MovementDirection = 1;
                     }
 
                 }
-                if (extraDemonsControlled[i].MovementDirection != 0)
-                    extraDemonsControlled[i].transform.localScale = Vector3.one - (Vector3.right * (1 - extraDemonsControlled[i].MovementDirection));
+                if (m_extraDemonsControlled[i].MovementDirection != 0)
+                    m_extraDemonsControlled[i].transform.localScale = Vector3.one - (Vector3.right * (1 - m_extraDemonsControlled[i].MovementDirection));
             }
-            else if (!extraDemonsControlled[i].CanMove)
+            else if (!m_extraDemonsControlled[i].CanMove)
             {
-                extraDemonsControlled[i].Move(0);
+                m_extraDemonsControlled[i].Move(0);
             }
         }
     }
@@ -169,13 +169,24 @@ public class InputManager : PersistentSingleton<InputManager>
         }
     }
 
+    public void SetExtraCharactersDirections()
+    {
+        if(m_extraDemonsControlled != null && m_extraDemonsControlled.Count > 0)
+        {
+            for (int i = 0; i < m_extraDemonsControlled.Count; i++)
+            {
+                m_extraDemonsControlled[i].transform.localScale = m_direction;
+            }
+        }
+    }
+
     private void SetMainCharacterDirection()
     {
         if (m_currentDemon != null && m_currentDemon.MovementDirection != 0)
         {
-            direction = transform.localScale;
-            direction.x = m_currentDemon.MovementDirection;
-            m_currentDemon.transform.localScale = direction;
+            m_direction = transform.localScale;
+            m_direction.x = m_currentDemon.MovementDirection;
+            m_currentDemon.transform.localScale = m_direction;
         }
     }
 
@@ -193,11 +204,11 @@ public class InputManager : PersistentSingleton<InputManager>
         }
         if (PossessionManager.Instance.ControllingMultipleDemons)
         {
-            for (int i = 0; i < extraDemonsControlled.Count; i++)
+            for (int i = 0; i < m_extraDemonsControlled.Count; i++)
             {
-                if (extraDemonsControlled[i].CanMove)
+                if (m_extraDemonsControlled[i].CanMove)
                 {
-                    extraDemonsControlled[i].Jump();
+                    m_extraDemonsControlled[i].Jump();
                 }
             }
         }
@@ -213,11 +224,11 @@ public class InputManager : PersistentSingleton<InputManager>
         if (PossessionManager.Instance.ControllingMultipleDemons)
         {
 
-            for (int i = 0; i < extraDemonsControlled.Count; i++)
+            for (int i = 0; i < m_extraDemonsControlled.Count; i++)
             {
-                if (extraDemonsControlled[i].CanMove)
+                if (m_extraDemonsControlled[i].CanMove)
                 {
-                    extraDemonsControlled[i].JumpReleaseButton();
+                    m_extraDemonsControlled[i].JumpReleaseButton();
                 }
             }
         }
@@ -233,11 +244,11 @@ public class InputManager : PersistentSingleton<InputManager>
 
         if (PossessionManager.Instance.ControllingMultipleDemons)
         {
-            for (int i = 0; i < extraDemonsControlled.Count; i++)
+            for (int i = 0; i < m_extraDemonsControlled.Count; i++)
             {
-                if (extraDemonsControlled[i].CanMove)
+                if (m_extraDemonsControlled[i].CanMove)
                 {
-                    extraDemonsControlled[i].Die(true);
+                    m_extraDemonsControlled[i].Die(true);
                 }
             }
         }
@@ -246,19 +257,21 @@ public class InputManager : PersistentSingleton<InputManager>
 
     void UseSkill()
     {
+        //if (m_currentDemon != null && m_currentDemon.CanMove)
+        //    m_currentDemon.UseSkill();
         if (m_currentDemon != null && m_currentDemon.CanMove)
-            m_currentDemon.UseSkill();
+            m_currentDemon.ShowPossessionRange();
 
-        if (PossessionManager.Instance.ControllingMultipleDemons)
-        {
-            for (int i = 0; i < extraDemonsControlled.Count; i++)
-            {
-                if (extraDemonsControlled[i].CanMove)
-                {
-                    extraDemonsControlled[i].UseSkill();
-                }
-            }
-        }
+        //if (PossessionManager.Instance.ControllingMultipleDemons)
+        //{
+        //    for (int i = 0; i < extraDemonsControlled.Count; i++)
+        //    {
+        //        if (extraDemonsControlled[i].CanMove)
+        //        {
+        //            extraDemonsControlled[i].UseSkill();
+        //        }
+        //    }
+        //}
 
     }
 
@@ -269,22 +282,22 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public void UpdateExtraDemonsControlled(List<DemonBase> controlledDemons)
     {
-        if (extraDemonsControlled == null)
+        if (m_extraDemonsControlled == null)
         {
-            extraDemonsControlled = new List<DemonBase>();
+            m_extraDemonsControlled = new List<DemonBase>();
         }
 
         for (int i = 0; i < controlledDemons.Count; i++)
         {
-            extraDemonsControlled.Add(controlledDemons[i]);
+            m_extraDemonsControlled.Add(controlledDemons[i]);
         }
     }
 
     public void RemoveExtraDemonControlled(DemonBase demonToRemove)
     {
-        if (extraDemonsControlled.Contains(demonToRemove))
+        if (m_extraDemonsControlled.Contains(demonToRemove))
         {
-            extraDemonsControlled.Remove(demonToRemove);
+            m_extraDemonsControlled.Remove(demonToRemove);
         }
         else
         {
