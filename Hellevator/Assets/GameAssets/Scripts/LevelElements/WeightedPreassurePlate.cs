@@ -23,6 +23,8 @@ public class WeightedPreassurePlate : MonoBehaviour
     private Vector3 m_startingPosition;
     private float m_distanceToEndPosition;
 
+    Vector3 m_endPosition;
+
 
     [Header("Linked objects variables")]
     //Linked Object variables (just for platform type preasureplates)
@@ -49,7 +51,6 @@ public class WeightedPreassurePlate : MonoBehaviour
 
     private float m_percentage = 0f;
     private float m_positionY = 0f;
-    private float m_positionX = 0f;
     private float m_LOpositionY = 0f;
     private float m_LOpositionX = 0f;
 
@@ -80,6 +81,7 @@ public class WeightedPreassurePlate : MonoBehaviour
         if (m_linkedObjectPosition != null)
         {
             m_linkedObjectStartingPosition = m_linkedObjectPosition.position;
+            m_endPosition = m_linkedObjectEndPosition.position;
             m_linkedObjectDistanceToEndPosition = Vector3.Distance(m_linkedObjectStartingPosition, m_linkedObjectEndPosition.position);
         }
         else if ((m_linkedObjectPosition == null && !m_activatesProjectileSpawner) && (m_type == TypeOfPreassurePlate.PaltformRaiser || m_type == TypeOfPreassurePlate.PlatformLowerer))
@@ -119,21 +121,24 @@ public class WeightedPreassurePlate : MonoBehaviour
                         else
                         {
                             m_positionY = m_distanceToEndPosition * m_percentage;
-                            m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
+                            m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x , m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
                             m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
+                            m_LOpositionX = m_linkedObjectDistanceToEndPosition * m_percentage;
                             
 
-                            Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y + m_LOpositionY, m_linkedObjectStartingPosition.z);
-                            if (Vector3.Distance(m_linkedObjectPosition.position, destination) < 0.1f)
+                            Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x + m_LOpositionX, m_linkedObjectStartingPosition.y + m_LOpositionY, m_linkedObjectStartingPosition.z);
+                            if (Vector3.Distance(m_linkedObjectPosition.position, m_endPosition/*destination*/) < 0.1f)
                             {
-                                m_audioSource.Stop();
+                                if (m_audioSource)
+                                    m_audioSource.Stop();
                             }
                             else if (!m_audioSource.isPlaying)
                             {
                                 m_audioSource.Play();
                             }
-                            m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
+                            m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, m_endPosition, m_linkedObjectSpeed * Time.deltaTime);
+                            //m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
                         }
                     }
                 }
@@ -166,19 +171,24 @@ public class WeightedPreassurePlate : MonoBehaviour
                             m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
                             m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
+                            m_LOpositionX = m_linkedObjectDistanceToEndPosition * m_percentage;
                             //print(LOpositionY);
 
-                            Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
-                            if (Vector3.Distance(m_linkedObjectPosition.position, destination) < 0.1f)
+                            //Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x - m_LOpositionX, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
+                            Vector3 direction = m_endPosition - m_linkedObjectStartingPosition;
+                            Vector3 destination = m_linkedObjectStartingPosition + direction * m_percentage;
+                            if (Vector3.Distance(m_linkedObjectPosition.position, m_endPosition/*destination*/) < 0.1f)
                             {
+                                if(m_audioSource)
                                 m_audioSource.Stop();
                             }
-                            else if (!m_audioSource.isPlaying)
+                            else if (m_audioSource && !m_audioSource.isPlaying)
                             {
-                                m_audioSource.Play();
+                                if (m_audioSource)
+                                    m_audioSource.Play();
                             }
-
                             m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
+                            //m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
                         }                        
                     }
                 }
@@ -205,10 +215,11 @@ public class WeightedPreassurePlate : MonoBehaviour
                             }
                             m_positionY = m_distanceToEndPosition * m_percentage;
 
-                            Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
+                            Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x - m_LOpositionX, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
                             if (Vector3.Distance(m_linkedObjectPosition.position, destination) < 0.1f && m_audioSource)
                             {
-                                m_audioSource.Stop();
+                                if (m_audioSource)
+                                    m_audioSource.Stop();
                             }
 
                             m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
