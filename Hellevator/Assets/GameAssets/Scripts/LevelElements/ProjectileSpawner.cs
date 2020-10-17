@@ -14,6 +14,8 @@ public class ProjectileSpawner : ButtonActivatedBase
     int maxNumberOfProjectiles = 5;
     List<GameObject> projectilePool;
 
+    bool m_active;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,26 +29,35 @@ public class ProjectileSpawner : ButtonActivatedBase
         {
             Activate();
         }
+        InvokeRepeating(nameof(ShootProjectile), m_initialWaitTimeBeforeShooting, m_timeIntervalBetweenShots);
     }
 
     private void ShootProjectile()
     {
-        for (int i = 0; i < projectilePool.Count; i++)
+        if (m_active)
         {
-            if (!projectilePool[i].activeSelf)
+            for (int i = 0; i < projectilePool.Count; i++)
             {
-                projectilePool[i].SetActive(true);
-                projectilePool[i].GetComponent<Projectile>().Speed = m_projectileSpeed;
-                return;
+                if (!projectilePool[i].activeSelf)
+                {
+                    projectilePool[i].SetActive(true);
+                    projectilePool[i].GetComponent<Projectile>().Speed = m_projectileSpeed;
+                    return;
+                }
             }
-        }
-        GameObject newProjectile = Instantiate(m_projectileToShoot, transform.position, transform.rotation,transform);
-        projectilePool.Add(newProjectile);
-        newProjectile.GetComponent<Projectile>().Speed = m_projectileSpeed;
+            GameObject newProjectile = Instantiate(m_projectileToShoot, transform.position, transform.rotation,transform);
+            projectilePool.Add(newProjectile);
+            newProjectile.GetComponent<Projectile>().Speed = m_projectileSpeed;
+        }        
     }
 
     public override void Activate()
     {
-        InvokeRepeating(nameof(ShootProjectile), m_initialWaitTimeBeforeShooting, m_timeIntervalBetweenShots);
+        m_active = true;
+        
+    }
+    public void Deactivate()
+    {
+        m_active = false;
     }
 }
