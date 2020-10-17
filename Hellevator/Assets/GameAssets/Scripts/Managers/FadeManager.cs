@@ -86,6 +86,7 @@ public class FadeManager : TemporalSingleton<FadeManager>
 
     public void StartFadingIn()
     {
+        m_blackPanel.gameObject.SetActive(true);
         m_currentFadeState = FadeState.FadingIn;
         if (PossessionManager.Instance.ControlledDemon != null)
             PossessionManager.Instance.ControlledDemon.CanMove = false;
@@ -93,6 +94,7 @@ public class FadeManager : TemporalSingleton<FadeManager>
 
     public void StartFadingOut()
     {
+        m_blackPanel.gameObject.SetActive(true);
         m_currentFadeState = FadeState.FadingOut;
         m_currentStartingTimer = m_timeFullBlackWhenOpenedScene;
         if (PossessionManager.Instance.ControlledDemon != null)

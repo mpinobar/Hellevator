@@ -6,22 +6,24 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : PersistentSingleton<LevelManager>
 {
-	private List<Vector3> m_checkPoints;
+    private List<Vector3> m_checkPoints;
 
-	public CheckPoint m_lastCheckPoint;
+    public CheckPoint m_lastCheckPoint;
 
     private bool m_isRestarting;
 
     AsyncOperation m_loadingScene;
-	
-	[SerializeField] private GameObject m_fade = null;
+
+    [SerializeField] private GameObject m_fade = null;
 
     List<string> m_adjacentScenes;
     LevelLoadManager m_centralScene;
 
+    [SerializeField] GameObject cameraPrefab;
 
-
-    public CheckPoint LastCheckPoint { get => m_lastCheckPoint;
+    public CheckPoint LastCheckPoint
+    {
+        get => m_lastCheckPoint;
 
         set
         {
@@ -29,8 +31,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
     }
 
-	public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
-	public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
+    public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
+    public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
     public LevelLoadManager CentralScene { get => m_centralScene; set => m_centralScene = value; }
 
 
@@ -47,7 +49,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         bool foundInside = false;
         for (int i = 0; i < m_checkPoints.Count; i++)
         {
-            if(m_checkPoints[i] == value.transform.position)
+            if (m_checkPoints[i] == value.transform.position)
             {
                 foundInside = true;
             }
@@ -65,15 +67,15 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             if (m_loadingScene.isDone)
             {
-				UpdateLastCheckPointReference();
+                UpdateLastCheckPointReference();
 
 
-				CameraManager.Instance.CurrentCamera.enabled = false;
-				CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
-				CameraManager.Instance.CurrentCamera.enabled = true;
-				ParalaxManager.Instance.SetUpSceneParalax();
+                CameraManager.Instance.CurrentCamera.enabled = false;
+                CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
+                CameraManager.Instance.CurrentCamera.enabled = true;
+                ParalaxManager.Instance.SetUpSceneParalax();
 
-				if (PossessionManager.Instance.ControlledDemon != null)
+                if (PossessionManager.Instance.ControlledDemon != null)
                 {
                     PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
                 }
@@ -94,16 +96,16 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
         for (int i = 0; i < cps.Length; i++)
         {
-            if(m_checkPoints[m_checkPoints.Count-1] == cps[i].transform.position)
+            if (m_checkPoints[m_checkPoints.Count - 1] == cps[i].transform.position)
             {
                 m_lastCheckPoint = cps[i];
-				print("CP pos = " + cps[i].transform.position);
-				print("Number of CPs = " + m_checkPoints.Count);
+                print("CP pos = " + cps[i].transform.position);
+                print("Number of CPs = " + m_checkPoints.Count);
 
-				return;
+                return;
             }
         }
-        
+
     }
 
     /// <summary>
@@ -111,23 +113,37 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// </summary>
     public void StartRestartingLevel()
     {
-		FadeManager.Instance.StartFadingIn();
+        Debug.LogError("Fading in");
+        FadeManager.Instance.StartFadingIn();
     }
-	public void RestartLevel()
-	{
-        m_loadingScene = SceneManager.LoadSceneAsync(CentralScene.ThisSceneName);
-		
-        if( m_checkPoints != null && m_checkPoints.Count > 0)
+    public void RestartLevel()
+    {
+        
+        AsyncOperation op = SceneManager.LoadSceneAsync("H.1");
+        m_adjacentScenes.Clear();
+        CentralScene = null;
+        op.completed += Op_completed;
+        if (m_checkPoints != null && m_checkPoints.Count > 0)
         {
             m_isRestarting = true;
         }
-	}
+    }
+
+    private void Op_completed(AsyncOperation obj)
+    {
+        
+        FadeManager.Instance.StartFadingOut();
+    }
 
     public void LoadLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        {
+            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        }
     }
-    
+
     public void LoadLevel(string levelName)
     {
         SceneManager.LoadScene(levelName);
@@ -138,7 +154,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         CentralScene = newCentralScene;
         for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
         {
-            SceneManager.LoadSceneAsync(m_centralScene.AdjacentScenes[i], LoadSceneMode.Additive);            
+            SceneManager.LoadSceneAsync(m_centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
         }
         if (m_adjacentScenes == null)
         {
@@ -149,13 +165,16 @@ public class LevelManager : PersistentSingleton<LevelManager>
             m_adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
         }
 
-        if(!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
-        SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        {
+            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        }
+        //SceneManager.MoveGameObjectToScene(CameraManager.Instance.gameObject, SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
     }
 
     public void ChangeCentralScene(LevelLoadManager newCentralScene)
     {
-        if(m_centralScene != newCentralScene)
+        if (m_centralScene != newCentralScene)
         {
             if (m_adjacentScenes == null)
             {
@@ -169,8 +188,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
             m_adjacentScenes.Remove(m_centralScene.ThisSceneName);
 
             PossessionManager.Instance.MoveDemonsToCentralScene(SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
-            SceneManager.MoveGameObjectToScene(CameraManager.Instance.gameObject, SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
-            
+            //SceneManager.MoveGameObjectToScene(CameraManager.Instance.gameObject, SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
+
             //Debug.LogError("New central scene is " + newCentralScene.ThisSceneName);
 
             //Descargar las escenas que ya no se necesitan porque no se encuentran entre las adyacentes de la nueva central
@@ -202,10 +221,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
                     else
                     {
                         //Debug.LogError("Scene already loaded: " + centralScene.AdjacentScenes[i]);
-                    }                    
+                    }
                 }
             }
-        }       
+        }
     }
 
 

@@ -21,7 +21,7 @@ public class LevelLoadManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
+        if(collision.GetComponent<DemonBase>().IsControlledByPlayer)
         LevelManager.Instance.ChangeCentralScene(this);
     }
 }
