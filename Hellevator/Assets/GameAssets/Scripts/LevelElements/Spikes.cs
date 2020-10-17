@@ -41,8 +41,8 @@ public class Spikes : MonoBehaviour
                 {
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                     cmpDemon.IsInDanger = true;                                        
-                    cmpDemon.Die(true);
                     collision.GetComponentInParent<BloodInstantiate>().InstantiateBlood();
+                    cmpDemon.Die(true);
                 }
                 else
                 {

@@ -91,7 +91,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             if (extraDemonsControlled == null || extraDemonsControlled.Count == 0)
             {
                 //Debug.LogError("no extra characters controlled");
-                ControlledDemon.SetNotControlledByPlayer();
+                if(ControlledDemon)
+                    ControlledDemon.SetNotControlledByPlayer();
                 if (!currentDemon.GetComponent<DemonBase>().MultiplePossessionWhenDead)
                 {
                     //Debug.LogError("should not possess multiple characters on death");

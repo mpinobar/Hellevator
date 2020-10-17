@@ -29,7 +29,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
         m_initialPosition = transform.position;
         m_returningToInitialPosition = false;
         m_speed = Vector2.Distance(m_initialPosition, m_endPos) / m_period;
-     
+
     }
 
     // Update is called once per frame
@@ -53,10 +53,10 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, m_initialPosition, m_speed * Time.deltaTime);
 
-            if(Vector2.Distance(transform.position, m_initialPosition) < 0.001f)
+            if (Vector2.Distance(transform.position, m_initialPosition) < 0.001f)
             {
                 m_waitTimer -= Time.deltaTime;
-                if(m_waitTimer <= 0)
+                if (m_waitTimer <= 0)
                 {
                     m_returningToInitialPosition = false;
                     m_waitTimer = m_waitTimeOnArrival;
@@ -65,7 +65,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
         }
         else
         {
-            transform.position = Vector3.MoveTowards(transform.position,m_endPos, m_speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, m_endPos, m_speed * Time.deltaTime);
 
             if (Vector2.Distance(transform.position, m_endPos) < 0.001f)
             {
@@ -76,44 +76,49 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
                     m_waitTimer = m_waitTimeOnArrival;
                 }
             }
-        } 
+        }
     }
-    
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-       
+
         DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
 
         if (cmpDemon != null)
         {
-            bool isCounted = false;
-
-            for (int i = 0; i < m_spikesData.Count; i++)
+            RaycastHit2D hit = Physics2D.Raycast(cmpDemon.Torso.position, Vector2.down, 2f, 1<<0);
+            if (hit.transform != null && (hit.transform == transform || hit.transform == transform.GetChild(0)))
             {
-                //if the demon is already inside the spikes
-                if (cmpDemon == m_spikesData[i].AssociatedDemon)
-                {
-                    isCounted = true;
+                bool isCounted = false;
 
-                    //add the collider to the associated demon's collider list if it isnt already included
-                    if (!m_spikesData[i].Colliders.Contains(collision.collider) && collision.gameObject.tag != "BodyCollider")
+                for (int i = 0; i < m_spikesData.Count; i++)
+                {
+                    //if the demon is already inside the spikes
+                    if (cmpDemon == m_spikesData[i].AssociatedDemon)
                     {
-                        m_spikesData[i].Colliders.Add(collision.collider);
+                        isCounted = true;
+
+                        //add the collider to the associated demon's collider list if it isnt already included
+                        if (!m_spikesData[i].Colliders.Contains(collision.collider) && collision.gameObject.tag != "BodyCollider")
+                        {
+                            m_spikesData[i].Colliders.Add(collision.collider);
+                        }
                     }
                 }
-            }
-            if (!isCounted)
-            {
+                if (!isCounted)
+                {
 
-                m_spikesData.Add(new SpikesWeightData(cmpDemon, collision.collider));
-                m_enemiesOnPreassurePlate.Add(cmpDemon);
-                cmpDemon.transform.parent = transform;
+                    m_spikesData.Add(new SpikesWeightData(cmpDemon, collision.collider));
+                    m_enemiesOnPreassurePlate.Add(cmpDemon);
+                    cmpDemon.transform.parent = transform;
 
+                }
             }
+
 
         }
     }
-    
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
@@ -126,7 +131,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
                 if (cmpDemon == m_spikesData[i].AssociatedDemon)
                 {
 
-                    if(cmpDemon.IsControlledByPlayer)
+                    if (cmpDemon.IsControlledByPlayer)
                     {
                         m_spikesData.RemoveAt(i);
                         m_enemiesOnPreassurePlate.Remove(cmpDemon);
@@ -142,20 +147,20 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
 
                         //all the limbs have exited the spikes
                         if (m_spikesData[i].Colliders.Count == 0)
-                        {                            
+                        {
                             m_spikesData.RemoveAt(i);
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);
                             cmpDemon.transform.parent = null;
                         }
                         else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].gameObject.layer == m_bodyLayer)
                         {
-                            m_enemiesOnPreassurePlate.Remove(cmpDemon);                            
+                            m_enemiesOnPreassurePlate.Remove(cmpDemon);
                             m_spikesData.RemoveAt(i);
                             cmpDemon.transform.parent = null;
                         }
                     }
                 }
             }
-        }        
-    }    
+        }
+    }
 }

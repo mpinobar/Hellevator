@@ -18,7 +18,7 @@ public class Explosion : MonoBehaviour
         ExplosionVisuals();
         GetComponent<DemonBase>().enabled = false;
         
-        PossessionManager.Instance.RemoveDemonPossession(transform);
+        //PossessionManager.Instance.RemoveDemonPossession(transform);
         Collider2D [] colliders = Physics2D.OverlapCircleAll(transform.position,m_explosionRadius,m_explosionInteractionLayerMask);
         DemonBase demonInRange;
         DestructibleWall explodingWall;
