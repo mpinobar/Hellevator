@@ -42,7 +42,7 @@ public class DestructiblePlatform : MonoBehaviour
     void Update()
     {
         if (m_destroying)
-        {            
+        {
             tmp -= Time.deltaTime;
             m_percentageOfDestruction = tmp / m_timeToDestroy;
             Color c = rnd.color;
@@ -52,19 +52,19 @@ public class DestructiblePlatform : MonoBehaviour
             {
                 m_decorado.color = c;
                 m_currentMultiplier = (1 - m_percentageOfDestruction) * m_multiplierAtEnd;
-                if(tmpShake == m_framesPerShake)
+                if (tmpShake == m_framesPerShake)
                 {
-                    m_targetShakePosition = new Vector2(m_initPos.x + Random.Range(-m_shakeStrength, m_shakeStrength) * 0.1f*m_currentMultiplier, m_initPos.y + Random.Range(-m_shakeStrength, m_shakeStrength) * 0.1f * m_currentMultiplier);
+                    m_targetShakePosition = new Vector2(m_initPos.x + Random.Range(-m_shakeStrength, m_shakeStrength) * 0.1f * m_currentMultiplier, m_initPos.y + Random.Range(-m_shakeStrength, m_shakeStrength) * 0.1f * m_currentMultiplier);
                 }
                 tmpShake--;
                 m_decorado.transform.position = Vector2.MoveTowards(m_decorado.transform.position, m_targetShakePosition, m_currentMultiplier * Time.deltaTime);
-                if(tmpShake <= 0)
+                if (tmpShake <= 0)
                 {
                     tmpShake = m_framesPerShake;
                 }
 
             }
-            if(tmp <= 0)
+            if (tmp <= 0)
             {
                 m_collider.enabled = false;
                 m_destroying = false;
@@ -72,15 +72,15 @@ public class DestructiblePlatform : MonoBehaviour
         }
         else if (willReappear)
         {
-            if(tmp <= 0)
+            if (tmp <= 0)
             {
                 tmpReappear -= Time.deltaTime;
-                if(tmpReappear <= 0)
+                if (tmpReappear <= 0)
                 {
                     tmp = m_timeToDestroy;
                     tmpReappear = m_timeToReappear;
                     m_collider.enabled = true;
-                    Color c = rnd.color;                    
+                    Color c = rnd.color;
                     c.a = 1;
                     rnd.color = c;
                     if (m_decorado)
@@ -99,8 +99,12 @@ public class DestructiblePlatform : MonoBehaviour
         DemonBase demon = collision.transform.root.GetComponent<DemonBase>();
         if (demon && demon.IsControlledByPlayer)
         {
-            m_destroying = true;
-
+            RaycastHit2D hit = Physics2D.Raycast(collision.transform.position,Vector2.down,0.5f,1 << 0);
+            
+            if (hit.transform != null && hit.transform == transform)
+            {
+                m_destroying = true;
+            }
         }
         else
         {
