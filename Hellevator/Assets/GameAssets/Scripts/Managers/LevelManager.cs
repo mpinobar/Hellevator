@@ -111,12 +111,11 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// </summary>
     public void StartRestartingLevel()
     {
-        Debug.LogError("Restarting");
 		FadeManager.Instance.StartFadingIn();
     }
 	public void RestartLevel()
 	{
-        m_loadingScene = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        m_loadingScene = SceneManager.LoadSceneAsync(CentralScene.ThisSceneName);
 		
         if( m_checkPoints != null && m_checkPoints.Count > 0)
         {

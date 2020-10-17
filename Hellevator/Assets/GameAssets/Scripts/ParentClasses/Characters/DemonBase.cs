@@ -622,6 +622,7 @@ public abstract class DemonBase : MonoBehaviour
         }
         IsControlledByPlayer = false;
         m_isDead = true;
+
         if (m_startsStandingUp)
         {
             
@@ -642,6 +643,7 @@ public abstract class DemonBase : MonoBehaviour
             SetRagdollActive(true);
         }
         CanMove = false;
+        
         //for (int i = 1; i < m_childSprites.Length; i++)
         //{
         //    m_childSprites[i].material.SetFloat("_Thickness", 0);
@@ -662,6 +664,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         SetRagdollActive(false);
         m_isControlledByIA = true;
+        
         //m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
         m_isControlledByPlayer = false;
@@ -694,6 +697,7 @@ public abstract class DemonBase : MonoBehaviour
         if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
         {
         }
+        
         //m_PossessionCircle.enabled = true;
 
         //for (int i = 1; i < m_childSprites.Length; i++)
