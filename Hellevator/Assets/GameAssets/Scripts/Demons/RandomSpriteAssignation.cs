@@ -20,6 +20,7 @@ public class RandomSpriteAssignation : MonoBehaviour
 
     private void AssignRandomSprite()
     {
+        if(m_availableSprites.Length > 0)
         GetComponent<SpriteRenderer>().sprite = m_availableSprites[Random.Range(0, m_availableSprites.Length)];
     }
 
