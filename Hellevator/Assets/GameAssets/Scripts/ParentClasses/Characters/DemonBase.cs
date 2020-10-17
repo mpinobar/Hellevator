@@ -50,6 +50,7 @@ public abstract class DemonBase : MonoBehaviour
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
     [SerializeField] private bool       m_multiplePossessionWhenDead;
+    [SerializeField] private bool       m_startsStandingUp;
     [SerializeField] private float      m_maximumPossessionRange;
 
     [ColorUsage(true, true)]
@@ -621,7 +622,25 @@ public abstract class DemonBase : MonoBehaviour
         }
         IsControlledByPlayer = false;
         m_isDead = true;
-        SetRagdollActive(true);
+        if (m_startsStandingUp)
+        {
+            
+            m_startsStandingUp = false;
+            m_ragdollLogicCollider.enabled = true;
+            m_myRgb.isKinematic = true;
+            for (int i = 0; i < m_limbsColliders.Length; i++)
+            {
+                m_limbsColliders[i].enabled = true;
+            }
+            for (int i = 0; i < m_limbsRbds.Length; i++)
+            {
+                m_limbsRbds[i].isKinematic = true;
+            }
+        }
+        else
+        {
+            SetRagdollActive(true);
+        }
         CanMove = false;
         //for (int i = 1; i < m_childSprites.Length; i++)
         //{

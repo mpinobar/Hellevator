@@ -64,6 +64,7 @@ public class BasicZombie : DemonBase
     [SerializeField] Color colorSkullIndicatorExplosive;
     [ColorUsage(true,true)]
     [SerializeField] Color colorSkullIndicatorPetrification;
+    [SerializeField] GameObject m_faceCover;
 
     #endregion
 
@@ -78,8 +79,8 @@ public class BasicZombie : DemonBase
 
     public override void UseSkill()
     {
-        
-        if(MultiplePossessionWhenDead)
+
+        if (MultiplePossessionWhenDead)
             PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
         if (GetComponent<Petrification>())
             GetComponent<Petrification>().Petrify();
@@ -89,6 +90,7 @@ public class BasicZombie : DemonBase
     protected override void Awake()
     {
         base.Awake();
+        m_faceCover.SetActive(false);
         if (skullIndicator)
         {
 
@@ -191,6 +193,7 @@ public class BasicZombie : DemonBase
             }
         }
         m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
+        m_myAnimator.SetFloat("yMovement", Mathf.Abs(MyRgb.velocity.y * 0.1f));
 
         SkullIndicator();
 
@@ -405,7 +408,9 @@ public class BasicZombie : DemonBase
             m_hasJumped = false;
             m_hasDoubleJumped = false;
             MyRgb.gravityScale = 0f;
+            m_myAnimator.SetBool("OnLadder", onLadder);
         }
+        m_faceCover.SetActive(onLadder);
     }
 
 }
