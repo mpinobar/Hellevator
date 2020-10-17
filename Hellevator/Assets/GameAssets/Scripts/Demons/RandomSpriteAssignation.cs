@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class RandomSpriteAssignation : MonoBehaviour
 {
-    bool init;
+    bool m_init;
 
     [SerializeField] Sprite [] m_availableSprites;
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        if (!init)
+        if (!m_init)
         {
             AssignRandomSprite();
-            init = true;
+            m_init = true;
         }
     }
 
