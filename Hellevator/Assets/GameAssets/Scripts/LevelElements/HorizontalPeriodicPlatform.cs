@@ -20,6 +20,9 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
     [SerializeField] private LayerMask m_bodyLayer;
     List<SpikesWeightData> m_spikesData;
 
+    public LayerMask PlayerLayer { get => m_playerLayer; set => m_playerLayer = value; }
+    public LayerMask BodyLayer { get => m_bodyLayer; set => m_bodyLayer = value; }
+
     private void Awake()
     {
         m_enemiesOnPreassurePlate = new List<DemonBase>();
@@ -90,6 +93,11 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
             if (hit.transform != null && (hit.transform == transform || hit.transform == transform.GetChild(0)))
             {
                 bool isCounted = false;
+
+                if(m_spikesData == null)
+                {
+                    m_spikesData = new List<SpikesWeightData>();
+                }
 
                 for (int i = 0; i < m_spikesData.Count; i++)
                 {
