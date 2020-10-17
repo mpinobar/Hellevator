@@ -1789,8 +1789,6 @@ GameObject:
   - component: {fileID: 1910114081468263192}
   - component: {fileID: 2759100286305166894}
   - component: {fileID: 5873728004412041557}
-  - component: {fileID: 4404433702586531064}
-  - component: {fileID: 9003010718298764056}
   m_Layer: 10
   m_Name: Penitente_Basico
   m_TagString: Untagged
@@ -1867,10 +1865,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_demonMaskSprite: {fileID: 6503473911029235946}
-  m_maxSpeed: 10
-  m_acceleration: 30
-  m_jumpForce: 750
-  m_jumpForceSecond: 650
+  m_maxSpeed: 17
+  m_acceleration: 40
+  m_jumpForce: 1600
+  m_jumpForceSecond: 1400
   m_canJump: 1
   m_canDoubleJump: 1
   m_coyoteTimeDuration: 0.2
@@ -1879,12 +1877,12 @@ MonoBehaviour:
   walkingParticles: {fileID: 0}
   "m_SoyUnNi\xF1oDeVerdad": 0
   skullIndicator: {fileID: 6927124578001267804}
-  m_firstGravity: 3.5
-  m_firstGravityHoldingJump: 2.5
-  m_secondGravity: 2.25
-  m_thirdGravity: 4
-  m_thirdGravityDoubleJump: 2
-  m_fourthGravity: 5.5
+  m_firstGravity: 15
+  m_firstGravityHoldingJump: 10
+  m_secondGravity: 8
+  m_thirdGravity: 5
+  m_thirdGravityDoubleJump: 3
+  m_fourthGravity: 8
   colorSkullIndicatorExplosive: {r: 1.6226416, g: 0.57733166, b: 0.0688857, a: 1}
   colorSkullIndicatorPetrification: {r: 0.051886797, g: 0.50669, b: 1, a: 1}
   m_faceCover: {fileID: 7320654321223807868}
@@ -1957,44 +1955,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &4404433702586531064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9032155453379708232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbc76bbbec85dbe4b963de4dc239e2cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_prefabToConvertInto: {fileID: 0}
-  m_usesGravity: 0
---- !u!114 &9003010718298764056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9032155453379708232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cd7d32c77efe044fa6db13669af8aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_explosionParticles: {fileID: 1994286666195178269}
-  m_explosionRadius: 0
-  m_explosionForce: 0
-  m_explosionInteractionLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  m_limbsToUnparent:
-  - {fileID: 7876538221899107236}
-  - {fileID: 2523376367460445207}
-  - {fileID: 3484962589859891395}
-  - {fileID: 6019722100231935459}
-  - {fileID: 1879121604080691324}
 --- !u!1001 &4894900859349458597
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2147,12 +2107,6 @@ PrefabInstance:
 --- !u!4 &1994286666195178266 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6359943925026508223, guid: d1bb3b8ffedc56c46af8f1795495361b,
-    type: 3}
-  m_PrefabInstance: {fileID: 4894900859349458597}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &1994286666195178269 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 6359943925026508216, guid: d1bb3b8ffedc56c46af8f1795495361b,
     type: 3}
   m_PrefabInstance: {fileID: 4894900859349458597}
   m_PrefabAsset: {fileID: 0}
