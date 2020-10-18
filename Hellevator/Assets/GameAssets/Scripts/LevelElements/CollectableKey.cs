@@ -35,6 +35,7 @@ public class CollectableKey : MonoBehaviour
             }
             else
             {
+                LevelManager.Instance.HasKitchenKey = true;
                 Destroy(gameObject);
                 PlayerPrefs.SetInt(key.ToString(), 1);
                 PlayerPrefs.Save();
