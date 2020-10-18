@@ -69,22 +69,22 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             //if (m_loadingScene.isDone)
             //{
-                //UpdateLastCheckPointReference();
+            //UpdateLastCheckPointReference();
 
 
-                //CameraManager.Instance.CurrentCamera.enabled = false;
-                //CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
-                //CameraManager.Instance.CurrentCamera.enabled = true;
-                //ParalaxManager.Instance.SetUpSceneParalax();
+            //CameraManager.Instance.CurrentCamera.enabled = false;
+            //CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
+            //CameraManager.Instance.CurrentCamera.enabled = true;
+            //ParalaxManager.Instance.SetUpSceneParalax();
 
-                //if (PossessionManager.Instance.ControlledDemon != null)
-                //{
-                //    PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
-                //}
-                //m_lastCheckPoint.SpawnPlayer();
+            //if (PossessionManager.Instance.ControlledDemon != null)
+            //{
+            //    PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
+            //}
+            //m_lastCheckPoint.SpawnPlayer();
 
-                m_isRestarting = false;
-                Time.timeScale = 1;
+            m_isRestarting = false;
+            Time.timeScale = 1;
             //}
         }
     }
@@ -117,13 +117,15 @@ public class LevelManager : PersistentSingleton<LevelManager>
     }
     public void RestartLevel()
     {
-        
-        AsyncOperation op = SceneManager.LoadSceneAsync(m_lastCheckPoint.SceneToLoad);
-        m_adjacentScenes.Clear();
+        string nameToLoad = "H.1";
+
+        if (m_lastCheckPoint)
+            nameToLoad = m_lastCheckPoint.SceneToLoad;
+        AsyncOperation op = SceneManager.LoadSceneAsync(nameToLoad);
+        if(m_adjacentScenes != null)
+         m_adjacentScenes.Clear();
         CentralScene = null;
         op.completed += Op_completed;
-
-        
 
         if (m_checkPoints != null && m_checkPoints.Count > 0)
         {
@@ -137,6 +139,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
 
         CameraManager.Instance.CurrentCamera.enabled = false;
+        if(m_lastCheckPoint)
         CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
         CameraManager.Instance.CurrentCamera.enabled = true;
         ParalaxManager.Instance.SetUpSceneParalax();
@@ -145,7 +148,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
         }
-        m_lastCheckPoint.SpawnPlayer();
+        if (m_lastCheckPoint)
+            m_lastCheckPoint.SpawnPlayer();
         FadeManager.Instance.StartFadingOut();
     }
 
