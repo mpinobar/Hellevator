@@ -47,7 +47,7 @@ public class WeightedPreassurePlate : MonoBehaviour
     //Sound variables
     [SerializeField] private AudioClip m_machineClip;
     private AudioSource m_audioSource;
-
+    Vector3 m_lastLOPosition;
 
     private float m_percentage = 0f;
     private float m_positionY = 0f;
@@ -65,6 +65,7 @@ public class WeightedPreassurePlate : MonoBehaviour
             m_audioSource.clip = m_machineClip;
             m_audioSource.loop = true;
             m_audioSource.volume = MusicManager.SfxVolume;
+            m_audioSource.Stop();
         }
         
         if (m_type == TypeOfPreassurePlate.Elevator)
@@ -128,7 +129,10 @@ public class WeightedPreassurePlate : MonoBehaviour
                             
 
                             Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x + m_LOpositionX, m_linkedObjectStartingPosition.y + m_LOpositionY, m_linkedObjectStartingPosition.z);
-                            if (Vector3.Distance(m_linkedObjectPosition.position, m_endPosition/*destination*/) < 0.1f)
+
+                            m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, m_endPosition, m_linkedObjectSpeed * Time.deltaTime);
+                            
+                            if (m_linkedObjectPosition.position == m_lastLOPosition)
                             {
                                 if (m_audioSource)
                                     m_audioSource.Stop();
@@ -137,7 +141,17 @@ public class WeightedPreassurePlate : MonoBehaviour
                             {
                                 m_audioSource.Play();
                             }
-                            m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, m_endPosition, m_linkedObjectSpeed * Time.deltaTime);
+                            //if (Vector3.Distance(m_linkedObjectPosition.position, m_endPosition/*destination*/) < 0.1f)
+                            //{
+                            //    if (m_audioSource)
+                            //        m_audioSource.Stop();
+                            //}
+                            //else if (!m_audioSource.isPlaying)
+                            //{
+                            //    m_audioSource.Play();
+                            //}
+                            
+                            m_lastLOPosition = m_linkedObjectPosition.position;
                             //m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
                         }
                     }
@@ -159,9 +173,13 @@ public class WeightedPreassurePlate : MonoBehaviour
                             if (m_percentage >= 1)
                             {
                                 m_buttonActivatedObject.Activate();
+                                if (m_audioSource && !m_audioSource.isPlaying)
+                                    m_audioSource.Play();
                             }
                             else
                             {
+                                if (m_audioSource)
+                                    m_audioSource.Stop();
                                 m_buttonActivatedObject.GetComponent<ProjectileSpawner>().Deactivate();
                             }
                         }
@@ -177,17 +195,28 @@ public class WeightedPreassurePlate : MonoBehaviour
                             //Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x - m_LOpositionX, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
                             Vector3 direction = m_endPosition - m_linkedObjectStartingPosition;
                             Vector3 destination = m_linkedObjectStartingPosition + direction * m_percentage;
-                            if (Vector3.Distance(m_linkedObjectPosition.position, m_endPosition/*destination*/) < 0.1f)
-                            {
-                                if(m_audioSource)
-                                m_audioSource.Stop();
-                            }
-                            else if (m_audioSource && !m_audioSource.isPlaying)
+                            m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
+                            //if (Vector3.Distance(m_linkedObjectPosition.position, m_endPosition/*destination*/) < 0.1f)
+                            //{
+                            //    if(m_audioSource)
+                            //        m_audioSource.Stop();
+                            //}
+                            //else if (m_audioSource && !m_audioSource.isPlaying && m_percentage > 0 && m_percentage < 1)
+                            //{
+                            //    if (m_audioSource)
+                            //        m_audioSource.Play();
+                            //}
+                            if (m_linkedObjectPosition.position == m_lastLOPosition)
                             {
                                 if (m_audioSource)
-                                    m_audioSource.Play();
+                                    m_audioSource.Stop();
                             }
-                            m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
+                            else if (!m_audioSource.isPlaying)
+                            {
+                                m_audioSource.Play();
+                            }
+                            m_lastLOPosition = m_linkedObjectPosition.position;
+                            
                             //m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
                         }                        
                     }
@@ -203,7 +232,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                             m_preassurePlateActivated = true;
                             if (m_audioSource && !m_audioSource.isPlaying)
                             {
-                                m_audioSource.Play();
+                                //m_audioSource.Play();
                             }
                         }
                         else if(!m_activatesProjectileSpawner)

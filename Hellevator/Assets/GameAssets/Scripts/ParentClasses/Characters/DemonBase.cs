@@ -951,6 +951,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             MusicManager.Instance.PlayAudioSFX(m_deathClip, false);
             m_isDead = true;
+            
         }
 
         if (m_isControlledByPlayer)
@@ -964,7 +965,9 @@ public abstract class DemonBase : MonoBehaviour
         {
             m_isControlledByIA = false;
             m_isDead = true;
-            SetRagdollActive(true);
+            UseSkill();
+            SetNotControlledByPlayer();
+            //SetRagdollActive(true);
         }
     }
     /// <summary>
