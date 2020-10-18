@@ -802,6 +802,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         m_isRagdollActive = active;
 
+        
 
         //activate all the limbs colliders if ragdoll is active, set inactive otherwise
         for (int i = 0; i < m_limbsColliders.Length; i++)
@@ -822,6 +823,7 @@ public abstract class DemonBase : MonoBehaviour
             }
         }
 
+        m_myAnimator.enabled = !active;
         m_playerCollider.enabled = !active;
         m_ragdollLogicCollider.enabled = active;
         m_myRgb.isKinematic = active;
