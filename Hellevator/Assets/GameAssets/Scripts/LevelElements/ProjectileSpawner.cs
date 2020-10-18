@@ -40,6 +40,7 @@ public class ProjectileSpawner : ButtonActivatedBase
             {
                 if (!projectilePool[i].activeSelf)
                 {
+                    projectilePool[i].transform.position = transform.position;
                     projectilePool[i].SetActive(true);
                     projectilePool[i].GetComponent<Projectile>().Speed = m_projectileSpeed;
                     return;

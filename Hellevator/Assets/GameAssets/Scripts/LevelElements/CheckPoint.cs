@@ -5,19 +5,21 @@ using UnityEngine;
 [RequireComponent (typeof (Collider2D))]
 public class CheckPoint : MonoBehaviour
 {
-
+    string m_sceneToLoad;
     [SerializeField] AudioClip m_lightUpClip;
     bool m_active;
     bool m_opening;
     [SerializeField] private DemonBase m_demonToSpawn;
     private float m_openingValue;
     SpriteRenderer m_spr;
-    
+
+    public string SceneToLoad { get => m_sceneToLoad; set => m_sceneToLoad = value; }
 
     private void Awake()
     {
         m_spr = GetComponent<SpriteRenderer>();
         m_openingValue = 1;
+        m_sceneToLoad = gameObject.scene.name;
 
     }
 
@@ -64,7 +66,7 @@ public class CheckPoint : MonoBehaviour
     {
         DemonBase spawnedDemon = Instantiate(m_demonToSpawn, transform.position - Vector3.up*2, Quaternion.identity);
         spawnedDemon.enabled = true;
-        spawnedDemon.SetControlledByPlayer();
+        spawnedDemon.PossessedOnStart = true;
         ActivateCheckPoint();
         //CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();

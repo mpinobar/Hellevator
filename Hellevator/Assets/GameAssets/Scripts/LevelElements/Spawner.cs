@@ -45,7 +45,7 @@ public class Spawner : MonoBehaviour
     /// <returns>El numero de demonios que hay activos que haya spawneado este spawner</returns>
     private int ActiveDemons()
     {
-        int d = 0;
+        int activeDemonsFromThisSpawner = 0;
         for (int i = 0; i < m_spawnedDemons.Count; i++)
         {
             if (m_spawnedDemons[i] != null)
@@ -54,7 +54,7 @@ public class Spawner : MonoBehaviour
                 {
                     if (!m_spawnedDemons[i].IsControlledByPlayer)
                     {
-                        d++;
+                        activeDemonsFromThisSpawner++;
                     }
                     else
                     {
@@ -63,9 +63,9 @@ public class Spawner : MonoBehaviour
                     }
                 }
                 else
-                    d++;
+                    activeDemonsFromThisSpawner++;
             }
         }
-        return d;
+        return activeDemonsFromThisSpawner;
     }
 }
