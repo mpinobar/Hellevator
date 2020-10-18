@@ -1,12 +1,12 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 //using UnityEditor.SceneManagement;
-//using UnityEngine;
-//using UnityEngine.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //[ExecuteInEditMode]
-//public class SceneOpener : MonoBehaviour
-//{
+public class SceneOpener : MonoBehaviour
+{
 //    bool added;
 //    // Start is called before the first frame update
 //    private void OnEnable()
@@ -24,4 +24,4 @@
 //#endif
 //    }
 
-//}
+}
