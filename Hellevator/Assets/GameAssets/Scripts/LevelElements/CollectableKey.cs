@@ -16,19 +16,29 @@ public class CollectableKey : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        
+
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponentInParent<DemonBase>())
         {
-            if (PlayerPrefs.GetInt(key.ToString()) == 0)
+            if (m_checkPlayerPrefs)
+            {
+
+                if (PlayerPrefs.GetInt(key.ToString()) == 0)
+                {
+                    Destroy(gameObject);
+                    PlayerPrefs.SetInt(key.ToString(), 1);
+                    PlayerPrefs.Save();
+                }
+            }
+            else
             {
                 Destroy(gameObject);
                 PlayerPrefs.SetInt(key.ToString(), 1);
                 PlayerPrefs.Save();
-            }            
+            }
         }
     }
 }

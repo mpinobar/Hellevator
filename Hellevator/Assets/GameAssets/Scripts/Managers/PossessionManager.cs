@@ -70,7 +70,17 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     public void MoveDemonsToCentralScene(Scene centralScene)
     {
-        SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, centralScene);
+        if(ControlledDemon.transform.parent == null)
+        {
+            SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, centralScene);
+        }
+        else
+        {
+            Transform parent = ControlledDemon.transform.parent;
+            ControlledDemon.transform.parent = null;
+            SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, centralScene);
+            ControlledDemon.transform.parent = parent;
+        }
 
         if (extraDemonsControlled != null && extraDemonsControlled.Count > 0)
         {
