@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class LevelLoadManager : MonoBehaviour
 {
     string m_thisSceneName;
@@ -16,7 +17,8 @@ public class LevelLoadManager : MonoBehaviour
         if(LevelManager.Instance.CentralScene == null)
         {
             LevelManager.Instance.LoadCentralSceneFirstTime(this);
-        }        
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

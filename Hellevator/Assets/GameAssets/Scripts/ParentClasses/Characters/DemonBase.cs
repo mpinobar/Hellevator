@@ -29,7 +29,7 @@ public abstract class DemonBase : MonoBehaviour
     [Space]
     //Weight variables
     [Header("Physicality")]
-    
+
     [Tooltip("Weight of the body for puzzles")]
     [SerializeField] protected float        m_weight;
 
@@ -50,7 +50,6 @@ public abstract class DemonBase : MonoBehaviour
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
     [SerializeField] private bool       m_multiplePossessionWhenDead;
-    [SerializeField] private bool       m_startsStandingUp;
     [SerializeField] private float      m_maximumPossessionRange;
 
     [ColorUsage(true, true)]
@@ -244,7 +243,9 @@ public abstract class DemonBase : MonoBehaviour
             overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
 
             overlay.SetActive(false);
-        }else {
+        }
+        else
+        {
             Debug.LogError("No se ha asignado la referencia al overlay para mostrar rango de posesión. Nombre de cuerpo: " + name);
         }
 
@@ -290,7 +291,7 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
-    
+
 
     protected virtual void Update()
     {
@@ -624,27 +625,11 @@ public abstract class DemonBase : MonoBehaviour
         IsControlledByPlayer = false;
         m_isDead = true;
 
-        if (m_startsStandingUp)
-        {
-            
-            m_startsStandingUp = false;
-            m_ragdollLogicCollider.enabled = true;
-            m_myRgb.isKinematic = true;
-            for (int i = 0; i < m_limbsColliders.Length; i++)
-            {
-                m_limbsColliders[i].enabled = true;
-            }
-            for (int i = 0; i < m_limbsRbds.Length; i++)
-            {
-                m_limbsRbds[i].isKinematic = true;
-            }
-        }
-        else
-        {
-            SetRagdollActive(true);
-        }
+
+        SetRagdollActive(true);
+
         CanMove = false;
-        
+
         //for (int i = 1; i < m_childSprites.Length; i++)
         //{
         //    m_childSprites[i].material.SetFloat("_Thickness", 0);
@@ -665,7 +650,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         SetRagdollActive(false);
         m_isControlledByIA = true;
-        
+
         //m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
         m_isControlledByPlayer = false;
@@ -691,14 +676,14 @@ public abstract class DemonBase : MonoBehaviour
         m_isControlledByIA = false;
         IsControlledByPlayer = true;
         m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
-        
-        if (PossessionManager.Instance.ControlledDemon) 
-        CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+
+        if (PossessionManager.Instance.ControlledDemon)
+            CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
 
         if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
         {
         }
-        
+
         //m_PossessionCircle.enabled = true;
 
         //for (int i = 1; i < m_childSprites.Length; i++)
@@ -945,7 +930,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public virtual void Die(bool playDeathSound)
     {
-        
+
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         HidePossessionRange();
@@ -953,7 +938,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             MusicManager.Instance.PlayAudioSFX(m_deathClip, false);
             m_isDead = true;
-            
+
         }
 
         if (m_isControlledByPlayer)
@@ -967,7 +952,6 @@ public abstract class DemonBase : MonoBehaviour
         {
             m_isControlledByIA = false;
             m_isDead = true;
-            UseSkill();
             SetNotControlledByPlayer();
             //SetRagdollActive(true);
         }
@@ -977,7 +961,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     /// <returns>Boolean determining if it is touching the ground</returns>
     public bool IsGrounded()
-    {        
+    {
         RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.3f, Vector2.down, 0.5f, m_groundedDetectionLayers);
         bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
