@@ -21,6 +21,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     [SerializeField] GameObject cameraPrefab;
 
+    bool m_hasKitchenKey;
     public CheckPoint LastCheckPoint
     {
         get => m_lastCheckPoint;
@@ -34,6 +35,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
     public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
     public LevelLoadManager CentralScene { get => m_centralScene; set => m_centralScene = value; }
+    public bool HasKitchenKey { get => m_hasKitchenKey; set => m_hasKitchenKey = value; }
 
 
     /// <summary>

@@ -5,13 +5,14 @@ using UnityEngine;
 public class KeyActivatedDoor : MonoBehaviour
 {
     [SerializeField] Key key;
-
+       
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        
         if (collision.GetComponentInParent<DemonBase>())
         {
-            if (PlayerPrefs.GetInt(key.ToString()) == 1)
+            if (/*PlayerPrefs.GetInt(key.ToString()) == 1*/ LevelManager.Instance.HasKitchenKey)
             {
                 OpenDoor();
             }
