@@ -829,10 +829,12 @@ public abstract class DemonBase : MonoBehaviour
         m_myRgb.isKinematic = active;
         if (!active)
         {
+            
             m_myRgb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
         else
         {
+            m_isLerpingToResetBones = false;
             m_myRgb.constraints = RigidbodyConstraints2D.None;
         }
 
