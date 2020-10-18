@@ -223,12 +223,10 @@ public class Paralax : MonoBehaviour
 
 	public void SetUpParalax()
 	{
-		print(m_paralaxIsSetUp + "booleano");
 		if (!m_paralaxIsSetUp)
 		{
 			float posX = this.transform.position.x;
 			this.transform.position = new Vector3(Camera.main.transform.position.x, this.transform.position.y, this.transform.position.z);
-			print(this.transform.position);
 
 			m_startingPosX = Camera.main.transform.position.x;
 			pruebas = m_startingPosX;
