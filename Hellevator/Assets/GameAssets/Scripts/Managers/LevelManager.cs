@@ -65,25 +65,25 @@ public class LevelManager : PersistentSingleton<LevelManager>
     {
         if (m_isRestarting)
         {
-            if (m_loadingScene.isDone)
-            {
-                UpdateLastCheckPointReference();
+            //if (m_loadingScene.isDone)
+            //{
+                //UpdateLastCheckPointReference();
 
 
-                CameraManager.Instance.CurrentCamera.enabled = false;
-                CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
-                CameraManager.Instance.CurrentCamera.enabled = true;
-                ParalaxManager.Instance.SetUpSceneParalax();
+                //CameraManager.Instance.CurrentCamera.enabled = false;
+                //CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
+                //CameraManager.Instance.CurrentCamera.enabled = true;
+                //ParalaxManager.Instance.SetUpSceneParalax();
 
-                if (PossessionManager.Instance.ControlledDemon != null)
-                {
-                    PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
-                }
-                m_lastCheckPoint.SpawnPlayer();
+                //if (PossessionManager.Instance.ControlledDemon != null)
+                //{
+                //    PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
+                //}
+                //m_lastCheckPoint.SpawnPlayer();
 
                 m_isRestarting = false;
                 Time.timeScale = 1;
-            }
+            //}
         }
     }
 
@@ -99,8 +99,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
             if (m_checkPoints[m_checkPoints.Count - 1] == cps[i].transform.position)
             {
                 m_lastCheckPoint = cps[i];
-                print("CP pos = " + cps[i].transform.position);
-                print("Number of CPs = " + m_checkPoints.Count);
 
                 return;
             }
@@ -113,16 +111,18 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// </summary>
     public void StartRestartingLevel()
     {
-        Debug.LogError("Fading in");
         FadeManager.Instance.StartFadingIn();
     }
     public void RestartLevel()
     {
         
-        AsyncOperation op = SceneManager.LoadSceneAsync("H.1");
+        AsyncOperation op = SceneManager.LoadSceneAsync(m_lastCheckPoint.SceneToLoad);
         m_adjacentScenes.Clear();
         CentralScene = null;
         op.completed += Op_completed;
+
+        
+
         if (m_checkPoints != null && m_checkPoints.Count > 0)
         {
             m_isRestarting = true;
@@ -131,7 +131,19 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void Op_completed(AsyncOperation obj)
     {
-        
+        UpdateLastCheckPointReference();
+
+
+        CameraManager.Instance.CurrentCamera.enabled = false;
+        CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
+        CameraManager.Instance.CurrentCamera.enabled = true;
+        ParalaxManager.Instance.SetUpSceneParalax();
+
+        if (PossessionManager.Instance.ControlledDemon != null)
+        {
+            PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
+        }
+        m_lastCheckPoint.SpawnPlayer();
         FadeManager.Instance.StartFadingOut();
     }
 

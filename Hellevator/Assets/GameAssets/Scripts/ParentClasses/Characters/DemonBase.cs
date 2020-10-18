@@ -220,6 +220,7 @@ public abstract class DemonBase : MonoBehaviour
     }
     public float DistanceToPlayer { get => m_distanceToPlayer; set => m_distanceToPlayer = value; }
     public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
+    public bool PossessedOnStart { get => m_possessedOnStart; set => m_possessedOnStart = value; }
 
 
     #endregion
@@ -947,6 +948,7 @@ public abstract class DemonBase : MonoBehaviour
         
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
+        HidePossessionRange();
         if (!m_isDead && playDeathSound)
         {
             MusicManager.Instance.PlayAudioSFX(m_deathClip, false);
