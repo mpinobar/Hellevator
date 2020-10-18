@@ -5,14 +5,18 @@ using UnityEngine;
 public class CollectableKey : MonoBehaviour
 {
     [SerializeField] Key key;
-
+    [SerializeField] bool m_checkPlayerPrefs;
 
     private void Start()
     {
-        if (PlayerPrefs.GetInt(key.ToString()) == 1)
+        if (m_checkPlayerPrefs)
         {
-            Destroy(gameObject);
+            if (PlayerPrefs.GetInt(key.ToString()) == 1)
+            {
+                Destroy(gameObject);
+            }
         }
+        
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
