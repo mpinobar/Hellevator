@@ -21,13 +21,9 @@ public class MainMenuCanvasController : MonoBehaviour
     {
         m_tmp = m_fadeTime * 0.5f;
         m_fadingIn = false;
-<<<<<<< Updated upstream
-        ChangeState(MenuCameraState.Default);
-        SetMenuActive();
-=======
+
         ChangeState(MenuCameraState.Options);
         SetMenuActive();        
->>>>>>> Stashed changes
     }
 
 
