@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuCanvasController : MonoBehaviour
@@ -15,6 +16,8 @@ public class MainMenuCanvasController : MonoBehaviour
     private float m_tmp;
     private bool m_hasFadedWhenLoading;
 
+    bool m_loading;
+
     public bool HasFadedWhenLoading { get => m_hasFadedWhenLoading; set => m_hasFadedWhenLoading = value; }
 
     private void Start()
@@ -22,7 +25,7 @@ public class MainMenuCanvasController : MonoBehaviour
         m_tmp = m_fadeTime * 0.5f;
         m_fadingIn = false;
         ChangeState(MenuCameraState.Default);
-        SetMenuActive();
+        SetMenuActive();        
     }
 
 
@@ -49,6 +52,11 @@ public class MainMenuCanvasController : MonoBehaviour
                     else
                     {
                         m_hasFadedWhenLoading = true;
+                        if (!m_loading)
+                        {
+                            LevelManager.Instance.RestartLevel();
+                            m_loading = true;
+                        }
                     }
                 }
             }
