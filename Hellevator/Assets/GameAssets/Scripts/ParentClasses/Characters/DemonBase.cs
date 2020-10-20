@@ -99,7 +99,7 @@ public abstract class DemonBase : MonoBehaviour
     private Rigidbody2D     m_myRgb;
     private Collider2D      m_playerCollider;
     protected Animator      m_myAnimator;
-
+    protected int           m_numSpikesTouching;
 
 
     /*
@@ -164,13 +164,21 @@ public abstract class DemonBase : MonoBehaviour
         {
             if (value)
             {
-                //SetColor(m_tintWhenCantBePossessed);
+                m_numSpikesTouching++;                
             }
             else
             {
-                //SetColor(m_spritesColor);
+                m_numSpikesTouching--;
+
             }
-            m_isInDanger = value;
+            if(m_numSpikesTouching <= 0)
+            {
+                m_isInDanger = false;                
+            }
+            else
+            {
+                m_isInDanger = true;
+            }            
         }
     }
 

@@ -34,8 +34,8 @@ public class EditorPlaymodeTintCycler
             goingUp = true;
         }
         float R = cycleTimer;
-        float G = 0;
-        float B = 0.5f;
+        float G = 1f;
+        float B = 0f;
         Color c = new Color(R, G, B, 1.0f);
 
         SettingsHelper.playmodeTint = c;
