@@ -3,8 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss : TemporalSingleton<Boss>
+public class Boss : MonoBehaviour
 {
+    Animator m_bossAnimator;
+    [SerializeField] Projectile m_knifePrefab;
+    [SerializeField] float m_knifeSpawnHeight = 10f;
+    [SerializeField] float m_knifeSpeed = 40f;
+    [SerializeField] int m_maxHealth = 2;
+    int m_currentHealth;
 
     private enum State
     {
@@ -15,26 +21,42 @@ public class Boss : TemporalSingleton<Boss>
     [SerializeField] float m_timeUntilPlayerDeath;
     float m_playerSeenDeathTimer = 0f;
 
+    bool m_started;
+
+    bool m_attacking;
+
     State m_currentState = State.Default;
 
-    public override void Awake()
+    private void Awake()
     {
-        base.Awake();
+
         m_playerSeenDeathTimer = 0f;
+        m_doorToCloseUponStart.SetActive(false);
+        m_bossAnimator = GetComponent<Animator>();
+        m_currentHealth = m_maxHealth;
     }
 
+    public void Begin()
+    {
+        m_started = true;
+        SetNotSeeingPlayer();
+        CloseEntrance();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if(m_currentState == State.SeeingPlayer)
+        if (m_started && PossessionManager.Instance.ControlledDemon != null)
         {
-            m_playerSeenDeathTimer += Time.deltaTime;
-            if(m_playerSeenDeathTimer >= m_timeUntilPlayerDeath)
+            if (m_currentState == State.SeeingPlayer)
             {
-                KillPlayer();
+                m_playerSeenDeathTimer += Time.deltaTime;
+                if (m_playerSeenDeathTimer >= m_timeUntilPlayerDeath)
+                {
+                    AttackPlayer();
+                }
             }
-        }        
+        }
     }
 
     public void SetSeeingPlayer()
@@ -48,13 +70,48 @@ public class Boss : TemporalSingleton<Boss>
         m_playerSeenDeathTimer = 0f;
     }
 
-    private void KillPlayer()
+    public void DamageBoss()
     {
-        throw new NotImplementedException();
+        m_currentHealth--;
+        Debug.LogError("Damaged boss. HP remaining: " + m_currentHealth);
+        if (m_currentHealth > 0)
+        {
+            m_bossAnimator.SetTrigger("Hurting");
+        }
+        else
+        {
+            Die();
+        }
     }
 
+    private void Die()
+    {
+        PossessionManager.Instance.Boss = null;
+        m_started = false;
+        m_bossAnimator.SetTrigger("Death");
+    }
+
+    private void AttackPlayer()
+    {
+        m_bossAnimator.SetTrigger("Attack");
+        ThrowKnife(PossessionManager.Instance.ControlledDemon.transform, 0, false);
+        m_playerSeenDeathTimer = 0f;
+    }
+
+    public void ThrowKnife(Transform target, float delay, bool initial)
+    {
+        StartCoroutine(SpawnKnife(target, delay, initial));
+    }
+    IEnumerator SpawnKnife(Transform target, float delay, bool initial)
+    {
+        yield return new WaitForSeconds(delay);
+        Projectile knife = Instantiate(m_knifePrefab, target.position + Vector3.up * m_knifeSpawnHeight, Quaternion.identity);
+        knife.transform.localEulerAngles = Vector3.forward * 180;
+        knife.Speed = m_knifeSpeed;
+        knife.DestroyOnScenaryImpact = !initial;
+    }
     public void CloseEntrance()
     {
-        //m_doorToCloseUponStart.Close();
+        m_doorToCloseUponStart.SetActive(true);
     }
 }

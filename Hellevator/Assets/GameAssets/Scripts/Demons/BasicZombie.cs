@@ -391,6 +391,16 @@ public class BasicZombie : DemonBase
                 }
             }
         }
+
+
+        if(m_isDead && IsRagdollActive)
+        {
+            if(collision.gameObject.layer == 1 << 0)
+            {
+                m_torso.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            }
+        }
+
     }
 
     public override void StopMovement()
@@ -415,6 +425,7 @@ public class BasicZombie : DemonBase
             m_hasDoubleJumped = false;
             MyRgb.gravityScale = 0f;
             m_myAnimator.SetBool("OnLadder", onLadder);
+            MyRgb.velocity = new Vector2(0,MyRgb.velocity.y);
         }
         m_faceCover.SetActive(onLadder);
     }
