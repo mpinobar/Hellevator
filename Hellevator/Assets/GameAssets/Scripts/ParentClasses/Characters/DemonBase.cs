@@ -93,7 +93,7 @@ public abstract class DemonBase : MonoBehaviour
     //mask for ground detection
     [Header("Don't touch")]
     [SerializeField] protected LayerMask    m_groundedDetectionLayers;
-    [SerializeField] protected GameObject   m_demonMaskSprite;
+    [SerializeField] private GameObject   m_demonMaskSprite;
 
     //Demon references
     private Rigidbody2D     m_myRgb;
@@ -228,6 +228,7 @@ public abstract class DemonBase : MonoBehaviour
     public float DistanceToPlayer { get => m_distanceToPlayer; set => m_distanceToPlayer = value; }
     public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
     public bool PossessedOnStart { get => m_possessedOnStart; set => m_possessedOnStart = value; }
+    public GameObject DemonMaskSprite { get => m_demonMaskSprite; }
 
 
     #endregion

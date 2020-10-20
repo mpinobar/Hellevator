@@ -22,10 +22,12 @@ public class Explosion : MonoBehaviour
         Collider2D [] colliders = Physics2D.OverlapCircleAll(transform.position,m_explosionRadius,m_explosionInteractionLayerMask);
         DemonBase demonInRange;
         DestructibleWall explodingWall;
+        Boss boss;
         for (int i = 0; i < colliders.Length; i++)
         {
             demonInRange = colliders[i].GetComponentInParent<DemonBase>();
             explodingWall = colliders[i].GetComponentInParent<DestructibleWall>();
+            boss = colliders[i].GetComponent<Boss>();
             if (demonInRange && demonInRange != GetComponentInParent<DemonBase>())
             {
                 demonInRange.Die(true);
@@ -33,6 +35,10 @@ public class Explosion : MonoBehaviour
             if (explodingWall)
             {
                 explodingWall.Explode(transform.position, m_explosionForce);
+            }
+            if (boss)
+            {
+                boss.DamageBoss();
             }
         }
 
