@@ -69,8 +69,9 @@ public class Projectile : MonoBehaviour
                 if (collision.GetComponent<DemonBase>())
                 {
                     transform.parent = collision.GetComponent<DemonBase>().DemonMaskSprite.transform.parent;
-                    transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerID = collision.GetComponent<DemonBase>().DemonMaskSprite.GetComponent<SpriteRenderer>().sortingLayerID;                    
-                    m_countingDown = false;
+                    transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerID = collision.GetComponent<DemonBase>().DemonMaskSprite.GetComponent<SpriteRenderer>().sortingLayerID;   
+                    if(collision.GetComponent<DemonBase>().DemonMaskSprite.transform.parent.childCount < 4)
+                        m_countingDown = false;
                 }
                 
                 
