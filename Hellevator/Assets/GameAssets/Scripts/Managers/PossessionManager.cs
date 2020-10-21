@@ -18,6 +18,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     public LayerMask RagdollBodyMask { get => m_ragdollBodyMask; }
     public bool ControllingMultipleDemons { get => controllingMultipleDemons; }
     public DemonBase DemonShowingSkull { get => demonShowingSkull; set => demonShowingSkull = value; }
+    public Boss Boss { get => boss; set => boss = value; }
 
     [SerializeField] LayerMask m_ragdollBodyMask;
     [SerializeField] GameObject m_PossessionLight;
@@ -30,6 +31,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     DemonBase demonShowingSkull;
 
     [SerializeField] int m_maxDemonsPossessed;
+
+    Boss boss;
 
     private void Start()
     {

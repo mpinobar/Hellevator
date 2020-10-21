@@ -48,19 +48,21 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             m_checkPoints = new List<Vector3>();
         }
-        bool foundInside = false;
-        for (int i = 0; i < m_checkPoints.Count; i++)
-        {
-            if (m_checkPoints[i] == value.transform.position)
-            {
-                foundInside = true;
-            }
-        }
-        if (!foundInside)
-        {
-            m_checkPoints.Add(value.transform.position);
-            m_lastCheckPoint = value;
-        }
+        //bool foundInside = false;
+        //for (int i = 0; i < m_checkPoints.Count; i++)
+        //{
+        //    if (m_checkPoints[i] == value.transform.position)
+        //    {
+        //        foundInside = true;
+        //    }
+        //}
+        //if (!foundInside)
+        //{
+        //    m_checkPoints.Add(value.transform.position);
+        //    m_lastCheckPoint = value;
+        //}
+        m_checkPoints.Add(value.transform.position);
+        m_lastCheckPoint = value;
     }
 
     private void Update()
