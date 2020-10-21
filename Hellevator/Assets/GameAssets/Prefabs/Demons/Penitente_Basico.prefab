@@ -198,6 +198,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1175873361314945403}
   - component: {fileID: 1130024741348160167}
+  - component: {fileID: 7570657751372697295}
   m_Layer: 8
   m_Name: LogicalRagdollCollider
   m_TagString: Untagged
@@ -235,6 +236,19 @@ CapsuleCollider2D:
   m_Offset: {x: -0.068533905, y: 0.0003197789}
   m_Size: {x: 1.8452036, y: 0.6990646}
   m_Direction: 1
+--- !u!114 &7570657751372697295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662049721648039061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c84835206aebf24b8b0a9f5509d50f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  say: 1
 --- !u!1 &1879121604080691324
 GameObject:
   m_ObjectHideFlags: 0
@@ -1839,7 +1853,6 @@ MonoBehaviour:
   m_landingClip: {fileID: 8300000, guid: c24f8018d13cf9546a3ce60b8f37459e, type: 3}
   m_possessedOnStart: 0
   m_multiplePossessionWhenDead: 0
-  m_startsStandingUp: 0
   m_maximumPossessionRange: 30
   m_tintWhenCantBePossessed: {r: 4, g: 0.09411765, b: 0.09411765, a: 1}
   m_PossessionCircle: {fileID: 0}

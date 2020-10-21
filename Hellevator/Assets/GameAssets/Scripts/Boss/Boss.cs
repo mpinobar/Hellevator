@@ -7,6 +7,7 @@ public class Boss : MonoBehaviour
 {
     Animator m_bossAnimator;
     [SerializeField] Projectile m_knifePrefab;
+    [SerializeField] Color m_colorWhenHurt;
     [SerializeField] float m_knifeSpawnHeight = 10f;
     [SerializeField] float m_knifeSpeed = 40f;
     [SerializeField] int m_maxHealth = 2;
@@ -77,11 +78,43 @@ public class Boss : MonoBehaviour
         if (m_currentHealth > 0)
         {
             m_bossAnimator.SetTrigger("Hurting");
+            //StopCoroutine(HurtVisuals());
+            StartCoroutine(HurtVisuals());
         }
         else
         {
+            StartCoroutine(HurtVisuals());
             Die();
         }
+    }
+
+    private IEnumerator HurtVisuals()
+    {
+        SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
+
+        bool isRed = false;
+        int switchCounter = 0;
+        while(switchCounter <= 5)
+        {
+
+            for (int i = 0; i < childSprites.Length; i++)
+            {
+                if (isRed)
+                {
+                    childSprites[i].color = Color.white;
+                    
+                }
+                else
+                {
+                    childSprites[i].color = m_colorWhenHurt;
+                    
+                }
+            }
+            isRed = !isRed;
+            switchCounter++;
+            yield return new WaitForSeconds(0.08f);
+        }
+
     }
 
     private void Die()
@@ -89,6 +122,13 @@ public class Boss : MonoBehaviour
         PossessionManager.Instance.Boss = null;
         m_started = false;
         m_bossAnimator.SetTrigger("Death");
+        Invoke(nameof(DeactivateBoss), 2f);
+    }
+
+    private void DeactivateBoss()
+    {
+        gameObject.SetActive(false);
+        OpenEntrance();
     }
 
     private void AttackPlayer()
@@ -113,5 +153,10 @@ public class Boss : MonoBehaviour
     public void CloseEntrance()
     {
         m_doorToCloseUponStart.SetActive(true);
+    }
+
+    private void OpenEntrance()
+    {
+        m_doorToCloseUponStart.SetActive(true);        
     }
 }
