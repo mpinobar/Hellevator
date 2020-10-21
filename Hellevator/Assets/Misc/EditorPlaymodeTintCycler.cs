@@ -15,29 +15,29 @@ public class EditorPlaymodeTintCycler
 
     static void Update()
     {
-        if (!EditorApplication.isPlaying)
-        {
-            return;
-        }
+        //if (!EditorApplication.isPlaying)
+        //{
+        //    return;
+        //}
 
-        if (goingUp)
-            cycleTimer += Time.deltaTime;
-        else
-            cycleTimer -= Time.deltaTime;
+        //if (goingUp)
+        //    cycleTimer += Time.deltaTime;
+        //else
+        //    cycleTimer -= Time.deltaTime;
 
-        if (cycleTimer >= 1.0f)
-        {
-            goingUp = false;
-        }
-        if (cycleTimer <= 0.0f)
-        {
-            goingUp = true;
-        }
-        float R = cycleTimer;
-        float G = 1f;
-        float B = 0f;
-        Color c = new Color(R, G, B, 1.0f);
+        //if (cycleTimer >= 1.0f)
+        //{
+        //    goingUp = false;
+        //}
+        //if (cycleTimer <= 0.0f)
+        //{
+        //    goingUp = true;
+        //}
+        //float R = cycleTimer;
+        //float G = 1f;
+        //float B = 0f;
+        //Color c = new Color(R, G, B, 1.0f);
 
-        SettingsHelper.playmodeTint = c;
+        //SettingsHelper.playmodeTint = c;
     }
 }
