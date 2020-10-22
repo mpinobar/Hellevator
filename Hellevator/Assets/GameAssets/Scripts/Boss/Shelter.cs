@@ -22,24 +22,28 @@ public class Shelter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (m_startsBoss)
+        if (collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
         {
-            if (!m_init)
+            if (m_startsBoss)
             {
-                boss.Begin();
-                for (int i = 0; i < m_attackPlaces.Count; i++)
+                if (!m_init)
                 {
-                    boss.ThrowKnife(m_attackPlaces[i], Random.Range(0, 0.5f),true);
+                    boss.Begin();
+                    for (int i = 0; i < m_attackPlaces.Count; i++)
+                    {
+                        boss.ThrowKnife(m_attackPlaces[i], Random.Range(0, 0.5f), true);
+                    }
+                    m_init = true;
                 }
-                m_init = true;
+
             }
-            
+            boss.SetNotSeeingPlayer();
         }
-        boss.SetNotSeeingPlayer();
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if(collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
         boss.SetSeeingPlayer();
     }
 

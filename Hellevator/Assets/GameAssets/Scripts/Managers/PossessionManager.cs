@@ -96,6 +96,10 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     public void RemoveDemonPossession(Transform currentDemon)
     {
+        if (boss)
+        {
+            boss.ResetTimer();
+        }
         DemonBase demonCmp = currentDemon.GetComponentInParent<DemonBase>();
         //Debug.LogError("possessed character died: " + currentDemon.name);
         if (ControlledDemon == demonCmp)

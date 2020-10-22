@@ -12,6 +12,10 @@ public class Boss : MonoBehaviour
     [SerializeField] float m_knifeSpeed = 40f;
     [SerializeField] int m_maxHealth = 2;
     int m_currentHealth;
+    [SerializeField] float m_offsetMovement = 5f;
+    [SerializeField] float m_movementSpeed = 0.5f;
+    [SerializeField] float m_maxCoordinate = -100f;
+    Vector3 m_desiredPos;
 
     private enum State
     {
@@ -42,6 +46,7 @@ public class Boss : MonoBehaviour
         m_started = true;
         SetNotSeeingPlayer();
         CloseEntrance();
+        PossessionManager.Instance.Boss = this;
     }
 
     // Update is called once per frame
@@ -51,11 +56,20 @@ public class Boss : MonoBehaviour
         {
             if (m_currentState == State.SeeingPlayer)
             {
+
+
                 m_playerSeenDeathTimer += Time.deltaTime;
                 if (m_playerSeenDeathTimer >= m_timeUntilPlayerDeath)
                 {
                     AttackPlayer();
                 }
+                float maxX = Mathf.Max(PossessionManager.Instance.ControlledDemon.transform.position.x - m_offsetMovement,m_maxCoordinate);
+                m_desiredPos = new Vector3(maxX, transform.position.y, 0);
+                transform.position = Vector3.Lerp(transform.position, m_desiredPos, Time.deltaTime * m_movementSpeed);
+            }
+            else
+            {
+                m_playerSeenDeathTimer = 0f;
             }
         }
     }
@@ -74,11 +88,11 @@ public class Boss : MonoBehaviour
     public void DamageBoss()
     {
         m_currentHealth--;
-        Debug.LogError("Damaged boss. HP remaining: " + m_currentHealth);
+
         if (m_currentHealth > 0)
         {
             m_bossAnimator.SetTrigger("Hurting");
-            //StopCoroutine(HurtVisuals());
+
             StartCoroutine(HurtVisuals());
         }
         else
@@ -88,13 +102,18 @@ public class Boss : MonoBehaviour
         }
     }
 
+    public void ResetTimer()
+    {
+        m_playerSeenDeathTimer = 0;
+    }
+
     private IEnumerator HurtVisuals()
     {
         SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
 
         bool isRed = false;
         int switchCounter = 0;
-        while(switchCounter <= 5)
+        while (switchCounter <= 5)
         {
 
             for (int i = 0; i < childSprites.Length; i++)
@@ -102,12 +121,12 @@ public class Boss : MonoBehaviour
                 if (isRed)
                 {
                     childSprites[i].color = Color.white;
-                    
+
                 }
                 else
                 {
                     childSprites[i].color = m_colorWhenHurt;
-                    
+
                 }
             }
             isRed = !isRed;
@@ -157,6 +176,6 @@ public class Boss : MonoBehaviour
 
     private void OpenEntrance()
     {
-        m_doorToCloseUponStart.SetActive(true);        
+        m_doorToCloseUponStart.SetActive(true);
     }
 }
