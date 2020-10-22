@@ -77,8 +77,7 @@ public class Boss : MonoBehaviour
         Debug.LogError("Damaged boss. HP remaining: " + m_currentHealth);
         if (m_currentHealth > 0)
         {
-            m_bossAnimator.SetTrigger("Hurting");
-            //StopCoroutine(HurtVisuals());
+            m_bossAnimator.SetTrigger("Hurting");            
             StartCoroutine(HurtVisuals());
         }
         else
@@ -89,7 +88,7 @@ public class Boss : MonoBehaviour
     }
 
     private IEnumerator HurtVisuals()
-    {
+    {        
         SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
 
         bool isRed = false;

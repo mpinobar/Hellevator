@@ -5,7 +5,7 @@ using UnityEngine;
 public class MusicManager : TemporalSingleton<MusicManager>
 {
     [Range (0,1)]
-    [SerializeField] static float m_sfxVolume = 0.5f;
+    [SerializeField] static float m_sfxVolume = 0.25f;
     [Range(0, 1)]
     [SerializeField] static float m_musicVolume = 0.5f;
     List<AudioSource> m_sourcesList;
