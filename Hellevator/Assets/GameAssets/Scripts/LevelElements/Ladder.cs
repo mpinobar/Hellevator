@@ -8,8 +8,9 @@ public class Ladder : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponent<BasicZombie>().TryingToGrabLadder)
-        {
+        {            
             collision.GetComponent<BasicZombie>().SetOnLadder(true);
+            collision.GetComponent<BasicZombie>().ResetVelocity();
         }
     }
 

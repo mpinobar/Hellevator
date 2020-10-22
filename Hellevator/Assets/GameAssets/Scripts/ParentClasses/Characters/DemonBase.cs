@@ -64,6 +64,7 @@ public abstract class DemonBase : MonoBehaviour
     private float                       m_distanceMaxGlow = 5;
     private bool                        m_isPossessionBlocked;
     private bool                        m_isControlledByPlayer;
+    private bool                        m_overlayActive;
 
     [ColorUsage(true,true)]
     [SerializeField] private Color      m_fireColorWhenPossessed;
@@ -311,14 +312,14 @@ public abstract class DemonBase : MonoBehaviour
             LerpResetRagdollTransforms();
         }
 
-        if (IsControlledByPlayer)
-        {
+        //if (IsControlledByPlayer)
+        //{
 
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                HidePossessionRange();
-            }
-        }
+        //    if (Input.GetKeyDown(KeyCode.Q))
+        //    {
+        //        HidePossessionRange();
+        //    }
+        //}
         m_spiritFire.transform.rotation = Quaternion.identity;
 
         #region Shader outline
@@ -748,11 +749,12 @@ public abstract class DemonBase : MonoBehaviour
     public void ShowPossessionRange()
     {
         StopAllCoroutines();
-        StartCoroutine(LerpPossessionOverlay(true));
+        StartCoroutine(LerpPossessionOverlay(!m_overlayActive));
     }
 
     IEnumerator LerpPossessionOverlay(bool active)
     {
+        m_overlayActive = active;
         overlay.transform.localScale = Vector3.one * MaximumPossessionRange * 5;
         SpriteRenderer spr = overlay.GetComponent<SpriteRenderer>();
         Color aux = spr.color;

@@ -415,9 +415,13 @@ public class BasicZombie : DemonBase
             m_hasDoubleJumped = false;
             MyRgb.gravityScale = 0f;
             m_myAnimator.SetBool("OnLadder", onLadder);
-            MyRgb.velocity = new Vector2(0,MyRgb.velocity.y);
+            
         }
         m_faceCover.SetActive(onLadder);
     }
 
+    public void ResetVelocity()
+    {
+        MyRgb.velocity = new Vector2(0, MyRgb.velocity.y);
+    }
 }
