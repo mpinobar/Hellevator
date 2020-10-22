@@ -10,7 +10,6 @@ public class Ladder : MonoBehaviour
         if (collision.GetComponent<BasicZombie>().TryingToGrabLadder)
         {
             collision.GetComponent<BasicZombie>().SetOnLadder(true);
-            collision.GetComponent<BasicZombie>().ResetVelocity();
         }
     }
 

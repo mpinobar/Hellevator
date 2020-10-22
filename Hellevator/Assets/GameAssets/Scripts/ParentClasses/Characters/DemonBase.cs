@@ -69,8 +69,7 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private Color      m_fireColorWhenPossessed;
     [SerializeField] private Color      m_spritesColor;
     [ColorUsage(true, true)] Color      m_fireColorWhenNotPossessed;
-    [SerializeField] GameObject         m_overlay;
-    private bool                        m_showingRange;
+    [SerializeField] GameObject         overlay;
 
     //IAReferences
     [Space]
@@ -248,11 +247,11 @@ public abstract class DemonBase : MonoBehaviour
         //m_initialGlowThickness = m_childSprites[3].material.GetFloat("_Thickness");
         //m_IKManager = GetComponent<IKManager2D>();
 
-        if (m_overlay)
+        if (overlay)
         {
-            m_overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+            overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
 
-            m_overlay.SetActive(false);
+            overlay.SetActive(false);
         }
         else
         {
@@ -312,14 +311,14 @@ public abstract class DemonBase : MonoBehaviour
             LerpResetRagdollTransforms();
         }
 
-        //if (IsControlledByPlayer)
-        //{
+        if (IsControlledByPlayer)
+        {
 
-        //    if (Input.GetKeyDown(KeyCode.Q))
-        //    {
-        //        HidePossessionRange();
-        //    }
-        //}
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                HidePossessionRange();
+            }
+        }
         m_spiritFire.transform.rotation = Quaternion.identity;
 
         #region Shader outline
@@ -749,18 +748,17 @@ public abstract class DemonBase : MonoBehaviour
     public void ShowPossessionRange()
     {
         StopAllCoroutines();
-        StartCoroutine(LerpPossessionOverlay(!m_showingRange));
+        StartCoroutine(LerpPossessionOverlay(true));
     }
 
     IEnumerator LerpPossessionOverlay(bool active)
     {
-        m_showingRange = active;
-        m_overlay.transform.localScale = Vector3.one * MaximumPossessionRange * 5;
-        SpriteRenderer spr = m_overlay.GetComponent<SpriteRenderer>();
+        overlay.transform.localScale = Vector3.one * MaximumPossessionRange * 5;
+        SpriteRenderer spr = overlay.GetComponent<SpriteRenderer>();
         Color aux = spr.color;
         Color endColor = Color.black;
 
-        m_overlay.SetActive(true);
+        overlay.SetActive(true);
         if (active)
         {
             endColor.a = 1;
@@ -779,7 +777,7 @@ public abstract class DemonBase : MonoBehaviour
         spr.color = endColor;
         if (!active)
         {
-            m_overlay.SetActive(false);
+            overlay.SetActive(false);
         }
     }
 

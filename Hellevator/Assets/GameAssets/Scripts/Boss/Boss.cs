@@ -92,6 +92,7 @@ public class Boss : MonoBehaviour
         if (m_currentHealth > 0)
         {
             m_bossAnimator.SetTrigger("Hurting");
+
             StartCoroutine(HurtVisuals());
         }
         else
