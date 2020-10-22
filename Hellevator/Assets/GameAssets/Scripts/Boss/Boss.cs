@@ -42,6 +42,7 @@ public class Boss : MonoBehaviour
         m_started = true;
         SetNotSeeingPlayer();
         CloseEntrance();
+        PossessionManager.Instance.Boss = this;
     }
 
     // Update is called once per frame
@@ -74,7 +75,7 @@ public class Boss : MonoBehaviour
     public void DamageBoss()
     {
         m_currentHealth--;
-        Debug.LogError("Damaged boss. HP remaining: " + m_currentHealth);
+        
         if (m_currentHealth > 0)
         {
             m_bossAnimator.SetTrigger("Hurting");            
@@ -85,6 +86,11 @@ public class Boss : MonoBehaviour
             StartCoroutine(HurtVisuals());
             Die();
         }
+    }
+
+    public void ResetTimer()
+    {
+        m_playerSeenDeathTimer = 0;
     }
 
     private IEnumerator HurtVisuals()
