@@ -176,6 +176,6 @@ public class Boss : MonoBehaviour
 
     private void OpenEntrance()
     {
-        m_doorToCloseUponStart.SetActive(true);
+        m_doorToCloseUponStart.SetActive(false);
     }
 }
