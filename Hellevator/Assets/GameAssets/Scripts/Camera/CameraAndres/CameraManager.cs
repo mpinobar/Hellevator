@@ -42,7 +42,7 @@ public class CameraManager : PersistentSingleton<CameraManager>
 	// Start is called before the first frame update
 	void Start()
     {
-		
+		ParalaxManager.Instance.SetUpSceneParalax();
 	}
 
     // Update is called once per frame

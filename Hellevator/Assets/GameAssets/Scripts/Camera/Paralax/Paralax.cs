@@ -225,7 +225,6 @@ public class Paralax : MonoBehaviour
 	{
 		if (!m_paralaxIsSetUp)
 		{
-
 			float posX = this.transform.position.x;
 			this.transform.position = new Vector3(Camera.main.transform.position.x, this.transform.position.y, this.transform.position.z);
 

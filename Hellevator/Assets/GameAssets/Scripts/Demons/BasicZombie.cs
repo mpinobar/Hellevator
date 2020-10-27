@@ -64,6 +64,7 @@ public class BasicZombie : DemonBase
     [SerializeField] Color colorSkullIndicatorExplosive;
     [ColorUsage(true,true)]
     [SerializeField] Color colorSkullIndicatorPetrification;
+    [SerializeField] GameObject m_faceCover;
 
     #endregion
 
@@ -78,14 +79,18 @@ public class BasicZombie : DemonBase
 
     public override void UseSkill()
     {
-        //ShowPossessionRange();
-        //PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
-        //GetComponent<Petrification>().Petrify();
-        GetComponent<Explosion>().CreateExplosion();
+
+        if (MultiplePossessionWhenDead)
+            PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
+        if (GetComponent<Petrification>())
+            GetComponent<Petrification>().Petrify();
+        else if (GetComponent<Explosion>())
+            GetComponent<Explosion>().CreateExplosion();
     }
     protected override void Awake()
     {
         base.Awake();
+        m_faceCover.SetActive(false);
         if (skullIndicator)
         {
 
@@ -188,6 +193,7 @@ public class BasicZombie : DemonBase
             }
         }
         m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
+        m_myAnimator.SetFloat("yMovement", Mathf.Abs(MyRgb.velocity.y * 0.1f));
 
         SkullIndicator();
 
@@ -202,9 +208,15 @@ public class BasicZombie : DemonBase
     {
         if (skullIndicator)
         {
-            if (IsDead && PossessionManager.Instance.ControlledDemon != null && !IsInDanger)
+
+            if(PossessionManager.Instance.DemonShowingSkull == this && IsControlledByPlayer)
             {
-                DistanceToPlayer = Vector2.Distance(transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
+                PossessionManager.Instance.DemonShowingSkull = null;
+            }
+
+            if (IsDead && PossessionManager.Instance.ControlledDemon != null && !IsInDanger && !PossessionManager.Instance.ControllingMultipleDemons)
+            {
+                DistanceToPlayer = Vector2.Distance(m_torso.transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
                 if (DistanceToPlayer <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
                 {
                     if (PossessionManager.Instance.DemonShowingSkull == null || PossessionManager.Instance.DemonShowingSkull == this || (PossessionManager.Instance.DemonShowingSkull != this && PossessionManager.Instance.DemonShowingSkull.DistanceToPlayer > DistanceToPlayer))
@@ -380,7 +392,7 @@ public class BasicZombie : DemonBase
             }
         }
     }
-
+    
     public override void StopMovement()
     {
         MyRgb.velocity = Vector3.zero;
@@ -402,7 +414,14 @@ public class BasicZombie : DemonBase
             m_hasJumped = false;
             m_hasDoubleJumped = false;
             MyRgb.gravityScale = 0f;
+            m_myAnimator.SetBool("OnLadder", onLadder);
+            
         }
+        m_faceCover.SetActive(onLadder);
     }
 
+    public void ResetVelocity()
+    {
+        MyRgb.velocity = new Vector2(0, MyRgb.velocity.y);
+    }
 }

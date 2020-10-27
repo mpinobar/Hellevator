@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class WeightedPreassurePlate : MonoBehaviour
 {
+    [Header("Weight and type variables")]
     //Weight and type variables
     [SerializeField] private TypeOfPreassurePlate m_type = TypeOfPreassurePlate.None;
     [SerializeField] private float m_weightNeeded;
@@ -14,6 +15,7 @@ public class WeightedPreassurePlate : MonoBehaviour
     private List<DemonBase> m_enemiesOnPreassurePlate;
     [SerializeField] private LayerMask m_enemyLayerMask;
 
+    [Header("Position variables")]
     //Position Variables
     [SerializeField] private float m_speed;
     [SerializeField] private Transform m_pressurePlateEndPosition;
@@ -21,7 +23,10 @@ public class WeightedPreassurePlate : MonoBehaviour
     private Vector3 m_startingPosition;
     private float m_distanceToEndPosition;
 
+    Vector3 m_endPosition;
 
+
+    [Header("Linked objects variables")]
     //Linked Object variables (just for platform type preasureplates)
     [SerializeField] private Transform m_linkedObjectPosition;
     private Vector3 m_linkedObjectStartingPosition;
@@ -30,20 +35,24 @@ public class WeightedPreassurePlate : MonoBehaviour
 
     private float m_linkedObjectDistanceToEndPosition;
 
+    [Header("Button variables")]
     //Button variables
     private bool m_preassurePlateActivated;
     private bool m_preassurePlateIsAtLocation;
     [SerializeField] private ButtonActivatedBase m_buttonActivatedObject;
     List<SpikesWeightData> m_spikesData;
+    [SerializeField] private bool m_activatesProjectileSpawner;
+    
 
     //Sound variables
     [SerializeField] private AudioClip m_machineClip;
     private AudioSource m_audioSource;
-
+    Vector3 m_lastLOPosition;
 
     private float m_percentage = 0f;
     private float m_positionY = 0f;
     private float m_LOpositionY = 0f;
+    private float m_LOpositionX = 0f;
 
 
     private void Awake()
@@ -51,9 +60,14 @@ public class WeightedPreassurePlate : MonoBehaviour
         m_enemiesOnPreassurePlate = new List<DemonBase>(0);
         m_currentWeight = 0;
         m_audioSource = GetComponent<AudioSource>();
-        m_audioSource.clip = m_machineClip;
-        m_audioSource.loop = true;
-        m_audioSource.volume = MusicManager.SfxVolume;
+        if (m_audioSource)
+        {
+            m_audioSource.clip = m_machineClip;
+            m_audioSource.loop = true;
+            m_audioSource.volume = MusicManager.SfxVolume;
+            m_audioSource.Stop();
+        }
+        
         if (m_type == TypeOfPreassurePlate.Elevator)
         {
             m_startingPosition = m_parent.localPosition;
@@ -68,9 +82,10 @@ public class WeightedPreassurePlate : MonoBehaviour
         if (m_linkedObjectPosition != null)
         {
             m_linkedObjectStartingPosition = m_linkedObjectPosition.position;
+            m_endPosition = m_linkedObjectEndPosition.position;
             m_linkedObjectDistanceToEndPosition = Vector3.Distance(m_linkedObjectStartingPosition, m_linkedObjectEndPosition.position);
         }
-        else if (m_linkedObjectPosition == null && (m_type == TypeOfPreassurePlate.PaltformRaiser || m_type == TypeOfPreassurePlate.PlatformLowerer))
+        else if ((m_linkedObjectPosition == null && !m_activatesProjectileSpawner) && (m_type == TypeOfPreassurePlate.PaltformRaiser || m_type == TypeOfPreassurePlate.PlatformLowerer))
         {
             print("The preassureplate " + this.gameObject.name + " needs to have a Linked Object");
         }
@@ -92,22 +107,53 @@ public class WeightedPreassurePlate : MonoBehaviour
                         {
                             m_percentage = 1f;
                         }
-                        m_positionY = m_distanceToEndPosition * m_percentage;
-                        m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
-
-                        m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
-
-                        Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y + m_LOpositionY, m_linkedObjectStartingPosition.z);
-                        if (Vector3.Distance(m_linkedObjectPosition.position, destination) < 0.1f)
+                        
+                        if (m_activatesProjectileSpawner)
                         {
-                            m_audioSource.Stop();
+                            if(m_percentage >= 1)
+                            {
+                                m_buttonActivatedObject.Activate();
+                            }
+                            else
+                            {
+                                m_buttonActivatedObject.GetComponent<ProjectileSpawner>().Deactivate();
+                            }
                         }
-                        else if (!m_audioSource.isPlaying)
+                        else
                         {
-                            m_audioSource.Play();
-                        }
+                            m_positionY = m_distanceToEndPosition * m_percentage;
+                            m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x , m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
-                        m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
+                            m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
+                            m_LOpositionX = m_linkedObjectDistanceToEndPosition * m_percentage;
+                            
+
+                            Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x + m_LOpositionX, m_linkedObjectStartingPosition.y + m_LOpositionY, m_linkedObjectStartingPosition.z);
+
+                            m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, m_endPosition, m_linkedObjectSpeed * Time.deltaTime);
+                            
+                            if (m_linkedObjectPosition.position == m_lastLOPosition)
+                            {
+                                if (m_audioSource)
+                                    m_audioSource.Stop();
+                            }
+                            else if (!m_audioSource.isPlaying)
+                            {
+                                m_audioSource.Play();
+                            }
+                            //if (Vector3.Distance(m_linkedObjectPosition.position, m_endPosition/*destination*/) < 0.1f)
+                            //{
+                            //    if (m_audioSource)
+                            //        m_audioSource.Stop();
+                            //}
+                            //else if (!m_audioSource.isPlaying)
+                            //{
+                            //    m_audioSource.Play();
+                            //}
+                            
+                            m_lastLOPosition = m_linkedObjectPosition.position;
+                            //m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
+                        }
                     }
                 }
                 break;
@@ -122,23 +168,57 @@ public class WeightedPreassurePlate : MonoBehaviour
                         {
                             m_percentage = 1f;
                         }
-                        m_positionY = m_distanceToEndPosition * m_percentage;
-                        m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
-
-                        m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
-                        //print(LOpositionY);
-
-                        Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
-                        if (Vector3.Distance(m_linkedObjectPosition.position, destination) < 0.1f)
+                        if (m_activatesProjectileSpawner)
                         {
-                            m_audioSource.Stop();
+                            if (m_percentage >= 1)
+                            {
+                                m_buttonActivatedObject.Activate();
+                                if (m_audioSource && !m_audioSource.isPlaying)
+                                    m_audioSource.Play();
+                            }
+                            else
+                            {
+                                if (m_audioSource)
+                                    m_audioSource.Stop();
+                                m_buttonActivatedObject.GetComponent<ProjectileSpawner>().Deactivate();
+                            }
                         }
-                        else if (!m_audioSource.isPlaying)
+                        else
                         {
-                            m_audioSource.Play();
-                        }
+                            m_positionY = m_distanceToEndPosition * m_percentage;
+                            m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
-                        m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
+                            m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
+                            m_LOpositionX = m_linkedObjectDistanceToEndPosition * m_percentage;
+                            //print(LOpositionY);
+
+                            //Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x - m_LOpositionX, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
+                            Vector3 direction = m_endPosition - m_linkedObjectStartingPosition;
+                            Vector3 destination = m_linkedObjectStartingPosition + direction * m_percentage;
+                            m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
+                            //if (Vector3.Distance(m_linkedObjectPosition.position, m_endPosition/*destination*/) < 0.1f)
+                            //{
+                            //    if(m_audioSource)
+                            //        m_audioSource.Stop();
+                            //}
+                            //else if (m_audioSource && !m_audioSource.isPlaying && m_percentage > 0 && m_percentage < 1)
+                            //{
+                            //    if (m_audioSource)
+                            //        m_audioSource.Play();
+                            //}
+                            if (m_linkedObjectPosition.position == m_lastLOPosition)
+                            {
+                                if (m_audioSource)
+                                    m_audioSource.Stop();
+                            }
+                            else if (!m_audioSource.isPlaying)
+                            {
+                                m_audioSource.Play();
+                            }
+                            m_lastLOPosition = m_linkedObjectPosition.position;
+                            
+                            //m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
+                        }                        
                     }
                 }
                 break;
@@ -150,12 +230,12 @@ public class WeightedPreassurePlate : MonoBehaviour
                         if (m_currentWeight >= m_weightNeeded)
                         {
                             m_preassurePlateActivated = true;
-                            if (!m_audioSource.isPlaying)
+                            if (m_audioSource && !m_audioSource.isPlaying)
                             {
-                                m_audioSource.Play();
+                                //m_audioSource.Play();
                             }
                         }
-                        else
+                        else if(!m_activatesProjectileSpawner)
                         {
                             m_percentage = m_currentWeight / m_weightNeeded;
                             if (m_percentage > 1f)
@@ -164,18 +244,19 @@ public class WeightedPreassurePlate : MonoBehaviour
                             }
                             m_positionY = m_distanceToEndPosition * m_percentage;
 
-                            Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
+                            Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x - m_LOpositionX, m_linkedObjectStartingPosition.y - m_LOpositionY, m_linkedObjectStartingPosition.z);
                             if (Vector3.Distance(m_linkedObjectPosition.position, destination) < 0.1f && m_audioSource)
                             {
-                                m_audioSource.Stop();
+                                if (m_audioSource)
+                                    m_audioSource.Stop();
                             }
 
                             m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
                         }
                     }
-                    else if (!m_preassurePlateIsAtLocation)
+                    else if (!m_preassurePlateIsAtLocation || m_activatesProjectileSpawner)
                     {
-                        if (Vector3.Distance(m_parent.transform.position, m_pressurePlateEndPosition.position) != 0)
+                        if (Vector3.Distance(m_parent.transform.position, m_pressurePlateEndPosition.position) != 0 && !m_activatesProjectileSpawner)
                         {
                             m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, m_pressurePlateEndPosition.position, m_speed * Time.deltaTime);
                         }

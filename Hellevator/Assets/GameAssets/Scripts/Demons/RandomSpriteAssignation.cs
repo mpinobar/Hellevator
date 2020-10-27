@@ -4,22 +4,23 @@ using UnityEngine;
 
 public class RandomSpriteAssignation : MonoBehaviour
 {
-    bool init;
+    bool m_init;
 
     [SerializeField] Sprite [] m_availableSprites;
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        if (!init)
+        if (!m_init)
         {
             AssignRandomSprite();
-            init = true;
+            m_init = true;
         }
     }
 
     private void AssignRandomSprite()
     {
+        if(m_availableSprites.Length > 0)
         GetComponent<SpriteRenderer>().sprite = m_availableSprites[Random.Range(0, m_availableSprites.Length)];
     }
 

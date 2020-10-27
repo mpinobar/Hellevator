@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileSpawner : MonoBehaviour
+public class ProjectileSpawner : ButtonActivatedBase
 {
 
-    [SerializeField] GameObject projectileToShoot;
-    [SerializeField] float initialWaitTimeBeforeShooting = 0f;
-    [SerializeField] float timeIntervalBetweenShots = 2f;
-    [SerializeField] float projectileSpeed = 4f;
+    [SerializeField] GameObject m_projectileToShoot;
+    [SerializeField] float m_initialWaitTimeBeforeShooting = 0f;
+    [SerializeField] float m_timeIntervalBetweenShots = 2f;
+    [SerializeField] float m_projectileSpeed = 4f;
+    [SerializeField] bool m_activatedWithButton;
 
     int maxNumberOfProjectiles = 5;
     List<GameObject> projectilePool;
+
+    bool m_active;
 
     // Start is called before the first frame update
     void Start()
@@ -19,26 +22,43 @@ public class ProjectileSpawner : MonoBehaviour
         projectilePool = new List<GameObject>();
         for (int i = 0; i < maxNumberOfProjectiles; i++)
         {
-            projectilePool.Add(Instantiate(projectileToShoot, transform.position, Quaternion.identity, transform));
+            projectilePool.Add(Instantiate(m_projectileToShoot, transform.position, transform.rotation, transform));
             projectilePool[i].SetActive(false);
         }
-
-        InvokeRepeating(nameof(ShootProjectile), initialWaitTimeBeforeShooting, timeIntervalBetweenShots);
+        if (!m_activatedWithButton)
+        {
+            Activate();
+        }
+        InvokeRepeating(nameof(ShootProjectile), m_initialWaitTimeBeforeShooting, m_timeIntervalBetweenShots);
     }
 
     private void ShootProjectile()
     {
-        for (int i = 0; i < projectilePool.Count; i++)
+        if (m_active)
         {
-            if (!projectilePool[i].activeSelf)
+            for (int i = 0; i < projectilePool.Count; i++)
             {
-                projectilePool[i].SetActive(true);
-                projectilePool[i].GetComponent<Projectile>().Speed = projectileSpeed;
-                return;
+                if (!projectilePool[i].activeSelf)
+                {
+                    projectilePool[i].transform.position = transform.position;
+                    projectilePool[i].SetActive(true);
+                    projectilePool[i].GetComponent<Projectile>().Speed = m_projectileSpeed;
+                    return;
+                }
             }
-        }
-        GameObject newProjectile = Instantiate(projectileToShoot, transform.position, Quaternion.identity,transform);
-        projectilePool.Add(newProjectile);
+            GameObject newProjectile = Instantiate(m_projectileToShoot, transform.position, transform.rotation,transform);
+            projectilePool.Add(newProjectile);
+            newProjectile.GetComponent<Projectile>().Speed = m_projectileSpeed;
+        }        
     }
 
+    public override void Activate()
+    {
+        m_active = true;
+        
+    }
+    public void Deactivate()
+    {
+        m_active = false;
+    }
 }

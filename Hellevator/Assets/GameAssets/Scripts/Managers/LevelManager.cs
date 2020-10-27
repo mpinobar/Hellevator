@@ -6,22 +6,25 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : PersistentSingleton<LevelManager>
 {
-	private List<Vector3> m_checkPoints;
+    private List<Vector3> m_checkPoints;
 
-	public CheckPoint m_lastCheckPoint;
+    public CheckPoint m_lastCheckPoint;
 
     private bool m_isRestarting;
 
     AsyncOperation m_loadingScene;
-	
-	[SerializeField] private GameObject m_fade = null;
 
-    List<string> adjacentScenes;
-    LevelLoadManager centralScene;
+    [SerializeField] private GameObject m_fade = null;
 
+    List<string> m_adjacentScenes;
+    LevelLoadManager m_centralScene;
 
+    [SerializeField] GameObject cameraPrefab;
 
-    public CheckPoint LastCheckPoint { get => m_lastCheckPoint;
+    bool m_hasKitchenKey;
+    public CheckPoint LastCheckPoint
+    {
+        get => m_lastCheckPoint;
 
         set
         {
@@ -29,9 +32,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
     }
 
-	public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
-	public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
-    public LevelLoadManager CentralScene { get => centralScene; set => centralScene = value; }
+    public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
+    public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
+    public LevelLoadManager CentralScene { get => m_centralScene; set => m_centralScene = value; }
+    public bool HasKitchenKey { get => m_hasKitchenKey; set => m_hasKitchenKey = value; }
 
 
     /// <summary>
@@ -44,44 +48,46 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             m_checkPoints = new List<Vector3>();
         }
-        bool foundInside = false;
-        for (int i = 0; i < m_checkPoints.Count; i++)
-        {
-            if(m_checkPoints[i] == value.transform.position)
-            {
-                foundInside = true;
-            }
-        }
-        if (!foundInside)
-        {
-            m_checkPoints.Add(value.transform.position);
-            m_lastCheckPoint = value;
-        }
+        //bool foundInside = false;
+        //for (int i = 0; i < m_checkPoints.Count; i++)
+        //{
+        //    if (m_checkPoints[i] == value.transform.position)
+        //    {
+        //        foundInside = true;
+        //    }
+        //}
+        //if (!foundInside)
+        //{
+        //    m_checkPoints.Add(value.transform.position);
+        //    m_lastCheckPoint = value;
+        //}
+        m_checkPoints.Add(value.transform.position);
+        m_lastCheckPoint = value;
     }
 
     private void Update()
     {
         if (m_isRestarting)
         {
-            if (m_loadingScene.isDone)
-            {
-				UpdateLastCheckPointReference();
+            //if (m_loadingScene.isDone)
+            //{
+            //UpdateLastCheckPointReference();
 
 
-				CameraManager.Instance.CurrentCamera.enabled = false;
-				CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
-				CameraManager.Instance.CurrentCamera.enabled = true;
-				ParalaxManager.Instance.SetUpSceneParalax();
+            //CameraManager.Instance.CurrentCamera.enabled = false;
+            //CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
+            //CameraManager.Instance.CurrentCamera.enabled = true;
+            //ParalaxManager.Instance.SetUpSceneParalax();
 
-				if (PossessionManager.Instance.ControlledDemon != null)
-                {
-                    PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
-                }
-                m_lastCheckPoint.SpawnPlayer();
+            //if (PossessionManager.Instance.ControlledDemon != null)
+            //{
+            //    PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
+            //}
+            //m_lastCheckPoint.SpawnPlayer();
 
-                m_isRestarting = false;
-                Time.timeScale = 1;
-            }
+            m_isRestarting = false;
+            Time.timeScale = 1;
+            //}
         }
     }
 
@@ -94,16 +100,14 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
         for (int i = 0; i < cps.Length; i++)
         {
-            if(m_checkPoints[m_checkPoints.Count-1] == cps[i].transform.position)
+            if (m_checkPoints[m_checkPoints.Count - 1] == cps[i].transform.position)
             {
                 m_lastCheckPoint = cps[i];
-				print("CP pos = " + cps[i].transform.position);
-				print("Number of CPs = " + m_checkPoints.Count);
 
-				return;
+                return;
             }
         }
-        
+
     }
 
     /// <summary>
@@ -111,23 +115,55 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// </summary>
     public void StartRestartingLevel()
     {
-		FadeManager.Instance.StartFadingIn();
+        FadeManager.Instance.StartFadingIn();
     }
-	public void RestartLevel()
-	{
-        m_loadingScene = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-		
-        if( m_checkPoints != null && m_checkPoints.Count > 0)
+    public void RestartLevel()
+    {
+        string nameToLoad = "H.1";
+
+        if (m_lastCheckPoint)
+            nameToLoad = m_lastCheckPoint.SceneToLoad;
+        AsyncOperation op = SceneManager.LoadSceneAsync(nameToLoad);
+        if(m_adjacentScenes != null)
+         m_adjacentScenes.Clear();
+        CentralScene = null;
+        op.completed += Op_completed;
+
+        if (m_checkPoints != null && m_checkPoints.Count > 0)
         {
             m_isRestarting = true;
         }
-	}
+    }
+
+    private void Op_completed(AsyncOperation obj)
+    {
+        UpdateLastCheckPointReference();
+
+
+        CameraManager.Instance.CurrentCamera.enabled = false;
+        if(m_lastCheckPoint)
+        CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
+        CameraManager.Instance.CurrentCamera.enabled = true;
+        ParalaxManager.Instance.SetUpSceneParalax();
+
+        if (PossessionManager.Instance.ControlledDemon != null)
+        {
+            PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
+        }
+        if (m_lastCheckPoint)
+            m_lastCheckPoint.SpawnPlayer();
+        FadeManager.Instance.StartFadingOut();
+    }
 
     public void LoadLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        {
+            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        }
     }
-    
+
     public void LoadLevel(string levelName)
     {
         SceneManager.LoadScene(levelName);
@@ -138,48 +174,52 @@ public class LevelManager : PersistentSingleton<LevelManager>
         CentralScene = newCentralScene;
         for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
         {
-            SceneManager.LoadSceneAsync(centralScene.AdjacentScenes[i], LoadSceneMode.Additive);            
+            SceneManager.LoadSceneAsync(m_centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
         }
-        if (adjacentScenes == null)
+        if (m_adjacentScenes == null)
         {
-            adjacentScenes = new List<string>();
+            m_adjacentScenes = new List<string>();
         }
         for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
         {
-            adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
+            m_adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
         }
 
-        if(!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
-        SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        {
+            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        }
+        //SceneManager.MoveGameObjectToScene(CameraManager.Instance.gameObject, SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
     }
 
     public void ChangeCentralScene(LevelLoadManager newCentralScene)
     {
-        if(centralScene != newCentralScene)
+        if (m_centralScene != newCentralScene)
         {
-            if (adjacentScenes == null)
+            if (m_adjacentScenes == null)
             {
-                adjacentScenes = new List<string>();
+                m_adjacentScenes = new List<string>();
             }
 
-            adjacentScenes.Add(centralScene.ThisSceneName);
-            centralScene = newCentralScene;
+            m_adjacentScenes.Add(m_centralScene.ThisSceneName);
+            m_centralScene = newCentralScene;
 
             //la que ahora es central ya no es adyacente
-            adjacentScenes.Remove(centralScene.ThisSceneName);
+            m_adjacentScenes.Remove(m_centralScene.ThisSceneName);
 
-            PossessionManager.Instance.MoveDemonsToCentralScene(SceneManager.GetSceneByName(centralScene.ThisSceneName));
+            PossessionManager.Instance.MoveDemonsToCentralScene(SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
+            //SceneManager.MoveGameObjectToScene(CameraManager.Instance.gameObject, SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
 
             //Debug.LogError("New central scene is " + newCentralScene.ThisSceneName);
 
             //Descargar las escenas que ya no se necesitan porque no se encuentran entre las adyacentes de la nueva central
-            for (int i = 0; i < adjacentScenes.Count; i++)
+            for (int i = 0; i < m_adjacentScenes.Count; i++)
             {
-                if (!centralScene.AdjacentScenes.Contains(adjacentScenes[i]))
+                if (!m_centralScene.AdjacentScenes.Contains(m_adjacentScenes[i]))
                 {
                     //Debug.LogError("Removing from loaded scenes: " + adjacentScenes[i]);
-                    SceneManager.UnloadSceneAsync(adjacentScenes[i]);
-                    adjacentScenes.Remove(adjacentScenes[i]);
+                    SceneManager.UnloadSceneAsync(m_adjacentScenes[i]);
+                    m_adjacentScenes.Remove(m_adjacentScenes[i]);
                     i--;
                 }
                 else
@@ -189,22 +229,22 @@ public class LevelManager : PersistentSingleton<LevelManager>
             }
 
             //Cargar las escenas que se necesitan por ser adyacentes a la nueva central y que no están cargadas
-            for (int i = 0; i < centralScene.AdjacentScenes.Count; i++)
+            for (int i = 0; i < m_centralScene.AdjacentScenes.Count; i++)
             {
-                if (!adjacentScenes.Contains(centralScene.AdjacentScenes[i]))
+                if (!m_adjacentScenes.Contains(m_centralScene.AdjacentScenes[i]))
                 {
-                    if (!SceneManager.GetSceneByName(centralScene.AdjacentScenes[i]).isLoaded)
+                    if (!SceneManager.GetSceneByName(m_centralScene.AdjacentScenes[i]).isLoaded)
                     {
-                        SceneManager.LoadSceneAsync(centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
-                        adjacentScenes.Add(centralScene.AdjacentScenes[i]);
+                        SceneManager.LoadSceneAsync(m_centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
+                        m_adjacentScenes.Add(m_centralScene.AdjacentScenes[i]);
                     }
                     else
                     {
                         //Debug.LogError("Scene already loaded: " + centralScene.AdjacentScenes[i]);
-                    }                    
+                    }
                 }
             }
-        }       
+        }
     }
 
 

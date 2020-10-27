@@ -29,7 +29,7 @@ public abstract class DemonBase : MonoBehaviour
     [Space]
     //Weight variables
     [Header("Physicality")]
-    
+
     [Tooltip("Weight of the body for puzzles")]
     [SerializeField] protected float        m_weight;
 
@@ -49,6 +49,7 @@ public abstract class DemonBase : MonoBehaviour
     [Space]
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
+    [SerializeField] private bool       m_multiplePossessionWhenDead;
     [SerializeField] private float      m_maximumPossessionRange;
 
     [ColorUsage(true, true)]
@@ -63,6 +64,7 @@ public abstract class DemonBase : MonoBehaviour
     private float                       m_distanceMaxGlow = 5;
     private bool                        m_isPossessionBlocked;
     private bool                        m_isControlledByPlayer;
+    private bool                        m_overlayActive;
 
     [ColorUsage(true,true)]
     [SerializeField] private Color      m_fireColorWhenPossessed;
@@ -92,13 +94,13 @@ public abstract class DemonBase : MonoBehaviour
     //mask for ground detection
     [Header("Don't touch")]
     [SerializeField] protected LayerMask    m_groundedDetectionLayers;
-    [SerializeField] protected GameObject   m_demonMaskSprite;
+    [SerializeField] private GameObject   m_demonMaskSprite;
 
     //Demon references
     private Rigidbody2D     m_myRgb;
     private Collider2D      m_playerCollider;
     protected Animator      m_myAnimator;
-
+    protected int           m_numSpikesTouching;
 
 
     /*
@@ -163,13 +165,21 @@ public abstract class DemonBase : MonoBehaviour
         {
             if (value)
             {
-                //SetColor(m_tintWhenCantBePossessed);
+                m_numSpikesTouching++;                
             }
             else
             {
-                //SetColor(m_spritesColor);
+                m_numSpikesTouching--;
+
             }
-            m_isInDanger = value;
+            if(m_numSpikesTouching <= 0)
+            {
+                m_isInDanger = false;                
+            }
+            else
+            {
+                m_isInDanger = true;
+            }            
         }
     }
 
@@ -217,6 +227,9 @@ public abstract class DemonBase : MonoBehaviour
         get => m_canMove; set => m_canMove = value;
     }
     public float DistanceToPlayer { get => m_distanceToPlayer; set => m_distanceToPlayer = value; }
+    public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
+    public bool PossessedOnStart { get => m_possessedOnStart; set => m_possessedOnStart = value; }
+    public GameObject DemonMaskSprite { get => m_demonMaskSprite; }
 
 
     #endregion
@@ -240,7 +253,9 @@ public abstract class DemonBase : MonoBehaviour
             overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
 
             overlay.SetActive(false);
-        }else {
+        }
+        else
+        {
             Debug.LogError("No se ha asignado la referencia al overlay para mostrar rango de posesión. Nombre de cuerpo: " + name);
         }
 
@@ -286,6 +301,8 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
+
+
     protected virtual void Update()
     {
 
@@ -295,14 +312,14 @@ public abstract class DemonBase : MonoBehaviour
             LerpResetRagdollTransforms();
         }
 
-        if (IsControlledByPlayer)
-        {
+        //if (IsControlledByPlayer)
+        //{
 
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                HidePossessionRange();
-            }
-        }
+        //    if (Input.GetKeyDown(KeyCode.Q))
+        //    {
+        //        HidePossessionRange();
+        //    }
+        //}
         m_spiritFire.transform.rotation = Quaternion.identity;
 
         #region Shader outline
@@ -617,7 +634,12 @@ public abstract class DemonBase : MonoBehaviour
         }
         IsControlledByPlayer = false;
         m_isDead = true;
+
+
         SetRagdollActive(true);
+
+        CanMove = false;
+
         //for (int i = 1; i < m_childSprites.Length; i++)
         //{
         //    m_childSprites[i].material.SetFloat("_Thickness", 0);
@@ -638,6 +660,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         SetRagdollActive(false);
         m_isControlledByIA = true;
+
         //m_isLerpingToResetBones = true;
         m_hasResetParentPosition = false;
         m_isControlledByPlayer = false;
@@ -658,16 +681,19 @@ public abstract class DemonBase : MonoBehaviour
         SetRagdollActive(false);
         CanMove = true;
         m_isLerpingToResetBones = true;
+        m_playerCollider.enabled = false;
         m_hasResetParentPosition = false;
         m_isControlledByIA = false;
         IsControlledByPlayer = true;
         m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
 
-        CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+        if (PossessionManager.Instance.ControlledDemon)
+            CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
 
         if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
         {
         }
+
         //m_PossessionCircle.enabled = true;
 
         //for (int i = 1; i < m_childSprites.Length; i++)
@@ -708,7 +734,6 @@ public abstract class DemonBase : MonoBehaviour
     /// <param name="active">True to turn them on, false to turn them off</param>
     public abstract void ToggleWalkingParticles(bool active);
 
-
     /// <summary>
     /// Changes the color of all limbs
     /// </summary>
@@ -724,11 +749,12 @@ public abstract class DemonBase : MonoBehaviour
     public void ShowPossessionRange()
     {
         StopAllCoroutines();
-        StartCoroutine(LerpPossessionOverlay(true));
+        StartCoroutine(LerpPossessionOverlay(!m_overlayActive));
     }
 
     IEnumerator LerpPossessionOverlay(bool active)
     {
+        m_overlayActive = active;
         overlay.transform.localScale = Vector3.one * MaximumPossessionRange * 5;
         SpriteRenderer spr = overlay.GetComponent<SpriteRenderer>();
         Color aux = spr.color;
@@ -787,6 +813,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         m_isRagdollActive = active;
 
+        
 
         //activate all the limbs colliders if ragdoll is active, set inactive otherwise
         for (int i = 0; i < m_limbsColliders.Length; i++)
@@ -807,15 +834,18 @@ public abstract class DemonBase : MonoBehaviour
             }
         }
 
+        m_myAnimator.enabled = !active;
         m_playerCollider.enabled = !active;
         m_ragdollLogicCollider.enabled = active;
         m_myRgb.isKinematic = active;
         if (!active)
         {
+            
             m_myRgb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
         else
         {
+            m_isLerpingToResetBones = false;
             m_myRgb.constraints = RigidbodyConstraints2D.None;
         }
 
@@ -881,6 +911,7 @@ public abstract class DemonBase : MonoBehaviour
             }
             m_hasResetParentPosition = true;
             m_torso.parent = transform;
+            m_playerCollider.enabled = true;
         }
 
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, m_recomposingSpeed * Time.deltaTime);
@@ -917,21 +948,27 @@ public abstract class DemonBase : MonoBehaviour
 
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
+        HidePossessionRange();
         if (!m_isDead && playDeathSound)
         {
             MusicManager.Instance.PlayAudioSFX(m_deathClip, false);
             m_isDead = true;
+
         }
 
         if (m_isControlledByPlayer)
         {
-            Debug.LogError("Player died");
+            //Debug.LogError("Player died: " + name);
             PossessionManager.Instance.RemoveDemonPossession(transform);
+            m_isDead = true;
+            UseSkill();
         }
         else if (m_isControlledByIA)
         {
             m_isControlledByIA = false;
-            SetRagdollActive(true);
+            m_isDead = true;
+            SetNotControlledByPlayer();
+            //SetRagdollActive(true);
         }
     }
     /// <summary>
@@ -939,7 +976,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     /// <returns>Boolean determining if it is touching the ground</returns>
     public bool IsGrounded()
-    {        
+    {
         RaycastHit2D[] impact = Physics2D.CircleCastAll(transform.position, 0.3f, Vector2.down, 0.5f, m_groundedDetectionLayers);
         bool isGrounded = false;
         for (int i = 0; i < impact.Length; i++)
