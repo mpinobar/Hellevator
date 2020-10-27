@@ -10,11 +10,26 @@ public class Boss : MonoBehaviour
     [SerializeField] Color m_colorWhenHurt;
     [SerializeField] float m_knifeSpawnHeight = 10f;
     [SerializeField] float m_knifeSpeed = 40f;
+    [SerializeField] float m_knifeDelay = 1f;
     [SerializeField] int m_maxHealth = 2;
     int m_currentHealth;
     [SerializeField] float m_offsetMovement = 5f;
     [SerializeField] float m_movementSpeed = 0.5f;
     [SerializeField] float m_maxCoordinate = -100f;
+    [SerializeField] List<GameObject> m_limbsToUnparent;
+
+    [SerializeField] List<GameObject> m_kitchenUtensils;
+    List<Transform> m_kitchenUtensilsParents;
+    List<Vector2> m_kitchenUtensilsStartingOffset;
+
+    [SerializeField] AnimationCurve m_visualKnivesHeightCurve;
+    [SerializeField] float m_visualKnivesHeightMultiplier = 5f;
+    [SerializeField] float m_visualKnivesDuration = 0.5f;
+
+    [SerializeField] float m_explosionForce;
+    [SerializeField] float m_timeFlickerWhenHurt = 0.08f;
+    [SerializeField] float m_timeDelayToExplodeLimbs = 0.75f;
+    [SerializeField] float m_timeDelayToDeactivate = 5f;
     Vector3 m_desiredPos;
 
     private enum State
@@ -23,8 +38,8 @@ public class Boss : MonoBehaviour
     }
 
     [SerializeField] GameObject m_doorToCloseUponStart;
-    [SerializeField] float m_timeUntilPlayerDeath;
-    float m_playerSeenDeathTimer = 0f;
+    [SerializeField] float m_timeToAttackPlayer = 2.5f;
+    float m_playerSeenAttackTimer = 0f;
 
     bool m_started;
 
@@ -32,10 +47,25 @@ public class Boss : MonoBehaviour
 
     State m_currentState = State.Default;
 
+
     private void Awake()
     {
+        for (int i = 0; i < m_limbsToUnparent.Count; i++)
+        {
+            m_limbsToUnparent[i].GetComponent<Collider2D>().enabled = false;
+            m_limbsToUnparent[i].GetComponent<Rigidbody2D>().isKinematic = true;
+        }
 
-        m_playerSeenDeathTimer = 0f;
+        m_kitchenUtensilsParents = new List<Transform>();
+        m_kitchenUtensilsStartingOffset = new List<Vector2>();
+
+        for (int i = 0; i < m_kitchenUtensils.Count; i++)
+        {
+            m_kitchenUtensilsParents.Add(m_kitchenUtensils[i].transform.parent);
+            m_kitchenUtensilsStartingOffset.Add(m_kitchenUtensils[i].transform.position - m_kitchenUtensilsParents[i].position);
+        }
+
+        m_playerSeenAttackTimer = 0f;
         m_doorToCloseUponStart.SetActive(false);
         m_bossAnimator = GetComponent<Animator>();
         m_currentHealth = m_maxHealth;
@@ -56,10 +86,8 @@ public class Boss : MonoBehaviour
         {
             if (m_currentState == State.SeeingPlayer)
             {
-
-
-                m_playerSeenDeathTimer += Time.deltaTime;
-                if (m_playerSeenDeathTimer >= m_timeUntilPlayerDeath)
+                m_playerSeenAttackTimer += Time.deltaTime;
+                if (m_playerSeenAttackTimer >= m_timeToAttackPlayer)
                 {
                     AttackPlayer();
                 }
@@ -69,7 +97,7 @@ public class Boss : MonoBehaviour
             }
             else
             {
-                m_playerSeenDeathTimer = 0f;
+                m_playerSeenAttackTimer = 0f;
             }
         }
     }
@@ -82,7 +110,7 @@ public class Boss : MonoBehaviour
     public void SetNotSeeingPlayer()
     {
         m_currentState = State.Default;
-        m_playerSeenDeathTimer = 0f;
+        m_playerSeenAttackTimer = 0f;
     }
 
     public void DamageBoss()
@@ -104,7 +132,7 @@ public class Boss : MonoBehaviour
 
     public void ResetTimer()
     {
-        m_playerSeenDeathTimer = 0;
+        m_playerSeenAttackTimer = 0;
     }
 
     private IEnumerator HurtVisuals()
@@ -131,7 +159,7 @@ public class Boss : MonoBehaviour
             }
             isRed = !isRed;
             switchCounter++;
-            yield return new WaitForSeconds(0.08f);
+            yield return new WaitForSeconds(m_timeFlickerWhenHurt);
         }
 
     }
@@ -141,20 +169,22 @@ public class Boss : MonoBehaviour
         PossessionManager.Instance.Boss = null;
         m_started = false;
         m_bossAnimator.SetTrigger("Death");
-        Invoke(nameof(DeactivateBoss), 2f);
+        Invoke(nameof(UnparentLimbs), m_timeDelayToExplodeLimbs);
+        OpenEntrance();
+        Invoke(nameof(DeactivateBoss), m_timeDelayToDeactivate);
     }
 
     private void DeactivateBoss()
     {
         gameObject.SetActive(false);
-        OpenEntrance();
     }
 
     private void AttackPlayer()
     {
-        m_bossAnimator.SetTrigger("Attack");
-        ThrowKnife(PossessionManager.Instance.ControlledDemon.transform, 0, false);
-        m_playerSeenDeathTimer = 0f;
+        //m_bossAnimator.SetTrigger("Attack");
+        StartCoroutine(VisualKitchenKnives());
+        ThrowKnife(PossessionManager.Instance.ControlledDemon.transform, m_knifeDelay, false);
+        m_playerSeenAttackTimer = 0f;
     }
 
     public void ThrowKnife(Transform target, float delay, bool initial)
@@ -165,6 +195,7 @@ public class Boss : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Projectile knife = Instantiate(m_knifePrefab, target.position + Vector3.up * m_knifeSpawnHeight, Quaternion.identity);
+        m_playerSeenAttackTimer = 0f;
         knife.transform.localEulerAngles = Vector3.forward * 180;
         knife.Speed = m_knifeSpeed;
         knife.DestroyOnScenaryImpact = !initial;
@@ -178,4 +209,67 @@ public class Boss : MonoBehaviour
     {
         m_doorToCloseUponStart.SetActive(false);
     }
+
+    public void UnparentLimbs()
+    {
+        Rigidbody2D cache = null;
+        for (int i = 0; i < m_limbsToUnparent.Count; i++)
+        {
+            m_limbsToUnparent[i].transform.parent = null;
+            m_limbsToUnparent[i].GetComponent<Collider2D>().enabled = true;
+            cache = m_limbsToUnparent[i].GetComponent<Rigidbody2D>();
+            cache.isKinematic = false;
+            cache.velocity = Vector2.zero;
+            cache.AddForce((Vector2.up + UnityEngine.Random.Range(-2, 2) * Vector2.right) * m_explosionForce, ForceMode2D.Impulse);
+            //Destroy(m_limbsToUnparent[i].gameObject, 5f);
+        }
+    }
+    public IEnumerator VisualKitchenKnives()
+    {
+        m_bossAnimator.SetTrigger("Attack");
+        yield return new WaitForSeconds(0.25f);
+        UnparentKitchenKnives();
+        GetComponent<Animator>().enabled = false;
+        float time = 0f;
+        float evaluationTime = 0f;
+        while (time <= m_visualKnivesDuration)
+        {
+            time += Time.deltaTime;
+            evaluationTime += Time.deltaTime * m_visualKnivesHeightCurve.length / m_visualKnivesDuration;
+
+            for (int i = 0; i < m_kitchenUtensils.Count; i++)
+            {
+                m_kitchenUtensils[i].transform.position = (Vector2) m_kitchenUtensilsParents[i].position + m_kitchenUtensilsStartingOffset[i] + Vector2.up * m_visualKnivesHeightCurve.Evaluate(evaluationTime) * m_visualKnivesHeightMultiplier;
+            }
+
+            yield return null;
+        }
+        ReparentKitchenKnives();
+        m_bossAnimator.ResetTrigger("Attack");
+        GetComponent<Animator>().enabled = true;
+    }
+    //public void VisualThrowKnives()
+    //{
+    //    for (int i = 0; i < m_kitchenUtensils.Count; i++)
+    //    {
+    //        m_kitchenUtensils[i].GetComponent<Rigidbody2D>().
+    //    }
+    //}
+
+    private void UnparentKitchenKnives()
+    {
+        for (int i = 0; i < m_kitchenUtensils.Count; i++)
+        {
+            m_kitchenUtensils[i].transform.parent = null;
+        }
+    }
+
+    private void ReparentKitchenKnives()
+    {
+        for (int i = 0; i < m_kitchenUtensils.Count; i++)
+        {
+            m_kitchenUtensils[i].transform.parent = m_kitchenUtensilsParents[i];
+        }
+    }
+
 }
