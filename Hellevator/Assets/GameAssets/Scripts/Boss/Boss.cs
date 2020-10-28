@@ -21,9 +21,11 @@ public class Boss : MonoBehaviour
     [SerializeField] List<GameObject> m_kitchenUtensils;
     List<Transform> m_kitchenUtensilsParents;
     List<Vector2> m_kitchenUtensilsStartingOffset;
+    List<float> m_kitchenUtensilsStartingRot;
 
     [SerializeField] AnimationCurve m_visualKnivesHeightCurve;
     [SerializeField] float m_visualKnivesHeightMultiplier = 5f;
+    [SerializeField] float m_visualKnivesUnparentDelay = 0.35f;
     [SerializeField] float m_visualKnivesDuration = 0.5f;
 
     [SerializeField] float m_explosionForce;
@@ -224,29 +226,65 @@ public class Boss : MonoBehaviour
             //Destroy(m_limbsToUnparent[i].gameObject, 5f);
         }
     }
-    public IEnumerator VisualKitchenKnives()
+    private bool m_animatingKnives = false;
+    private float time = 0f;
+    private float evaluationTime = 0f;
+    private void LateUpdate()
     {
-        m_bossAnimator.SetTrigger("Attack");
-        yield return new WaitForSeconds(0.25f);
-        UnparentKitchenKnives();
-        GetComponent<Animator>().enabled = false;
-        float time = 0f;
-        float evaluationTime = 0f;
-        while (time <= m_visualKnivesDuration)
+        if (m_animatingKnives)
         {
             time += Time.deltaTime;
             evaluationTime += Time.deltaTime * m_visualKnivesHeightCurve.length / m_visualKnivesDuration;
 
             for (int i = 0; i < m_kitchenUtensils.Count; i++)
             {
-                m_kitchenUtensils[i].transform.position = (Vector2) m_kitchenUtensilsParents[i].position + m_kitchenUtensilsStartingOffset[i] + Vector2.up * m_visualKnivesHeightCurve.Evaluate(evaluationTime) * m_visualKnivesHeightMultiplier;
-            }
 
-            yield return null;
+                m_kitchenUtensils[i].transform.position = (Vector2)m_kitchenUtensilsParents[i].position + m_kitchenUtensilsStartingOffset[i] + Vector2.up * m_visualKnivesHeightCurve.Evaluate(evaluationTime) * m_visualKnivesHeightMultiplier;
+                m_kitchenUtensils[i].transform.eulerAngles = Vector3.forward * m_kitchenUtensilsStartingRot[i];
+            }
         }
+    }
+    public IEnumerator VisualKitchenKnives()
+    {
+        m_bossAnimator.SetTrigger("Attack");
+        yield return new WaitForSeconds(m_visualKnivesUnparentDelay);
+        
+        if(m_kitchenUtensilsStartingRot == null)
+        {
+            m_kitchenUtensilsStartingRot = new List<float>();
+        }
+        m_kitchenUtensilsStartingRot.Clear();
+        m_kitchenUtensilsStartingOffset.Clear();
+        for (int i = 0; i < m_kitchenUtensils.Count; i++)
+        {
+            m_kitchenUtensilsStartingOffset.Add(m_kitchenUtensils[i].transform.position - m_kitchenUtensilsParents[i].position);
+            m_kitchenUtensilsStartingRot.Add(m_kitchenUtensils[i].transform.eulerAngles.z);
+        }
+        UnparentKitchenKnives();
+        m_animatingKnives = true;
+        //GetComponent<Animator>().speed = 0f;
+        //GetComponent<Animator>().enabled = false;
+        time = 0f;
+        evaluationTime = 0f;
+        //while (time <= m_visualKnivesDuration)
+        //{
+        //    time += Time.deltaTime;
+        //    evaluationTime += Time.deltaTime * m_visualKnivesHeightCurve.length / m_visualKnivesDuration;
+
+        //    for (int i = 0; i < m_kitchenUtensils.Count; i++)
+        //    {
+        //        m_kitchenUtensils[i].transform.position = (Vector2)m_kitchenUtensilsParents[i].position + m_kitchenUtensilsStartingOffset[i] + Vector2.up * m_visualKnivesHeightCurve.Evaluate(evaluationTime) * m_visualKnivesHeightMultiplier;
+        //    }
+
+        //    yield return null;
+        //}
+        yield return new WaitForSeconds(m_visualKnivesDuration);
+
+        m_animatingKnives = false;
         ReparentKitchenKnives();
         m_bossAnimator.ResetTrigger("Attack");
-        GetComponent<Animator>().enabled = true;
+        //GetComponent<Animator>().enabled = true;        
+        //GetComponent<Animator>().speed = 1f;
     }
     //public void VisualThrowKnives()
     //{
