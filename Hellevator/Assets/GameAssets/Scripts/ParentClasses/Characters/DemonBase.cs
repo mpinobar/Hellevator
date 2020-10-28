@@ -305,7 +305,7 @@ public abstract class DemonBase : MonoBehaviour
 
     protected virtual void Update()
     {
-
+        m_numSpikesTouching = 0;
         if (m_isLerpingToResetBones)
         {
             //ResetRagdollTransforms();

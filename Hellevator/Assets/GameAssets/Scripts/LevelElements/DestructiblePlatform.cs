@@ -20,7 +20,8 @@ public class DestructiblePlatform : MonoBehaviour
     private float tmpReappear;
     private int tmpShake;
     private Vector2 m_targetShakePosition;
-    private bool willReappear = true;
+    private bool m_willReappear = true;
+    private bool m_turnsKinematicOnSpikesEnter;
 
     LayerMask m_playerLayer;
     LayerMask m_bodyLayer;
@@ -28,7 +29,8 @@ public class DestructiblePlatform : MonoBehaviour
     List<SpikesWeightData> m_spikesData;
     private List<DemonBase> m_enemiesOnPreassurePlate;
 
-    public bool WillReappear { get => willReappear; set => willReappear = value; }
+    public bool WillReappear { get => m_willReappear; set => m_willReappear = value; }
+    public bool TurnsKinematicOnSpikesEnter { get => m_turnsKinematicOnSpikesEnter; set => m_turnsKinematicOnSpikesEnter = value; }
 
     private bool m_isParentMovingPlatform;
 
@@ -78,7 +80,7 @@ public class DestructiblePlatform : MonoBehaviour
                 m_destroying = false;
             }
         }
-        else if (willReappear)
+        else if (m_willReappear)
         {
             if (tmp <= 0)
             {
@@ -116,7 +118,7 @@ public class DestructiblePlatform : MonoBehaviour
         }
         else
         {
-            if (!willReappear)
+            if (!m_willReappear)
             {
                 GetComponent<Rigidbody2D>().isKinematic = true;
                 GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
@@ -226,7 +228,33 @@ public class DestructiblePlatform : MonoBehaviour
                     }
                 }
             }
+        }        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (m_turnsKinematicOnSpikesEnter)
+        {
+            if(collision.GetComponent<Spikes>() != null)
+            {
+                GetComponent<Rigidbody2D>().isKinematic = true;
+                if (!m_willReappear)
+                {
+                    GetComponent<Rigidbody2D>().isKinematic = true;
+                    GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+                    HorizontalPeriodicPlatform hpp = collision.transform.GetComponentInParent<HorizontalPeriodicPlatform>();
+                    if (hpp)
+                    {
+                        m_bodyLayer = hpp.BodyLayer;
+                        m_playerLayer = hpp.PlayerLayer;
+                        transform.parent = collision.transform;
+                        m_isParentMovingPlatform = true;
+                    }
+                }
+            }
+
+            
+
         }
-        
     }
 }
