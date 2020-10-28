@@ -195,12 +195,13 @@ public class BasicZombie : DemonBase
         m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
         m_myAnimator.SetFloat("yMovement", Mathf.Abs(MyRgb.velocity.y * 0.1f));
 
-        SkullIndicator();
+        
 
     }
 
     private void LateUpdate()
     {
+        SkullIndicator();
         VerticalMovementOnLadder(InputManager.Instance.VerticalInputValue);
     }
 
