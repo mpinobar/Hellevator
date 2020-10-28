@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Spikes : MonoBehaviour
 {
-    public bool debug;
+    //public bool debug;
     List<SpikesWeightData> m_spikesData;
+    [SerializeField] bool m_pushesRagdoll;
 
     private void Awake()
     {
@@ -60,10 +61,10 @@ public class Spikes : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (debug)
-        {
-            Debug.LogError(m_spikesData.Count);
-        }
+        //if (debug)
+        //{
+        //    Debug.LogError(m_spikesData.Count);
+        //}
         for (int i = 0; i < m_spikesData.Count; i++)
         {
             m_spikesData[i].AssociatedDemon.IsInDanger = true;
@@ -103,12 +104,18 @@ public class Spikes : MonoBehaviour
         }
     }
 
-    //private void OnTriggerStay2D(Collider2D collision)
-    //{
-    //    DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
-    //    if (cmpDemon != null)
-    //    {
-    //        cmpDemon.IsInDanger = true;
-    //    }
-    //}
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (m_pushesRagdoll)
+        {
+            DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
+            if (cmpDemon != null)
+            {
+                cmpDemon.Die(true);
+                
+                cmpDemon.ApplyForceToRagdoll((collision.transform.position - (Vector3) collision.contacts[0].point).normalized * 50f);
+            }
+        }
+    }
+
 }

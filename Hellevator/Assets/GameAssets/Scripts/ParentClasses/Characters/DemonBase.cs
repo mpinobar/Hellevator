@@ -165,21 +165,21 @@ public abstract class DemonBase : MonoBehaviour
         {
             if (value)
             {
-                m_numSpikesTouching++;                
+                m_numSpikesTouching++;
             }
             else
             {
                 m_numSpikesTouching--;
 
             }
-            if(m_numSpikesTouching <= 0)
+            if (m_numSpikesTouching <= 0)
             {
-                m_isInDanger = false;                
+                m_isInDanger = false;
             }
             else
             {
                 m_isInDanger = true;
-            }            
+            }
         }
     }
 
@@ -746,12 +746,19 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Toggles between activating and deactivating the possession overlay
+    /// </summary>
     public void ShowPossessionRange()
     {
         StopAllCoroutines();
         StartCoroutine(LerpPossessionOverlay(!m_overlayActive));
     }
-
+    /// <summary>
+    /// Transition for the possession overlay
+    /// </summary>
+    /// <param name="active">If it should transition to activate (true) or deactivate (false)</param>
+    /// <returns></returns>
     IEnumerator LerpPossessionOverlay(bool active)
     {
         m_overlayActive = active;
@@ -783,12 +790,19 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Deactivates the overlay that shows the range of possession
+    /// </summary>
     public void HidePossessionRange()
     {
         StopAllCoroutines();
         StartCoroutine(LerpPossessionOverlay(false));
     }
 
+    /// <summary>
+    /// Movement applied when the body is on a platform that causes external movement
+    /// </summary>
+    /// <param name="amount"></param>
     public void DragMovement(float amount)
     {
         if (m_dragMovement == 0 && amount != 0)
@@ -803,6 +817,16 @@ public abstract class DemonBase : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, transform.position + Vector3.right, m_dragMovement * Time.deltaTime);
     }
 
+
+    public void ApplyForceToRagdoll(Vector2 force)
+    {
+        //for (int i = 0; i < m_limbsRbds.Length; i++)
+        //{
+        //    m_limbsRbds[i].AddForce(force, ForceMode2D.Impulse);
+        //}
+        m_torso.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
+    }
+
     #region Ragdolls
 
     /// <summary>
@@ -813,7 +837,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         m_isRagdollActive = active;
 
-        
+
 
         //activate all the limbs colliders if ragdoll is active, set inactive otherwise
         for (int i = 0; i < m_limbsColliders.Length; i++)
@@ -840,7 +864,7 @@ public abstract class DemonBase : MonoBehaviour
         m_myRgb.isKinematic = active;
         if (!active)
         {
-            
+
             m_myRgb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
         else
