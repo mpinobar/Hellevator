@@ -282,6 +282,7 @@ public abstract class DemonBase : MonoBehaviour
 
     private void Start()
     {
+
         if (m_possessedOnStart && PossessionManager.Instance.ControlledDemon == null)
         {
             PossessionManager.Instance.ControlledDemon = this;
@@ -818,6 +819,14 @@ public abstract class DemonBase : MonoBehaviour
     }
 
 
+    public void SetRagdollNewGravity(float newGravity)
+    {
+        for (int i = 0; i < m_limbsRbds.Length; i++)
+        {
+            m_limbsRbds[i].gravityScale= newGravity;
+        }        
+    }
+
     public void ApplyForceToRagdoll(Vector2 force)
     {
         //for (int i = 0; i < m_limbsRbds.Length; i++)
@@ -894,7 +903,7 @@ public abstract class DemonBase : MonoBehaviour
     /// <summary>
     /// Resets the position and rotation of all ragdoll parts immediately
     /// </summary>
-    private void ResetRagdollTransforms()
+    public void ResetRagdollTransforms()
     {
         //m_childTransforms = ReturnComponentsInChildren<Transform>();
         //transform.rotation = Quaternion.identity;

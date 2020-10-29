@@ -30,6 +30,7 @@ public class PossessingLight : MonoBehaviour
                 m_target = PossessionManager.Instance.LookForNearestDemon(m_lastDemonPossessionRange, transform, m_originDemon);
                 if(m_target == null)
                 {
+                    Debug.LogError(m_originDemon.name);
                     LevelManager.Instance.StartRestartingLevel();
                 }
                 else
@@ -58,7 +59,7 @@ public class PossessingLight : MonoBehaviour
         //Debug.LogError("Possessing light towards " + destinationDemon.name + " from " + originDemon);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if(collision.GetComponentInParent<DemonBase>() == m_target)
         {

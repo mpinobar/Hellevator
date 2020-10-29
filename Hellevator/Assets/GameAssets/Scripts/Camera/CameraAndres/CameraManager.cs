@@ -45,11 +45,6 @@ public class CameraManager : PersistentSingleton<CameraManager>
 		ParalaxManager.Instance.SetUpSceneParalax();
 	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
 	/// <summary>
 	/// Changes the focus of the player camera to this object.

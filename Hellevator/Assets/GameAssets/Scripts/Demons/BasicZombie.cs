@@ -205,7 +205,7 @@ public class BasicZombie : DemonBase
         VerticalMovementOnLadder(InputManager.Instance.VerticalInputValue);
     }
 
-    private void SkullIndicator()
+    public void SkullIndicator()
     {
         if (skullIndicator)
         {
@@ -245,6 +245,7 @@ public class BasicZombie : DemonBase
         }
     }
 
+  
     public void VerticalMovementOnLadder(float verticalInput)
     {
         if (m_isOnLadder)
