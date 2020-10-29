@@ -30,6 +30,8 @@ public class PersistentSingleton<T> : MonoBehaviour	where T : Component
 		} 
 		else 
 		{
+			Debug.LogError("Already existing singleton: " + _instance.name);
+			Debug.LogError("Destroying: "+name);
 			Destroy (gameObject);
 		}
 	}

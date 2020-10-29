@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
+    [SerializeField] float              m_chainExplosionDelay = 0.5f;
     [SerializeField] ParticleSystem     m_explosionParticles;
     [SerializeField] float              m_explosionRadius;
     [SerializeField] float              m_explosionForce;
@@ -30,7 +31,17 @@ public class Explosion : MonoBehaviour
             boss = colliders[i].GetComponent<Boss>();
             if (demonInRange && demonInRange != GetComponentInParent<DemonBase>())
             {
-                demonInRange.Die(true);
+                if (demonInRange.GetComponent<Explosion>())
+                {
+                    demonInRange.IsPossessionBlocked = true;
+                    demonInRange.GetComponent<Explosion>().DelayExplosion(m_chainExplosionDelay);
+                }
+
+                if (!demonInRange.IsDead)
+                {
+                    demonInRange.Die(true);
+                }
+                
             }
             if (explodingWall)
             {
@@ -42,9 +53,13 @@ public class Explosion : MonoBehaviour
             }
         }
 
-        UnparentLimbs();
+        UnparentLimbs();       
         
-        
+    }
+
+    public void DelayExplosion(float time)
+    {
+        Invoke(nameof(CreateExplosion), time);
     }
 
     public void ExplosionVisuals()

@@ -4,21 +4,22 @@ using UnityEngine;
 
 public class Spikes : MonoBehaviour
 {
-
+    //public bool debug;
     List<SpikesWeightData> m_spikesData;
+    [SerializeField] bool m_pushesRagdoll;
 
     private void Awake()
     {
         m_spikesData = new List<SpikesWeightData>();
     }
-				
+
     // On trigger enter kill the character that collided. 
     private void OnTriggerEnter2D(Collider2D collision)
-	{
-	    DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
+    {
+        DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
 
-		if (cmpDemon != null)
-		{
+        if (cmpDemon != null)
+        {
             bool isCounted = false;
 
             for (int i = 0; i < m_spikesData.Count; i++)
@@ -40,7 +41,7 @@ public class Spikes : MonoBehaviour
                 if (cmpDemon.IsControlledByPlayer)
                 {
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
-                    cmpDemon.IsInDanger = true;                                        
+                    cmpDemon.IsInDanger = true;
                     collision.GetComponentInParent<BloodInstantiate>().InstantiateBlood();
                     cmpDemon.Die(true);
                 }
@@ -49,14 +50,26 @@ public class Spikes : MonoBehaviour
                     if (!cmpDemon.IsInDanger)
                     {
                         m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
-                        cmpDemon.IsInDanger = true;                        
+                        cmpDemon.IsInDanger = true;
                         cmpDemon.Die(true);
                     }
                 }
             }
 
-		}
-	}
+        }
+    }
+
+    private void LateUpdate()
+    {
+        //if (debug)
+        //{
+        //    Debug.LogError(m_spikesData.Count);
+        //}
+        for (int i = 0; i < m_spikesData.Count; i++)
+        {
+            m_spikesData[i].AssociatedDemon.IsInDanger = true;
+        }
+    }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -75,19 +88,34 @@ public class Spikes : MonoBehaviour
                         m_spikesData[i].Colliders.Remove(collision);
 
                         //all the limbs have exited the spikes
-                        if(m_spikesData[i].Colliders.Count == 0)
+                        if (m_spikesData[i].Colliders.Count == 0)
                         {
-                            cmpDemon.IsInDanger = false;                            
                             m_spikesData.RemoveAt(i);
-                        }
-                        else if(m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
-                        {                            
                             cmpDemon.IsInDanger = false;
+                        }
+                        else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
+                        {
                             m_spikesData.RemoveAt(i);
+                            cmpDemon.IsInDanger = false;
                         }
                     }
                 }
-            }            
+            }
         }
-    }    
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (m_pushesRagdoll)
+        {
+            DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
+            if (cmpDemon != null)
+            {
+                cmpDemon.Die(true);
+                
+                cmpDemon.ApplyForceToRagdoll((collision.transform.position - (Vector3) collision.contacts[0].point).normalized * 50f);
+            }
+        }
+    }
+
 }
