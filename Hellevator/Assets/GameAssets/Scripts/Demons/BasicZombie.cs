@@ -260,7 +260,10 @@ public class BasicZombie : DemonBase
         }
         enabled = false;
     }
-
+    private void OnDisable()
+    {
+        m_skullIndicator.SetActive(false);
+    }
     public void VerticalMovementOnLadder(float verticalInput)
     {
         if (m_isOnLadder)
