@@ -983,9 +983,10 @@ public abstract class DemonBase : MonoBehaviour
         if (m_isControlledByPlayer)
         {
             //Debug.LogError("Player died: " + name);
-            PossessionManager.Instance.RemoveDemonPossession(transform);
-            m_isDead = true;
             UseSkill();
+            m_isDead = true;
+            PossessionManager.Instance.RemoveDemonPossession(transform);
+            
         }
         else if (m_isControlledByIA)
         {

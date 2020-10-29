@@ -210,12 +210,12 @@ public class BasicZombie : DemonBase
         if (skullIndicator)
         {
 
-            if(PossessionManager.Instance.DemonShowingSkull == this && IsControlledByPlayer)
+            if(PossessionManager.Instance.DemonShowingSkull == this && (IsControlledByPlayer || IsInDanger || IsPossessionBlocked))
             {
                 PossessionManager.Instance.DemonShowingSkull = null;
             }
 
-            if (IsDead && PossessionManager.Instance.ControlledDemon != null && !IsInDanger && !PossessionManager.Instance.ControllingMultipleDemons)
+            if (IsDead && PossessionManager.Instance.ControlledDemon != null && !IsInDanger && !PossessionManager.Instance.ControllingMultipleDemons && !IsPossessionBlocked)
             {
                 DistanceToPlayer = Vector2.Distance(m_torso.transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
                 if (DistanceToPlayer <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
