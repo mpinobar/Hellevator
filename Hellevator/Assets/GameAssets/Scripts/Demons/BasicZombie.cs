@@ -9,35 +9,37 @@ public class BasicZombie : DemonBase
 
 
     [Header("Movement")]
-    [SerializeField] private float m_maxSpeed;
-    [SerializeField] private float m_acceleration = 7;
-    [SerializeField] private float m_jumpForce = 10;
-    [SerializeField] private float m_jumpForceSecond = 10;
-    [SerializeField] private bool m_canJump;
-    [SerializeField] private bool m_canDoubleJump;
-    [SerializeField] private float m_coyoteTimeDuration = 0f;//Mirar si hacer cambio a frames
-    [SerializeField] private float m_groundCorrectionMultiplier = 3;
+    [SerializeField] List<GameObject>   m_limbsToUnparent;
+    [SerializeField] private float      m_maxSpeed;
+    [SerializeField] private float      m_acceleration = 7;
+    [SerializeField] private float      m_jumpForce = 10;
+    [SerializeField] private float      m_jumpForceSecond = 10;
+    [SerializeField] private bool       m_canJump;
+    [SerializeField] private bool       m_canDoubleJump;
+    [SerializeField] private float      m_coyoteTimeDuration = 0f;//Mirar si hacer cambio a frames
+    [SerializeField] private float      m_groundCorrectionMultiplier = 3;
+
     private bool m_isOnLadder = false;
     private bool m_hasJumped;
     private bool m_hasDoubleJumped;
     private bool m_coyoteTimeActive = false;
-    private float m_currentCoyoteTimer = 0f;
     private bool m_isHoldingJump = false;
     private bool m_tryingToGrabLadder;
-
     private bool m_jumpHasBeenPressOnAir = false;
+
     [SerializeField] private float m_jumpHasBeenPressOnAirTimer = 0f;
     private float m_currentTimerJumpOnAir = 0f;
 
+    private float m_currentCoyoteTimer = 0f;
     private float m_previousGravityScale = 0f;
+    private float m_skullOffset;
     private Vector3 m_previousVelocity = Vector3.zero;
     LayerMask ladderLayer = 1 << 12;
 
     [Header("References")]
-    [SerializeField] ParticleSystem walkingParticles;
+    //[SerializeField] ParticleSystem m_walkingParticles;
     [SerializeField] bool m_SoyUnNiñoDeVerdad;
-    [SerializeField] GameObject skullIndicator;
-    float skullOffset;
+    [SerializeField] GameObject m_skullIndicator;
 
     [Header("Gravity")]
     [Range(1,20)]
@@ -61,9 +63,9 @@ public class BasicZombie : DemonBase
 
     [Header("Color")]
     [ColorUsage(true,true)]
-    [SerializeField] Color colorSkullIndicatorExplosive;
+    [SerializeField] Color m_colorSkullIndicatorExplosive;
     [ColorUsage(true,true)]
-    [SerializeField] Color colorSkullIndicatorPetrification;
+    [SerializeField] Color m_colorSkullIndicatorPetrification;
     [SerializeField] GameObject m_faceCover;
 
     #endregion
@@ -91,17 +93,17 @@ public class BasicZombie : DemonBase
     {
         base.Awake();
         m_faceCover.SetActive(false);
-        if (skullIndicator)
+        if (m_skullIndicator)
         {
 
-            skullOffset = skullIndicator.transform.position.y - m_torso.transform.position.y;
+            m_skullOffset = m_skullIndicator.transform.position.y - m_torso.transform.position.y;
             if (GetComponent<Explosion>() != null)
             {
-                skullIndicator.GetComponent<SpriteRenderer>().color = colorSkullIndicatorExplosive;
+                m_skullIndicator.GetComponent<SpriteRenderer>().color = m_colorSkullIndicatorExplosive;
             }
             else if (GetComponent<Petrification>() != null)
             {
-                skullIndicator.GetComponent<SpriteRenderer>().color = colorSkullIndicatorPetrification;
+                m_skullIndicator.GetComponent<SpriteRenderer>().color = m_colorSkullIndicatorPetrification;
             }
         }
         else
@@ -195,7 +197,7 @@ public class BasicZombie : DemonBase
         m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
         m_myAnimator.SetFloat("yMovement", Mathf.Abs(MyRgb.velocity.y * 0.1f));
 
-        
+
 
     }
 
@@ -207,10 +209,10 @@ public class BasicZombie : DemonBase
 
     public void SkullIndicator()
     {
-        if (skullIndicator)
+        if (m_skullIndicator)
         {
 
-            if(PossessionManager.Instance.DemonShowingSkull == this && (IsControlledByPlayer || IsInDanger || IsPossessionBlocked))
+            if (PossessionManager.Instance.DemonShowingSkull == this && (IsControlledByPlayer || IsInDanger || IsPossessionBlocked))
             {
                 PossessionManager.Instance.DemonShowingSkull = null;
             }
@@ -223,29 +225,42 @@ public class BasicZombie : DemonBase
                     if (PossessionManager.Instance.DemonShowingSkull == null || PossessionManager.Instance.DemonShowingSkull == this || (PossessionManager.Instance.DemonShowingSkull != this && PossessionManager.Instance.DemonShowingSkull.DistanceToPlayer > DistanceToPlayer))
                     {
                         PossessionManager.Instance.DemonShowingSkull = this;
-                        skullIndicator.SetActive(true);
-                        skullIndicator.transform.position = m_torso.transform.position + Vector3.up * skullOffset;
+                        m_skullIndicator.SetActive(true);
+                        m_skullIndicator.transform.position = m_torso.transform.position + Vector3.up * m_skullOffset;
                     }
                     else
                     {
-                        skullIndicator.SetActive(false);
+                        m_skullIndicator.SetActive(false);
                     }
 
                 }
                 else
                 {
 
-                    skullIndicator.SetActive(false);
+                    m_skullIndicator.SetActive(false);
                 }
             }
             else
             {
-                skullIndicator.SetActive(false);
+                m_skullIndicator.SetActive(false);
             }
         }
     }
 
-  
+    public void UnparentLimbs(float explosionForce)
+    {
+        RagdollLogicCollider.gameObject.SetActive(false);
+        for (int i = 0; i < m_limbsToUnparent.Count; i++)
+        {
+            m_limbsToUnparent[i].transform.parent = null;
+            m_limbsToUnparent[i].GetComponent<HingeJoint2D>().enabled = false;
+            m_limbsToUnparent[i].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            if (explosionForce > 0)
+                m_limbsToUnparent[i].GetComponent<Rigidbody2D>().AddForce((Vector2.up + Random.Range(-2, 2) * Vector2.right) * explosionForce, ForceMode2D.Impulse);
+        }
+        enabled = false;
+    }
+
     public void VerticalMovementOnLadder(float verticalInput)
     {
         if (m_isOnLadder)
@@ -394,7 +409,7 @@ public class BasicZombie : DemonBase
             }
         }
     }
-    
+
     public override void StopMovement()
     {
         MyRgb.velocity = Vector3.zero;
@@ -417,7 +432,7 @@ public class BasicZombie : DemonBase
             m_hasDoubleJumped = false;
             MyRgb.gravityScale = 0f;
             m_myAnimator.SetBool("OnLadder", onLadder);
-            
+
         }
         m_faceCover.SetActive(onLadder);
     }

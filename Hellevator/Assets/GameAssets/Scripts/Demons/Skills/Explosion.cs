@@ -8,16 +8,20 @@ public class Explosion : MonoBehaviour
     [SerializeField] ParticleSystem     m_explosionParticles;
     [SerializeField] float              m_explosionRadius;
     [SerializeField] float              m_explosionForce;
-    [SerializeField] LayerMask          m_explosionInteractionLayerMask;
-    [SerializeField] List<GameObject>   m_limbsToUnparent;
+    [SerializeField] LayerMask          m_explosionInteractionLayerMask;    
+    BasicZombie                         m_demonCmp;
 
+    private void Start()
+    {
+        m_demonCmp = GetComponent<BasicZombie>();
+    }
     public void CreateExplosion()
     {
         Debug.DrawLine(transform.position, transform.position + transform.up * m_explosionRadius, Color.red, 2f);
-        GetComponent<DemonBase>().RagdollLogicCollider.gameObject.SetActive(false);
+        m_demonCmp.RagdollLogicCollider.gameObject.SetActive(false);
 
         ExplosionVisuals();
-        GetComponent<DemonBase>().enabled = false;
+        m_demonCmp.enabled = false;
         
         //PossessionManager.Instance.RemoveDemonPossession(transform);
         Collider2D [] colliders = Physics2D.OverlapCircleAll(transform.position,m_explosionRadius,m_explosionInteractionLayerMask);
@@ -53,7 +57,7 @@ public class Explosion : MonoBehaviour
             }
         }
 
-        UnparentLimbs();       
+        m_demonCmp.UnparentLimbs(m_explosionForce);       
         
     }
 
@@ -70,14 +74,5 @@ public class Explosion : MonoBehaviour
             m_explosionParticles.transform.GetChild(i).GetComponent<ParticleSystem>().Play();
         }
     }
-    public void UnparentLimbs()
-    {
-        for (int i = 0; i < m_limbsToUnparent.Count; i++)
-        {
-            m_limbsToUnparent[i].transform.parent = null;
-            m_limbsToUnparent[i].GetComponent<HingeJoint2D>().enabled = false;
-            m_limbsToUnparent[i].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            m_limbsToUnparent[i].GetComponent<Rigidbody2D>().AddForce((Vector2.up + Random.Range(-2, 2) * Vector2.right) * m_explosionForce, ForceMode2D.Impulse);
-        }
-    }
+
 }
