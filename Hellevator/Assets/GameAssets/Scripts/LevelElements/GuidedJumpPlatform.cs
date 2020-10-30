@@ -15,6 +15,7 @@ public class GuidedJumpPlatform : MonoBehaviour
         if(collision.GetComponentInParent<DemonBase>() != null && collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
         {
             StartCoroutine(TransferToDestination(collision.transform.root));
+            transform.GetChild(1).GetComponent<Animator>().SetTrigger("Active");
         }
     }
 
