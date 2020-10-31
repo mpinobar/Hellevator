@@ -45,14 +45,14 @@ public class SpawnerMatadero : MonoBehaviour
             //Debug.LogError(Vector2.Distance(m_spawnedCharacters[0].Torso.transform.position, m_endingPosition.position));
             for (int i = 0; i < m_spawnedCharacters.Count; i++)
             {
-                if (m_spawnedCharacters[i].IsControlledByPlayer)
+                if (m_spawnedCharacters[i].IsControlledByPlayer || !m_spawnedCharacters[i].enabled)
                 {
                     m_spawnedCharacters[i].transform.parent = null;
                     m_spawnedCharacters[i].SetRagdollNewGravity(1);
                     m_spawnedCharacters.Remove(m_spawnedCharacters[i]);
                     i--;
                 }
-                else if (Vector2.Distance(m_spawnedCharacters[i].Torso.transform.position, m_endingPosition.position) <= 2f)
+                else if (Vector2.Distance(m_spawnedCharacters[i].Torso.transform.position, m_endingPosition.position) <= 2f )
                 {
                     m_spawnedCharacters[i].gameObject.SetActive(false);
                     m_spawnedCharacters[i].IsPossessionBlocked = true;
