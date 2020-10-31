@@ -21,6 +21,11 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     [SerializeField] GameObject cameraPrefab;
 
+    bool m_isSwitchingToNewScene;
+    bool m_canLoad;
+    string m_newSceneName;
+    string m_previousScene;
+
     bool m_hasKitchenKey;
     public CheckPoint LastCheckPoint
     {
@@ -36,6 +41,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
     public LevelLoadManager CentralScene { get => m_centralScene; set => m_centralScene = value; }
     public bool HasKitchenKey { get => m_hasKitchenKey; set => m_hasKitchenKey = value; }
+    public bool CanLoad { get => m_canLoad; set => m_canLoad = value; }
+    public string PreviousScene { get => m_previousScene; set => m_previousScene = value; }
 
 
     /// <summary>
@@ -67,6 +74,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void Update()
     {
+  
         if (m_isRestarting)
         {
             //if (m_loadingScene.isDone)
@@ -89,6 +97,31 @@ public class LevelManager : PersistentSingleton<LevelManager>
             Time.timeScale = 1;
             //}
         }
+
+        if (m_isSwitchingToNewScene)
+        {
+            
+            if(m_loadingScene.progress >= 0.9f && m_canLoad)
+            {
+                //Debug.LogError("Done loading scene " + m_newSceneName);
+                //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
+                m_isSwitchingToNewScene = false;
+                AsyncOperation op = SceneManager.UnloadSceneAsync(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
+                m_loadingScene.allowSceneActivation = true;
+                FadeManager.Instance.StartFadingOut();
+                PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName("PersistentGameObjects"));
+                //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
+                op.completed += UnloadCompleted;
+            }
+        }
+    }
+    
+    private void UnloadCompleted(AsyncOperation obj)
+    {
+        //PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
+        //Debug.LogError("Unloaded successfully");
+        //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
+
     }
 
     /// <summary>
@@ -116,6 +149,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public void StartRestartingLevel()
     {
         FadeManager.Instance.StartFadingIn();
+        FadeManager.Instance.IsRestarting = true;
     }
     public void RestartLevel()
     {
@@ -127,7 +161,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         if(m_adjacentScenes != null)
          m_adjacentScenes.Clear();
         CentralScene = null;
-        op.completed += Op_completed;
+        op.completed += LoadCompletedRestart;
 
         if (m_checkPoints != null && m_checkPoints.Count > 0)
         {
@@ -135,7 +169,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
     }
 
-    private void Op_completed(AsyncOperation obj)
+    private void LoadCompletedRestart(AsyncOperation obj)
     {
         UpdateLastCheckPointReference();
 
@@ -153,42 +187,37 @@ public class LevelManager : PersistentSingleton<LevelManager>
         if (m_lastCheckPoint)
             m_lastCheckPoint.SpawnPlayer();
         FadeManager.Instance.StartFadingOut();
+        
     }
 
-    public void LoadLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
-        {
-            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
-        }
-    }
-
-    public void LoadLevel(string levelName)
-    {
-        SceneManager.LoadScene(levelName);
-    }
 
     public void LoadCentralSceneFirstTime(LevelLoadManager newCentralScene)
     {
         CentralScene = newCentralScene;
-        for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
-        {
-            SceneManager.LoadSceneAsync(m_centralScene.AdjacentScenes[i], LoadSceneMode.Additive);
-        }
-        if (m_adjacentScenes == null)
-        {
-            m_adjacentScenes = new List<string>();
-        }
-        for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
-        {
-            m_adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
-        }
 
         if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
         {
             SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
         }
+
+        //for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
+        //{
+        //    AsyncOperation op = SceneManager.LoadSceneAsync(m_centralScene.AdjacentScenes[i]);
+        //    op.allowSceneActivation = false;
+        //    m_adjScenes.Add(CentralScene.AdjacentScenes[i],op);
+        //    //m_adjScenes[CentralScene.AdjacentScenes[i]].allowSceneActivation = false;
+        //}
+        //if (m_adjacentScenes == null)
+        //{
+        //    m_adjacentScenes = new List<string>();
+        //}
+        //for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
+        //{
+        //    m_adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
+
+        //}
+
+
         //SceneManager.MoveGameObjectToScene(CameraManager.Instance.gameObject, SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
     }
 
@@ -247,5 +276,25 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
     }
 
+    
+    public void SwitchToAdjacentScene(string newSceneName)
+    {
+        m_previousScene = PossessionManager.Instance.ControlledDemon.gameObject.scene.name;
+        FadeManager.Instance.StartFadingIn();
+        m_newSceneName = newSceneName;
+        m_loadingScene = SceneManager.LoadSceneAsync(newSceneName, LoadSceneMode.Additive);
+        m_loadingScene.allowSceneActivation = false;
+        m_loadingScene.completed += LoadSwitchSceneCompleted;
+        m_isSwitchingToNewScene = true;
+        FadeManager.Instance.IsRestarting = false;
+        CanLoad = false;
+        
+        
+    }
 
+    private void LoadSwitchSceneCompleted(AsyncOperation obj)
+    {
+        PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
+        
+    }
 }
