@@ -42,7 +42,7 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.InputJump.canceled += ctx => JumpButtonReleased();
         m_controls.PlayerControls.VerticalMovement.performed += ctx => m_verticalInputValue = ctx.ReadValue<float>();
         m_controls.PlayerControls.VerticalMovement.canceled += ctx => m_verticalInputValue = ctx.ReadValue<float>();
-
+        m_controls.PlayerControls.InputInteract.performed += ctx => Interact();
         m_controls.PlayerControls.InputAbility.performed += ctx => UseSkill();
         //m_controls.PlayerControls.InputInteract.performed += ctx => Grab();
         //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
@@ -189,6 +189,13 @@ public class InputManager : PersistentSingleton<InputManager>
             m_currentDemon.transform.localScale = m_direction;
         }
     }
+    void Interact()
+    {
+        if (IsInInteactionTrigger)
+        {
+            OnInteract();
+        }
+    }
 
     void Jump()
     {
@@ -320,6 +327,7 @@ public class InputManager : PersistentSingleton<InputManager>
     private void OnEnable()
     {
         m_controls.Enable();
+        
     }
     private void OnDisable()
     {
