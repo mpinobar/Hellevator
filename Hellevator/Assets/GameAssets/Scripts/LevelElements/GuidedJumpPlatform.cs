@@ -5,39 +5,54 @@ using UnityEngine;
 public class GuidedJumpPlatform : MonoBehaviour
 {
 
-    [SerializeField] AnimationCurve xMovement;
-    [SerializeField] AnimationCurve yMovement;
-    [SerializeField] Transform endPoint;
-    [SerializeField] float transitionSpeed;
+    [SerializeField] AnimationCurve m_xMovement;
+    [SerializeField] AnimationCurve m_yMovement;
+    [SerializeField] Transform m_endPoint;
+    [SerializeField] float m_transitionSpeed;
+    Collider2D m_collider;
+
+    private void Awake()
+    {
+        m_collider = GetComponent<Collider2D>();
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.GetComponentInParent<DemonBase>() != null && collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
+        if (collision.GetComponentInParent<DemonBase>() != null && collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon && PossessionManager.Instance.ControlledDemon.CanMove)
         {
-            StartCoroutine(TransferToDestination(collision.transform.root));
+            //InputManager.Instance.ResetPlayerInput();
+            StopAllCoroutines();
+            StartCoroutine(TransferToDestination(PossessionManager.Instance.ControlledDemon.transform));
             transform.GetChild(1).GetComponent<Animator>().SetTrigger("Active");
         }
     }
 
     IEnumerator TransferToDestination(Transform characterToMove)
     {
-        float currentX = characterToMove.position.x;
-        float currentY = characterToMove.position.y;
         characterToMove.GetComponent<DemonBase>().CanMove = false;
+        Rigidbody2D rgb = characterToMove.GetComponent<Rigidbody2D>();
+
+        rgb.gravityScale = 0;
+        rgb.isKinematic = true;
+        rgb.velocity = Vector2.zero;
+
         Vector3 posToMove = Vector3.zero;
+        Vector3 initPos = characterToMove.position;
         float time = 0;
-        while (Vector3.Distance(characterToMove.position,endPoint.position) > 0.2f)
+        m_collider.enabled = false;
+
+        while (time < 1)
         {
-            time += Time.deltaTime * transitionSpeed;
-            currentX = Mathf.LerpUnclamped(currentX, endPoint.position.x, xMovement.Evaluate(time));
-            currentY = Mathf.LerpUnclamped(currentY, endPoint.position.y, yMovement.Evaluate(time));
-            posToMove.x = currentX;
-            posToMove.y = currentY;
+            time += Time.deltaTime * m_transitionSpeed;
+            posToMove.x = initPos.x + ((m_endPoint.position.x - initPos.x) * m_xMovement.Evaluate(time));
+            posToMove.y = initPos.y + ((m_endPoint.position.y - initPos.y) * m_yMovement.Evaluate(time));
             characterToMove.position = posToMove;
             yield return null;
         }
-        characterToMove.position = endPoint.position;
+
         characterToMove.GetComponent<DemonBase>().CanMove = true;
-        InputManager.Instance.ResetPlayerInput();
+        rgb.isKinematic = false;
+        m_collider.enabled = true;
     }
 }
