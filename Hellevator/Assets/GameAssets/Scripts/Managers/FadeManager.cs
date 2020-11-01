@@ -17,11 +17,12 @@ public class FadeManager : TemporalSingleton<FadeManager>
     private FadeState m_currentFadeState = FadeState.None;
 
     private float m_newAlpha = 0f;
-
+    private bool m_isRestarting = false;    
     [SerializeField] private float m_percentajeOfFadeForPlayerToMove = 0f;
     private bool m_playerCanMove = false;
 
     public bool PlayerCanMove { get => m_playerCanMove; set => m_playerCanMove = value; }
+    public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -43,7 +44,12 @@ public class FadeManager : TemporalSingleton<FadeManager>
                         m_newAlpha = 1;
                         m_currentFadeState = FadeState.None;
                         m_blackPanel.color = new Color(m_blackPanel.color.r, m_blackPanel.color.g, m_blackPanel.color.b, m_newAlpha);
-                        LevelManager.Instance.RestartLevel();
+                        if (m_isRestarting)
+                        {
+                            LevelManager.Instance.RestartLevel();
+                            m_isRestarting = false;
+                        }
+                        LevelManager.Instance.CanLoad = true;
                     }
                     m_blackPanel.color = new Color(m_blackPanel.color.r, m_blackPanel.color.g, m_blackPanel.color.b, m_newAlpha);
                 }

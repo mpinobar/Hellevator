@@ -20,7 +20,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     public DemonBase DemonShowingSkull { get => demonShowingSkull; set => demonShowingSkull = value; }
     public Boss Boss { get => boss; set => boss = value; }
 
-    [SerializeField] LayerMask m_ragdollBodyMask;
+    [SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
     [SerializeField] GameObject m_PossessionLight;
     private PossessingLight m_pLight;
 
@@ -30,13 +30,22 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     DemonBase demonShowingSkull;
 
-    [SerializeField] int m_maxDemonsPossessed;
+    [SerializeField] int m_maxDemonsPossessed = 2;
 
     Boss boss;
 
     private void Start()
     {
         InputManager.Instance.UpdateDemonReference();
+
+        if (m_PossessionLight == null)
+        {
+            Debug.LogError("FALTABA POSSESSION MANAGER, CREANDO UNO CON REFERENCIAS POR CODIGO. PARA LA PROXIMA INTENTAD ARRASTRAR UNO A LA ESCENA PARA ALIGERAR LA CARGA DE RECURSOS PLEASE");
+            string path = "PossessingLight";
+            m_PossessionLight = (GameObject) Resources.Load(path, typeof(GameObject));
+            //GameObject go = Instantiate(Resources.Load(path,typeof(GameObject))) as GameObject;
+            //PLight = go.GetComponent<PossessingLight>();
+        }
 
     }
 
@@ -73,7 +82,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     public void MoveDemonsToCentralScene(Scene centralScene)
     {
-        if(ControlledDemon.transform.parent == null)
+        if (ControlledDemon.transform.parent == null)
         {
             SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, centralScene);
         }
@@ -94,6 +103,20 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
     }
 
+    public void MoveMainCharacterToScene(Scene newScene)
+    {
+        if (ControlledDemon.transform.parent == null)
+        {
+            SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
+        }
+        else
+        {
+            Transform parent = ControlledDemon.transform.parent;
+            ControlledDemon.transform.parent = null;
+            SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
+            ControlledDemon.transform.parent = parent;
+        }
+    }
     public void RemoveDemonPossession(Transform currentDemon)
     {
         if (boss)
@@ -108,7 +131,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             if (extraDemonsControlled == null || extraDemonsControlled.Count == 0)
             {
                 //Debug.LogError("no extra characters controlled");
-                if(ControlledDemon)
+                if (ControlledDemon)
                     ControlledDemon.SetNotControlledByPlayer();
                 if (!currentDemon.GetComponent<DemonBase>().MultiplePossessionWhenDead)
                 {
@@ -236,7 +259,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         while (lookForRadius <= radiusLimit)
         {
             Collider2D[] other = Physics2D.OverlapCircleAll(currentDemon.transform.position, lookForRadius, m_ragdollBodyMask);
-            
+
             for (int i = 0; i < other.Length; i++)
             {
                 DemonBase foundDemon = other[i].GetComponentInParent<DemonBase>();
@@ -268,7 +291,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         ControlledDemon = null;
         InputManager.Instance.UpdateDemonReference();
 
-        
+
 
         if (demonToPossess != null)
         {
@@ -296,7 +319,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     public void PossessNewDemon(DemonBase demonToPossess)
     {
-       // Debug.LogError("Single possession of demon: " + demonToPossess.name);
+        // Debug.LogError("Single possession of demon: " + demonToPossess.name);
         demonToPossess.enabled = true;
         demonToPossess.transform.parent = null;
         ControlledDemon = demonToPossess;

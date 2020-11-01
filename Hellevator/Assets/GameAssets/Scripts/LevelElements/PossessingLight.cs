@@ -25,7 +25,7 @@ public class PossessingLight : MonoBehaviour
     {
         if (m_travelling)
         {
-            if(m_target == null || m_target.IsPossessionBlocked || m_target.IsInDanger)
+            if(m_target == null || m_target.IsPossessionBlocked || m_target.IsInDanger || !m_target.enabled)
             {
                 m_target = PossessionManager.Instance.LookForNearestDemon(m_lastDemonPossessionRange, transform, m_originDemon);
                 if(m_target == null)
