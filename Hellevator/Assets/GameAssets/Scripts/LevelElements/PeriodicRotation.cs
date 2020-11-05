@@ -4,40 +4,24 @@ using UnityEngine;
 
 public class PeriodicRotation : MonoBehaviour
 {
-    [SerializeField] float m_period = 2f;
-    float m_frecuency;
+    [SerializeField] float m_period;
     float m_angularSpeed;
     [SerializeField] float m_maxAngle = 30f;
-    bool m_isClockwise;
-    Quaternion m_targetRotation;
 
+    float time;
     private void Awake()
     {
-        m_angularSpeed = m_maxAngle * 0.5f / m_period;
-    }
-
-    private void Start()
-    {
-        m_targetRotation = Quaternion.Euler(Vector3.forward * m_maxAngle);/*Quaternion.FromToRotation(transform.eulerAngles, Vector3.forward * m_maxAngle);*/
+        m_angularSpeed = 2f * Mathf.PI / m_period;
     }
 
     // Update is called once per frame
     void Update()
     {        
-        if (Mathf.Abs(transform.eulerAngles.z - m_maxAngle) < 1.5f || Mathf.Abs(360 - transform.eulerAngles.z - m_maxAngle) < 1.5f)
+        time += Time.deltaTime;
+        if (time >= m_period * 2f)
         {
-            if (m_isClockwise)
-            {
-                m_targetRotation = Quaternion.Euler(Vector3.forward * m_maxAngle);
-
-            }
-            else
-            {
-                m_targetRotation = Quaternion.Euler(-Vector3.forward * m_maxAngle);
-            }
-            m_isClockwise = !m_isClockwise;
+            time = 0;
         }
-
-        transform.rotation = Quaternion.Lerp(transform.rotation, m_targetRotation, m_angularSpeed * Time.deltaTime);
+        transform.eulerAngles = Vector3.forward * m_maxAngle * Mathf.Sin(m_angularSpeed * time);
     }
 }
