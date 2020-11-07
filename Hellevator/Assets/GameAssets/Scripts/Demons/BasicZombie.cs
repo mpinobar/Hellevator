@@ -161,6 +161,12 @@ public class BasicZombie : DemonBase
                     }
                     else
                     {
+                        //reset de velocidad en caso de dejar de pulsar el espacio durante el primer salto
+                        if (!m_hasDoubleJumped)
+                        {
+                            MyRgb.velocity = new Vector2(MyRgb.velocity.x, 1);
+                            MyRgb.gravityScale = m_secondGravity;
+                        }
                         MyRgb.gravityScale = m_firstGravity;
                     }
 
@@ -270,30 +276,10 @@ public class BasicZombie : DemonBase
         {
             MyRgb.gravityScale = 0f;
             MyRgb.velocity = new Vector2(MyRgb.velocity.x, verticalInput * MaxSpeed);
-            //if (!m_isJumping)
-            //{
-            //    MyRgb.gravityScale = 0f;
-            //    MyRgb.velocity = new Vector2(MyRgb.velocity.x, verticalInput * MaxSpeed);
-            //}
-            //else if(verticalInput != 0)
-            //{
-            //    MyRgb.gravityScale = 0f;
-            //    MyRgb.velocity = new Vector2(MyRgb.velocity.x, verticalInput * MaxSpeed);
-            //}
         }
         else if (verticalInput != 0)
         {
             m_tryingToGrabLadder = true;
-            //RaycastHit2D ladderCheck = Physics2D.CircleCast(transform.position,0.1f,transform.up,0.1f,ladderLayer);
-            //if (ladderCheck.transform != null)
-            //{
-            //    Debug.LogError("Player trying to grab ladder" + ladderCheck.transform.name);
-            //    m_isOnLadder = true;
-            //    m_hasJumped = false;
-            //    m_hasDoubleJumped = false;
-            //    MyRgb.gravityScale = 0f;
-            //}
-
         }
         else
         {
@@ -305,13 +291,13 @@ public class BasicZombie : DemonBase
     {
         float accel = m_acceleration;
 
-        if (IsGrounded())
+        if ((MyRgb.velocity.x) * xInput < 0)
         {
-            if ((MyRgb.velocity.x) * xInput < 0)
+            if (IsGrounded())
             {
                 accel *= m_groundCorrectionMultiplier;
             }
-        }
+        }             
 
         MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, accel * Time.deltaTime), MyRgb.velocity.y);
     }

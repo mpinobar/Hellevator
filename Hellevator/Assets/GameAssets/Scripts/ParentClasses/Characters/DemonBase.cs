@@ -827,6 +827,14 @@ public abstract class DemonBase : MonoBehaviour
         }        
     }
 
+    public void ResetRagdollVelocity()
+    {
+        for (int i = 0; i < m_limbsRbds.Length; i++)
+        {
+            m_limbsRbds[i].velocity = Vector2.zero;
+        }
+    }
+
     public void ApplyForceToRagdoll(Vector2 force)
     {
         //for (int i = 0; i < m_limbsRbds.Length; i++)
