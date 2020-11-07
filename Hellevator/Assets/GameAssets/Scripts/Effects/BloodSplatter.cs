@@ -23,7 +23,15 @@ public class BloodSplatter : MonoBehaviour
         for (int i = 0; i < m_events.Count; i++)
         {
             if (Random.value <= m_probSpawnSplatter)
-                Instantiate(m_splatPrefabs[Random.Range(0, m_splatPrefabs.Length)], m_events[i].intersection - m_events[i].normal, Quaternion.Euler(0, 0, Random.value * 360), other.transform);
+            {
+                if(other.GetComponent<SpriteMask>() == null)
+                {
+                    other.AddComponent<SpriteMask>();
+                    other.GetComponent<SpriteMask>().sprite = other.GetComponent<SpriteRenderer>().sprite;
+                }
+                else
+                    Instantiate(m_splatPrefabs[Random.Range(0, m_splatPrefabs.Length)], m_events[i].intersection - m_events[i].normal, Quaternion.Euler(0, 0, Random.value * 360), other.transform);
+            }
         }
     }
 }
