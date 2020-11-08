@@ -129,7 +129,7 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             m_currentDemon.Move(m_moveInputValue);
 
-            //m_currentDemon.ToggleWalkingParticles(m_moveInputValue != 0 && m_currentDemon.IsGrounded());
+            m_currentDemon.ToggleWalkingParticles(m_moveInputValue != 0 && m_currentDemon.IsGrounded());
 
             if (m_moveInputValue > 0)
             {
