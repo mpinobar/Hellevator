@@ -823,8 +823,8 @@ public abstract class DemonBase : MonoBehaviour
     {
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
-            m_limbsRbds[i].gravityScale= newGravity;
-        }        
+            m_limbsRbds[i].gravityScale = newGravity;
+        }
     }
 
     public void ResetRagdollVelocity()
@@ -992,7 +992,7 @@ public abstract class DemonBase : MonoBehaviour
         HidePossessionRange();
         if (!m_isDead && playDeathSound)
         {
-            MusicManager.Instance.PlayAudioSFX(m_deathClip, false);
+            MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.7f);
             m_isDead = true;
 
         }
@@ -1003,7 +1003,7 @@ public abstract class DemonBase : MonoBehaviour
             UseSkill();
             m_isDead = true;
             PossessionManager.Instance.RemoveDemonPossession(transform);
-            
+
         }
         else if (m_isControlledByIA)
         {

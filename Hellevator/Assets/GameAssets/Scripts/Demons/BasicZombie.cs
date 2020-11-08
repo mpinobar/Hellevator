@@ -37,9 +37,10 @@ public class BasicZombie : DemonBase
     LayerMask ladderLayer = 1 << 12;
 
     [Header("References")]
-    //[SerializeField] ParticleSystem m_walkingParticles;
+    [SerializeField] ParticleSystem m_walkingParticles;
     [SerializeField] bool m_SoyUnNiñoDeVerdad;
     [SerializeField] GameObject m_skullIndicator;
+    [SerializeField] ParticleSystem m_jumpLandParticles;
 
     [Header("Gravity")]
     [Range(1,20)]
@@ -297,7 +298,14 @@ public class BasicZombie : DemonBase
             {
                 accel *= m_groundCorrectionMultiplier;
             }
-        }             
+        }
+        //if(xInput != 0)
+        //{
+        //    if (!m_walkingParticles.isPlaying)
+        //    {
+        //        m_walkingParticles.Play();
+        //    }
+        //}
 
         MyRgb.velocity = new Vector2(Mathf.MoveTowards(MyRgb.velocity.x, xInput * MaxSpeed, accel * Time.deltaTime), MyRgb.velocity.y);
     }
@@ -319,7 +327,7 @@ public class BasicZombie : DemonBase
                 m_coyoteTimeActive = false;
                 m_isHoldingJump = true;
                 m_myAnimator.SetTrigger("Jump");
-                MusicManager.Instance.PlayAudioSFX(m_jumpClip, false);
+                MusicManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
                 m_isOnLadder = false;
             }
             else if (m_canDoubleJump && !m_hasDoubleJumped)
@@ -328,7 +336,7 @@ public class BasicZombie : DemonBase
                 MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
                 m_hasDoubleJumped = true;
                 m_myAnimator.SetTrigger("Jump");
-                MusicManager.Instance.PlayAudioSFX(m_jumpClip, false);
+                MusicManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
             }
             else if (m_hasJumped)
             {
@@ -356,15 +364,17 @@ public class BasicZombie : DemonBase
 
     public override void ToggleWalkingParticles(bool active)
     {
-        //walkingParticles.Stop();
-        //if (active)
-        //{
-        //    walkingParticles.Play();
-        //}
-        //else
-        //{
 
-        //}
+        if (active)
+        {
+            if (!m_walkingParticles.isPlaying)
+                m_walkingParticles.Play();
+        }
+        else
+        {
+            if (m_walkingParticles.isPlaying)
+                m_walkingParticles.Stop();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -375,7 +385,8 @@ public class BasicZombie : DemonBase
             {
                 if (m_hasJumped)
                 {
-                    MusicManager.Instance.PlayAudioSFX(m_landingClip, false);
+                    MusicManager.Instance.PlayAudioSFX(m_landingClip, false, 0.5f);
+                    m_jumpLandParticles.Play();
                     m_isJumping = false;
                 }
                 m_hasJumped = false;
