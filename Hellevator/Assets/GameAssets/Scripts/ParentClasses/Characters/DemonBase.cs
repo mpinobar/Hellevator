@@ -823,8 +823,16 @@ public abstract class DemonBase : MonoBehaviour
     {
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
-            m_limbsRbds[i].gravityScale= newGravity;
-        }        
+            m_limbsRbds[i].gravityScale = newGravity;
+        }
+    }
+
+    public void ResetRagdollVelocity()
+    {
+        for (int i = 0; i < m_limbsRbds.Length; i++)
+        {
+            m_limbsRbds[i].velocity = Vector2.zero;
+        }
     }
 
     public void ApplyForceToRagdoll(Vector2 force)
@@ -976,31 +984,33 @@ public abstract class DemonBase : MonoBehaviour
     /// <summary>
     /// Die method for characters
     /// </summary>
-    public virtual void Die(bool playDeathSound)
+    public virtual void Die(bool playEffects)
     {
 
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         HidePossessionRange();
-        if (!m_isDead && playDeathSound)
+        if (!m_isDead)
         {
-            MusicManager.Instance.PlayAudioSFX(m_deathClip, false);
             m_isDead = true;
-
+            if (playEffects)
+            {
+                MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.55f);
+                GetComponent<BloodInstantiate>().InstantiateBlood();
+            }
         }
+        
+        
 
         if (m_isControlledByPlayer)
         {
             //Debug.LogError("Player died: " + name);
             UseSkill();
-            m_isDead = true;
             PossessionManager.Instance.RemoveDemonPossession(transform);
-            
         }
         else if (m_isControlledByIA)
         {
             m_isControlledByIA = false;
-            m_isDead = true;
             SetNotControlledByPlayer();
             //SetRagdollActive(true);
         }

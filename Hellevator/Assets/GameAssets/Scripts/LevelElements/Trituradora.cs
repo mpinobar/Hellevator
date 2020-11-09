@@ -10,7 +10,12 @@ public class Trituradora : MonoBehaviour
         if (character)
         {
             character.Die(true);
-            character.UnparentLimbs(0);
+            if (character.GetComponentInParent<SpawnerMatadero>())
+            {
+                character.GetComponentInParent<SpawnerMatadero>().AttachCharacterPart(character.UnparentLimbs());
+            }
+            else
+                character.UnparentBodyParts(0);
             //character.gameObject.SetActive(false);
         }
     }

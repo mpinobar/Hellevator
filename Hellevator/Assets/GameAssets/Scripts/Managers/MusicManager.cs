@@ -138,4 +138,48 @@ public class MusicManager : TemporalSingleton<MusicManager>
             return m_sourcesList[m_sourcesList.Count - 1];
         }        
     }
+
+
+    public AudioSource PlayAudioSFX(AudioClip clip, bool looping, float volumeModifier)
+    {
+        if (m_sourcesList == null)
+        {
+            m_sourcesList = new List<AudioSource>();
+        }
+
+        if (m_sourcesList.Count == 0)
+        {
+            m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
+            m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
+            m_sourcesList[m_sourcesList.Count - 1].clip = clip;
+            m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume*volumeModifier;
+            m_sourcesList[m_sourcesList.Count - 1].loop = looping;
+            m_sourcesList[m_sourcesList.Count - 1].Play();
+            return m_sourcesList[m_sourcesList.Count - 1];
+        }
+        else
+        {
+
+            for (int i = 0; i < m_sourcesList.Count; i++)
+            {
+                if (!m_sourcesList[i].isPlaying)
+                {
+                    m_sourcesList[i].clip = clip;
+                    m_sourcesList[i].volume = m_sfxVolume * volumeModifier;
+                    m_sourcesList[i].loop = looping;
+                    m_sourcesList[i].Play();
+
+                    return m_sourcesList[i];
+                }
+            }
+
+            m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
+            m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
+            m_sourcesList[m_sourcesList.Count - 1].clip = clip;
+            m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume * volumeModifier;
+            m_sourcesList[m_sourcesList.Count - 1].loop = looping;
+            m_sourcesList[m_sourcesList.Count - 1].Play();
+            return m_sourcesList[m_sourcesList.Count - 1];
+        }
+    }
 }

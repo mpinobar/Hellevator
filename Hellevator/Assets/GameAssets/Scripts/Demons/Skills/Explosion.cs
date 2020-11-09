@@ -57,7 +57,7 @@ public class Explosion : MonoBehaviour
             }
         }
 
-        m_demonCmp.UnparentLimbs(m_explosionForce);       
+        m_demonCmp.UnparentBodyParts(m_explosionForce);       
         
     }
 

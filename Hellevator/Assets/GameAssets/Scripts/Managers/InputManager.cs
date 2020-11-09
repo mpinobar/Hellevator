@@ -40,6 +40,7 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.InputMove.canceled += ctx => m_moveInputValue = ctx.ReadValue<float>();
         m_controls.PlayerControls.InputJump.performed += ctx => Jump();
         m_controls.PlayerControls.InputJump.canceled += ctx => JumpButtonReleased();
+        m_controls.PlayerControls.VerticalMovement.performed += ctx => VerticalInputStart(ctx.ReadValue<float>());
         m_controls.PlayerControls.VerticalMovement.performed += ctx => m_verticalInputValue = ctx.ReadValue<float>();
         m_controls.PlayerControls.VerticalMovement.canceled += ctx => m_verticalInputValue = ctx.ReadValue<float>();
         m_controls.PlayerControls.InputInteract.performed += ctx => Interact();
@@ -129,7 +130,7 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             m_currentDemon.Move(m_moveInputValue);
 
-            //m_currentDemon.ToggleWalkingParticles(m_moveInputValue != 0 && m_currentDemon.IsGrounded());
+            m_currentDemon.ToggleWalkingParticles(m_moveInputValue != 0 && m_currentDemon.IsGrounded());
 
             if (m_moveInputValue > 0)
             {
@@ -219,10 +220,8 @@ public class InputManager : PersistentSingleton<InputManager>
                 }
             }
         }
-
-
-
     }
+
     void JumpButtonReleased()
     {
         if (m_currentDemon != null && m_currentDemon.CanMove)
@@ -242,6 +241,25 @@ public class InputManager : PersistentSingleton<InputManager>
 
     }
 
+    public void VerticalInputStart(float verticalInput)
+    {
+        if(verticalInput < 0)
+        {
+            if (m_currentDemon != null && m_currentDemon.CanMove)
+                ((BasicZombie)m_currentDemon).CheckTraversePlatform();
+
+            if (PossessionManager.Instance.ControllingMultipleDemons)
+            {
+                for (int i = 0; i < m_extraDemonsControlled.Count; i++)
+                {
+                    if (m_extraDemonsControlled[i].CanMove)
+                    {
+                        ((BasicZombie)m_extraDemonsControlled[i]).CheckTraversePlatform();
+                    }
+                }
+            }
+        }        
+    }
 
 
     void PossesNearestDemon()
