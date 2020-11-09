@@ -22,7 +22,7 @@ public class SpawnerMatadero : MonoBehaviour
     {
         m_spawnedCharacters = new List<DemonBase>();
         m_timeToSpawnNewCharacterTimer = m_timeToSpawnNewCharacter;
-        
+
     }
 
     // Start is called before the first frame update
@@ -36,13 +36,13 @@ public class SpawnerMatadero : MonoBehaviour
     {
 
         m_timeToSpawnNewCharacterTimer -= Time.deltaTime;
-        if(m_timeToSpawnNewCharacterTimer <= 0)
+        if (m_timeToSpawnNewCharacterTimer <= 0)
         {
             SpawnNewCharacter();
             m_timeToSpawnNewCharacterTimer = m_timeToSpawnNewCharacter;
         }
 
-        if(m_spawnedCharacters.Count > 0)
+        if (m_spawnedCharacters.Count > 0)
         {
             //Debug.LogError(Vector2.Distance(m_spawnedCharacters[0].Torso.transform.position, m_endingPosition.position));
             for (int i = 0; i < m_spawnedCharacters.Count; i++)
@@ -52,7 +52,7 @@ public class SpawnerMatadero : MonoBehaviour
                     DetachCharacter(m_spawnedCharacters[i]);
                     i--;
                 }
-                else if (Vector2.Distance(m_spawnedCharacters[i].Torso.transform.position, m_endingPosition.position) <= 2f )
+                else if (Vector2.Distance(m_spawnedCharacters[i].Torso.transform.position, m_endingPosition.position) <= 2f)
                 {
                     m_spawnedCharacters[i].gameObject.SetActive(false);
                     m_spawnedCharacters[i].IsPossessionBlocked = true;
@@ -62,37 +62,42 @@ public class SpawnerMatadero : MonoBehaviour
                 {
                     //Debug.LogError("movingCharacter" + i);
                     //m_spawnedCharacters[i].SetTorsoKinematic(true);
-                    m_spawnedCharacters[i].Torso.position += (Vector3) m_movingDirection * m_movementSpeed * Time.deltaTime;
+                    m_spawnedCharacters[i].Torso.position += (Vector3)m_movingDirection * m_movementSpeed * Time.deltaTime;
                 }
             }
 
-            if(m_attachedParts != null)
+            if (m_attachedParts != null)
             {
                 for (int i = 0; i < m_attachedParts.Count; i++)
                 {
                     m_attachedParts[i].position += (Vector3)m_movingDirection * m_movementSpeed * Time.deltaTime;
-                    if(Vector2.Distance(m_attachedParts[i].position,m_endingPosition.position) <= 2f)
+                    if (Vector2.Distance(m_attachedParts[i].position, m_endingPosition.position) <= 2f)
                     {
-                        DestroyPartAndParentDemon(m_attachedParts[i]);                        
+                        DestroyPartAndParentDemon(m_attachedParts[i]);
                     }
                 }
             }
-        }        
+        }
     }
 
     public void DetachCharacter(DemonBase characterToDetach)
     {
         if (m_spawnedCharacters.Contains(characterToDetach))
         {
+            Debug.LogError("Detaching character " + characterToDetach.name);
             characterToDetach.transform.parent = null;
             characterToDetach.SetRagdollNewGravity(1);
             m_spawnedCharacters.Remove(characterToDetach);
-        }        
+        }
+        else
+        {
+            Debug.LogError("Trying to detach a character that isn't attached. Character is: " + characterToDetach.name);
+        }
     }
 
     public void AttachCharacterPart(Transform part)
     {
-        if(m_attachedParts == null)
+        if (m_attachedParts == null)
         {
             m_attachedParts = new List<Transform>();
         }
@@ -109,10 +114,10 @@ public class SpawnerMatadero : MonoBehaviour
         m_attachedParts.Remove(partToDestroy);
         BasicZombie parentDemon = (BasicZombie)partToDestroy.GetComponentInChildren<RagdollLogicalCollider>(true).ParentDemon;
         SpriteSkin [] skins = parentDemon.GetComponentsInChildren<SpriteSkin>();
-        
+
         for (int i = 0; i < skins.Length; i++)
         {
-            if(skins[i].boneTransforms[0].parent != null)
+            if (skins[i].boneTransforms[0].parent != null)
             {
                 skins[i].gameObject.SetActive(false);
             }
@@ -124,7 +129,7 @@ public class SpawnerMatadero : MonoBehaviour
     }
 
     public void SpawnNewCharacter()
-    {        
+    {
         if (m_spawnedCharacters.Count > 0)
         {
             for (int i = 0; i < m_spawnedCharacters.Count; i++)

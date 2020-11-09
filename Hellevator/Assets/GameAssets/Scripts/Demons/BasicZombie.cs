@@ -458,6 +458,18 @@ public class BasicZombie : DemonBase
                 }
             }
         }
+        else
+        {
+            if(transform.parent != null)
+            {
+                SpawnerMatadero sm = GetComponentInParent<SpawnerMatadero>();
+                if(sm != null)
+                {
+                    sm.DetachCharacter(this);
+                }
+            }
+            
+        }
     }
 
     public override void StopMovement()

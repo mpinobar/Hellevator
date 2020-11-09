@@ -28,6 +28,17 @@ public class RagdollLogicalCollider : MonoBehaviour
             //{
             //    LimbsColliders[i].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             //}
+
+
+            if (m_parentDemon.transform.parent != null)
+            {
+                SpawnerMatadero sm = GetComponentInParent<SpawnerMatadero>();
+                if (sm != null)
+                {
+                    sm.DetachCharacter(m_parentDemon);
+                }
+            }
+
         }
 
     }
