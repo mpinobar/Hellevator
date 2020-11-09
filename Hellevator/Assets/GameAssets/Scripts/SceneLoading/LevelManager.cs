@@ -106,12 +106,12 @@ public class LevelManager : PersistentSingleton<LevelManager>
                 //Debug.LogError("Done loading scene " + m_newSceneName);
                 //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
                 m_isSwitchingToNewScene = false;
-                AsyncOperation op = SceneManager.UnloadSceneAsync(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
+				AsyncOperation op = SceneManager.UnloadSceneAsync(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
+				PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName("PersistentGameObjects"));
                 m_loadingScene.allowSceneActivation = true;
-                FadeManager.Instance.StartFadingOut();
-                PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName("PersistentGameObjects"));
+                FadeManager.Instance.StartFadingOut();                
                 //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
-                op.completed += UnloadCompleted;
+                //op.completed += UnloadCompleted;
             }
         }
     }
