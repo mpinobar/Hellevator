@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 public class SpawnerMatadero : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class SpawnerMatadero : MonoBehaviour
     [SerializeField] float m_movementSpeed = 2f;
 
     List<DemonBase> m_spawnedCharacters;
+    List<Transform> m_attachedParts;
 
     Vector2 m_movingDirection;
 
@@ -47,9 +49,7 @@ public class SpawnerMatadero : MonoBehaviour
             {
                 if (m_spawnedCharacters[i].IsControlledByPlayer || !m_spawnedCharacters[i].enabled)
                 {
-                    m_spawnedCharacters[i].transform.parent = null;
-                    m_spawnedCharacters[i].SetRagdollNewGravity(1);
-                    m_spawnedCharacters.Remove(m_spawnedCharacters[i]);
+                    DetachCharacter(m_spawnedCharacters[i]);
                     i--;
                 }
                 else if (Vector2.Distance(m_spawnedCharacters[i].Torso.transform.position, m_endingPosition.position) <= 2f )
@@ -65,10 +65,63 @@ public class SpawnerMatadero : MonoBehaviour
                     m_spawnedCharacters[i].Torso.position += (Vector3) m_movingDirection * m_movementSpeed * Time.deltaTime;
                 }
             }
-        }
-        
+
+            if(m_attachedParts != null)
+            {
+                for (int i = 0; i < m_attachedParts.Count; i++)
+                {
+                    m_attachedParts[i].position += (Vector3)m_movingDirection * m_movementSpeed * Time.deltaTime;
+                    if(Vector2.Distance(m_attachedParts[i].position,m_endingPosition.position) <= 2f)
+                    {
+                        DestroyPartAndParentDemon(m_attachedParts[i]);                        
+                    }
+                }
+            }
+        }        
     }
 
+    public void DetachCharacter(DemonBase characterToDetach)
+    {
+        if (m_spawnedCharacters.Contains(characterToDetach))
+        {
+            characterToDetach.transform.parent = null;
+            characterToDetach.SetRagdollNewGravity(1);
+            m_spawnedCharacters.Remove(characterToDetach);
+        }        
+    }
+
+    public void AttachCharacterPart(Transform part)
+    {
+        if(m_attachedParts == null)
+        {
+            m_attachedParts = new List<Transform>();
+        }
+        m_attachedParts.Add(part);
+        part.parent = transform;
+        part.GetComponent<Rigidbody2D>().isKinematic = true;
+        //desactiva el game object del fuego de posesion
+        part.GetChild(part.childCount - 1).gameObject.SetActive(false);
+    }
+
+    private void DestroyPartAndParentDemon(Transform partToDestroy)
+    {
+        Destroy(partToDestroy.gameObject);
+        m_attachedParts.Remove(partToDestroy);
+        BasicZombie parentDemon = (BasicZombie)partToDestroy.GetComponentInChildren<RagdollLogicalCollider>(true).ParentDemon;
+        SpriteSkin [] skins = parentDemon.GetComponentsInChildren<SpriteSkin>();
+        
+        for (int i = 0; i < skins.Length; i++)
+        {
+            if(skins[i].boneTransforms[0].parent != null)
+            {
+                skins[i].gameObject.SetActive(false);
+            }
+        }
+        Destroy(parentDemon.gameObject, 10f);
+        //.gameObject.SetActive(false);
+        //partToDestroy.GetComponentInChildren<RagdollLogicalCollider>(true).ParentDemon.gameObject.SetActive(true);
+        //Destroy(partToDestroy.GetComponentInChildren<RagdollLogicalCollider>(true).ParentDemon.gameObject);
+    }
 
     public void SpawnNewCharacter()
     {        

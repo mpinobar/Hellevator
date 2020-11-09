@@ -10,6 +10,7 @@ public class BasicZombie : DemonBase
 
     [Header("Movement")]
     [SerializeField] List<GameObject>   m_limbsToUnparent;
+    [SerializeField] private float      m_timeToDestroyLimbsAfterUnparenting = 10f;
     [SerializeField] private float      m_maxSpeed;
     [SerializeField] private float      m_acceleration = 7;
     [SerializeField] private float      m_jumpForce = 10;
@@ -19,7 +20,7 @@ public class BasicZombie : DemonBase
     [SerializeField] private float      m_coyoteTimeDuration = 0f;//Mirar si hacer cambio a frames
     [SerializeField] private float      m_groundCorrectionMultiplier = 3;
     [SerializeField] private float      m_waitTimeResetPlatformTraversal = 0.5f;
-
+    
     private bool m_isOnLadder = false;
     private bool m_hasJumped;
     private bool m_hasDoubleJumped;
@@ -118,11 +119,7 @@ public class BasicZombie : DemonBase
 
     protected override void Update()
     {
-
-
         base.Update();
-
-
 
         if (CanMove)
         {
@@ -256,7 +253,7 @@ public class BasicZombie : DemonBase
         }
     }
 
-    public void UnparentLimbs(float explosionForce)
+    public void UnparentBodyParts(float explosionForce)
     {
         RagdollLogicCollider.gameObject.SetActive(false);
         for (int i = 0; i < m_limbsToUnparent.Count; i++)
@@ -264,15 +261,32 @@ public class BasicZombie : DemonBase
             m_limbsToUnparent[i].transform.parent = null;
             m_limbsToUnparent[i].GetComponent<HingeJoint2D>().enabled = false;
             m_limbsToUnparent[i].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            Destroy(m_limbsToUnparent[i], m_timeToDestroyLimbsAfterUnparenting);
             if (explosionForce > 0)
                 m_limbsToUnparent[i].GetComponent<Rigidbody2D>().AddForce((Vector2.up + Random.Range(-2, 2) * Vector2.right) * explosionForce, ForceMode2D.Impulse);
         }
         enabled = false;
     }
+    public Transform UnparentLimbs()
+    {
+        RagdollLogicCollider.gameObject.SetActive(false);
+        for (int i = 0; i < m_limbsToUnparent.Count-1; i++)
+        {
+            m_limbsToUnparent[i].transform.parent = null;
+            m_limbsToUnparent[i].GetComponent<HingeJoint2D>().enabled = false;
+            m_limbsToUnparent[i].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            Destroy(m_limbsToUnparent[i], m_timeToDestroyLimbsAfterUnparenting);
+        }
+        enabled = false;
+
+        return Torso;
+    }
+
     private void OnDisable()
     {
         m_skullIndicator.SetActive(false);
     }
+
     public void VerticalMovementOnLadder(float verticalInput)
     {
         if (m_isOnLadder)

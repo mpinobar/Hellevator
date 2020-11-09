@@ -7,6 +7,8 @@ public class RagdollLogicalCollider : MonoBehaviour
 
     DemonBase m_parentDemon;
 
+    public DemonBase ParentDemon { get => m_parentDemon; set => m_parentDemon = value; }
+
     private void Start()
     {
         m_parentDemon = GetComponentInParent<DemonBase>();
