@@ -16,6 +16,7 @@ public class TriggerSceneChange : MonoBehaviour
         {
             //Debug.LogError("level load to " + m_linkedScene);
             LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
+            GetComponent<Collider2D>().enabled = false;
         }
     }   
 }

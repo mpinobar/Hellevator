@@ -990,12 +990,17 @@ public abstract class DemonBase : MonoBehaviour
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         HidePossessionRange();
-        if (playEffects)
+        if (!m_isDead)
         {
-            MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.55f);
-            GetComponent<BloodInstantiate>().InstantiateBlood();
+            m_isDead = true;
+            if (playEffects)
+            {
+                MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.55f);
+                GetComponent<BloodInstantiate>().InstantiateBlood();
+            }
         }
-        m_isDead = true;
+        
+        
 
         if (m_isControlledByPlayer)
         {
