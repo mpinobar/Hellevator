@@ -28,11 +28,10 @@ public class LevelLoadManager : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             string triggerLinkedScene = transform.GetChild(i).GetComponent<TriggerSceneChange>().LinkedScene;
-            if(triggerLinkedScene == previousSceneName)
+            if (triggerLinkedScene == previousSceneName)
             {
                 PossessionManager.Instance.ControlledDemon.gameObject.SetActive(true);
                 PossessionManager.Instance.ControlledDemon.transform.position = transform.GetChild(i).GetComponent<TriggerSceneChange>().PositionToSetAfterEntering.position;
-				print("Character position has been updated to new scene");
             }
         }
     }
