@@ -7,6 +7,8 @@ public class RagdollLogicalCollider : MonoBehaviour
 
     DemonBase m_parentDemon;
 
+    public DemonBase ParentDemon { get => m_parentDemon; set => m_parentDemon = value; }
+
     private void Start()
     {
         m_parentDemon = GetComponentInParent<DemonBase>();
@@ -26,6 +28,17 @@ public class RagdollLogicalCollider : MonoBehaviour
             //{
             //    LimbsColliders[i].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             //}
+
+
+            if (m_parentDemon.transform.parent != null)
+            {
+                SpawnerMatadero sm = GetComponentInParent<SpawnerMatadero>();
+                if (sm != null)
+                {
+                    sm.DetachCharacter(m_parentDemon);
+                }
+            }
+
         }
 
     }

@@ -984,31 +984,28 @@ public abstract class DemonBase : MonoBehaviour
     /// <summary>
     /// Die method for characters
     /// </summary>
-    public virtual void Die(bool playDeathSound)
+    public virtual void Die(bool playEffects)
     {
 
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         HidePossessionRange();
-        if (!m_isDead && playDeathSound)
+        if (playEffects)
         {
-            MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.7f);
-            m_isDead = true;
-
+            MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.55f);
+            GetComponent<BloodInstantiate>().InstantiateBlood();
         }
+        m_isDead = true;
 
         if (m_isControlledByPlayer)
         {
             //Debug.LogError("Player died: " + name);
             UseSkill();
-            m_isDead = true;
             PossessionManager.Instance.RemoveDemonPossession(transform);
-
         }
         else if (m_isControlledByIA)
         {
             m_isControlledByIA = false;
-            m_isDead = true;
             SetNotControlledByPlayer();
             //SetRagdollActive(true);
         }
