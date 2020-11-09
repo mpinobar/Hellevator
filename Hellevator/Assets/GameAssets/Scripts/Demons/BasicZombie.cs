@@ -18,6 +18,7 @@ public class BasicZombie : DemonBase
     [SerializeField] private bool       m_canDoubleJump;
     [SerializeField] private float      m_coyoteTimeDuration = 0f;//Mirar si hacer cambio a frames
     [SerializeField] private float      m_groundCorrectionMultiplier = 3;
+    [SerializeField] private float      m_waitTimeResetPlatformTraversal = 0.5f;
 
     private bool m_isOnLadder = false;
     private bool m_hasJumped;
@@ -26,6 +27,7 @@ public class BasicZombie : DemonBase
     private bool m_isHoldingJump = false;
     private bool m_tryingToGrabLadder;
     private bool m_jumpHasBeenPressOnAir = false;
+    private bool m_tryingToTraversePlatform = false;
 
     [SerializeField] private float m_jumpHasBeenPressOnAirTimer = 0f;
     private float m_currentTimerJumpOnAir = 0f;
@@ -281,11 +283,45 @@ public class BasicZombie : DemonBase
         else if (verticalInput != 0)
         {
             m_tryingToGrabLadder = true;
+            
         }
         else
         {
             m_tryingToGrabLadder = false;
         }
+    }
+
+    public void CheckTraversePlatform()
+    {
+        if (IsGrounded())
+        {
+            RaycastHit2D impact = Physics2D.Raycast(transform.position,Vector2.down,1f,m_groundedDetectionLayers);
+            if (impact.transform.CompareTag("Traversable"))
+            {
+                if (!m_tryingToTraversePlatform)
+                {
+                    m_tryingToTraversePlatform = true;
+                    StartCoroutine(DelayResetInputTraversePlatform(m_waitTimeResetPlatformTraversal));
+                }
+                else
+                {
+                    TraversePlatform(impact.transform);
+                    StopAllCoroutines();
+                    m_tryingToTraversePlatform = false;
+                }
+            }
+        }
+    }
+
+    IEnumerator DelayResetInputTraversePlatform(float time)
+    {
+        yield return new WaitForSeconds(time);
+        m_tryingToTraversePlatform = false;
+    }
+
+    private void TraversePlatform(Transform platformToTraverse)
+    {
+        platformToTraverse.GetComponentInParent<TraversablePlatform>().Traverse();
     }
 
     public override void Move(float xInput)
