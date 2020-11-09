@@ -12,11 +12,14 @@ public class TriggerSceneChange : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponent<DemonBase>().IsControlledByPlayer)
+		if( collision.GetComponent<DemonBase>() != null)
+	   	{
+			if (collision.GetComponent<DemonBase>().IsControlledByPlayer)
         {
             //Debug.LogError("level load to " + m_linkedScene);
             LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
             GetComponent<Collider2D>().enabled = false;
         }
-    }   
+			}
+		}  
 }

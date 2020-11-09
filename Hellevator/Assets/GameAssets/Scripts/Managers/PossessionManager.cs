@@ -105,17 +105,19 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     public void MoveMainCharacterToScene(Scene newScene)
     {
-        if (ControlledDemon.transform.parent == null)
-        {
-            SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
-        }
-        else
-        {
-            Transform parent = ControlledDemon.transform.parent;
-            ControlledDemon.transform.parent = null;
-            SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
-            ControlledDemon.transform.parent = parent;
-        }
+        ControlledDemon.transform.parent = null;
+        SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
+        //if (ControlledDemon.transform.parent == null)
+        //{
+        //    SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
+        //}
+        //else
+        //{
+        //    Transform parent = ControlledDemon.transform.parent;
+        //    ControlledDemon.transform.parent = null;
+        //    SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
+        //    ControlledDemon.transform.parent = parent;
+        //}
     }
     public void RemoveDemonPossession(Transform currentDemon)
     {
