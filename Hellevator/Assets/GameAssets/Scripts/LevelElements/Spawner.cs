@@ -28,7 +28,8 @@ public class Spawner : MonoBehaviour
             m_timer -= Time.deltaTime;
             if (m_timer <= 0)
             {
-                m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity));
+                m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity,transform));
+                m_spawnedDemons[m_spawnedDemons.Count - 1].transform.parent = null;
                 if (maxRange != 0)
                 {
                     m_spawnedDemons[m_spawnedDemons.Count - 1].MaximumPossessionRange = maxRange;
