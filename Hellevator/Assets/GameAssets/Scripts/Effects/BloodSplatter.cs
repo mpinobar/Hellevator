@@ -32,7 +32,7 @@ public class BloodSplatter : MonoBehaviour
                 else
                 {
                     Transform splat = Instantiate(m_splatPrefabs[Random.Range(0, m_splatPrefabs.Length)], m_events[i].intersection - m_events[i].normal, Quaternion.Euler(0, 0, Random.value * 360), other.transform).transform;
-                    splat.localScale = Vector3.one;
+                    //splat.localScale = new Vector3(1/other.transform.localScale.x, 1 / other.transform.localScale.y,1);
                 }
             }
         }

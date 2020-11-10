@@ -176,7 +176,7 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             for (int i = 0; i < m_extraDemonsControlled.Count; i++)
             {
-                m_extraDemonsControlled[i].transform.localScale = m_direction;
+                m_extraDemonsControlled[i].transform.localScale = new Vector3(Mathf.Abs(m_extraDemonsControlled[i].transform.localScale.x) * m_extraDemonsControlled[i].MovementDirection / m_extraDemonsControlled[i].transform.lossyScale.x, m_extraDemonsControlled[i].transform.localScale.y / m_extraDemonsControlled[i].transform.lossyScale.y, 1);
             }
         }
     }
@@ -184,10 +184,10 @@ public class InputManager : PersistentSingleton<InputManager>
     private void SetMainCharacterDirection()
     {
         if (m_currentDemon != null && m_currentDemon.MovementDirection != 0)
-        {
-            m_direction = transform.localScale;
-            m_direction.x = m_currentDemon.MovementDirection;
-            m_currentDemon.transform.localScale = m_direction;
+        {            
+            m_currentDemon.transform.localScale = new Vector3(Mathf.Abs(m_currentDemon.transform.localScale.x) * m_currentDemon.MovementDirection / m_currentDemon.transform.lossyScale.x, m_currentDemon.transform.localScale.y / m_currentDemon.transform.lossyScale.y, 1);
+            //m_direction = PossessionManager.Instance.ControlledDemon.MovementDirection;
+            //Debug.LogError(m_currentDemon.transform.localScale);
         }
     }
     void Interact()
