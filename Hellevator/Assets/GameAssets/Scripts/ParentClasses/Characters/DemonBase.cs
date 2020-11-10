@@ -66,10 +66,10 @@ public abstract class DemonBase : MonoBehaviour
     private bool                        m_isControlledByPlayer;
     private bool                        m_overlayActive;
 
-    [ColorUsage(true,true)]
+    //[ColorUsage(true,true)]
     [SerializeField] private Color      m_fireColorWhenPossessed;
     [SerializeField] private Color      m_spritesColor;
-    [ColorUsage(true, true)] Color      m_fireColorWhenNotPossessed;
+    /*[ColorUsage(true, true)]*/ Color      m_fireColorWhenNotPossessed;
     [SerializeField] GameObject         overlay;
 
     //IAReferences

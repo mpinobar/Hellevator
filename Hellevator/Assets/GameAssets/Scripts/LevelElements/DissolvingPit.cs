@@ -10,15 +10,15 @@ public class DissolvingPit : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
-        if(cmpDemon != null)
+        if (cmpDemon != null)
         {
-            MusicManager.Instance.PlayAudioSFX(m_acidClip, false);
+            MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.75f);
             //the torso has entered the pit while being a ragdoll
             if (collision == cmpDemon.LimbsColliders[0])
             {
-                Destroy(cmpDemon.gameObject);            
+                Destroy(cmpDemon.gameObject);
             }
-            else if(collision == cmpDemon.PlayerCollider)
+            else if (collision == cmpDemon.PlayerCollider)
             {
                 cmpDemon.Die(false);
             }

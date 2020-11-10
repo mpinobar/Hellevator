@@ -14,11 +14,14 @@ public class MusicManager : TemporalSingleton<MusicManager>
     AudioSource m_BGM;
     int m_currentBGMClip;
 
-    public static float MusicVolume { get => m_musicVolume;
-        set {
-            
+    public static float MusicVolume
+    {
+        get => m_musicVolume;
+        set
+        {
+
             m_musicVolume = value;
-            
+
         }
     }
     public static float SfxVolume { get => m_sfxVolume; set => m_sfxVolume = value; }
@@ -58,7 +61,7 @@ public class MusicManager : TemporalSingleton<MusicManager>
                 d++;
             }
         }
-	}
+    }
     public void PlayAudioMusic(AudioClip clip, bool looping)
     {
         if (m_sourcesList == null)
@@ -89,32 +92,27 @@ public class MusicManager : TemporalSingleton<MusicManager>
         {
             m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
             m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
-            m_sourcesList[m_sourcesList.Count-1].clip = clip;
+            m_sourcesList[m_sourcesList.Count - 1].clip = clip;
             m_sourcesList[m_sourcesList.Count - 1].loop = looping;
-            m_sourcesList[m_sourcesList.Count-1].volume = m_musicVolume;
-            m_sourcesList[m_sourcesList.Count-1].Play();
+            m_sourcesList[m_sourcesList.Count - 1].volume = m_musicVolume;
+            m_sourcesList[m_sourcesList.Count - 1].Play();
         }
     }
 
     public AudioSource PlayAudioSFX(AudioClip clip, bool looping)
     {
-        if(m_sourcesList == null)
+        if (m_sourcesList == null)
         {
             m_sourcesList = new List<AudioSource>();
         }
 
-        if(m_sourcesList.Count == 0)
+        if (m_sourcesList.Count == 0)
         {
-            m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
-            m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
-            m_sourcesList[m_sourcesList.Count - 1].clip = clip;
-            m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
-            m_sourcesList[m_sourcesList.Count - 1].loop = looping;
-            m_sourcesList[m_sourcesList.Count - 1].Play();
+            CreateAudioSourceAndSetParameters(clip, looping);
             return m_sourcesList[m_sourcesList.Count - 1];
         }
         else
-        {           
+        {
 
             for (int i = 0; i < m_sourcesList.Count; i++)
             {
@@ -124,21 +122,17 @@ public class MusicManager : TemporalSingleton<MusicManager>
                     m_sourcesList[i].volume = m_sfxVolume;
                     m_sourcesList[i].loop = looping;
                     m_sourcesList[i].Play();
-                    
-                    return m_sourcesList[i];
-                }                
-            }
 
-            m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
-            m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
-            m_sourcesList[m_sourcesList.Count - 1].clip = clip;
-            m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
-            m_sourcesList[m_sourcesList.Count - 1].loop = looping;
-            m_sourcesList[m_sourcesList.Count - 1].Play();
+                    return m_sourcesList[i];
+                }
+            }
+            CreateAudioSourceAndSetParameters(clip, looping);
+            
             return m_sourcesList[m_sourcesList.Count - 1];
-        }        
+        }
     }
 
+    
 
     public AudioSource PlayAudioSFX(AudioClip clip, bool looping, float volumeModifier)
     {
@@ -149,12 +143,7 @@ public class MusicManager : TemporalSingleton<MusicManager>
 
         if (m_sourcesList.Count == 0)
         {
-            m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
-            m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
-            m_sourcesList[m_sourcesList.Count - 1].clip = clip;
-            m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume*volumeModifier;
-            m_sourcesList[m_sourcesList.Count - 1].loop = looping;
-            m_sourcesList[m_sourcesList.Count - 1].Play();
+            CreateAudioSourceAndSetParameters(clip, looping);
             return m_sourcesList[m_sourcesList.Count - 1];
         }
         else
@@ -173,13 +162,20 @@ public class MusicManager : TemporalSingleton<MusicManager>
                 }
             }
 
-            m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
-            m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
-            m_sourcesList[m_sourcesList.Count - 1].clip = clip;
-            m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume * volumeModifier;
-            m_sourcesList[m_sourcesList.Count - 1].loop = looping;
-            m_sourcesList[m_sourcesList.Count - 1].Play();
+            CreateAudioSourceAndSetParameters(clip, looping);
             return m_sourcesList[m_sourcesList.Count - 1];
         }
     }
+
+    private void CreateAudioSourceAndSetParameters(AudioClip clip, bool looping)
+    {
+        m_sourcesList.Add(gameObject.AddComponent<AudioSource>());
+        m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
+        m_sourcesList[m_sourcesList.Count - 1].spatialBlend = 0.25f;
+        m_sourcesList[m_sourcesList.Count - 1].clip = clip;
+        m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
+        m_sourcesList[m_sourcesList.Count - 1].loop = looping;
+        m_sourcesList[m_sourcesList.Count - 1].Play();
+    }
+
 }

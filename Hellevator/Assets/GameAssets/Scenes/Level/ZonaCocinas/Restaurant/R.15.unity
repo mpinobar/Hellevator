@@ -1008,12 +1008,12 @@ PrefabInstance:
     - target: {fileID: 2124095321533503958, guid: e73db34c6d0c2b9479f791f44709ec17,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 9.54
+      value: 8.47
       objectReference: {fileID: 0}
     - target: {fileID: 2124095321533503958, guid: e73db34c6d0c2b9479f791f44709ec17,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.4
+      value: 0.58
       objectReference: {fileID: 0}
     - target: {fileID: 3558451553298169565, guid: e73db34c6d0c2b9479f791f44709ec17,
         type: 3}
@@ -1158,12 +1158,12 @@ PrefabInstance:
     - target: {fileID: 5836539039764296868, guid: e73db34c6d0c2b9479f791f44709ec17,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.4
+      value: 7.56
       objectReference: {fileID: 0}
     - target: {fileID: 5836539039764296868, guid: e73db34c6d0c2b9479f791f44709ec17,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.68
+      value: 8.85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e73db34c6d0c2b9479f791f44709ec17, type: 3}
@@ -3385,7 +3385,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 569337946}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.16, y: 14.33, z: 0}
+  m_LocalPosition: {x: 8.95, y: 13.82, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1797777445}
@@ -4454,7 +4454,7 @@ PrefabInstance:
     - target: {fileID: 8418663556276120726, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
       propertyPath: m_isControlledByIA
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9032155453379708232, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
@@ -6415,6 +6415,7 @@ GameObject:
   - component: {fileID: 1442548178}
   - component: {fileID: 1442548177}
   - component: {fileID: 1442548176}
+  - component: {fileID: 1442548179}
   m_Layer: 0
   m_Name: LinkedDoor
   m_TagString: Untagged
@@ -6527,6 +6528,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1442548179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442548174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b9cbdf0b2a20f343a6680da14b2918e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_endPosition: {fileID: 0}
+  m_period: 2
+  m_waitTimeOnArrival: 0.25
+  m_playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  m_bodyLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &1454312073
 GameObject:
   m_ObjectHideFlags: 0
