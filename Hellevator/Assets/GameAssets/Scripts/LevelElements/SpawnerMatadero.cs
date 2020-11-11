@@ -84,7 +84,6 @@ public class SpawnerMatadero : MonoBehaviour
     {
         if (m_spawnedCharacters.Contains(characterToDetach))
         {
-            Debug.LogError("Detaching character " + characterToDetach.name);
             characterToDetach.transform.parent = null;
             characterToDetach.SetRagdollNewGravity(1);
             m_spawnedCharacters.Remove(characterToDetach);

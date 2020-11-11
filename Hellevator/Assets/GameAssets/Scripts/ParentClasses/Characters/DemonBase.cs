@@ -995,8 +995,7 @@ public abstract class DemonBase : MonoBehaviour
             m_isDead = true;
             if (playEffects)
             {
-                MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.55f);
-                GetComponent<BloodInstantiate>().InstantiateBlood();
+                PlayDeathEffects();
             }
         }
         
@@ -1015,6 +1014,13 @@ public abstract class DemonBase : MonoBehaviour
             //SetRagdollActive(true);
         }
     }
+
+    public void PlayDeathEffects()
+    {
+        MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.55f);
+        GetComponent<BloodInstantiate>().InstantiateBlood();
+    }
+
     /// <summary>
     /// Check to see if the character is grounded
     /// </summary>

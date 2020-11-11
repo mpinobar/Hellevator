@@ -5,12 +5,18 @@ using UnityEngine;
 public class Lever : ButtonActivatedBase
 {
     [SerializeField] ButtonActivatedDoor m_doorToUnlock;
+    [SerializeField] float m_visualLeverSpeed = 2f;
     bool m_added;
-
+    bool m_activated;
     public override void Activate()
     {
-        m_doorToUnlock.Activate();
-        ChangeLeverVisual();
+        if (!m_activated)
+        {
+            m_doorToUnlock.Activate();
+            ChangeLeverVisual();
+            m_activated = true;
+        }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -47,7 +53,22 @@ public class Lever : ButtonActivatedBase
 
     void ChangeLeverVisual()
     {
-        transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
-        transform.GetChild(0).GetChild(2).gameObject.SetActive(true);
+        
+        StartCoroutine(LeverVisualRotation());
+    }
+
+    IEnumerator LeverVisualRotation()
+    {
+        Transform visual = transform.GetChild(0).GetChild(1);
+        float currentAngle = visual.localEulerAngles.z;
+        float endAngle = -currentAngle;
+
+        while (currentAngle > endAngle)
+        {
+            
+            currentAngle -= Time.deltaTime * m_visualLeverSpeed;
+            visual.localEulerAngles = Vector3.forward * currentAngle;
+            yield return null;
+        }
     }
 }
