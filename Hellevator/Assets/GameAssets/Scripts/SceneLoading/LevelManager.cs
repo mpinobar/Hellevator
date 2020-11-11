@@ -184,6 +184,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
         }
+        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        {
+            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        }
         if (m_lastCheckPoint)
             m_lastCheckPoint.SpawnPlayer();
         FadeManager.Instance.StartFadingOut();
