@@ -9,7 +9,13 @@ public class Trituradora : MonoBehaviour
         BasicZombie character = collision.GetComponentInParent<BasicZombie>();
         if (character)
         {
-            character.Die(true);
+            if (!character.IsDead)
+            {
+                character.Die(true);
+            }else
+            {
+                character.PlayDeathEffects();
+            }
             if (character.GetComponentInParent<SpawnerMatadero>())
             {
                 character.GetComponentInParent<SpawnerMatadero>().AttachCharacterPart(character.UnparentLimbs());
