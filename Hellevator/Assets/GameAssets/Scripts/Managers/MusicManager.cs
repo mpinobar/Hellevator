@@ -12,8 +12,9 @@ public class MusicManager : TemporalSingleton<MusicManager>
 
     [SerializeField] List<AudioClip> m_backgroundMusicClips;
     AudioSource m_BGM;
-    int m_currentBGMClip;
     float m_spatialBlendSFX = 0.35f;
+    int m_musicClipIndex;
+        
     public static float MusicVolume
     {
         get => m_musicVolume;
@@ -41,14 +42,21 @@ public class MusicManager : TemporalSingleton<MusicManager>
 
     private void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            QueueOutOfTuneClip();
+        }
         if (!m_BGM.isPlaying && m_backgroundMusicClips != null)
         {
-            int aux = m_currentBGMClip;
-            while (aux == m_currentBGMClip && m_backgroundMusicClips.Count > 1)
-            {
-                m_currentBGMClip = Random.Range(0, m_backgroundMusicClips.Count);
-            }
-            m_BGM.clip = m_backgroundMusicClips[m_currentBGMClip];
+            //int aux = m_currentBGMClip;
+            //while (aux == m_currentBGMClip && m_backgroundMusicClips.Count > 1)
+            //{
+            //    m_currentBGMClip = Random.Range(0, m_backgroundMusicClips.Count);
+            //}
+            
+            m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
+            m_musicClipIndex = (m_musicClipIndex + 1) % 2;
             m_BGM.Play();
         }
 
@@ -178,6 +186,11 @@ public class MusicManager : TemporalSingleton<MusicManager>
         m_sourcesList[m_sourcesList.Count - 1].volume = m_sfxVolume;
         m_sourcesList[m_sourcesList.Count - 1].loop = looping;
         m_sourcesList[m_sourcesList.Count - 1].Play();
+    }
+
+    public void QueueOutOfTuneClip()
+    {
+        m_musicClipIndex = 2;
     }
 
 }
