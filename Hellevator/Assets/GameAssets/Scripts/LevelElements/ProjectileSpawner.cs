@@ -57,7 +57,7 @@ public class ProjectileSpawner : ButtonActivatedBase
         m_active = true;
         
     }
-    public void Deactivate()
+    public override void Deactivate()
     {
         m_active = false;
     }
