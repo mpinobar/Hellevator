@@ -180,7 +180,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                             {
                                 if (m_audioSource)
                                     m_audioSource.Stop();
-                                m_buttonActivatedObject.GetComponent<ProjectileSpawner>().Deactivate();
+                                m_buttonActivatedObject.Deactivate();
                             }
                         }
                         else
@@ -310,6 +310,31 @@ public class WeightedPreassurePlate : MonoBehaviour
                     }
                 }
                 break;
+            case TypeOfPreassurePlate.Activator:
+                {
+                    m_percentage = m_currentWeight / m_weightNeeded;
+                    if (m_percentage >= 1f)
+                    {
+                        m_percentage = 1f;
+                        if (!m_preassurePlateActivated)
+                        {
+                            m_preassurePlateActivated = true;
+                            m_buttonActivatedObject.Activate();
+                        }
+                    }
+                    else
+                    {
+                        if (m_preassurePlateActivated)
+                        {
+                            m_preassurePlateActivated = false;
+                            m_buttonActivatedObject.Deactivate();
+                        }
+                    }
+                    m_positionY = m_distanceToEndPosition * m_percentage;
+                    m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
+
+                }
+                    break;
             case TypeOfPreassurePlate.None:
                 {
                     print("Type of preasureplate needs to be indicated to: " + this.gameObject.name);
