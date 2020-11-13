@@ -38,7 +38,7 @@ public class Fire : MonoBehaviour
         else
         {
             m_currentFireAltitude = Mathf.Lerp(m_currentFireAltitude, 1, Time.deltaTime);
-            m_propertyBlock.SetFloat("_height", m_currentFireAltitude);
+            m_propertyBlock.SetFloat("_height", Mathf.Clamp01(m_currentFireAltitude));
             m_spriteRenderer.SetPropertyBlock(m_propertyBlock);
         }
     }

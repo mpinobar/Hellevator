@@ -16,8 +16,8 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
     private float   m_speed;
 
     private List<DemonBase> m_enemiesOnPreassurePlate;
-    [SerializeField] private LayerMask m_playerLayer;
-    [SerializeField] private LayerMask m_bodyLayer;
+    [SerializeField] private LayerMask m_playerLayer = 1<<10;
+    [SerializeField] private LayerMask m_bodyLayer = 1<<8;
     List<SpikesWeightData> m_spikesData;
 
     public LayerMask PlayerLayer { get => m_playerLayer; set => m_playerLayer = value; }
@@ -34,7 +34,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
             m_initialPosition = transform.position;
             m_returningToInitialPosition = false;
             m_speed = Vector2.Distance(m_initialPosition, m_endPos) / m_period;
-        }       
+        }
 
     }
 
@@ -86,7 +86,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
             }
         }
 
-        
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -101,7 +101,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
             {
                 bool isCounted = false;
 
-                if(m_spikesData == null)
+                if (m_spikesData == null)
                 {
                     m_spikesData = new List<SpikesWeightData>();
                 }
