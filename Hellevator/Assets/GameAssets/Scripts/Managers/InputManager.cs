@@ -14,7 +14,7 @@ public class InputManager : PersistentSingleton<InputManager>
     bool        m_isInInteactionTrigger = false;
     float       m_verticalInputValue;
     Vector3     m_direction = Vector3.one;
-     
+
     public delegate void OnButtonPress();
 
     public event OnButtonPress OnInteract;
@@ -157,7 +157,7 @@ public class InputManager : PersistentSingleton<InputManager>
                 }
 
             }
-            
+
             //m_currentDemon.transform.localScale = direction; //Vector3.one - (Vector3.right * (1 - m_currentDemon.MovementDirection));
         }
         else if (m_currentDemon != null && !m_currentDemon.CanMove)
@@ -172,23 +172,34 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public void SetExtraCharactersDirections()
     {
-        if(m_extraDemonsControlled != null && m_extraDemonsControlled.Count > 0)
+        if (m_extraDemonsControlled != null && m_extraDemonsControlled.Count > 0)
         {
             for (int i = 0; i < m_extraDemonsControlled.Count; i++)
             {
-                m_extraDemonsControlled[i].transform.localScale = new Vector3(Mathf.Abs(m_extraDemonsControlled[i].transform.localScale.x) * m_extraDemonsControlled[i].MovementDirection / m_extraDemonsControlled[i].transform.lossyScale.x, m_extraDemonsControlled[i].transform.localScale.y / m_extraDemonsControlled[i].transform.lossyScale.y, 1);
+                if(m_extraDemonsControlled[i].MovementDirection == 0)
+                {
+                    m_extraDemonsControlled[i].transform.localScale = new Vector3(Mathf.Abs(m_extraDemonsControlled[i].transform.localScale.x) / m_extraDemonsControlled[i].transform.lossyScale.x, m_extraDemonsControlled[i].transform.localScale.y / m_extraDemonsControlled[i].transform.lossyScale.y, 1);
+                }
+                else
+                    m_extraDemonsControlled[i].transform.localScale = new Vector3(Mathf.Abs(m_extraDemonsControlled[i].transform.localScale.x) * m_extraDemonsControlled[i].MovementDirection / m_extraDemonsControlled[i].transform.lossyScale.x, m_extraDemonsControlled[i].transform.localScale.y / m_extraDemonsControlled[i].transform.lossyScale.y, 1);
             }
         }
     }
 
     private void SetMainCharacterDirection()
     {
-        if (m_currentDemon != null && m_currentDemon.MovementDirection != 0)
-        {            
-            m_currentDemon.transform.localScale = new Vector3(Mathf.Abs(m_currentDemon.transform.localScale.x) * m_currentDemon.MovementDirection / m_currentDemon.transform.lossyScale.x, m_currentDemon.transform.localScale.y / m_currentDemon.transform.lossyScale.y, 1);
+        if (m_currentDemon != null)
+        {
+            if (m_currentDemon.MovementDirection == 0)
+            {
+                m_currentDemon.transform.localScale = new Vector3(Mathf.Abs(m_currentDemon.transform.localScale.x) / m_currentDemon.transform.lossyScale.x, m_currentDemon.transform.localScale.y / m_currentDemon.transform.lossyScale.y, 1);
+            }
+            else
+                m_currentDemon.transform.localScale = new Vector3(Mathf.Abs(m_currentDemon.transform.localScale.x) * m_currentDemon.MovementDirection / m_currentDemon.transform.lossyScale.x, m_currentDemon.transform.localScale.y / m_currentDemon.transform.lossyScale.y, 1);
             //m_direction = PossessionManager.Instance.ControlledDemon.MovementDirection;
             //Debug.LogError(m_currentDemon.transform.localScale);
         }
+
     }
     void Interact()
     {
@@ -243,7 +254,7 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public void VerticalInputStart(float verticalInput)
     {
-        if(verticalInput < 0)
+        if (verticalInput < 0)
         {
             if (m_currentDemon != null && m_currentDemon.CanMove)
                 ((BasicZombie)m_currentDemon).CheckTraversePlatform();
@@ -258,7 +269,7 @@ public class InputManager : PersistentSingleton<InputManager>
                     }
                 }
             }
-        }        
+        }
     }
 
 
@@ -345,7 +356,7 @@ public class InputManager : PersistentSingleton<InputManager>
     private void OnEnable()
     {
         m_controls.Enable();
-        
+
     }
     private void OnDisable()
     {

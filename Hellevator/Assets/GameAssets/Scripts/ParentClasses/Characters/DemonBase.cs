@@ -808,7 +808,6 @@ public abstract class DemonBase : MonoBehaviour
     {
         if (m_dragMovement == 0 && amount != 0)
         {
-
             m_dragMovement = amount;
         }
         if (amount == 0)

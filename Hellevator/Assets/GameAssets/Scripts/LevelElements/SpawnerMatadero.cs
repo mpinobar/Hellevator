@@ -42,6 +42,13 @@ public class SpawnerMatadero : MonoBehaviour
             m_timeToSpawnNewCharacterTimer = m_timeToSpawnNewCharacter;
         }
 
+        MoveAttachedCharacters();
+
+        MoveAttachedBodyParts();
+    }
+
+    private void MoveAttachedCharacters()
+    {
         if (m_spawnedCharacters.Count > 0)
         {
             //Debug.LogError(Vector2.Distance(m_spawnedCharacters[0].Torso.transform.position, m_endingPosition.position));
@@ -59,22 +66,25 @@ public class SpawnerMatadero : MonoBehaviour
                     ((BasicZombie)m_spawnedCharacters[i]).SkullIndicator();
                 }
                 else
-                {
-                    //Debug.LogError("movingCharacter" + i);
-                    //m_spawnedCharacters[i].SetTorsoKinematic(true);
+                {                    
                     m_spawnedCharacters[i].Torso.position += (Vector3)m_movingDirection * m_movementSpeed * Time.deltaTime;
                 }
             }
 
-            if (m_attachedParts != null)
+
+        }
+    }
+
+    private void MoveAttachedBodyParts()
+    {
+        if (m_attachedParts != null)
+        {
+            for (int i = 0; i < m_attachedParts.Count; i++)
             {
-                for (int i = 0; i < m_attachedParts.Count; i++)
+                m_attachedParts[i].position += (Vector3)m_movingDirection * m_movementSpeed * Time.deltaTime;
+                if (Vector2.Distance(m_attachedParts[i].position, m_endingPosition.position) <= 2f)
                 {
-                    m_attachedParts[i].position += (Vector3)m_movingDirection * m_movementSpeed * Time.deltaTime;
-                    if (Vector2.Distance(m_attachedParts[i].position, m_endingPosition.position) <= 2f)
-                    {
-                        DestroyPartAndParentDemon(m_attachedParts[i]);
-                    }
+                    DestroyPartAndParentDemon(m_attachedParts[i]);
                 }
             }
         }
@@ -116,7 +126,7 @@ public class SpawnerMatadero : MonoBehaviour
 
         for (int i = 0; i < skins.Length; i++)
         {
-            if (skins[i].boneTransforms[0].parent != null)
+            if (skins[i].boneTransforms[0] && skins[i].boneTransforms[0].parent != null)
             {
                 skins[i].gameObject.SetActive(false);
             }
