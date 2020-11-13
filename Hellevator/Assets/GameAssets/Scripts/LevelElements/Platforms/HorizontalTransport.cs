@@ -28,7 +28,14 @@ public class HorizontalTransport : MonoBehaviour
     {
         for (int i = 0; i < m_enemiesOnPreassurePlate.Count; i++)
         {
-            m_enemiesOnPreassurePlate[i].DragMovement(dir*m_speed);
+			if (m_enemiesOnPreassurePlate[i] != null)
+			{
+				m_enemiesOnPreassurePlate[i].DragMovement(dir*m_speed);
+			}
+			else
+			{
+				m_enemiesOnPreassurePlate.TrimExcess();
+			}
         }
     }
          
