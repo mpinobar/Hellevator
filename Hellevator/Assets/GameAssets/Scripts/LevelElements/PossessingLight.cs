@@ -63,7 +63,17 @@ public class PossessingLight : MonoBehaviour
     {
         if(collision.GetComponentInParent<DemonBase>() == m_target)
         {
-            PossessionManager.Instance.PossessNewDemon(m_target);
+            if(m_target.transform.parent != null)
+            {
+                Transform parent = m_target.transform.parent;
+                m_target.transform.parent = null;
+                PossessionManager.Instance.PossessNewDemon(m_target);
+                m_target.transform.parent = parent;
+            }
+            else
+            {
+                PossessionManager.Instance.PossessNewDemon(m_target);
+            }
             m_lightSound.Stop();
         }
     }
