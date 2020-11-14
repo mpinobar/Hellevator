@@ -109,7 +109,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
 				AsyncOperation op = SceneManager.UnloadSceneAsync(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
 				PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName("PersistentGameObjects"));
                 m_loadingScene.allowSceneActivation = true;
-                FadeManager.Instance.StartFadingOut();                
+                CameraManager.Instance.FadeOut();
+                
                 //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
                 //op.completed += UnloadCompleted;
             }
@@ -148,8 +149,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// </summary>
     public void StartRestartingLevel()
     {
-        FadeManager.Instance.StartFadingIn();
-        FadeManager.Instance.IsRestarting = true;
+        CameraManager.Instance.FadeIn();
+        FadeManager.IsRestarting = true;
     }
     public void RestartLevel()
     {
@@ -178,8 +179,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
         if(m_lastCheckPoint)
         CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
         CameraManager.Instance.CurrentCamera.enabled = true;
-        ParalaxManager.Instance.SetUpSceneParalax();
-
+        CameraManager.Instance.SetupParallax();
+        
         if (PossessionManager.Instance.ControlledDemon != null)
         {
             PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
@@ -190,7 +191,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
         if (m_lastCheckPoint)
             m_lastCheckPoint.SpawnPlayer();
-        FadeManager.Instance.StartFadingOut();
+        CameraManager.Instance.FadeOut();
         
     }
 
@@ -284,13 +285,13 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public void SwitchToAdjacentScene(string newSceneName)
     {
         m_previousScene = PossessionManager.Instance.ControlledDemon.gameObject.scene.name;
-        FadeManager.Instance.StartFadingIn();
+        CameraManager.Instance.FadeIn();
         m_newSceneName = newSceneName;
         m_loadingScene = SceneManager.LoadSceneAsync(newSceneName, LoadSceneMode.Additive);
         m_loadingScene.allowSceneActivation = false;
         m_loadingScene.completed += LoadSwitchSceneCompleted;
         m_isSwitchingToNewScene = true;
-        FadeManager.Instance.IsRestarting = false;
+        FadeManager.IsRestarting = false;
         CanLoad = false;
         
         
@@ -299,6 +300,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
     private void LoadSwitchSceneCompleted(AsyncOperation obj)
     {
         PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
-        
+        CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
     }
 }

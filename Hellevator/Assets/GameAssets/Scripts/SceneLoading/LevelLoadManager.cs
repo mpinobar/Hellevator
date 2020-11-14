@@ -21,6 +21,7 @@ public class LevelLoadManager : MonoBehaviour
         //    LevelManager.Instance.LoadCentralSceneFirstTime(this);
         //}
         SetControlledCharacterPositionAfterEntering(LevelManager.Instance.PreviousScene);
+        
     }
 
     public void SetControlledCharacterPositionAfterEntering(string previousSceneName)
