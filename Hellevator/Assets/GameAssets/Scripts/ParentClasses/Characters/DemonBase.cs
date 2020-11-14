@@ -58,7 +58,7 @@ public abstract class DemonBase : MonoBehaviour
     [ColorUsage(true, true)]
     [SerializeField] private Color      m_colorWhenAvailable;
 
-    private GameObject                  m_spiritFire;
+    protected GameObject                m_spiritFire;
     //private float                       m_distanceMaxGlow = 5;
     private bool                        m_isPossessionBlocked;
     private bool                        m_isControlledByPlayer;
@@ -69,7 +69,7 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private Color      m_spritesColor;
     [ColorUsage(true, true)]
     /*[SerializeField] */
-    private Color      m_fireColorWhenNotPossessed;
+    private Color                       m_fireColorWhenNotPossessed;
     [SerializeField] GameObject         overlay;
 
     //IAReferences
@@ -94,7 +94,7 @@ public abstract class DemonBase : MonoBehaviour
     //mask for ground detection
     [Header("Don't touch")]
     [SerializeField] protected LayerMask    m_groundedDetectionLayers;
-    [SerializeField] private GameObject   m_demonMaskSprite;
+    [SerializeField] private GameObject     m_demonMaskSprite;
 
     //Demon references
     private Rigidbody2D     m_myRgb;
@@ -1016,8 +1016,12 @@ public abstract class DemonBase : MonoBehaviour
 
     public void PlayDeathEffects()
     {
-        MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.55f);
-        GetComponent<BloodInstantiate>().InstantiateBlood();
+        if (m_spiritFire.GetComponent<SpriteRenderer>().isVisible)
+        {
+            MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.35f);
+            GetComponent<BloodInstantiate>().InstantiateBlood();
+        }
+        
     }
 
     /// <summary>
