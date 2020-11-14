@@ -34,5 +34,5 @@ public class TemporalSingleton<T> : MonoBehaviour where T : Component
 		}
 	}
 
-	private static T _instance;
+	protected static T _instance;
 }
