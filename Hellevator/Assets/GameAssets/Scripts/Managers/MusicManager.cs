@@ -56,7 +56,7 @@ public class MusicManager : TemporalSingleton<MusicManager>
             //}
             
             m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
-            m_musicClipIndex = (m_musicClipIndex + 1) % 2;
+            m_musicClipIndex = (m_musicClipIndex + 1) % Mathf.Min(2,m_backgroundMusicClips.Count);
             m_BGM.Play();
         }
 

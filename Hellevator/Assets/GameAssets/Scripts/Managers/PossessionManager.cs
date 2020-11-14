@@ -144,6 +144,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 {
                     //Debug.LogError("SHOULD possess multiple characters on death");
                     ControlledDemon = null;
+                    PossessAllDemonsInRange(currentDemon.GetComponent<DemonBase>().MaximumPossessionRange, currentDemon);
+                    CameraManager.Instance.ChangeFocusOfMainCameraTo(ControlledDemon.transform);
                 }
             }
             else
@@ -155,6 +157,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
                 InputManager.Instance.RemoveExtraDemonControlled(ControlledDemon);
                 InputManager.Instance.UpdateDemonReference();
+                CameraManager.Instance.ChangeFocusOfMainCameraTo(ControlledDemon.transform);
                 if (extraDemonsControlled.Count == 0)
                 {
                     //Debug.LogError("last one of the extra characters died");
@@ -170,6 +173,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 extraDemonsControlled.Remove(demonCmp);
                 InputManager.Instance.RemoveExtraDemonControlled(demonCmp);
                 demonCmp.SetNotControlledByPlayer();
+                CameraManager.Instance.ChangeFocusOfMainCameraTo(ControlledDemon.transform);
                 if (extraDemonsControlled.Count == 0)
                 {
                     //Debug.LogError("last one of the extra characters died");
@@ -182,7 +186,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     public void PossessAllDemonsInRange(float radiusLimit, Transform currentDemon)
     {
         //Debug.LogError("Controlling demons in range");
-        int counter = 0;
+        //int counter = 0;
         if (!controllingMultipleDemons)
         {
             if (extraDemonsControlled == null)
@@ -191,10 +195,11 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             }
             extraDemonsControlled.Clear();
             Collider2D[] other = Physics2D.OverlapCircleAll(currentDemon.transform.position, radiusLimit, m_ragdollBodyMask);
-
+            List<DemonBase> temp = new List<DemonBase>();
             for (int i = 0; i < other.Length; i++)
             {
                 DemonBase foundDemon = other[i].GetComponentInParent<DemonBase>();
+                
                 //Debug.LogError("Candidate " + foundDemon.name);
                 //if ((foundDemon.GetComponent<DemonBase>() == ControlledDemon))
                 //    Debug.LogError("Is not main demon: " + (foundDemon.GetComponent<DemonBase>() != ControlledDemon));
@@ -212,13 +217,35 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 //    Debug.LogError("Is within limits of max number of possessed: " + (counter < m_maxDemonsPossessed));
                 if (foundDemon != null && foundDemon != ControlledDemon && !extraDemonsControlled.Contains(foundDemon) && currentDemon != foundDemon.transform)
                 {
-                    if (!foundDemon.IsInDanger && foundDemon.IsDead && !foundDemon.IsPossessionBlocked && counter < m_maxDemonsPossessed)
+                    if (!foundDemon.IsInDanger && foundDemon.IsDead && !foundDemon.IsPossessionBlocked /*&& counter < m_maxDemonsPossessed*/)
                     {
-                        counter++;
-                        extraDemonsControlled.Add(foundDemon);
-                        foundDemon.SetControlledByPlayer();
+                        //counter++;
+                        temp.Add(foundDemon);
+                        //extraDemonsControlled.Add(foundDemon);
+                        //foundDemon.SetControlledByPlayer();
                     }
                 }
+            }
+            
+            for (int i = 0; i < m_maxDemonsPossessed; i++)
+            {
+                if(temp.Count > 0)
+                {
+                    int bestIndex = 0;
+                    float distance = Vector2.Distance(temp[0].transform.position,currentDemon.transform.position);
+                    for (int j = 0; j < temp.Count; j++)
+                    {
+                        if (Vector2.Distance(temp[j].transform.position, currentDemon.transform.position) <= distance)
+                        {
+                            distance = Vector2.Distance(temp[j].transform.position, currentDemon.transform.position);
+                            bestIndex = j;
+                        }
+                    }
+                    extraDemonsControlled.Add(temp[bestIndex]);
+                    temp[bestIndex].SetControlledByPlayer();
+                    temp.RemoveAt(bestIndex);
+                }
+                
             }
 
 
