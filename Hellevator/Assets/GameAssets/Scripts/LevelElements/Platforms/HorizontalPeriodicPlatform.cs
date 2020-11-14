@@ -54,6 +54,8 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
             }
         }
 
+
+
         if (m_endPosition)
         {
             if (m_returningToInitialPosition)
@@ -86,7 +88,11 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
             }
         }
 
-
+        for (int i = 0; i < m_enemiesOnPreassurePlate.Count; i++)
+        {
+            m_enemiesOnPreassurePlate[i].transform.localScale = new Vector3(m_enemiesOnPreassurePlate[i].transform.localScale.x / m_enemiesOnPreassurePlate[i].transform.lossyScale.x,
+                                                                            m_enemiesOnPreassurePlate[i].transform.localScale.y / m_enemiesOnPreassurePlate[i].transform.lossyScale.y,1);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

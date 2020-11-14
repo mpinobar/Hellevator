@@ -314,6 +314,7 @@ public class InputManager : PersistentSingleton<InputManager>
     public void UpdateDemonReference()
     {
         m_currentDemon = PossessionManager.Instance.ControlledDemon;
+        
     }
 
     public void UpdateExtraDemonsControlled(List<DemonBase> controlledDemons)

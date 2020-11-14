@@ -64,6 +64,7 @@ public class BasicZombie : DemonBase
     [Range(1, 20)]
     [Tooltip("Descending part of the jump")]
     [SerializeField] private float m_fourthGravity = 5f;
+    [SerializeField] private float m_ySpeedWhenReleasingEarly = 3f;
 
     [Header("Color")]
     [ColorUsage(true,true)]
@@ -84,10 +85,7 @@ public class BasicZombie : DemonBase
     #endregion
 
     public override void UseSkill()
-    {
-
-        if (MultiplePossessionWhenDead)
-            PossessionManager.Instance.PossessAllDemonsInRange(MaximumPossessionRange, transform);
+    {        
         if (GetComponent<Petrification>())
             GetComponent<Petrification>().Petrify();
         else if (GetComponent<Explosion>())
@@ -203,7 +201,10 @@ public class BasicZombie : DemonBase
         m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
         m_myAnimator.SetFloat("yMovement", Mathf.Abs(MyRgb.velocity.y * 0.1f));
 
-
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            MultiplePossessionWhenDead = true;
+        }
 
     }
 
@@ -265,6 +266,7 @@ public class BasicZombie : DemonBase
             if (explosionForce > 0)
                 m_limbsToUnparent[i].GetComponent<Rigidbody2D>().AddForce((Vector2.up + Random.Range(-2, 2) * Vector2.right) * explosionForce, ForceMode2D.Impulse);
         }
+        m_spiritFire.SetActive(false);
         enabled = false;
     }
     public Transform UnparentLimbs()
