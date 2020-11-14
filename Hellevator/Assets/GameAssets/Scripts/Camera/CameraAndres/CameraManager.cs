@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class CameraManager : PersistentSingleton<CameraManager>
+public class CameraManager : TemporalSingleton<CameraManager>
 {
 
 	[SerializeField] private CinemachineVirtualCamera m_playerCamera = null;
 	private CinemachineVirtualCamera m_cameraWithHigherPriority = null;
 
 	[SerializeField] private CinemachineVirtualCamera m_currentCamera = null;
-
+	[SerializeField] private FadeManager m_fadeManager;
 	[SerializeField] private int m_cameraHighPriorityValue = 0;
 	[SerializeField] private int m_cameraLowPriorityValue = 0;
 
@@ -29,10 +29,21 @@ public class CameraManager : PersistentSingleton<CameraManager>
 
 	private bool laCamaraMurio = false;
 
+	ParalaxManager m_parallaxManager;
 
 	public override void Awake()
 	{
-		base.Awake();
+		if (_instance == null)
+		{
+			_instance = this;
+		}
+		else
+		{
+			Destroy(_instance.gameObject);
+			_instance = this;
+			//ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+		}
+		m_parallaxManager = GetComponent<ParalaxManager>();
 		m_currentCamera = m_playerCamera;
 		m_startingOrtographicSize = m_currentCamera.m_Lens.OrthographicSize;
 		m_currentCamera.Priority = m_cameraHighPriorityValue;
@@ -42,15 +53,28 @@ public class CameraManager : PersistentSingleton<CameraManager>
 	// Start is called before the first frame update
 	void Start()
     {
-		ParalaxManager.Instance.SetUpSceneParalax();
+        SetupParallax();
+    }
+
+    public void SetupParallax()
+    {
+        m_parallaxManager.SetUpSceneParalax();
+    }
+
+	public void FadeIn()
+    {
+		m_fadeManager.StartFadingIn();
+    }
+	public void FadeOut()
+    {
+		m_fadeManager.StartFadingOut();
 	}
 
-
-	/// <summary>
-	/// Changes the focus of the player camera to this object.
-	/// </summary>
-	/// <param name="newCameraFocus"> Requieres a Tranform of the new object to focus</param>
-	public void ChangeFocusOfMainCameraTo(Transform newCameraFocus)
+    /// <summary>
+    /// Changes the focus of the player camera to this object.
+    /// </summary>
+    /// <param name="newCameraFocus"> Requieres a Tranform of the new object to focus</param>
+    public void ChangeFocusOfMainCameraTo(Transform newCameraFocus)
 	{
 		if(newCameraFocus != null)
 		{

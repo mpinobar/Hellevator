@@ -19,7 +19,7 @@ public class HorizontalTransport : MonoBehaviour
         m_enemiesOnPreassurePlate = new List<DemonBase>();
         m_spikesData = new List<SpikesWeightData>();
         m_charactersRgbs = new List<HorizontalTransportData>();
-        dir = (int) direction * 2 - 1;
+        dir = (int)direction * 2 - 1;
         m_bonesTransforms = new List<Transform>();
     }
 
@@ -28,17 +28,17 @@ public class HorizontalTransport : MonoBehaviour
     {
         for (int i = 0; i < m_enemiesOnPreassurePlate.Count; i++)
         {
-			if (m_enemiesOnPreassurePlate[i] != null)
-			{
-				m_enemiesOnPreassurePlate[i].DragMovement(dir*m_speed);
-			}
-			else
-			{
-				m_enemiesOnPreassurePlate.TrimExcess();
-			}
+            if (m_enemiesOnPreassurePlate[i] != null)
+            {
+                m_enemiesOnPreassurePlate[i].DragMovement(dir * m_speed);
+            }
+            else
+            {
+                m_enemiesOnPreassurePlate.TrimExcess();
+            }
         }
     }
-         
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
@@ -59,17 +59,17 @@ public class HorizontalTransport : MonoBehaviour
                     if (!m_spikesData[i].Colliders.Contains(collision.collider) && collision.gameObject.tag != "BodyCollider")
                     {
                         m_spikesData[i].Colliders.Add(collision.collider);
-                        
+
                     }
                 }
             }
             if (!isCounted)
             {
                 m_spikesData.Add(new SpikesWeightData(cmpDemon, collision.collider));
-                m_charactersRgbs.Add(new HorizontalTransportData(cmpDemon.Torso.GetComponent<Rigidbody2D>(),false));
+                m_charactersRgbs.Add(new HorizontalTransportData(cmpDemon.Torso.GetComponent<Rigidbody2D>(), false));
                 cmpDemon.DragMovement(m_speed * dir);
                 m_enemiesOnPreassurePlate.Add(cmpDemon);
-                
+
 
             }
 
@@ -95,13 +95,17 @@ public class HorizontalTransport : MonoBehaviour
                         //all the limbs have exited the spikes
                         if (m_spikesData[i].Colliders.Count == 0)
                         {
+                            StopAllCoroutines();
                             cmpDemon.DragMovement(0);
+                            StartCoroutine(PushedBodyInertia(cmpDemon));
                             m_spikesData.RemoveAt(i);
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);
                         }
                         else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
                         {
+                            StopAllCoroutines();
                             cmpDemon.DragMovement(0);
+                            StartCoroutine(PushedBodyInertia(cmpDemon));
                             m_enemiesOnPreassurePlate.Remove(cmpDemon);
                             m_spikesData.RemoveAt(i);
                         }
@@ -111,5 +115,22 @@ public class HorizontalTransport : MonoBehaviour
         }
     }
 
-
+    IEnumerator PushedBodyInertia(DemonBase demon)
+    {
+        float maxTimeDrag = 0.25f;
+        float time = maxTimeDrag;
+        while (time > 0)
+        {
+            if (demon)
+            {                
+                demon.DragMovement(m_speed);
+            }
+            else
+            {
+                time = 0;
+            }
+            time -= Time.deltaTime;
+            yield return null;
+        }
+    }
 }

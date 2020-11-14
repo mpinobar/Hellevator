@@ -16,9 +16,9 @@ public class TriggerSceneChange : MonoBehaviour
         {
             if (collision.GetComponent<DemonBase>().IsControlledByPlayer)
             {
-                Debug.LogError("level load to " + m_linkedScene +" from scene "+gameObject.scene.name + " after " + collision.transform.name +" entered");
                 LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
                 GetComponent<Collider2D>().enabled = false;
+                System.GC.Collect();
             }
         }
     }

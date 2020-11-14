@@ -52,24 +52,24 @@ public abstract class DemonBase : MonoBehaviour
     [SerializeField] private bool       m_multiplePossessionWhenDead;
     [SerializeField] private float      m_maximumPossessionRange;
 
-    [ColorUsage(true, true)]
-    [SerializeField] private Color      m_tintWhenCantBePossessed;
-    [SerializeField] SpriteRenderer     m_PossessionCircle;
-    private float                       m_distanceStartGlow = 10;
+    //[ColorUsage(true, true)]
+    //private float                       m_distanceStartGlow = 10;
 
     [ColorUsage(true, true)]
     [SerializeField] private Color      m_colorWhenAvailable;
 
     private GameObject                  m_spiritFire;
-    private float                       m_distanceMaxGlow = 5;
+    //private float                       m_distanceMaxGlow = 5;
     private bool                        m_isPossessionBlocked;
     private bool                        m_isControlledByPlayer;
     private bool                        m_overlayActive;
 
-    //[ColorUsage(true,true)]
+    [ColorUsage(true,true)]
     [SerializeField] private Color      m_fireColorWhenPossessed;
     [SerializeField] private Color      m_spritesColor;
-    /*[ColorUsage(true, true)]*/ Color      m_fireColorWhenNotPossessed;
+    [ColorUsage(true, true)]
+    /*[SerializeField] */
+    private Color      m_fireColorWhenNotPossessed;
     [SerializeField] GameObject         overlay;
 
     //IAReferences
@@ -808,7 +808,6 @@ public abstract class DemonBase : MonoBehaviour
     {
         if (m_dragMovement == 0 && amount != 0)
         {
-
             m_dragMovement = amount;
         }
         if (amount == 0)

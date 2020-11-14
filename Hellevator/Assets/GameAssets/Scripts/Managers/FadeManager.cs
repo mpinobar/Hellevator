@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 
 
-public class FadeManager : TemporalSingleton<FadeManager>
+public class FadeManager : MonoBehaviour
 {
     [SerializeField] private Image m_blackPanel = null;
     [SerializeField] private float m_fadeSpeed = 0f;
@@ -17,12 +17,12 @@ public class FadeManager : TemporalSingleton<FadeManager>
     private FadeState m_currentFadeState = FadeState.None;
 
     private float m_newAlpha = 0f;
-    private bool m_isRestarting = false;    
+    private static bool m_isRestarting = false;    
     [SerializeField] private float m_percentajeOfFadeForPlayerToMove = 0f;
     private bool m_playerCanMove = false;
 
     public bool PlayerCanMove { get => m_playerCanMove; set => m_playerCanMove = value; }
-    public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
+    public static bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -100,6 +100,7 @@ public class FadeManager : TemporalSingleton<FadeManager>
 
     public void StartFadingOut()
     {
+        
         m_blackPanel.gameObject.SetActive(true);
         m_currentFadeState = FadeState.FadingOut;
         m_currentStartingTimer = m_timeFullBlackWhenOpenedScene;

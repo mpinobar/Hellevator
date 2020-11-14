@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParalaxManager : TemporalSingleton<ParalaxManager>
+public class ParalaxManager : MonoBehaviour
 {
 	[SerializeField] private Paralax[] m_paralaxes = new Paralax[3];
 	   
