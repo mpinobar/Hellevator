@@ -211,16 +211,16 @@ public class InputManager : PersistentSingleton<InputManager>
 
     void Jump()
     {
-        if (m_currentDemon != null && m_currentDemon.CanMove && !m_isInInteactionTrigger)
+        if (m_currentDemon != null && m_currentDemon.CanMove /*&& !m_isInInteactionTrigger*/)
         {
             m_currentDemon.ToggleWalkingParticles(false);
             m_currentDemon.Jump();
 
         }
-        if (m_isInInteactionTrigger)
-        {
-            OnInteract();
-        }
+        //if (m_isInInteactionTrigger)
+        //{
+        //    OnInteract();
+        //}
         if (PossessionManager.Instance.ControllingMultipleDemons)
         {
             for (int i = 0; i < m_extraDemonsControlled.Count; i++)
