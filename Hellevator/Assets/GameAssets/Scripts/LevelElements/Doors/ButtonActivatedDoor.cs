@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ButtonActivatedDoor : ButtonActivatedBase
-{
-
+{	
 	[SerializeField] private float m_speed;
 	[SerializeField] private Transform m_endPosition;
 	private bool m_opening = false;
@@ -28,4 +27,10 @@ public class ButtonActivatedDoor : ButtonActivatedBase
 	{
 		m_opening = true;
 	}
+
+	public void ActivateImmediately()
+    {
+		transform.position = m_endPosition.position;
+		enabled = false;
+    }
 }

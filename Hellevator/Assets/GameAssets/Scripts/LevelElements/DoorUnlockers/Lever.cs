@@ -4,14 +4,27 @@ using UnityEngine;
 
 public class Lever : ButtonActivatedBase
 {
+    [SerializeField] Key key;
     [SerializeField] ButtonActivatedDoor m_doorToUnlock;
     [SerializeField] float m_visualLeverSpeed = 2f;
     bool m_added;
     bool m_activated;
+
+    private void OnEnable()
+    {
+        if (PlayerPrefs.GetInt(key.ToString()) == 1)
+        {
+            m_activated = true;
+            transform.GetChild(0).GetChild(1).localEulerAngles = -Vector3.forward * transform.GetChild(0).GetChild(1).localEulerAngles.z;
+            m_doorToUnlock.ActivateImmediately();
+        }
+    }
+
     public override void Activate()
     {
         if (!m_activated)
         {
+            PlayerPrefs.SetInt(key.ToString(), 1);
             m_doorToUnlock.Activate();
             ChangeLeverVisual();
             m_activated = true;
@@ -52,8 +65,7 @@ public class Lever : ButtonActivatedBase
     }
 
     void ChangeLeverVisual()
-    {
-        
+    {        
         StartCoroutine(LeverVisualRotation());
     }
 
@@ -64,8 +76,7 @@ public class Lever : ButtonActivatedBase
         float endAngle = -currentAngle;
 
         while (currentAngle > endAngle)
-        {
-            
+        {            
             currentAngle -= Time.deltaTime * m_visualLeverSpeed;
             visual.localEulerAngles = Vector3.forward * currentAngle;
             yield return null;
