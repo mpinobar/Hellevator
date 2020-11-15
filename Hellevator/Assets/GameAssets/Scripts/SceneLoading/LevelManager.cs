@@ -155,7 +155,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     }
     public void RestartLevel()
     {
-        string nameToLoad = "H.1";
+        string nameToLoad = "R.1";
 
         if (m_lastCheckPoint)
         {
