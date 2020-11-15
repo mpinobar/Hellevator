@@ -10,10 +10,20 @@ public class KeyActivatedDoor : MonoBehaviour
     {        
         if (collision.GetComponentInParent<DemonBase>())
         {
-            if (PlayerPrefs.GetInt(key.ToString()) == 1 || LevelManager.Instance.HasKitchenKey)
-            {
-                OpenDoor();
-            }
+            CheckOpenDoor();
+        }
+    }
+
+    private void OnEnable()
+    {
+        CheckOpenDoor();
+    }
+
+    private void CheckOpenDoor()
+    {
+        if (PlayerPrefs.GetInt(key.ToString()) == 1 /*|| LevelManager.Instance.HasKitchenKey*/)
+        {
+            OpenDoor();
         }
     }
 

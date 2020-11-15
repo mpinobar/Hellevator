@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MusicManager : TemporalSingleton<MusicManager>
+public class MusicManager : PersistentSingleton<MusicManager>
 {
     [Range (0,1)]
     [SerializeField] static float m_sfxVolume = 0.25f;
@@ -14,7 +14,7 @@ public class MusicManager : TemporalSingleton<MusicManager>
     AudioSource m_BGM;
     float m_spatialBlendSFX = 0.35f;
     int m_musicClipIndex;
-        
+
     public static float MusicVolume
     {
         get => m_musicVolume;
@@ -38,27 +38,30 @@ public class MusicManager : TemporalSingleton<MusicManager>
         m_sourcesList = new List<AudioSource>();
         m_BGM = gameObject.AddComponent<AudioSource>();
         m_BGM.volume = m_musicVolume;
+        m_BGM.loop = true;
+        m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
+        m_BGM.Play();
     }
 
     private void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            QueueOutOfTuneClip();
-        }
-        if (!m_BGM.isPlaying && m_backgroundMusicClips != null)
-        {
-            //int aux = m_currentBGMClip;
-            //while (aux == m_currentBGMClip && m_backgroundMusicClips.Count > 1)
-            //{
-            //    m_currentBGMClip = Random.Range(0, m_backgroundMusicClips.Count);
-            //}
-            
-            m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
-            m_musicClipIndex = (m_musicClipIndex + 1) % Mathf.Min(2,m_backgroundMusicClips.Count);
-            m_BGM.Play();
-        }
+        //if (Input.GetKeyDown(KeyCode.G))
+        //{
+        //    QueueOutOfTuneClip();
+        //}
+        //if (!m_BGM.isPlaying && m_backgroundMusicClips != null)
+        //{
+        //    //int aux = m_currentBGMClip;
+        //    //while (aux == m_currentBGMClip && m_backgroundMusicClips.Count > 1)
+        //    //{
+        //    //    m_currentBGMClip = Random.Range(0, m_backgroundMusicClips.Count);
+        //    //}
+
+        //    m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
+        //    //m_musicClipIndex = (m_musicClipIndex + 1) % Mathf.Min(2, m_backgroundMusicClips.Count);
+        //    m_BGM.Play();
+        //}
 
 
         int d = 0;
@@ -70,6 +73,16 @@ public class MusicManager : TemporalSingleton<MusicManager>
             }
         }
     }
+
+    public void StartGameplayMusic()
+    {
+        m_BGM.Stop();
+        m_BGM.clip = m_backgroundMusicClips[1];
+        m_BGM.loop = true;
+        m_BGM.Play();
+        
+    }
+
     public void PlayAudioMusic(AudioClip clip, bool looping)
     {
         if (m_sourcesList == null)
@@ -136,12 +149,12 @@ public class MusicManager : TemporalSingleton<MusicManager>
                 }
             }
             CreateAudioSourceAndSetParametersForSFX(clip, looping);
-            
+
             return m_sourcesList[m_sourcesList.Count - 1];
         }
     }
 
-    
+
 
     public AudioSource PlayAudioSFX(AudioClip clip, bool looping, float volumeModifier)
     {

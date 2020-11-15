@@ -44,6 +44,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public bool CanLoad { get => m_canLoad; set => m_canLoad = value; }
     public string PreviousScene { get => m_previousScene; set => m_previousScene = value; }
 
+    private void Start()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 
     /// <summary>
     /// Checks if the checkpoint has been already entered
@@ -155,14 +159,14 @@ public class LevelManager : PersistentSingleton<LevelManager>
     }
     public void RestartLevel()
     {
-        string nameToLoad = "H.1";
+        string nameToLoad = "R.1";
 
         if (m_lastCheckPoint)
         {
             //en este caso tengo que reiniciar la misma sala en la que he muerto
             nameToLoad = m_lastCheckPoint.SceneToLoad;
         }
-        else if(m_checkPointSceneToLoad.Length > 0)
+        else if(m_checkPointSceneToLoad != null && m_checkPointSceneToLoad.Length > 0)
         {
             //he muerto en una sala distinta al ultimo checkpoint en el que he muerto
             nameToLoad = m_checkPointSceneToLoad;
@@ -182,7 +186,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     private void LoadCompletedRestart(AsyncOperation obj)
     {
         UpdateLastCheckPointReference();
-
+        MusicManager.Instance.StartGameplayMusic();
 
         CameraManager.Instance.CurrentCamera.enabled = false;
         if(m_lastCheckPoint)
