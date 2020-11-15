@@ -44,6 +44,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public bool CanLoad { get => m_canLoad; set => m_canLoad = value; }
     public string PreviousScene { get => m_previousScene; set => m_previousScene = value; }
 
+    private void Start()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 
     /// <summary>
     /// Checks if the checkpoint has been already entered
