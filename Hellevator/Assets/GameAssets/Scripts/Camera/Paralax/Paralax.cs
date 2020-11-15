@@ -82,6 +82,7 @@ public class Paralax : MonoBehaviour
 				localScale.x = m_ratioX * worldScreenWidth / m_lengthOG;
 
 				m_backgrounds[i].transform.localScale = localScale;
+				m_backgrounds[i].transform.localPosition = new Vector3(m_backgrounds[i].transform.localPosition.x, 0, m_backgrounds[i].transform.localPosition.z);
 			}
 
 
@@ -227,7 +228,6 @@ public class Paralax : MonoBehaviour
 		{
 			float posX = this.transform.position.x;
 			this.transform.position = new Vector3(Camera.main.transform.position.x, this.transform.position.y, this.transform.position.z);
-
 			m_startingPosX = Camera.main.transform.position.x;
 			pruebas = m_startingPosX;
 			previousCameraPosition = m_startingPosX;
@@ -238,7 +238,7 @@ public class Paralax : MonoBehaviour
 			
 			float diff = m_startingPosX - posX;
 			
-
+			
 			float correctionsNeeded = diff / this.GetComponentInChildren<SpriteRenderer>().bounds.size.x;
 			//if(diff < 0)
 			//{

@@ -46,7 +46,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             //GameObject go = Instantiate(Resources.Load(path,typeof(GameObject))) as GameObject;
             //PLight = go.GetComponent<PossessingLight>();
         }
-
+        
     }
 
     /// <summary>
