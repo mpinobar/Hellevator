@@ -8,8 +8,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
 {
     private List<Vector3> m_checkPoints;
 
-    public CheckPoint m_lastCheckPoint;
-
+    private CheckPoint m_lastCheckPoint;
+    private string m_checkPointSceneToLoad;
     private bool m_isRestarting;
 
     AsyncOperation m_loadingScene;
@@ -70,6 +70,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         //}
         m_checkPoints.Add(value.transform.position);
         m_lastCheckPoint = value;
+        m_checkPointSceneToLoad = m_lastCheckPoint.SceneToLoad;
     }
 
     private void Update()
@@ -157,7 +158,15 @@ public class LevelManager : PersistentSingleton<LevelManager>
         string nameToLoad = "H.1";
 
         if (m_lastCheckPoint)
+        {
+            //en este caso tengo que reiniciar la misma sala en la que he muerto
             nameToLoad = m_lastCheckPoint.SceneToLoad;
+        }
+        else if(m_checkPointSceneToLoad.Length > 0)
+        {
+            //he muerto en una sala distinta al ultimo checkpoint en el que he muerto
+            nameToLoad = m_checkPointSceneToLoad;
+        }
         AsyncOperation op = SceneManager.LoadSceneAsync(nameToLoad);
         if(m_adjacentScenes != null)
          m_adjacentScenes.Clear();
