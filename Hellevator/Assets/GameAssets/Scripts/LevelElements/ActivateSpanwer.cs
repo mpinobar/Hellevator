@@ -5,9 +5,7 @@ using UnityEngine;
 public class ActivateSpanwer : MonoBehaviour
 {
     [SerializeField] Spawner m_spawnerToActivate;
-    [SerializeField] float newMaxRangePossesion;
 
-    public float NewMaxRangePossesion { get => newMaxRangePossesion; set => newMaxRangePossesion = value; }
 
     private void Start()
     {
@@ -17,11 +15,9 @@ public class ActivateSpanwer : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         DemonBase demon = collision.transform.root.GetComponent<DemonBase>();
-        if(demon != null)
+        if(demon != null && demon.IsControlledByPlayer)
         {
-            demon.MaximumPossessionRange = newMaxRangePossesion;
             m_spawnerToActivate.enabled = true;
-            m_spawnerToActivate.MaxRange = newMaxRangePossesion;
         }
         
     }
