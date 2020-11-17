@@ -236,19 +236,19 @@ public class Boss : MonoBehaviour
         }
     }
     private bool m_animatingKnives = false;
-    private float time = 0f;
-    private float evaluationTime = 0f;
+    private float m_time = 0f;
+    private float m_evaluationTime = 0f;
     private void LateUpdate()
     {
         if (m_animatingKnives)
         {
-            time += Time.deltaTime;
-            evaluationTime += Time.deltaTime * m_visualKnivesHeightCurve.length / m_visualKnivesDuration;
+            m_time += Time.deltaTime;
+            m_evaluationTime += Time.deltaTime * m_visualKnivesHeightCurve.length / m_visualKnivesDuration;
 
             for (int i = 0; i < m_kitchenUtensils.Count; i++)
             {
 
-                m_kitchenUtensils[i].transform.position = (Vector2)m_kitchenUtensilsParents[i].position + m_kitchenUtensilsStartingOffset[i] + Vector2.up * m_visualKnivesHeightCurve.Evaluate(evaluationTime) * m_visualKnivesHeightMultiplier;
+                m_kitchenUtensils[i].transform.position = (Vector2)m_kitchenUtensilsParents[i].position + m_kitchenUtensilsStartingOffset[i] + Vector2.up * m_visualKnivesHeightCurve.Evaluate(m_evaluationTime) * m_visualKnivesHeightMultiplier;
                 m_kitchenUtensils[i].transform.eulerAngles = Vector3.forward * m_kitchenUtensilsStartingRot[i];
             }
         }
@@ -275,8 +275,8 @@ public class Boss : MonoBehaviour
         m_animatingKnives = true;
         //GetComponent<Animator>().speed = 0f;
         //GetComponent<Animator>().enabled = false;
-        time = 0f;
-        evaluationTime = 0f;
+        m_time = 0f;
+        m_evaluationTime = 0f;
         //while (time <= m_visualKnivesDuration)
         //{
         //    time += Time.deltaTime;
