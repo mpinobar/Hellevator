@@ -7,7 +7,9 @@ public class Boss : MonoBehaviour
 {
     Animator m_bossAnimator;
     [SerializeField] Projectile m_knifePrefab;
+    [SerializeField] Halo m_haloPrefab;
     [SerializeField] Color m_colorWhenHurt;
+    [SerializeField] float m_haloSpawnHeight = 10f;
     [SerializeField] float m_knifeSpawnHeight = 10f;
     [SerializeField] float m_knifeSpeed = 40f;
     [SerializeField] float m_knifeDelay = 1f;
@@ -184,6 +186,8 @@ public class Boss : MonoBehaviour
     private void AttackPlayer()
     {
         //m_bossAnimator.SetTrigger("Attack");
+        Halo halo = Instantiate(m_haloPrefab,PossessionManager.Instance.ControlledDemon.transform.position + Vector3.up*m_haloSpawnHeight,Quaternion.identity);
+        halo.SetTarget(PossessionManager.Instance.ControlledDemon.transform, m_haloSpawnHeight);
         StartCoroutine(VisualKitchenKnives());
         ThrowKnife(PossessionManager.Instance.ControlledDemon.transform, m_knifeDelay, false);
         m_playerSeenAttackTimer = 0f;
@@ -248,8 +252,10 @@ public class Boss : MonoBehaviour
     {
         m_bossAnimator.SetTrigger("Attack");
         yield return new WaitForSeconds(m_visualKnivesUnparentDelay);
-        
-        if(m_kitchenUtensilsStartingRot == null)
+
+
+
+        if (m_kitchenUtensilsStartingRot == null)
         {
             m_kitchenUtensilsStartingRot = new List<float>();
         }

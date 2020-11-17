@@ -997,8 +997,8 @@ public abstract class DemonBase : MonoBehaviour
                 PlayDeathEffects();
             }
         }
-        
-        
+
+
 
         if (m_isControlledByPlayer)
         {
@@ -1021,7 +1021,7 @@ public abstract class DemonBase : MonoBehaviour
             MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.35f);
             GetComponent<BloodInstantiate>().InstantiateBlood();
         }
-        
+
     }
 
     /// <summary>
