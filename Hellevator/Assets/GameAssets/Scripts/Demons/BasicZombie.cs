@@ -203,7 +203,8 @@ public class BasicZombie : DemonBase
 
         if (Input.GetKeyDown(KeyCode.J))
         {
-            MultiplePossessionWhenDead = true;
+
+            MultiplePossessionWhenDead = !MultiplePossessionWhenDead;
         }
 
     }
