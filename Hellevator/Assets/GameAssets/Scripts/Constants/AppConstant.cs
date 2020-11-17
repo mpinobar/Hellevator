@@ -38,7 +38,7 @@ public class AppSounds
 
 public enum Key
 {
-	Kitchen, Restaurant, Storage
+	Kitchen, Restaurant, Storage, BelcebuRoom, BossKey
 }
 
 
