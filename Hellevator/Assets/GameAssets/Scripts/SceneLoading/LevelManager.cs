@@ -186,7 +186,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     private void LoadCompletedRestart(AsyncOperation obj)
     {
         UpdateLastCheckPointReference();
-        MusicManager.Instance.StartGameplayMusic();
+
 
         CameraManager.Instance.CurrentCamera.enabled = false;
         if(m_lastCheckPoint)
@@ -205,7 +205,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         if (m_lastCheckPoint)
             m_lastCheckPoint.SpawnPlayer();
         CameraManager.Instance.FadeOut();
-        
+        MusicManager.Instance.StartGameplayMusic();
     }
 
 

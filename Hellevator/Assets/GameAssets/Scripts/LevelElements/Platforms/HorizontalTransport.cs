@@ -121,9 +121,9 @@ public class HorizontalTransport : MonoBehaviour
         float time = maxTimeDrag;
         while (time > 0)
         {
-            if (demon)
-            {                
-                demon.DragMovement(m_speed);
+            if (demon && demon.IsGrounded())
+            {
+                demon.DragMovement(m_speed * dir);
             }
             else
             {
