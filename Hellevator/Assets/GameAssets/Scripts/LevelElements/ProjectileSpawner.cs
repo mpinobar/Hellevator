@@ -61,4 +61,9 @@ public class ProjectileSpawner : ButtonActivatedBase
     {
         m_active = false;
     }
+
+    public override void ActivateImmediately()
+    {
+        
+    }
 }

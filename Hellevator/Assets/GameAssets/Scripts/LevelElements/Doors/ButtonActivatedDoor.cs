@@ -12,10 +12,10 @@ public class ButtonActivatedDoor : ButtonActivatedBase
 	{
 		if (m_opening)
 		{
-			this.transform.position = Vector3.MoveTowards(this.transform.position, m_endPosition.position, m_speed * Time.deltaTime);
-			if((Vector3.Distance(this.transform.position, m_endPosition.position)) == 0)
+			transform.position = Vector3.MoveTowards(transform.position, m_endPosition.position, m_speed * Time.deltaTime);
+			if((Vector3.Distance(transform.position, m_endPosition.position)) == 0)
 			{
-				this.enabled = false;
+				enabled = false;
 			}
 		}
 	}
@@ -25,12 +25,14 @@ public class ButtonActivatedDoor : ButtonActivatedBase
 	/// </summary>
 	public override void Activate()
 	{
+		base.Activate();
 		m_opening = true;
 	}
 
-	public void ActivateImmediately()
+    public override void ActivateImmediately()
     {
+		base.ActivateImmediately();
 		transform.position = m_endPosition.position;
 		enabled = false;
-    }
+	}
 }
