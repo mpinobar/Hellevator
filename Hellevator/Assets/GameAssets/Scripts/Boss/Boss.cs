@@ -34,6 +34,10 @@ public class Boss : MonoBehaviour
     [SerializeField] float m_timeDelayToDeactivate = 5f;
     Vector3 m_desiredPos;
 
+	[Space]
+	[SerializeField] GameObject m_bossKey = null;
+	[SerializeField] Transform m_bossKeySpawnPoint = null;
+
     private enum State
     {
         Default, SeeingPlayer
@@ -210,6 +214,7 @@ public class Boss : MonoBehaviour
     private void OpenEntrance()
     {
         m_doorToCloseUponStart.SetActive(false);
+		GameObject newBossKey = Instantiate(m_bossKey, m_bossKeySpawnPoint.position, Quaternion.identity);
     }
 
     public void UnparentLimbs()
