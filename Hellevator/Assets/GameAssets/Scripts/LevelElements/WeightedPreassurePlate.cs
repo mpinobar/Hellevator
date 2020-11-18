@@ -164,6 +164,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                     if (!m_preassurePlateActivated)
                     {
                         m_percentage = m_currentWeight / m_weightNeeded;
+
                         if (m_percentage > 1f)
                         {
                             m_percentage = 1f;
@@ -173,6 +174,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                             if (m_percentage >= 1)
                             {
                                 m_buttonActivatedObject.Activate();
+                                
                                 if (m_audioSource && !m_audioSource.isPlaying)
                                     m_audioSource.Play();
                             }
@@ -182,6 +184,8 @@ public class WeightedPreassurePlate : MonoBehaviour
                                     m_audioSource.Stop();
                                 m_buttonActivatedObject.Deactivate();
                             }
+                            m_positionY = m_distanceToEndPosition * m_percentage;
+                            m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
                         }
                         else
                         {
