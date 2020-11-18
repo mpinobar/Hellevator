@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : PersistentSingleton<LevelManager>
 {
+    
+    [SerializeField] Puzzle[] m_scenePuzzles;
     private List<Vector3> m_checkPoints;
 
     private CheckPoint m_lastCheckPoint;
@@ -14,13 +16,13 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     AsyncOperation m_loadingScene;
 
-    [SerializeField] private GameObject m_fade = null;
+    //[SerializeField] private GameObject m_fade = null;
 
     List<string> m_adjacentScenes;
     LevelLoadManager m_centralScene;
 
     [SerializeField] GameObject cameraPrefab;
-
+    
     bool m_isSwitchingToNewScene;
     bool m_canLoad;
     string m_newSceneName;
@@ -39,7 +41,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
     public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
-    public LevelLoadManager CentralScene { get => m_centralScene; set => m_centralScene = value; }
+    public LevelLoadManager CentralSceneLoadManager { get => m_centralScene; set => m_centralScene = value; }
     public bool HasKitchenKey { get => m_hasKitchenKey; set => m_hasKitchenKey = value; }
     public bool CanLoad { get => m_canLoad; set => m_canLoad = value; }
     public string PreviousScene { get => m_previousScene; set => m_previousScene = value; }
@@ -76,6 +78,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         m_lastCheckPoint = value;
         m_checkPointSceneToLoad = m_lastCheckPoint.SceneToLoad;
     }
+        
 
     private void Update()
     {
@@ -174,7 +177,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         AsyncOperation op = SceneManager.LoadSceneAsync(nameToLoad);
         if(m_adjacentScenes != null)
          m_adjacentScenes.Clear();
-        CentralScene = null;
+        CentralSceneLoadManager = null;
         op.completed += LoadCompletedRestart;
 
         if (m_checkPoints != null && m_checkPoints.Count > 0)
@@ -211,7 +214,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     public void LoadCentralSceneFirstTime(LevelLoadManager newCentralScene)
     {
-        CentralScene = newCentralScene;
+        CentralSceneLoadManager = newCentralScene;
 
         if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
         {

@@ -14,14 +14,13 @@ public class Lever : ButtonActivatedBase
     {
         if (PlayerPrefs.GetInt(key.ToString()) == 1)
         {
-            m_activated = true;
-            transform.GetChild(0).GetChild(1).localEulerAngles = -Vector3.forward * transform.GetChild(0).GetChild(1).localEulerAngles.z;
-            m_doorToUnlock.ActivateImmediately();
+            ActivateImmediately();
         }
     }
 
     public override void Activate()
     {
+        base.Activate();
         if (!m_activated)
         {
             PlayerPrefs.SetInt(key.ToString(), 1);
@@ -81,5 +80,13 @@ public class Lever : ButtonActivatedBase
             visual.localEulerAngles = Vector3.forward * currentAngle;
             yield return null;
         }
+    }
+
+    public override void ActivateImmediately()
+    {
+        base.ActivateImmediately();
+        m_activated = true;
+        transform.GetChild(0).GetChild(1).localEulerAngles = -Vector3.forward * transform.GetChild(0).GetChild(1).localEulerAngles.z;
+        m_doorToUnlock.ActivateImmediately();
     }
 }

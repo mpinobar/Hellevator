@@ -12,6 +12,7 @@ public class SequenceMovingPlatform : ButtonActivatedBase
 
     public override void Activate()
     {
+        base.Activate();
         m_desiredIndex++;
         if (m_desiredIndex > m_waypoints.Count)
         {
@@ -51,11 +52,14 @@ public class SequenceMovingPlatform : ButtonActivatedBase
 
     public override void Deactivate()
     {
+        base.Deactivate();
         m_desiredIndex--;
         if (m_desiredIndex < 0)
         {
             m_desiredIndex = 0;
         }
 
-    }        
+    }
+
+    
 }
