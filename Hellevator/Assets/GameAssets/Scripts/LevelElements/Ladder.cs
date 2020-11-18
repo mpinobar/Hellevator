@@ -10,7 +10,9 @@ public class Ladder : MonoBehaviour
         if (collision.GetComponent<BasicZombie>().TryingToGrabLadder)
         {            
             collision.GetComponent<BasicZombie>().SetOnLadder(true);
+            InputManager.Instance.ResetPlayerHorizontalInput();
             collision.GetComponent<BasicZombie>().ResetVelocity();
+            collision.transform.position = new Vector3(transform.position.x, collision.transform.position.y, collision.transform.position.z);
         }
     }
 

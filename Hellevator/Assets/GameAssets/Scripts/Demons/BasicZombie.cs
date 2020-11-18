@@ -13,12 +13,14 @@ public class BasicZombie : DemonBase
     [SerializeField] private float      m_timeToDestroyLimbsAfterUnparenting = 10f;
     [SerializeField] private float      m_maxSpeed;
     [SerializeField] private float      m_acceleration = 7;
+    [SerializeField] private float      m_deceleration = 7;
     [SerializeField] private float      m_jumpForce = 10;
     [SerializeField] private float      m_jumpForceSecond = 10;
     [SerializeField] private bool       m_canJump;
     [SerializeField] private bool       m_canDoubleJump;
     [SerializeField] private float      m_coyoteTimeDuration = 0f;//Mirar si hacer cambio a frames
     [SerializeField] private float      m_groundCorrectionMultiplier = 3;
+    [SerializeField] private float      m_airCorrectionMultiplier = 3;
     [SerializeField] private float      m_waitTimeResetPlatformTraversal = 0.5f;
     
     private bool m_isOnLadder = false;
@@ -162,7 +164,7 @@ public class BasicZombie : DemonBase
                         //reset de velocidad en caso de dejar de pulsar el espacio durante el primer salto
                         if (!m_hasDoubleJumped)
                         {
-                            MyRgb.velocity = new Vector2(MyRgb.velocity.x, 1);
+                            MyRgb.velocity = new Vector2(MyRgb.velocity.x, Mathf.Min(m_ySpeedWhenReleasingEarly, MyRgb.velocity.y));
                             MyRgb.gravityScale = m_secondGravity;
                         }
                         MyRgb.gravityScale = m_firstGravity;
@@ -344,14 +346,26 @@ public class BasicZombie : DemonBase
     public override void Move(float xInput)
     {
         float accel = m_acceleration;
-
-        if ((MyRgb.velocity.x) * xInput < 0)
+        if(xInput == 0)
+        {
+            accel = m_deceleration;
+        }
+        else
         {
             if (IsGrounded())
             {
-                accel *= m_groundCorrectionMultiplier;
+                if ((MyRgb.velocity.x) * xInput < 0)
+                {
+                    accel *= m_groundCorrectionMultiplier;
+                }
+            }
+            else
+            {
+                accel *= m_airCorrectionMultiplier;
             }
         }
+        
+        
         //if(xInput != 0)
         //{
         //    if (!m_walkingParticles.isPlaying)

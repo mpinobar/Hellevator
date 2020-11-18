@@ -39,8 +39,11 @@ public class MusicManager : PersistentSingleton<MusicManager>
         m_BGM = gameObject.AddComponent<AudioSource>();
         m_BGM.volume = m_musicVolume;
         m_BGM.loop = true;
-        m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
-        m_BGM.Play();
+        if (m_backgroundMusicClips != null)
+        {
+            m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
+            m_BGM.Play();
+        }
     }
 
     private void Update()
@@ -80,7 +83,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
         m_BGM.clip = m_backgroundMusicClips[1];
         m_BGM.loop = true;
         m_BGM.Play();
-        
+
     }
 
     public void PlayAudioMusic(AudioClip clip, bool looping)
