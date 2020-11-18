@@ -12,6 +12,8 @@ public class Shelter : MonoBehaviour
 
     bool m_init;
 
+	[SerializeField] AudioSource m_audioPruebaBoss = null;
+
     private void Awake()
     {
         if (!boss)
@@ -34,6 +36,11 @@ public class Shelter : MonoBehaviour
                         boss.ThrowKnife(m_attackPlaces[i], Random.Range(0, 0.5f), true);
                     }
                     m_init = true;
+					if(m_audioPruebaBoss != null)
+					{
+						m_audioPruebaBoss.Play();
+						print("AUDIO DE PRUEBAS ESTA SONANDO");
+					}
                 }
 
             }
