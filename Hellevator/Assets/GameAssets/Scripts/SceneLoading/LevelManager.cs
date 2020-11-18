@@ -188,6 +188,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void LoadCompletedRestart(AsyncOperation obj)
     {
+        if(m_lastCheckPoint)
         UpdateLastCheckPointReference();
 
 

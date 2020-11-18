@@ -14,6 +14,7 @@ public class TemporalSingleton<T> : MonoBehaviour where T : Component
 				if (_instance == null)
 				{
 					GameObject obj = new GameObject();
+					//Debug.LogError(obj.scene.name);
 					//obj.hideFlags = HideFlags.HideAndDontSave;
 					_instance = obj.AddComponent<T>();
 				}
