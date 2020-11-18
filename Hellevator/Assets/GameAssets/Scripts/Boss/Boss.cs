@@ -84,6 +84,7 @@ public class Boss : MonoBehaviour
         m_started = true;
         SetNotSeeingPlayer();
         CloseEntrance();
+		ChangeColorStartFight();
         PossessionManager.Instance.Boss = this;
     }
 
@@ -171,6 +172,15 @@ public class Boss : MonoBehaviour
         }
 
     }
+	private void ChangeColorStartFight()
+	{
+		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
+
+		for (int i = 0; i < childSprites.Length; i++)
+		{
+			childSprites[i].color = Color.white;
+		}
+	}
 
     private void Die()
     {
