@@ -4,10 +4,27 @@ using UnityEngine;
 
 public abstract class ButtonActivatedBase : MonoBehaviour
 {
-	public abstract void Activate();
+    private Puzzle m_belongingPuzzle;
+    private bool active;
+    public bool Active { get => active; set => active = value; }
+    public Puzzle BelongingPuzzle { get => m_belongingPuzzle; set => m_belongingPuzzle = value; }
+
+    public virtual void Activate()
+    {
+        active = true;
+        if (m_belongingPuzzle)
+        {
+            m_belongingPuzzle.TrySetPuzzleSolved();
+        }
+    }
 
 	public virtual void Deactivate()
     {
+        active = false;
+    }
 
+    public virtual void ActivateImmediately()
+    {
+        active = true;
     }
 }

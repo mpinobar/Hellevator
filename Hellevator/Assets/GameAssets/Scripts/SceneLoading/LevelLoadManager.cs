@@ -14,7 +14,7 @@ public class LevelLoadManager : MonoBehaviour
     private void OnEnable()
     {
         ThisSceneName = gameObject.scene.name;
-        LevelManager.Instance.CentralScene = this;
+        LevelManager.Instance.CentralSceneLoadManager = this;
         //if (LevelManager.Instance.CentralScene == null)
         //{
         //    //Debug.LogError("Loading scene as the first one: " + ThisSceneName);
@@ -36,6 +36,8 @@ public class LevelLoadManager : MonoBehaviour
             }
         }
     }
+
+
 
 
     //private void OnTriggerEnter2D(Collider2D collision)
