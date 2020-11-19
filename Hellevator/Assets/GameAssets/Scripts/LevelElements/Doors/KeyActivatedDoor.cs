@@ -1,13 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class KeyActivatedDoor : MonoBehaviour
 {
-    [SerializeField] Key key;       
+    [SerializeField] Key key;
+    [SerializeField] GameObject m_doorClosed;
+    [SerializeField] GameObject m_doorOpen;
+    [SerializeField] GameObject m_keyNeededText;
 
     private void OnTriggerEnter2D(Collider2D collision)
-    {        
+    {
         if (collision.GetComponentInParent<DemonBase>())
         {
             CheckOpenDoor();
@@ -16,7 +20,10 @@ public class KeyActivatedDoor : MonoBehaviour
 
     private void OnEnable()
     {
-        CheckOpenDoor();
+        if (PlayerPrefs.GetInt(key.ToString()) == 1 /*|| LevelManager.Instance.HasKitchenKey*/)
+        {
+            OpenDoor();
+        }
     }
 
     private void CheckOpenDoor()
@@ -25,11 +32,37 @@ public class KeyActivatedDoor : MonoBehaviour
         {
             OpenDoor();
         }
+        else
+        {
+            if (m_keyNeededText)
+                ShowKeyNeeded();
+        }
+    }
+
+    private void ShowKeyNeeded()
+    {
+        m_keyNeededText.SetActive(true);
     }
 
     public void OpenDoor()
     {
-        gameObject.SetActive(false);
+        m_doorClosed.gameObject.SetActive(false);
+        m_doorOpen.gameObject.SetActive(true);
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (m_keyNeededText)
+        {
+            if (collision.GetComponentInParent<DemonBase>())
+            {
+                HideKeyNeeded();
+            }
+        }
+
     }
 
+    private void HideKeyNeeded()
+    {
+        m_keyNeededText.SetActive(false);
+    }
 }
