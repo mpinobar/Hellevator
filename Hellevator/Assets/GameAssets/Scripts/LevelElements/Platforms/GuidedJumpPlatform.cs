@@ -10,21 +10,30 @@ public class GuidedJumpPlatform : MonoBehaviour
     [SerializeField] Transform m_endPoint;
     [SerializeField] float m_transitionSpeed;
     Collider2D m_collider;
+    [SerializeField] bool m_disappearsAfterOneSecond;
 
     private void Awake()
     {
         m_collider = GetComponent<Collider2D>();
+        if (m_disappearsAfterOneSecond)
+        {
+            Destroy(gameObject, 2f);
+        }
     }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponentInParent<DemonBase>() != null && collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon && PossessionManager.Instance.ControlledDemon.CanMove)
+        if (collision.GetComponentInParent<DemonBase>() != null && collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
         {
-            //InputManager.Instance.ResetPlayerInput();
-            StopAllCoroutines();
-            StartCoroutine(TransferToDestination(PossessionManager.Instance.ControlledDemon.transform));
-            transform.GetChild(1).GetComponent<Animator>().SetTrigger("Active");
+            if (m_disappearsAfterOneSecond || PossessionManager.Instance.ControlledDemon.CanMove)
+            {
+                StopAllCoroutines();
+                StartCoroutine(TransferToDestination(PossessionManager.Instance.ControlledDemon.transform));
+
+                transform.GetChild(1).GetComponent<Animator>().SetTrigger("Active");
+            }
+
         }
     }
 
@@ -54,5 +63,9 @@ public class GuidedJumpPlatform : MonoBehaviour
         characterToMove.GetComponent<DemonBase>().CanMove = true;
         rgb.isKinematic = false;
         m_collider.enabled = true;
+        if (m_disappearsAfterOneSecond)
+        {
+            Destroy(gameObject);
+        }
     }
 }

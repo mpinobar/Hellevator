@@ -11,7 +11,10 @@ public class DestructibleWall : MonoBehaviour
         m_parts = ReturnComponentsInChildren<Collider2D>();
         for (int i = 0; i < m_parts.Length; i++)
         {
-            m_parts[i].enabled = false;
+            if (!m_parts[i].GetComponent<Spikes>())
+            {
+                m_parts[i].enabled = false;
+            }
             m_parts[i].GetComponent<Rigidbody2D>().isKinematic = true;
         }
     }
@@ -37,7 +40,15 @@ public class DestructibleWall : MonoBehaviour
     {
         for (int i = 0; i < m_parts.Length; i++)
         {
-            m_parts[i].enabled = true;
+            if (m_parts[i].GetComponent<Spikes>())
+            {
+                m_parts[i].enabled = false;
+            }
+            else
+            {
+                m_parts[i].enabled = true;
+            }
+
             m_parts[i].transform.parent = null;
             m_parts[i].GetComponent<Rigidbody2D>().isKinematic = false;
             //m_parts[i].GetComponent<Rigidbody2D>().velocity = (m_parts[i].transform.position - origin).normalized * force;
