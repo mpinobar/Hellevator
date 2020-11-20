@@ -31,6 +31,14 @@ public class CameraManager : TemporalSingleton<CameraManager>
 
 	ParalaxManager m_parallaxManager;
 
+
+	[Header("Shake")]
+	[SerializeField] float m_lightShakeAmplitude = 12f;
+	[SerializeField] float m_lightShakeDuration = 0.5f;
+
+	[SerializeField] float m_medShakeAmplitude = 30f;
+	[SerializeField] float m_medShakeDuration = 0.5f;
+
 	public override void Awake()
 	{
 		if (_instance == null)
@@ -142,4 +150,32 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	{
 		m_currentCamera.m_Lens.OrthographicSize = newOrtographicSize;
 	}
+
+	public void CameraShakeLight()
+    {
+		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+		noise.m_AmplitudeGain = m_lightShakeAmplitude;
+        StartCoroutine(StopShaking(noise, m_lightShakeDuration));
+    }
+
+	public void CameraShakeMedium()
+    {
+		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+		noise.m_AmplitudeGain = m_medShakeAmplitude;
+        StartCoroutine(StopShaking(noise, m_medShakeDuration));
+    }
+
+
+	private IEnumerator StopShaking(CinemachineBasicMultiChannelPerlin noiseCmp, float time)
+    {
+		float timeRemaining = time;
+		//float amp = noiseCmp.m_AmplitudeGain;
+		while (timeRemaining > 0)
+        {
+			timeRemaining -= Time.deltaTime;
+			noiseCmp.m_AmplitudeGain = Mathf.Lerp(noiseCmp.m_AmplitudeGain, 0, (1 - timeRemaining / time));
+			yield return null;
+        }
+		noiseCmp.m_AmplitudeGain = 0f;
+    }
 }
