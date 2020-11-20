@@ -323,5 +323,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
     {
         PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
         CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+        PossessionManager.Instance.RemovePossessionFromExtraDemons();
     }
 }

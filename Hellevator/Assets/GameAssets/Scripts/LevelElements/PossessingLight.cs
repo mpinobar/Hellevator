@@ -5,7 +5,8 @@ using UnityEngine;
 public class PossessingLight : MonoBehaviour
 {
     [SerializeField] AudioClip m_lightTravelClip;
-    [SerializeField] ParticlesPossessionTargetReached m_prefabParticlesTargetReached;
+    [SerializeField] ParticlesPossessionTargetReached m_prefabShockwaveTargetReached;
+    [SerializeField] GameObject m_prefabSmallBurstTargetReached;
 
     bool m_travelling;
     DemonBase m_target;
@@ -70,13 +71,15 @@ public class PossessingLight : MonoBehaviour
                 m_target.transform.parent = null;
                 PossessionManager.Instance.PossessNewDemon(m_target);
                 m_target.transform.parent = parent;
-                Instantiate(m_prefabParticlesTargetReached, transform.position, Quaternion.identity).SetTarget(m_target.Torso);
+                Instantiate(m_prefabShockwaveTargetReached, transform.position, Quaternion.identity).SetTarget(m_target.Torso);
+                Instantiate(m_prefabSmallBurstTargetReached, transform.position, Quaternion.identity);
                 CameraManager.Instance.CameraShakeLight();
             }
             else
             {
                 PossessionManager.Instance.PossessNewDemon(m_target);
-                Instantiate(m_prefabParticlesTargetReached, transform.position, Quaternion.identity).SetTarget(m_target.Torso);
+                Instantiate(m_prefabShockwaveTargetReached, transform.position, Quaternion.identity).SetTarget(m_target.Torso);
+                Instantiate(m_prefabSmallBurstTargetReached, transform.position, Quaternion.identity);
                 CameraManager.Instance.CameraShakeLight();
             }
             m_lightSound.Stop();

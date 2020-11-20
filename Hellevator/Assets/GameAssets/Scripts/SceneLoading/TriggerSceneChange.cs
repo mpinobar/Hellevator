@@ -12,10 +12,12 @@ public class TriggerSceneChange : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponent<DemonBase>() != null)
+        DemonBase demon = collision.GetComponent<DemonBase>();
+        if (demon != null)
         {
-            if (collision.GetComponent<DemonBase>().IsControlledByPlayer)
+            if (demon.IsControlledByPlayer)
             {
+                PossessionManager.Instance.ChangeMainCharacter(demon);
                 LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
                 GetComponent<Collider2D>().enabled = false;
                 System.GC.Collect();
