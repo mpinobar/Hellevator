@@ -14,7 +14,7 @@ public class ParticlesPossessionTargetReached : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(Animate());    
+        StartCoroutine(Animate());
     }
 
     private IEnumerator Animate()
@@ -28,7 +28,8 @@ public class ParticlesPossessionTargetReached : MonoBehaviour
         {
             color.a = m_animCurveAlpha.Evaluate(time);
             spr.color = color;
-            transform.position = m_targetToFollow.position;
+            if (m_targetToFollow)
+                transform.position = m_targetToFollow.position;
             scale = Vector3.one * m_initialScale * m_animCurveScale.Evaluate(time);
             transform.localScale = scale;
             time += Time.deltaTime * m_speed;
@@ -36,6 +37,27 @@ public class ParticlesPossessionTargetReached : MonoBehaviour
         }
         Destroy(gameObject);
     }
+
+    //private IEnumerator AnimateReverse()
+    //{
+    //    Vector3 scale;
+    //    m_initialScale = transform.localScale.x;
+    //    float time = 0;
+    //    SpriteRenderer spr = GetComponent<SpriteRenderer>();
+    //    Color color = spr.color;
+    //    while (time < m_animCurveScale.length)
+    //    {
+    //        color.a = m_animCurveAlpha.Evaluate(time);
+    //        spr.color = color;
+    //        //transform.position = m_targetToFollow.position;
+    //        scale = Vector3.one * m_initialScale * m_animCurveScale.Evaluate(m_animCurveScale.length - time);
+    //        transform.localScale = scale;
+    //        time += Time.deltaTime * m_speed;
+    //        yield return null;
+    //    }
+    //    Destroy(gameObject);
+    //}
+
     public void SetTarget(Transform target)
     {
         m_targetToFollow = target;
