@@ -8,7 +8,7 @@ public class ButtonActivatedDoor : ButtonActivatedBase
 	[SerializeField] private Transform m_endPosition;
 	private bool m_opening = false;
 
-	private void Update()
+    private void Update()
 	{
 		if (m_opening)
 		{
