@@ -39,6 +39,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
     }
 
+    public string PlayerSceneName { get => m_newSceneName; }
     public bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
     public List<Vector3> CheckPoints { get => m_checkPoints; set => m_checkPoints = value; }
     public LevelLoadManager CentralSceneLoadManager { get => m_centralScene; set => m_centralScene = value; }
@@ -48,7 +49,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void Start()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
     }
 
     /// <summary>

@@ -268,7 +268,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                         {
                             m_buttonActivatedObject.Activate();
                             m_preassurePlateIsAtLocation = true;
-                            this.gameObject.SetActive(false);
+                            gameObject.SetActive(false);
                         }
                     }
                 }

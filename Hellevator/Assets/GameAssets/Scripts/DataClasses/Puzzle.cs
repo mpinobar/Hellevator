@@ -8,6 +8,7 @@ public class Puzzle : MonoBehaviour
     [SerializeField] string m_ID;
 
     [SerializeField] ButtonActivatedBase [] m_completeWhenActive;
+    [SerializeField] ButtonActivatedBase [] m_secondaryActivations;
 
     private void OnEnable()
     {
@@ -21,6 +22,10 @@ public class Puzzle : MonoBehaviour
         for (int i = 0; i < m_completeWhenActive.Length; i++)
         {
             m_completeWhenActive[i].BelongingPuzzle = this;
+        }
+        for (int i = 0; i < m_secondaryActivations.Length; i++)
+        {
+            m_secondaryActivations[i].BelongingPuzzle = this;
         }
     }
 
@@ -46,10 +51,17 @@ public class Puzzle : MonoBehaviour
         //Debug.LogError("Checking if puzzle with id " + m_ID + " was solved");
         if (PuzzlesDataManager.CheckPuzzle(m_ID))
         {
-            //Debug.LogError("Puzzle was solved. Unlocking all puzzle parts");
+            Debug.LogError("Puzzle was solved. Unlocking all puzzle parts");
             for (int i = 0; i < m_completeWhenActive.Length; i++)
             {
                 m_completeWhenActive[i].ActivateImmediately();
+            }
+            if (m_secondaryActivations != null && m_secondaryActivations.Length > 0)
+            {
+                for (int i = 0; i < m_secondaryActivations.Length; i++)
+                {
+                    m_secondaryActivations[i].ActivateImmediately();
+                }
             }
         }
         else

@@ -6,6 +6,7 @@ public abstract class ButtonActivatedBase : MonoBehaviour
 {
     private Puzzle m_belongingPuzzle;
     private bool active;
+	[SerializeField] bool m_deactivatesOnPuzzleCompletion;
     public bool Active { get => active; set => active = value; }
     public Puzzle BelongingPuzzle { get => m_belongingPuzzle; set => m_belongingPuzzle = value; }
 
@@ -26,5 +27,9 @@ public abstract class ButtonActivatedBase : MonoBehaviour
     public virtual void ActivateImmediately()
     {
         active = true;
+        if (m_deactivatesOnPuzzleCompletion)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
