@@ -26,8 +26,10 @@ public class BloodSplatter : MonoBehaviour
             {
                 if (other.GetComponent<SpriteMask>() == null)
                 {
+                    
                     other.AddComponent<SpriteMask>();
-                    other.GetComponent<SpriteMask>().sprite = other.GetComponent<SpriteRenderer>().sprite;
+                    if (other.GetComponent<SpriteRenderer>())
+                        other.GetComponent<SpriteMask>().sprite = other.GetComponent<SpriteRenderer>().sprite;
                 }
                 else
                 {
