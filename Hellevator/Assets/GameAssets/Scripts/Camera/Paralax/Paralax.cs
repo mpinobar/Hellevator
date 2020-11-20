@@ -67,7 +67,7 @@ public class Paralax : MonoBehaviour
 		{
 			m_camera = Camera.main.transform;
 
-			//Calculo de la nueva escala del fondo segun el ortographic size de la cámara 
+			////Calculo de la nueva escala del fondo segun el ortographic size de la cámara 
 			m_length = this.GetComponentInChildren<SpriteRenderer>().bounds.size.x;
 			m_height = this.GetComponentInChildren<SpriteRenderer>().bounds.size.y;
 

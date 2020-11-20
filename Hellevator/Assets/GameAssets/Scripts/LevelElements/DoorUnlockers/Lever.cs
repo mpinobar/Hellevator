@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class Lever : ButtonActivatedBase
 {
-    [SerializeField] Key key;
+    //[SerializeField] Key key;
     [SerializeField] ButtonActivatedDoor m_doorToUnlock;
     [SerializeField] float m_visualLeverSpeed = 2f;
     bool m_added;
     bool m_activated;
 
-    private void OnEnable()
-    {
-        if (PlayerPrefs.GetInt(key.ToString()) == 1)
-        {
-            ActivateImmediately();
-        }
-    }
+    //private void OnEnable()
+    //{
+    //    if (PlayerPrefs.GetInt(key.ToString()) == 1)
+    //    {
+    //        ActivateImmediately();
+    //    }
+    //}
 
     public override void Activate()
     {
         base.Activate();
         if (!m_activated)
         {
-            PlayerPrefs.SetInt(key.ToString(), 1);
+            //(PlayerPrefs.SetInt(key.ToString(), 1);
             m_doorToUnlock.Activate();
             ChangeLeverVisual();
             m_activated = true;
