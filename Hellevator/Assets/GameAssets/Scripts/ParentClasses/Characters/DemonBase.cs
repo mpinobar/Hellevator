@@ -1004,6 +1004,7 @@ public abstract class DemonBase : MonoBehaviour
         {
             //Debug.LogError("Player died: " + name);
             UseSkill();
+            CameraManager.Instance.CameraShakeMedium();
             PossessionManager.Instance.RemoveDemonPossession(transform);
         }
         else if (m_isControlledByIA)
@@ -1012,6 +1013,11 @@ public abstract class DemonBase : MonoBehaviour
             SetNotControlledByPlayer();
             //SetRagdollActive(true);
         }
+    }
+
+    public void PlayTrueDeathParticles()
+    {
+        Debug.LogError("True death");
     }
 
     public void PlayDeathEffects()

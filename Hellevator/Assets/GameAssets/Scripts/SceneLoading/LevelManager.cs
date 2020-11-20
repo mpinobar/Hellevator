@@ -146,7 +146,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
             if (m_checkPoints[m_checkPoints.Count - 1] == cps[i].transform.position)
             {
                 m_lastCheckPoint = cps[i];
-
                 return;
             }
         }
@@ -189,8 +188,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void LoadCompletedRestart(AsyncOperation obj)
     {
-        if(m_lastCheckPoint)
+        //Debug.LogError("Has Checkpoint?" + (m_lastCheckPoint != null));
+        if (m_checkPoints != null && m_checkPoints.Count > 0)
         UpdateLastCheckPointReference();
+        //Debug.LogError("Has Checkpoint?" + (m_lastCheckPoint != null));
 
 
         CameraManager.Instance.CurrentCamera.enabled = false;
@@ -208,7 +209,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
             SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
         }
         if (m_lastCheckPoint)
+        {
+            //Debug.LogError("Trying to spawn player");
             m_lastCheckPoint.SpawnPlayer();
+        }
         CameraManager.Instance.FadeOut();
         MusicManager.Instance.StartGameplayMusic();
     }
@@ -319,5 +323,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
     {
         PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
         CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+        PossessionManager.Instance.RemovePossessionFromExtraDemons();
     }
 }
