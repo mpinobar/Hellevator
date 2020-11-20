@@ -272,6 +272,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             else if (m_extraDemonsControlled.Count == 0 && ControlledDemon == null)
             {
                 LevelManager.Instance.StartRestartingLevel();
+                ControlledDemon.PlayTrueDeathParticles();
             }
         }
     }

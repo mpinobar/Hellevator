@@ -1015,6 +1015,11 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
+    public void PlayTrueDeathParticles()
+    {
+        Debug.LogError("True death");
+    }
+
     public void PlayDeathEffects()
     {
         if (m_spiritFire.GetComponent<SpriteRenderer>().isVisible)
