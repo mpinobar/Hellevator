@@ -79,11 +79,13 @@ public class MusicManager : PersistentSingleton<MusicManager>
 
     public void StartGameplayMusic()
     {
-        m_BGM.Stop();
-        m_BGM.clip = m_backgroundMusicClips[1];
-        m_BGM.loop = true;
-        m_BGM.Play();
-
+        if (m_backgroundMusicClips != null && m_backgroundMusicClips.Count > 0)
+        {
+            m_BGM.Stop();
+            m_BGM.clip = m_backgroundMusicClips[1];
+            m_BGM.loop = true;
+            m_BGM.Play();
+        }
     }
 
     public void PlayAudioMusic(AudioClip clip, bool looping)
