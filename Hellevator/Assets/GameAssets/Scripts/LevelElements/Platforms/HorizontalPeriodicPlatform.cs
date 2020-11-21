@@ -43,16 +43,16 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
     {
 
 
-        if (Input.GetKeyDown(KeyCode.Y) && m_spikesData.Count > 0)
-        {
-            for (int i = 0; i < m_spikesData.Count; i++)
-            {
-                for (int j = 0; j < m_spikesData[i].Colliders.Count; j++)
-                {
-                    print(m_spikesData[i].Colliders[j].name);
-                }
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Y) && m_spikesData.Count > 0)
+        //{
+        //    for (int i = 0; i < m_spikesData.Count; i++)
+        //    {
+        //        for (int j = 0; j < m_spikesData[i].Colliders.Count; j++)
+        //        {
+        //            print(m_spikesData[i].Colliders[j].name);
+        //        }
+        //    }
+        //}
 
 
 

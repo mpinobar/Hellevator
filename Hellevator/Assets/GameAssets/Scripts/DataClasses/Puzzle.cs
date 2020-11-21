@@ -7,8 +7,8 @@ public class Puzzle : MonoBehaviour
 {
     [SerializeField] string m_ID;
 
-    [SerializeField] ButtonActivatedBase [] m_completeWhenActive;
-    [SerializeField] ButtonActivatedBase [] m_secondaryActivations;
+    [SerializeField] ActivatedBase [] m_completeWhenActive;
+    [SerializeField] ActivatedBase [] m_secondaryActivations;
 
     private void OnEnable()
     {
@@ -23,10 +23,11 @@ public class Puzzle : MonoBehaviour
         {
             m_completeWhenActive[i].BelongingPuzzle = this;
         }
-        for (int i = 0; i < m_secondaryActivations.Length; i++)
-        {
-            m_secondaryActivations[i].BelongingPuzzle = this;
-        }
+        if (m_secondaryActivations != null && m_secondaryActivations.Length > 0)
+            for (int i = 0; i < m_secondaryActivations.Length; i++)
+            {
+                m_secondaryActivations[i].BelongingPuzzle = this;
+            }
     }
 
     public void TrySetPuzzleSolved()
