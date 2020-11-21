@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ButtonActivatedBase : MonoBehaviour
+public abstract class ActivatedBase : MonoBehaviour
 {
     private Puzzle m_belongingPuzzle;
     private bool active;
