@@ -87,44 +87,53 @@ public class InputManager : PersistentSingleton<InputManager>
     {
         for (int i = 0; i < m_extraDemonsControlled.Count; i++)
         {
-            if (m_extraDemonsControlled[i].CanMove)
+            if(m_extraDemonsControlled[i] != null)
             {
-                m_extraDemonsControlled[i].Move(m_moveInputValue);
-
-                m_extraDemonsControlled[i].ToggleWalkingParticles(m_moveInputValue != 0 && m_extraDemonsControlled[i].IsGrounded());
-
-                if (m_moveInputValue > 0)
+                if (m_extraDemonsControlled[i].CanMove)
                 {
-                    if (((BasicZombie)m_extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
-                    {
-                        m_extraDemonsControlled[i].MovementDirection = 1;
-                    }
-                    else
-                    {
-                        m_extraDemonsControlled[i].MovementDirection = -1;
-                    }
+                    m_extraDemonsControlled[i].Move(m_moveInputValue);
 
+                    m_extraDemonsControlled[i].ToggleWalkingParticles(m_moveInputValue != 0 && m_extraDemonsControlled[i].IsGrounded());
+
+                    if (m_moveInputValue > 0)
+                    {
+                        if (((BasicZombie)m_extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
+                        {
+                            m_extraDemonsControlled[i].MovementDirection = 1;
+                        }
+                        else
+                        {
+                            m_extraDemonsControlled[i].MovementDirection = -1;
+                        }
+
+                    }
+                    else if (m_moveInputValue < 0)
+                    {
+
+                        if (((BasicZombie)m_extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
+                        {
+                            m_extraDemonsControlled[i].MovementDirection = -1;
+                        }
+                        else
+                        {
+                            m_extraDemonsControlled[i].MovementDirection = 1;
+                        }
+
+                    }
+                    if (m_extraDemonsControlled[i].MovementDirection != 0)
+                        m_extraDemonsControlled[i].transform.localScale = Vector3.one - (Vector3.right * (1 - m_extraDemonsControlled[i].MovementDirection));
                 }
-                else if (m_moveInputValue < 0)
+                else if (!m_extraDemonsControlled[i].CanMove)
                 {
-
-                    if (((BasicZombie)m_extraDemonsControlled[i]).SoyUnNiñoDeVerdad)
-                    {
-                        m_extraDemonsControlled[i].MovementDirection = -1;
-                    }
-                    else
-                    {
-                        m_extraDemonsControlled[i].MovementDirection = 1;
-                    }
-
+                    m_extraDemonsControlled[i].Move(0);
                 }
-                if (m_extraDemonsControlled[i].MovementDirection != 0)
-                    m_extraDemonsControlled[i].transform.localScale = Vector3.one - (Vector3.right * (1 - m_extraDemonsControlled[i].MovementDirection));
             }
-            else if (!m_extraDemonsControlled[i].CanMove)
+            else
             {
-                m_extraDemonsControlled[i].Move(0);
+                m_extraDemonsControlled.RemoveAt(i);
+                i--;
             }
+            
         }
     }
 
