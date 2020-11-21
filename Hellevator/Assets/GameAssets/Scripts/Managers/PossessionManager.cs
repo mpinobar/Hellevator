@@ -20,8 +20,9 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     public DemonBase DemonShowingSkull { get => m_demonShowingSkull; set => m_demonShowingSkull = value; }
     public Boss Boss { get => boss; set => boss = value; }
     public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
+	public bool MultiplePossessionIsUnlocked { get => m_multiplePossessionIsUnlocked; set => m_multiplePossessionIsUnlocked = value; }
 
-    [SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
+	[SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
     [SerializeField] GameObject m_PossessionLight;
     private PossessingLight m_pLight;
 
@@ -29,7 +30,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     bool m_controllingMultipleDemons;
     bool m_multiplePossessionWhenDead;
-    DemonBase m_demonShowingSkull;
+	bool m_multiplePossessionIsUnlocked = false;
+	DemonBase m_demonShowingSkull;
 
     [SerializeField] int m_maxDemonsPossessed = 2;
 
@@ -44,9 +46,19 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             Debug.LogError("FALTABA POSSESSION MANAGER, CREANDO UNO CON REFERENCIAS POR CODIGO. PARA LA PROXIMA INTENTAD ARRASTRAR UNO A LA ESCENA PARA ALIGERAR LA CARGA DE RECURSOS PLEASE");
             string path = "PossessingLight";
             m_PossessionLight = (GameObject) Resources.Load(path, typeof(GameObject));
-            //GameObject go = Instantiate(Resources.Load(path,typeof(GameObject))) as GameObject;
-            //PLight = go.GetComponent<PossessingLight>();
-        }
+			//GameObject go = Instantiate(Resources.Load(path,typeof(GameObject))) as GameObject;
+			//PLight = go.GetComponent<PossessingLight>();
+			int hasMultiUnlocked = PlayerPrefs.GetInt("MultiIsUnlocked");
+			if(hasMultiUnlocked == 0)
+			{
+				m_multiplePossessionIsUnlocked = false;
+			}
+			else
+			{
+				m_multiplePossessionIsUnlocked = true;
+			}
+			//PlayerPrefs.SetInt("MultiIsUnlocked", 1);
+		}
         
     }
 
@@ -393,14 +405,15 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
         
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            MultiplePossessionWhenDead = !MultiplePossessionWhenDead;
-        }
-    }
+	
+	public void ToggleMultiplePossesion()
+	{
+		if (m_multiplePossessionIsUnlocked)
+		{
+			MultiplePossessionWhenDead = !MultiplePossessionWhenDead;
+			
+		}
+	}
 
 
 }

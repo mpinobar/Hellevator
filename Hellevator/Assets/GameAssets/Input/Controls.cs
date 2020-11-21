@@ -35,7 +35,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""InputAbility"",
+                    ""name"": ""InputShowRange"",
                     ""type"": ""Button"",
                     ""id"": ""6ece0954-3413-4ea1-805b-4deea4645634"",
                     ""expectedControlType"": """",
@@ -43,7 +43,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""InputSuicide"",
+                    ""name"": ""InputPosMulti"",
                     ""type"": ""Button"",
                     ""id"": ""8d0ebae8-91c0-432d-a1e2-d6e11cc342ae"",
                     ""expectedControlType"": """",
@@ -174,40 +174,40 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""InputAbility"",
+                    ""action"": ""InputShowRange"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""33cb9580-2032-45d8-9cc2-9346c67d1b8f"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""InputAbility"",
+                    ""action"": ""InputShowRange"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""4312718c-211c-4a60-b5b6-284e22b1ac34"",
-                    ""path"": ""<Keyboard>/p"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""InputSuicide"",
+                    ""action"": ""InputPosMulti"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""a49a9243-fefb-4049-ad54-0f84d082f256"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""InputSuicide"",
+                    ""action"": ""InputPosMulti"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -308,8 +308,8 @@ public class @Controls : IInputActionCollection, IDisposable
         m_PlayerControls = asset.FindActionMap("PlayerControls", throwIfNotFound: true);
         m_PlayerControls_InputMove = m_PlayerControls.FindAction("InputMove", throwIfNotFound: true);
         m_PlayerControls_InputJump = m_PlayerControls.FindAction("InputJump", throwIfNotFound: true);
-        m_PlayerControls_InputAbility = m_PlayerControls.FindAction("InputAbility", throwIfNotFound: true);
-        m_PlayerControls_InputSuicide = m_PlayerControls.FindAction("InputSuicide", throwIfNotFound: true);
+        m_PlayerControls_InputShowRange = m_PlayerControls.FindAction("InputShowRange", throwIfNotFound: true);
+        m_PlayerControls_InputPosMulti = m_PlayerControls.FindAction("InputPosMulti", throwIfNotFound: true);
         m_PlayerControls_InputInteract = m_PlayerControls.FindAction("InputInteract", throwIfNotFound: true);
         m_PlayerControls_VerticalMovement = m_PlayerControls.FindAction("VerticalMovement", throwIfNotFound: true);
     }
@@ -363,8 +363,8 @@ public class @Controls : IInputActionCollection, IDisposable
     private IPlayerControlsActions m_PlayerControlsActionsCallbackInterface;
     private readonly InputAction m_PlayerControls_InputMove;
     private readonly InputAction m_PlayerControls_InputJump;
-    private readonly InputAction m_PlayerControls_InputAbility;
-    private readonly InputAction m_PlayerControls_InputSuicide;
+    private readonly InputAction m_PlayerControls_InputShowRange;
+    private readonly InputAction m_PlayerControls_InputPosMulti;
     private readonly InputAction m_PlayerControls_InputInteract;
     private readonly InputAction m_PlayerControls_VerticalMovement;
     public struct PlayerControlsActions
@@ -373,8 +373,8 @@ public class @Controls : IInputActionCollection, IDisposable
         public PlayerControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @InputMove => m_Wrapper.m_PlayerControls_InputMove;
         public InputAction @InputJump => m_Wrapper.m_PlayerControls_InputJump;
-        public InputAction @InputAbility => m_Wrapper.m_PlayerControls_InputAbility;
-        public InputAction @InputSuicide => m_Wrapper.m_PlayerControls_InputSuicide;
+        public InputAction @InputShowRange => m_Wrapper.m_PlayerControls_InputShowRange;
+        public InputAction @InputPosMulti => m_Wrapper.m_PlayerControls_InputPosMulti;
         public InputAction @InputInteract => m_Wrapper.m_PlayerControls_InputInteract;
         public InputAction @VerticalMovement => m_Wrapper.m_PlayerControls_VerticalMovement;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
@@ -392,12 +392,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @InputJump.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputJump;
                 @InputJump.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputJump;
                 @InputJump.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputJump;
-                @InputAbility.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputAbility;
-                @InputAbility.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputAbility;
-                @InputAbility.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputAbility;
-                @InputSuicide.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputSuicide;
-                @InputSuicide.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputSuicide;
-                @InputSuicide.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputSuicide;
+                @InputShowRange.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputShowRange;
+                @InputShowRange.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputShowRange;
+                @InputShowRange.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputShowRange;
+                @InputPosMulti.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputPosMulti;
+                @InputPosMulti.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputPosMulti;
+                @InputPosMulti.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputPosMulti;
                 @InputInteract.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputInteract;
                 @InputInteract.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputInteract;
                 @InputInteract.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputInteract;
@@ -414,12 +414,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @InputJump.started += instance.OnInputJump;
                 @InputJump.performed += instance.OnInputJump;
                 @InputJump.canceled += instance.OnInputJump;
-                @InputAbility.started += instance.OnInputAbility;
-                @InputAbility.performed += instance.OnInputAbility;
-                @InputAbility.canceled += instance.OnInputAbility;
-                @InputSuicide.started += instance.OnInputSuicide;
-                @InputSuicide.performed += instance.OnInputSuicide;
-                @InputSuicide.canceled += instance.OnInputSuicide;
+                @InputShowRange.started += instance.OnInputShowRange;
+                @InputShowRange.performed += instance.OnInputShowRange;
+                @InputShowRange.canceled += instance.OnInputShowRange;
+                @InputPosMulti.started += instance.OnInputPosMulti;
+                @InputPosMulti.performed += instance.OnInputPosMulti;
+                @InputPosMulti.canceled += instance.OnInputPosMulti;
                 @InputInteract.started += instance.OnInputInteract;
                 @InputInteract.performed += instance.OnInputInteract;
                 @InputInteract.canceled += instance.OnInputInteract;
@@ -434,8 +434,8 @@ public class @Controls : IInputActionCollection, IDisposable
     {
         void OnInputMove(InputAction.CallbackContext context);
         void OnInputJump(InputAction.CallbackContext context);
-        void OnInputAbility(InputAction.CallbackContext context);
-        void OnInputSuicide(InputAction.CallbackContext context);
+        void OnInputShowRange(InputAction.CallbackContext context);
+        void OnInputPosMulti(InputAction.CallbackContext context);
         void OnInputInteract(InputAction.CallbackContext context);
         void OnVerticalMovement(InputAction.CallbackContext context);
     }
