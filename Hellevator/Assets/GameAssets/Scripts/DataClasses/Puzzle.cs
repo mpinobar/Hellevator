@@ -23,10 +23,11 @@ public class Puzzle : MonoBehaviour
         {
             m_completeWhenActive[i].BelongingPuzzle = this;
         }
-        for (int i = 0; i < m_secondaryActivations.Length; i++)
-        {
-            m_secondaryActivations[i].BelongingPuzzle = this;
-        }
+        if (m_secondaryActivations != null && m_secondaryActivations.Length > 0)
+            for (int i = 0; i < m_secondaryActivations.Length; i++)
+            {
+                m_secondaryActivations[i].BelongingPuzzle = this;
+            }
     }
 
     public void TrySetPuzzleSolved()
