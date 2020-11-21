@@ -352,12 +352,15 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     public void ChangeMainCharacter(DemonBase newMainCharacter)
     {
-        if (m_extraDemonsControlled.Contains(newMainCharacter))
+        if (ControllingMultipleDemons)
         {
-            m_extraDemonsControlled.Add(ControlledDemon);
-            ControlledDemon = newMainCharacter;
-            m_extraDemonsControlled.Remove(newMainCharacter);
-        }
+            if (m_extraDemonsControlled.Contains(newMainCharacter))
+            {
+                m_extraDemonsControlled.Add(ControlledDemon);
+                ControlledDemon = newMainCharacter;
+                m_extraDemonsControlled.Remove(newMainCharacter);
+            }
+        }        
     }
 
     public void PossessNewDemon(DemonBase demonToPossess)
@@ -379,11 +382,15 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     public void RemovePossessionFromExtraDemons()
     {
-        for (int i = 0; i < m_extraDemonsControlled.Count; i++)
+        if (ControllingMultipleDemons)
         {
-            InputManager.Instance.RemoveExtraDemonControlled(m_extraDemonsControlled[i]);
-            RemoveDemonPossession(m_extraDemonsControlled[i].transform);
+            for (int i = 0; i < m_extraDemonsControlled.Count; i++)
+            {
+                //InputManager.Instance.RemoveExtraDemonControlled(m_extraDemonsControlled[i]);
+                RemoveDemonPossession(m_extraDemonsControlled[i].transform);
+            }
         }
+        
     }
 
 }
