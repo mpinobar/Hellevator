@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lever : ButtonActivatedBase
+public class Lever : ActivatedBase
 {
     //[SerializeField] Key key;
     [SerializeField] ButtonActivatedDoor m_doorToUnlock;

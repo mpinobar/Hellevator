@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SequenceMovingPlatform : ButtonActivatedBase
+public class SequenceMovingPlatform : ActivatedBase
 {
     [SerializeField] float m_speed = 2f;
     [SerializeField] List <Transform> m_waypoints;

@@ -3564,6 +3564,11 @@ PrefabInstance:
       propertyPath: m_period
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 6893528801937984876, guid: db1a370b03c75674fad2db3c99db466b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6893528801937984877, guid: db1a370b03c75674fad2db3c99db466b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3644,7 +3649,18 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: -10
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8134216091720248767, guid: db1a370b03c75674fad2db3c99db466b,
+        type: 3}
+      propertyPath: m_period
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8134216091720248767, guid: db1a370b03c75674fad2db3c99db466b,
+        type: 3}
+      propertyPath: m_waitTimeOnArrival
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6893528801937984876, guid: db1a370b03c75674fad2db3c99db466b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: db1a370b03c75674fad2db3c99db466b, type: 3}
 --- !u!4 &634107035 stripped
 Transform:
@@ -5171,6 +5187,7 @@ MonoBehaviour:
   m_ID: K.2.1
   m_completeWhenActive:
   - {fileID: 1924311488}
+  m_secondaryActivations: []
 --- !u!1001 &1057338783
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6384,12 +6401,12 @@ PrefabInstance:
     - target: {fileID: 3085689038306640412, guid: f7c3b2eb5d4f9974baf6506ae4d9deae,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 144.81595
+      value: 146.18
       objectReference: {fileID: 0}
     - target: {fileID: 3085689038306640412, guid: f7c3b2eb5d4f9974baf6506ae4d9deae,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -83.57908
+      value: -83.5
       objectReference: {fileID: 0}
     - target: {fileID: 3085689038306640412, guid: f7c3b2eb5d4f9974baf6506ae4d9deae,
         type: 3}
@@ -6440,6 +6457,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Penitente_VariantePetrificacion
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415439931074892655, guid: f7c3b2eb5d4f9974baf6506ae4d9deae,
+        type: 3}
+      propertyPath: m_possessedOnStart
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7c3b2eb5d4f9974baf6506ae4d9deae, type: 3}
@@ -7271,7 +7293,7 @@ PrefabInstance:
     - target: {fileID: 8135263279798466777, guid: edb5d90997c5e3c4084aa9c84ea21f52,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -180.95554
+      value: -180.98813
       objectReference: {fileID: 0}
     - target: {fileID: 8135263279798466777, guid: edb5d90997c5e3c4084aa9c84ea21f52,
         type: 3}

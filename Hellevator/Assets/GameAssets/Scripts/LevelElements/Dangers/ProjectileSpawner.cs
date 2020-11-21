@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileSpawner : ButtonActivatedBase
+public class ProjectileSpawner : ActivatedBase
 {
 
     [SerializeField] GameObject m_projectileToShoot;

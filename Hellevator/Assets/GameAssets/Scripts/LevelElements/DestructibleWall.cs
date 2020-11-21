@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DestructibleWall : MonoBehaviour
-{
+public class DestructibleWall : ActivatedBase
+{    
     Collider2D[] m_parts;
     [SerializeField] float m_timeToDestroyPartAfterExplosion = 4f;
     private void Awake()
@@ -55,6 +55,7 @@ public class DestructibleWall : MonoBehaviour
             m_parts[i].GetComponent<Rigidbody2D>().AddForce((m_parts[i].transform.position - origin).normalized * force, ForceMode2D.Impulse);
             Destroy(m_parts[i].gameObject, m_timeToDestroyPartAfterExplosion);
         }
+        Activate();
         Destroy(gameObject);
     }
 }

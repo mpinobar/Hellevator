@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonActivatedDoor : ButtonActivatedBase
+public class ButtonActivatedDoor : ActivatedBase
 {	
 	[SerializeField] private float m_speed;
 	[SerializeField] private Transform m_endPosition;
