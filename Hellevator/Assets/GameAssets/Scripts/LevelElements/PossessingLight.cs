@@ -5,6 +5,10 @@ using UnityEngine;
 public class PossessingLight : MonoBehaviour
 {
     [SerializeField] AudioClip m_lightTravelClip;
+    [SerializeField] ParticlesPossessionTargetReached m_prefabShockwaveStart;
+    [SerializeField] ParticlesPossessionTargetReached m_prefabShockwaveEnd;
+    [SerializeField] GameObject m_prefabSmallBurstStart;
+    [SerializeField] GameObject m_prefabSmallBurstEnd;
 
     bool m_travelling;
     DemonBase m_target;
@@ -14,11 +18,6 @@ public class PossessingLight : MonoBehaviour
     AudioSource m_lightSound;
     float m_lastDemonPossessionRange;
     [SerializeField] float m_speed = 3.5f;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -56,6 +55,8 @@ public class PossessingLight : MonoBehaviour
         m_travelling = true;
         m_lightSound = MusicManager.Instance.PlayAudioSFX(m_lightTravelClip, false);
         m_initialDistance = Vector2.Distance(transform.position, m_target.transform.position);
+        Instantiate(m_prefabShockwaveStart, transform.position, Quaternion.identity);
+        Instantiate(m_prefabSmallBurstStart, transform.position, Quaternion.identity);
         //Debug.LogError("Possessing light towards " + destinationDemon.name + " from " + originDemon);
     }
 
@@ -69,10 +70,16 @@ public class PossessingLight : MonoBehaviour
                 m_target.transform.parent = null;
                 PossessionManager.Instance.PossessNewDemon(m_target);
                 m_target.transform.parent = parent;
+                Instantiate(m_prefabShockwaveEnd, transform.position, Quaternion.identity).SetTarget(m_target.Torso);
+                Instantiate(m_prefabSmallBurstEnd, transform.position, Quaternion.identity);
+                CameraManager.Instance.CameraShakeLight();
             }
             else
             {
                 PossessionManager.Instance.PossessNewDemon(m_target);
+                Instantiate(m_prefabShockwaveEnd, transform.position, Quaternion.identity).SetTarget(m_target.Torso);
+                Instantiate(m_prefabSmallBurstEnd, transform.position, Quaternion.identity);
+                CameraManager.Instance.CameraShakeLight();
             }
             m_lightSound.Stop();
         }
