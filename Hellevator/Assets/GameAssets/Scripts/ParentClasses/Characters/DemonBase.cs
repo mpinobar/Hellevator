@@ -49,7 +49,6 @@ public abstract class DemonBase : MonoBehaviour
     [Space]
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
-    [SerializeField] private bool       m_multiplePossessionWhenDead;
     [SerializeField] private float      m_maximumPossessionRange;
 
     //[ColorUsage(true, true)]
@@ -227,7 +226,6 @@ public abstract class DemonBase : MonoBehaviour
         get => m_canMove; set => m_canMove = value;
     }
     public float DistanceToPlayer { get => m_distanceToPlayer; set => m_distanceToPlayer = value; }
-    public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
     public bool PossessedOnStart { get => m_possessedOnStart; set => m_possessedOnStart = value; }
     public GameObject DemonMaskSprite { get => m_demonMaskSprite; }
 

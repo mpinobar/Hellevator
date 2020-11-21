@@ -126,7 +126,7 @@ public class BasicZombie : DemonBase
 
 		if (!IsDead)
 		{
-			if (MultiplePossessionWhenDead) 
+			if (PossessionManager.Instance.MultiplePossessionWhenDead) 
 			{
 				m_indicadorPosesionMultiActiva.SetActive(true);
 			} 
@@ -220,12 +220,9 @@ public class BasicZombie : DemonBase
             }
         }
         m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
-        m_myAnimator.SetFloat("yMovement", Mathf.Abs(MyRgb.velocity.y * 0.1f));
 
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            MultiplePossessionWhenDead = !MultiplePossessionWhenDead;
-        }
+        m_myAnimator.SetFloat("yMovement", Mathf.Abs(MyRgb.velocity.y * 0.1f));        
+
 
     }
 
