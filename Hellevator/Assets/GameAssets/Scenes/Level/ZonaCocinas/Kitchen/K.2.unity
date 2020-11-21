@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -6024,8 +6024,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1125690854}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 152.37999, y: 19.7, z: 4862.637}
-  m_LocalScale: {x: 52.897427, y: 1.9656713, z: 1}
+  m_LocalPosition: {x: 152.37999, y: 19.952, z: 4862.637}
+  m_LocalScale: {x: 52.897427, y: 2.4708488, z: 1}
   m_Children: []
   m_Father: {fileID: 1959489110}
   m_RootOrder: 42
@@ -6112,6 +6112,22 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1924311486}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1130645343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130645342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18ba6e39e9b4b9b43b5f9b67b39b412e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ID: K.2.1
+  m_completeWhenActive:
+  - {fileID: 1924311488}
+  m_secondaryActivations: []
 --- !u!82 &1130645346
 AudioSource:
   m_ObjectHideFlags: 0
@@ -10408,8 +10424,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 708422752}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 184.533, y: 4.788, z: 4862.637}
-  m_LocalScale: {x: 13.077334, y: 9.848826, z: 1}
+  m_LocalPosition: {x: 184.533, y: 6.404, z: 4862.637}
+  m_LocalScale: {x: 13.077334, y: 13.077074, z: 1}
   m_Children: []
   m_Father: {fileID: 1959489110}
   m_RootOrder: 12
@@ -11038,8 +11054,13 @@ PrefabInstance:
     - target: {fileID: 4431974017929591163, guid: a02b88b234c886549b1ced6d3b755fd7,
         type: 3}
       propertyPath: m_type
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4431974017929591163, guid: a02b88b234c886549b1ced6d3b755fd7,
+        type: 3}
+      propertyPath: m_buttonActivatedObject
+      value: 
+      objectReference: {fileID: 1924311488}
     - target: {fileID: 4431974018136182320, guid: a02b88b234c886549b1ced6d3b755fd7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -11048,7 +11069,7 @@ PrefabInstance:
     - target: {fileID: 4431974018136182320, guid: a02b88b234c886549b1ced6d3b755fd7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.02
+      value: -9.63
       objectReference: {fileID: 0}
     - target: {fileID: 4431974018136182320, guid: a02b88b234c886549b1ced6d3b755fd7,
         type: 3}
