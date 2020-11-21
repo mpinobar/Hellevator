@@ -19,6 +19,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     public bool ControllingMultipleDemons { get => m_controllingMultipleDemons; }
     public DemonBase DemonShowingSkull { get => m_demonShowingSkull; set => m_demonShowingSkull = value; }
     public Boss Boss { get => boss; set => boss = value; }
+    public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
 
     [SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
     [SerializeField] GameObject m_PossessionLight;
@@ -27,7 +28,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     List<DemonBase> m_extraDemonsControlled;
 
     bool m_controllingMultipleDemons;
-
+    bool m_multiplePossessionWhenDead;
     DemonBase m_demonShowingSkull;
 
     [SerializeField] int m_maxDemonsPossessed = 2;
@@ -135,7 +136,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 //Debug.LogError("no extra characters controlled");
                 if (ControlledDemon)
                     ControlledDemon.SetNotControlledByPlayer();
-                if (!currentDemon.GetComponent<DemonBase>().MultiplePossessionWhenDead)
+                if (!m_multiplePossessionWhenDead)
                 {
                     //Debug.LogError("should not possess multiple characters on death");
                     PossessNearestDemon(demonCmp.MaximumPossessionRange, demonCmp);
@@ -259,7 +260,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 }
                 InputManager.Instance.UpdateExtraDemonsControlled(m_extraDemonsControlled);
                 InputManager.Instance.UpdateDemonReference();
-                ControlledDemon.MultiplePossessionWhenDead = false;
+                m_multiplePossessionWhenDead = false;
             }
             else if (m_extraDemonsControlled.Count == 1)
             {
@@ -267,7 +268,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 m_extraDemonsControlled.Remove(ControlledDemon);
                 InputManager.Instance.UpdateExtraDemonsControlled(m_extraDemonsControlled);
                 InputManager.Instance.UpdateDemonReference();
-                ControlledDemon.MultiplePossessionWhenDead = false;
+                m_multiplePossessionWhenDead = false;
             }
             else if (m_extraDemonsControlled.Count == 0 && ControlledDemon == null)
             {
@@ -392,5 +393,14 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
         
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            MultiplePossessionWhenDead = !MultiplePossessionWhenDead;
+        }
+    }
+
 
 }

@@ -44,7 +44,7 @@ public class PossessingLight : MonoBehaviour
                 m_target = PossessionManager.Instance.LookForNearestDemon(m_lastDemonPossessionRange, transform, m_originDemon);
                 if (m_target == null)
                 {
-                    Debug.LogError(m_originDemon.name);
+                    m_lightSound.Stop();
                     LevelManager.Instance.StartRestartingLevel();
                 }
                 else
