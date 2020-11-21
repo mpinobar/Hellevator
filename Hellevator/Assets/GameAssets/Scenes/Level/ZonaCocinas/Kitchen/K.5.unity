@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -202,6 +202,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &105615110 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6461270402078268551, guid: 6524d9d6a5a12d34eae04dd2ce8ae2f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 929331425}
+  m_PrefabAsset: {fileID: 0}
+--- !u!50 &105615112
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105615110}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &123530385
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,6 +490,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DestructibleWall
       objectReference: {fileID: 0}
+    - target: {fileID: 3366388882247224827, guid: 5011e1dbc5313e348a39065d440fb432,
+        type: 3}
+      propertyPath: m_deactivatesOnPuzzleCompletion
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5011e1dbc5313e348a39065d440fb432, type: 3}
 --- !u!4 &318546759 stripped
@@ -631,7 +663,7 @@ Transform:
   m_LocalScale: {x: 3.6620812, y: 2.9036002, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &336025459
 GameObject:
@@ -949,6 +981,18 @@ Transform:
   m_Father: {fileID: 1124618025}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &460782447 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3366388882247224827, guid: 5011e1dbc5313e348a39065d440fb432,
+    type: 3}
+  m_PrefabInstance: {fileID: 318546758}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca38fda01866f744bc24455f1c8d979, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &496484843
 GameObject:
   m_ObjectHideFlags: 0
@@ -1331,7 +1375,7 @@ PrefabInstance:
     - target: {fileID: 8135263279798466777, guid: edb5d90997c5e3c4084aa9c84ea21f52,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -182.99812
+      value: -182.97736
       objectReference: {fileID: 0}
     - target: {fileID: 8135263279798466777, guid: edb5d90997c5e3c4084aa9c84ea21f52,
         type: 3}
@@ -3239,6 +3283,28 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.99999994}
   m_EdgeRadius: 0
+--- !u!1 &1266779263 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3558451554110874149, guid: e73db34c6d0c2b9479f791f44709ec17,
+    type: 3}
+  m_PrefabInstance: {fileID: 1040911197}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1266779267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266779263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18ba6e39e9b4b9b43b5f9b67b39b412e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ID: K.5.1
+  m_completeWhenActive:
+  - {fileID: 460782447}
+  m_secondaryActivations: []
 --- !u!1 &1308992307
 GameObject:
   m_ObjectHideFlags: 0
@@ -4294,7 +4360,7 @@ PrefabInstance:
     - target: {fileID: 7152071399073627621, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7152071399073627621, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
@@ -4844,7 +4910,7 @@ PrefabInstance:
     - target: {fileID: 7494933147399558419, guid: 6f4aa518bbeaf8a46926adc9e5b09b14,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 51.84
+      value: 55.49
       objectReference: {fileID: 0}
     - target: {fileID: 7494933147399558419, guid: 6f4aa518bbeaf8a46926adc9e5b09b14,
         type: 3}

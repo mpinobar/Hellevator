@@ -7,8 +7,8 @@ public class Puzzle : MonoBehaviour
 {
     [SerializeField] string m_ID;
 
-    [SerializeField] ButtonActivatedBase [] m_completeWhenActive;
-    [SerializeField] ButtonActivatedBase [] m_secondaryActivations;
+    [SerializeField] ActivatedBase [] m_completeWhenActive;
+    [SerializeField] ActivatedBase [] m_secondaryActivations;
 
     private void OnEnable()
     {

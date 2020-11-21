@@ -39,7 +39,7 @@ public class WeightedPreassurePlate : MonoBehaviour
     //Button variables
     private bool m_preassurePlateActivated;
     private bool m_preassurePlateIsAtLocation;
-    [SerializeField] private ButtonActivatedBase m_buttonActivatedObject;
+    [SerializeField] private ActivatedBase m_buttonActivatedObject;
     List<SpikesWeightData> m_spikesData;
     [SerializeField] private bool m_activatesProjectileSpawner;
     
