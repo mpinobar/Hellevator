@@ -44,8 +44,8 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.VerticalMovement.performed += ctx => m_verticalInputValue = ctx.ReadValue<float>();
         m_controls.PlayerControls.VerticalMovement.canceled += ctx => m_verticalInputValue = ctx.ReadValue<float>();
         m_controls.PlayerControls.InputInteract.performed += ctx => Interact();
-        m_controls.PlayerControls.InputAbility.performed += ctx => UseSkill();
-        //m_controls.PlayerControls.InputInteract.performed += ctx => Grab();
+        m_controls.PlayerControls.InputShowRange.performed += ctx => UseSkill();
+        m_controls.PlayerControls.InputPosMulti.performed += ctx => ToggleMultiplePosseion();
         //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
         UpdateDemonReference();
     }
@@ -221,6 +221,11 @@ public class InputManager : PersistentSingleton<InputManager>
             OnInteract();
         }
     }
+
+	void ToggleMultiplePosseion()
+	{
+		PossessionManager.Instance.ToggleMultiplePossesion();
+	}
 
     void Jump()
     {
