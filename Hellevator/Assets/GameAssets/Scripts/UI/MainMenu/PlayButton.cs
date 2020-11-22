@@ -36,9 +36,13 @@ public class PlayButton : MonoBehaviour
         {
             LevelManager.Instance.CheckPointSceneToLoad = "BossRoom";
         }
-        if (m_goesToK1)
+        else if (m_goesToK1)
         {
             LevelManager.Instance.CheckPointSceneToLoad = "K.1";
+        }
+        else
+        {
+            LevelManager.Instance.CheckPointSceneToLoad = "R.1";
         }
         
     }

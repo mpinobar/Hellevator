@@ -30,7 +30,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
 
     public void ChangeBGMVolume(float v)
     {
-        m_BGM.volume = v;
+        m_BGM.volume = v * 0.5f;
     }
 
     public override void Awake()
@@ -38,7 +38,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
         base.Awake();
         m_sourcesList = new List<AudioSource>();
         m_BGM = gameObject.AddComponent<AudioSource>();
-        m_BGM.volume = m_musicVolume;
+        m_BGM.volume = m_musicVolume*0.5f;
         m_BGM.loop = true;
         if (m_backgroundMusicClips != null)
         {
@@ -122,7 +122,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
             {
                 m_sourcesList[i].clip = clip;
                 m_sourcesList[i].loop = looping;
-                m_sourcesList[i].volume = m_musicVolume;
+                m_sourcesList[i].volume = m_musicVolume * 0.5f;
                 m_sourcesList[i].Play();
                 foundFreeSource = true;
                 return;
@@ -134,7 +134,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
             m_sourcesList[m_sourcesList.Count - 1].playOnAwake = false;
             m_sourcesList[m_sourcesList.Count - 1].clip = clip;
             m_sourcesList[m_sourcesList.Count - 1].loop = looping;
-            m_sourcesList[m_sourcesList.Count - 1].volume = m_musicVolume;
+            m_sourcesList[m_sourcesList.Count - 1].volume = m_musicVolume * 0.5f;
             m_sourcesList[m_sourcesList.Count - 1].Play();
         }
     }
