@@ -48,19 +48,22 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             m_PossessionLight = (GameObject) Resources.Load(path, typeof(GameObject));
 			//GameObject go = Instantiate(Resources.Load(path,typeof(GameObject))) as GameObject;
 			//PLight = go.GetComponent<PossessingLight>();
-			int hasMultiUnlocked = PlayerPrefs.GetInt("MultiIsUnlocked");
-			if(hasMultiUnlocked == 0)
-			{
-				m_multiplePossessionIsUnlocked = false;
-			}
-			else
-			{
-				m_multiplePossessionIsUnlocked = true;
-			}
+			
 			//PlayerPrefs.SetInt("MultiIsUnlocked", 1);
 		}
-        
-    }
+
+		int hasMultiUnlocked = PlayerPrefs.GetInt("MultiIsUnlocked");
+		print(hasMultiUnlocked);
+		if (hasMultiUnlocked == 0)
+		{
+			m_multiplePossessionIsUnlocked = false;
+		}
+		else
+		{
+			m_multiplePossessionIsUnlocked = true;
+		}
+
+	}
 
     /// <summary>
     /// Returns the nearest demon to the demon currently controlled by the player, with a distance limit
