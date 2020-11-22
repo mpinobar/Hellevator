@@ -22,7 +22,7 @@ public class LevelLoadManager : MonoBehaviour
         //    LevelManager.Instance.LoadCentralSceneFirstTime(this);
         //}
         SetControlledCharacterPositionAfterEntering(LevelManager.Instance.PreviousScene);
-        
+        MusicManager.Instance.CheckMusic();
     }
 
     public void SetControlledCharacterPositionAfterEntering(string previousSceneName)

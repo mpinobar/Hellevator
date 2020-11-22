@@ -467,7 +467,7 @@ public class BasicZombie : DemonBase
             {
                 if (m_hasJumped)
                 {
-                    MusicManager.Instance.PlayAudioSFX(m_landingClip, false, 0.5f);
+                    MusicManager.Instance.PlayAudioSFX(m_landingClip, false, 0.25f);
                     m_jumpLandParticles.Play();
                     m_isJumping = false;
                 }

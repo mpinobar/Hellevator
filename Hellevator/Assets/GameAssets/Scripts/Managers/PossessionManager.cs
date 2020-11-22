@@ -53,7 +53,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 		}
 
 		int hasMultiUnlocked = PlayerPrefs.GetInt("MultiIsUnlocked");
-		print(hasMultiUnlocked);
+//		print(hasMultiUnlocked);
 		if (hasMultiUnlocked == 0)
 		{
 			m_multiplePossessionIsUnlocked = false;

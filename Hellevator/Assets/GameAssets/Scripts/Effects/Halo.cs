@@ -34,12 +34,13 @@ public class Halo : MonoBehaviour
         }
         else
         {
-            SetTarget(PossessionManager.Instance.ControlledDemon.transform,30f);
+            if (PossessionManager.Instance.ControlledDemon != null)
+                SetTarget(PossessionManager.Instance.ControlledDemon.transform, 30f);
             //Destroy(gameObject);
         }
     }
 
-    public void SetTarget(Transform targetToFollow,float offsetY)
+    public void SetTarget(Transform targetToFollow, float offsetY)
     {
         m_target = targetToFollow;
         m_offsetY = offsetY;

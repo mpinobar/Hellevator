@@ -40,7 +40,8 @@ public class Shelter : MonoBehaviour
                     {
                         MusicManager.Instance.StopMusic();
                         m_audioPruebaBoss.Play();
-                        print("AUDIO DE PRUEBAS ESTA SONANDO");
+                        m_audioPruebaBoss.volume = MusicManager.MusicVolume;
+                        //print("AUDIO DE PRUEBAS ESTA SONANDO");
                     }
                 }
 

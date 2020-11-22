@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,6 +47,13 @@ public class MusicManager : PersistentSingleton<MusicManager>
         }
     }
 
+    internal void CheckMusic()
+    {
+        if (!m_BGM.isPlaying)
+        {
+            StartGameplayMusic();
+        }
+    }
 
     public void StopMusic()
     {
