@@ -8,6 +8,8 @@ public class PlayButton : MonoBehaviour
 {
     MainMenuCanvasController m_canvasController;
     [SerializeField] AudioClip m_buttonSoundClip;
+    [SerializeField] bool m_goesToK1;
+    [SerializeField] bool m_goesToBoss;
     bool loaded;
     private void Start()
     {
@@ -30,6 +32,14 @@ public class PlayButton : MonoBehaviour
     {
         MusicManager.Instance.PlayAudioSFX(m_buttonSoundClip, false);
         m_canvasController.ChangeState(MenuCameraState.Loading);
+        if (m_goesToBoss)
+        {
+            LevelManager.Instance.CheckPointSceneToLoad = "BossRoom";
+        }
+        if (m_goesToK1)
+        {
+            LevelManager.Instance.CheckPointSceneToLoad = "K.1";
+        }
         
     }
 }
