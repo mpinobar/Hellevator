@@ -46,6 +46,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public bool HasKitchenKey { get => m_hasKitchenKey; set => m_hasKitchenKey = value; }
     public bool CanLoad { get => m_canLoad; set => m_canLoad = value; }
     public string PreviousScene { get => m_previousScene; set => m_previousScene = value; }
+    public string CheckPointSceneToLoad { get => m_checkPointSceneToLoad; set => m_checkPointSceneToLoad = value; }
 
     private void Start()
     {
@@ -324,5 +325,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
         PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
         CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
         PossessionManager.Instance.RemovePossessionFromExtraDemons();
+    }
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadSceneAsync("Menu");
     }
 }

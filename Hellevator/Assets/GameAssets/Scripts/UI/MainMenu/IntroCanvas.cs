@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class IntroCanvas : MonoBehaviour
 {
@@ -34,6 +35,10 @@ public class IntroCanvas : MonoBehaviour
         m_tmpro.gameObject.SetActive(false);
         m_fadingIn = true;
         m_tmp = m_fadeTime;
+        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        {
+            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        }
     }
 
     // Update is called once per frame

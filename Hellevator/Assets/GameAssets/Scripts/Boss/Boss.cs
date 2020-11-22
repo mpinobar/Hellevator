@@ -214,11 +214,15 @@ public class Boss : MonoBehaviour
     IEnumerator SpawnKnife(Transform target, float delay, bool initial)
     {
         yield return new WaitForSeconds(delay);
-        Projectile knife = Instantiate(m_knifePrefab, target.position + Vector3.up * m_knifeSpawnHeight, Quaternion.identity);
+        if(target != null)
+        {
+            Projectile knife = Instantiate(m_knifePrefab, target.position + Vector3.up * m_knifeSpawnHeight, Quaternion.identity);
+            knife.transform.localEulerAngles = Vector3.forward * 180;
+            knife.Speed = m_knifeSpeed;
+            knife.DestroyOnScenaryImpact = !initial;
+        }
         m_playerSeenAttackTimer = 0f;
-        knife.transform.localEulerAngles = Vector3.forward * 180;
-        knife.Speed = m_knifeSpeed;
-        knife.DestroyOnScenaryImpact = !initial;
+        
     }
     public void CloseEntrance()
     {

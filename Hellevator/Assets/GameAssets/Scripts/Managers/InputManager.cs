@@ -71,9 +71,13 @@ public class InputManager : PersistentSingleton<InputManager>
             FeedInputToExtraDemons();
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             LevelManager.Instance.StartRestartingLevel();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            LevelManager.Instance.LoadMainMenu();
         }
     }
 
