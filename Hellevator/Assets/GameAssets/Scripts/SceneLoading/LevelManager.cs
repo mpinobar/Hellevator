@@ -50,7 +50,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void Start()
     {
-        //PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll();
     }
 
     /// <summary>
