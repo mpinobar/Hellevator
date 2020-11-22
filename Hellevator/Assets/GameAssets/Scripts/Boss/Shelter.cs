@@ -12,7 +12,7 @@ public class Shelter : MonoBehaviour
 
     bool m_init;
 
-	[SerializeField] AudioSource m_audioPruebaBoss = null;
+    [SerializeField] AudioSource m_audioPruebaBoss = null;
 
     private void Awake()
     {
@@ -36,11 +36,12 @@ public class Shelter : MonoBehaviour
                         boss.ThrowKnife(m_attackPlaces[i], Random.Range(0, 0.5f), true);
                     }
                     m_init = true;
-					if(m_audioPruebaBoss != null)
-					{
-						m_audioPruebaBoss.Play();
-						print("AUDIO DE PRUEBAS ESTA SONANDO");
-					}
+                    if (m_audioPruebaBoss != null)
+                    {
+                        MusicManager.Instance.StopMusic();
+                        m_audioPruebaBoss.Play();
+                        print("AUDIO DE PRUEBAS ESTA SONANDO");
+                    }
                 }
 
             }
@@ -50,8 +51,8 @@ public class Shelter : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if(collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
-        boss.SetSeeingPlayer();
+        if (collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
+            boss.SetSeeingPlayer();
     }
 
 }

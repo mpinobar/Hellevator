@@ -46,6 +46,12 @@ public class MusicManager : PersistentSingleton<MusicManager>
         }
     }
 
+
+    public void StopMusic()
+    {
+        if (m_BGM)
+            m_BGM.Stop();
+    }
     private void Update()
     {
 

@@ -22,6 +22,7 @@ public class MainMenuCanvasController : MonoBehaviour
 
     private void Start()
     {
+        Cursor.visible = true;
         m_tmp = m_fadeTime * 0.5f;
         m_fadingIn = false;
 
