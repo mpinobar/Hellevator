@@ -1,29 +1,29 @@
-﻿#if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
+﻿//#if UNITY_EDITOR
+//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class SceneOpener : MonoBehaviour
 {
 
-    bool added;
-    // Start is called before the first frame update
-    private void OnEnable()
-    {
-        UnityEditor.SceneManagement.EditorSceneManager.activeSceneChangedInEditMode += EditorSceneManager_activeSceneChangedInEditMode;
-    }
+//    bool added;
+//    // Start is called before the first frame update
+//    private void OnEnable()
+//    {
+//        UnityEditor.SceneManagement.EditorSceneManager.activeSceneChangedInEditMode += EditorSceneManager_activeSceneChangedInEditMode;
+//    }
 
-    private void EditorSceneManager_activeSceneChangedInEditMode(Scene arg0, Scene arg1)
-    {
+//    private void EditorSceneManager_activeSceneChangedInEditMode(Scene arg0, Scene arg1)
+//    {
 
-        if (!SceneManager.GetSceneByName("PersistentGameObjects").isLoaded)
-        {
-            UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/GameAssets/Scenes/TesteoSistemaCargaEscenas/PersistentGameObjects.unity", UnityEditor.SceneManagement.OpenSceneMode.Additive);
-        }
+//        if (!SceneManager.GetSceneByName("PersistentGameObjects").isLoaded)
+//        {
+//            UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/GameAssets/Scenes/TesteoSistemaCargaEscenas/PersistentGameObjects.unity", UnityEditor.SceneManagement.OpenSceneMode.Additive);
+//        }
 
-    }
+//    }
 
 }
-#endif
+//#endif

@@ -16,7 +16,7 @@ public class PossessingLight : MonoBehaviour
     float m_forwardMovementTimer;
     [SerializeField] float m_zigZagMovementAmplitude;
     [SerializeField] LayerMask m_lightTravelPoints = 1<<19;
-
+    [SerializeField] bool m_pausesTime;
     bool m_travelling;
     DemonBase m_target;
     DemonBase m_originDemon;
@@ -142,6 +142,12 @@ public class PossessingLight : MonoBehaviour
 
         Instantiate(m_prefabShockwaveStart, transform.position, Quaternion.identity);
         Instantiate(m_prefabSmallBurstStart, transform.position, Quaternion.identity);
+
+        if (m_pausesTime)
+        {
+            Time.timeScale = 0f;
+            StartCoroutine(ASD());
+        }
         //Debug.LogError("Possessing light towards " + destinationDemon.name + " from " + originDemon);
 
         //StartCoroutine(AnimationLight());
@@ -168,6 +174,91 @@ public class PossessingLight : MonoBehaviour
     //    m_travelling = true;
     //    m_lightSound = MusicManager.Instance.PlayAudioSFX(m_lightTravelClip, false);
     //}
+
+    private IEnumerator ASD()
+    {
+        ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < particles.Length; i++)
+        {
+            ParticleSystem.MainModule ps = particles[i].main;
+            ps.useUnscaledTime = true;
+        }
+        while (m_travelling)
+        {
+            if (m_target == null || m_target.IsPossessionBlocked || m_target.IsInDanger || !m_target.enabled)
+            {
+                m_target = PossessionManager.Instance.LookForNearestDemon(m_lastDemonPossessionRange, transform, m_originDemon);
+                if (m_target == null)
+                {
+                    m_lightSound.Stop();
+                    LevelManager.Instance.StartRestartingLevel();
+                }
+                else
+                {
+                    m_initialDistance = Vector2.Distance(transform.position, m_target.transform.position);
+                }
+            }
+            else
+            {
+                //m_desiredPosition = Vector3.Lerp(m_desiredPosition, m_target.Torso.position, m_speed * Time.deltaTime * Mathf.Max(0.5f, m_distancePercentage));
+
+                if (m_travellingToLightPoint)
+                {
+                    m_forwardMovementTimer += Time.deltaTime;
+
+                    m_desiredPosition = m_initialPosition + (m_lightTarget.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
+
+                    m_distancePercentage = Vector2.Distance(m_desiredPosition, m_lightTarget.position) / m_initialDistance;
+                    m_lightSound.volume = m_distancePercentage * MusicManager.SfxVolume;
+                    //transform.up = -(m_target.Torso.position - transform.position);
+
+                    transform.position = m_desiredPosition + m_sidewaysVector * m_sidewaysMovement.Evaluate(/*m_distancePercentage*/m_forwardMovementTimer) * m_zigZagMovementAmplitude /** m_distancePercentage*/;
+                    //transform.position = Vector3.MoveTowards(transform.position, m_target.Torso.position, m_speed * Time.deltaTime);
+
+                    transform.up = m_lastPosition - transform.position;
+                    m_lastPosition = transform.position;
+
+                    if (Vector3.Distance(m_desiredPosition, m_lightTarget.position) < 1.5f)
+                    {
+                        m_travellingToLightPoint = false;
+                        transform.up = (m_target.Torso.position - transform.position);
+                        m_sidewaysVector = -transform.right;
+                        m_initialPosition = transform.position;
+                        m_forwardMovementTimer = 0f;
+                        m_desiredPosition = transform.position;
+                        m_initialDistance = Vector2.Distance(transform.position, m_target.transform.position);
+                    }
+                }
+                else
+                {
+                    m_forwardMovementTimer += Time.unscaledDeltaTime;
+
+                    m_desiredPosition = m_initialPosition + (m_target.Torso.transform.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
+
+                    m_distancePercentage = Vector2.Distance(m_desiredPosition, m_target.Torso.transform.position) / m_initialDistance;
+                    m_lightSound.volume = m_distancePercentage * MusicManager.SfxVolume;
+                    //transform.up = -(m_target.Torso.position - transform.position);
+
+                    transform.position = m_desiredPosition + m_sidewaysVector * m_sidewaysMovement.Evaluate(/*m_distancePercentage*/m_forwardMovementTimer) * m_zigZagMovementAmplitude /** m_distancePercentage*/;
+                    //transform.position = Vector3.MoveTowards(transform.position, m_target.Torso.position, m_speed * Time.deltaTime);
+
+                    transform.up = m_lastPosition - transform.position;
+                    m_lastPosition = transform.position;
+
+                    if (Vector3.Distance(m_desiredPosition, m_target.Torso.position) < 1.5f)
+                    {
+                        EndLightWithCharacterPossession();
+                        Time.timeScale = 1f;
+                    }
+                    
+                }
+                yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
+            }
+        }
+       
+
+    }
+
 
     private void OnTriggerStay2D(Collider2D collision)
     {

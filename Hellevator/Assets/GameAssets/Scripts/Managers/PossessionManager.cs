@@ -43,7 +43,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
         if (m_PossessionLight == null)
         {
-            Debug.LogError("FALTABA POSSESSION MANAGER, CREANDO UNO CON REFERENCIAS POR CODIGO. PARA LA PROXIMA INTENTAD ARRASTRAR UNO A LA ESCENA PARA ALIGERAR LA CARGA DE RECURSOS PLEASE");
+            //Debug.LogError("FALTABA POSSESSION MANAGER, CREANDO UNO CON REFERENCIAS POR CODIGO. PARA LA PROXIMA INTENTAD ARRASTRAR UNO A LA ESCENA PARA ALIGERAR LA CARGA DE RECURSOS PLEASE");
             string path = "PossessingLight";
             m_PossessionLight = (GameObject) Resources.Load(path, typeof(GameObject));
 			//GameObject go = Instantiate(Resources.Load(path,typeof(GameObject))) as GameObject;
