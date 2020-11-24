@@ -12,11 +12,12 @@ public class ParticlesPossessionTargetReached : MonoBehaviour
     Transform m_targetToFollow;
     float m_initialScale;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         StartCoroutine(Animate());
     }
 
+    
     private IEnumerator Animate()
     {
         Vector3 scale;
@@ -32,8 +33,8 @@ public class ParticlesPossessionTargetReached : MonoBehaviour
                 transform.position = m_targetToFollow.position;
             scale = Vector3.one * m_initialScale * m_animCurveScale.Evaluate(time);
             transform.localScale = scale;
-            time += Time.deltaTime * m_speed;
-            yield return null;
+            time += Time.unscaledDeltaTime * m_speed;
+            yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
         }
         Destroy(gameObject);
     }

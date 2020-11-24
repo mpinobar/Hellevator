@@ -298,6 +298,11 @@ public abstract class DemonBase : MonoBehaviour
             }
 
         }
+
+        if(gameObject.scene.name == "PersistentGameObjects")
+        {
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(gameObject, PossessionManager.Instance.ControlledDemon.gameObject.scene);
+        }
     }
 
 
