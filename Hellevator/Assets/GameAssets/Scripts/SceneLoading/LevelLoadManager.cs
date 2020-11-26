@@ -13,7 +13,7 @@ public class LevelLoadManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Cursor.visible = false;
+        //Cursor.visible = false;
         ThisSceneName = gameObject.scene.name;
         LevelManager.Instance.CentralSceneLoadManager = this;
         //if (LevelManager.Instance.CentralScene == null)
