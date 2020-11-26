@@ -68,6 +68,7 @@ public class Explosion : MonoBehaviour
 
     public void ExplosionVisuals()
     {
+        m_explosionParticles.transform.parent = null;
         m_explosionParticles.Play();
         for (int i = 0; i < m_explosionParticles.transform.childCount; i++)
         {

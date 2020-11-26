@@ -13,16 +13,29 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     }
     public PossessingLight PLight
     {
-        get => m_pLight; set => m_pLight = value;
+        get => m_pLight;
+        set => m_pLight = value;
     }
     public LayerMask RagdollBodyMask { get => m_ragdollBodyMask; }
     public bool ControllingMultipleDemons { get => m_controllingMultipleDemons; }
     public DemonBase DemonShowingSkull { get => m_demonShowingSkull; set => m_demonShowingSkull = value; }
     public Boss Boss { get => boss; set => boss = value; }
     public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
-	public bool MultiplePossessionIsUnlocked { get => m_multiplePossessionIsUnlocked; set => m_multiplePossessionIsUnlocked = value; }
+    public bool MultiplePossessionIsUnlocked { get => m_multiplePossessionIsUnlocked; set => m_multiplePossessionIsUnlocked = value; }
+    public GameObject PossessionLight
+    {
+        get
+        { if(m_PossessionLight == null)
+            {
+                string path = "PossessingLight";
+                m_PossessionLight = (GameObject)Resources.Load(path, typeof(GameObject));
+            }
+            return m_PossessionLight;
+        }
+        set => m_PossessionLight = value;
+    }
 
-	[SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
+    [SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
     [SerializeField] GameObject m_PossessionLight;
     private PossessingLight m_pLight;
 
@@ -30,8 +43,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     bool m_controllingMultipleDemons;
     bool m_multiplePossessionWhenDead;
-	bool m_multiplePossessionIsUnlocked = false;
-	DemonBase m_demonShowingSkull;
+    bool m_multiplePossessionIsUnlocked = false;
+    DemonBase m_demonShowingSkull;
 
     [SerializeField] int m_maxDemonsPossessed = 2;
 
@@ -41,29 +54,29 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     {
         InputManager.Instance.UpdateDemonReference();
 
-        if (m_PossessionLight == null)
+        if (PossessionLight == null)
         {
             //Debug.LogError("FALTABA POSSESSION MANAGER, CREANDO UNO CON REFERENCIAS POR CODIGO. PARA LA PROXIMA INTENTAD ARRASTRAR UNO A LA ESCENA PARA ALIGERAR LA CARGA DE RECURSOS PLEASE");
             string path = "PossessingLight";
-            m_PossessionLight = (GameObject) Resources.Load(path, typeof(GameObject));
-			//GameObject go = Instantiate(Resources.Load(path,typeof(GameObject))) as GameObject;
-			//PLight = go.GetComponent<PossessingLight>();
-			
-			//PlayerPrefs.SetInt("MultiIsUnlocked", 1);
-		}
+            PossessionLight = (GameObject)Resources.Load(path, typeof(GameObject));
+            //GameObject go = Instantiate(Resources.Load(path,typeof(GameObject))) as GameObject;
+            //PLight = go.GetComponent<PossessingLight>();
 
-		int hasMultiUnlocked = PlayerPrefs.GetInt("MultiIsUnlocked");
-//		print(hasMultiUnlocked);
-		if (hasMultiUnlocked == 0)
-		{
-			m_multiplePossessionIsUnlocked = false;
-		}
-		else
-		{
-			m_multiplePossessionIsUnlocked = true;
-		}
+            //PlayerPrefs.SetInt("MultiIsUnlocked", 1);
+        }
 
-	}
+        int hasMultiUnlocked = PlayerPrefs.GetInt("MultiIsUnlocked");
+        //		print(hasMultiUnlocked);
+        if (hasMultiUnlocked == 0)
+        {
+            m_multiplePossessionIsUnlocked = false;
+        }
+        else
+        {
+            m_multiplePossessionIsUnlocked = true;
+        }
+
+    }
 
     /// <summary>
     /// Returns the nearest demon to the demon currently controlled by the player, with a distance limit
@@ -215,7 +228,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             for (int i = 0; i < other.Length; i++)
             {
                 DemonBase foundDemon = other[i].GetComponentInParent<DemonBase>();
-                
+
                 //Debug.LogError("Candidate " + foundDemon.name);
                 //if ((foundDemon.GetComponent<DemonBase>() == ControlledDemon))
                 //    Debug.LogError("Is not main demon: " + (foundDemon.GetComponent<DemonBase>() != ControlledDemon));
@@ -242,10 +255,10 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                     }
                 }
             }
-            
+
             for (int i = 0; i < m_maxDemonsPossessed; i++)
             {
-                if(temp.Count > 0)
+                if (temp.Count > 0)
                 {
                     int bestIndex = 0;
                     float distance = Vector2.Distance(temp[0].transform.position,currentDemon.transform.position);
@@ -261,7 +274,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                     temp[bestIndex].SetControlledByPlayer();
                     temp.RemoveAt(bestIndex);
                 }
-                
+
             }
 
 
@@ -346,7 +359,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             //Debug.LogError("Trying to possess: " + demonToPossess.name);
             if (m_pLight == null)
             {
-                m_pLight = Instantiate(m_PossessionLight, currentDemon.transform.position, Quaternion.identity).GetComponent<PossessingLight>();
+                m_pLight = Instantiate(PossessionLight, currentDemon.transform.position, Quaternion.identity).GetComponent<PossessingLight>();
             }
 
             m_pLight.gameObject.SetActive(true);
@@ -376,7 +389,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 ControlledDemon = newMainCharacter;
                 m_extraDemonsControlled.Remove(newMainCharacter);
             }
-        }        
+        }
     }
 
     public void PossessNewDemon(DemonBase demonToPossess)
@@ -406,17 +419,17 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 RemoveDemonPossession(m_extraDemonsControlled[i].transform);
             }
         }
-        
+        InputManager.Instance.RemoveAllExtraDemonsControlled();
     }
-	
-	public void ToggleMultiplePossesion()
-	{
-		if (m_multiplePossessionIsUnlocked)
-		{
-			MultiplePossessionWhenDead = !MultiplePossessionWhenDead;
-			
-		}
-	}
+
+    public void ToggleMultiplePossesion()
+    {
+        if (m_multiplePossessionIsUnlocked)
+        {
+            MultiplePossessionWhenDead = !MultiplePossessionWhenDead;
+
+        }
+    }
 
 
 }

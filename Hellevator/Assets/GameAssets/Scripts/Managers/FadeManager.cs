@@ -17,13 +17,15 @@ public class FadeManager : MonoBehaviour
     private FadeState m_currentFadeState = FadeState.None;
 
     private float m_newAlpha = 0f;
-    private static bool m_isRestarting = false;    
+    private static bool m_isRestarting = false;
     [SerializeField] private float m_percentajeOfFadeForPlayerToMove = 0f;
     private bool m_playerCanMove = false;
 
     public bool PlayerCanMove { get => m_playerCanMove; set => m_playerCanMove = value; }
     public static bool IsRestarting { get => m_isRestarting; set => m_isRestarting = value; }
+    public static bool IsInTransition { get => m_isInTransition; set => m_isInTransition = value; }
 
+    static bool m_isInTransition = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +45,7 @@ public class FadeManager : MonoBehaviour
                     {
                         m_newAlpha = 1;
                         m_currentFadeState = FadeState.None;
+                        m_isInTransition = false;
                         m_blackPanel.color = new Color(m_blackPanel.color.r, m_blackPanel.color.g, m_blackPanel.color.b, m_newAlpha);
                         if (m_isRestarting)
                         {
@@ -70,6 +73,7 @@ public class FadeManager : MonoBehaviour
                         {
                             m_newAlpha = 0;
                             m_currentFadeState = FadeState.None;
+                            m_isInTransition = false;
                         }
                         m_blackPanel.color = new Color(m_blackPanel.color.r, m_blackPanel.color.g, m_blackPanel.color.b, m_newAlpha);
                     }
@@ -92,6 +96,7 @@ public class FadeManager : MonoBehaviour
 
     public void StartFadingIn()
     {
+        m_isInTransition = true;
         m_blackPanel.gameObject.SetActive(true);
         m_currentFadeState = FadeState.FadingIn;
         if (PossessionManager.Instance.ControlledDemon != null)
@@ -100,7 +105,7 @@ public class FadeManager : MonoBehaviour
 
     public void StartFadingOut()
     {
-        
+        m_isInTransition = true;
         m_blackPanel.gameObject.SetActive(true);
         m_currentFadeState = FadeState.FadingOut;
         m_currentStartingTimer = m_timeFullBlackWhenOpenedScene;

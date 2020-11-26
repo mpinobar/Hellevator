@@ -35,10 +35,10 @@ public class IntroCanvas : MonoBehaviour
         m_tmpro.gameObject.SetActive(false);
         m_fadingIn = true;
         m_tmp = m_fadeTime;
-        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
-        {
-            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
-        }
+        //if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        //{
+        //    SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        //}
     }
 
     // Update is called once per frame
