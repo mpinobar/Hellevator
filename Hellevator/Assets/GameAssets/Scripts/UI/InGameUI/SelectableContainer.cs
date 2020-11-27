@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class SelectableContainer : Selectable
 {
-    List<Selectable> m_selectables;
-    [SerializeField] int m_currentIndex;
-    [SerializeField] Navigation m_navigation;
-    [SerializeField] bool m_keepsIndex;
+    protected List<Selectable> m_selectables;
+    [SerializeField] protected int m_currentIndex;
+    [SerializeField] protected Navigation m_navigation;
+    [SerializeField] protected bool m_keepsIndex;
     int m_keptIndex = 0;
     public List<Selectable> Selectables
     {
@@ -27,7 +27,22 @@ public class SelectableContainer : Selectable
         set => m_selectables = value;
     }
 
-    public int CurrentIndex { get => m_currentIndex; set => m_currentIndex = value; }
+    public int CurrentIndex
+    {
+        get => m_currentIndex; 
+        set
+        {
+            if(value < 0)
+            {
+                value = 0;
+            }
+            if(value >= Selectables.Count)
+            {
+                value = Selectables.Count - 1;
+            }
+            m_currentIndex = value;
+        }
+    }
     public int KeptIndex { get => m_keptIndex; set => m_keptIndex = value; }
     public bool KeepsIndex { get => m_keepsIndex; set => m_keepsIndex = value; }
 
@@ -60,7 +75,7 @@ public class SelectableContainer : Selectable
     public override void OnSelected()
     {
         //SelectableContainer selected = (SelectableContainer)Selectables[KeptIndex];
-        if (Selectables[KeptIndex] is SelectableContainer)
+        if (Selectables[CurrentIndex] is SelectableContainer)
         {
             if (((SelectableContainer)Selectables[KeptIndex]).KeepsIndex)
             {
@@ -70,16 +85,16 @@ public class SelectableContainer : Selectable
                 //if (m_currentIndex >= Selectables.Count)
                 //    m_currentIndex = Selectables.Count - 1;
 
-                (Selectables[m_currentIndex] as SelectableContainer).CurrentIndex = KeptIndex;
+                (Selectables[CurrentIndex] as SelectableContainer).CurrentIndex = KeptIndex;
             }
         }
-        if (m_currentIndex < 0)
-            m_currentIndex = 0;
-        if (m_currentIndex >= Selectables.Count)
-            m_currentIndex = Selectables.Count - 1;
+        if (CurrentIndex < 0)
+            CurrentIndex = 0;
+        if (CurrentIndex >= Selectables.Count)
+            CurrentIndex = Selectables.Count - 1;
 
         //transform.GetChild(m_currentIndex).GetComponent<Selectable>().OnSelected();
-        Selectables[m_currentIndex].OnSelected();
+        Selectables[CurrentIndex].OnSelected();
     }
 
     public override void OnDeselected()
@@ -88,7 +103,7 @@ public class SelectableContainer : Selectable
         //{
         //    transform.GetChild(i).GetComponent<Selectable>().OnDeselected();
         //}
-        Selectables[m_currentIndex].OnDeselected();
+        Selectables[CurrentIndex].OnDeselected();
     }
 
     public override void NavigateLeft()
@@ -104,7 +119,7 @@ public class SelectableContainer : Selectable
         }
         else
         {
-            m_currentIndex--;
+            CurrentIndex--;
             OnSelected();
         }
     }
@@ -122,7 +137,7 @@ public class SelectableContainer : Selectable
         }
         else
         {
-            m_currentIndex++;
+            CurrentIndex++;
             OnSelected();
         }
     }
@@ -140,7 +155,7 @@ public class SelectableContainer : Selectable
         }
         else
         {
-            m_currentIndex++;
+            CurrentIndex++;
             OnSelected();
         }
     }
@@ -157,7 +172,7 @@ public class SelectableContainer : Selectable
         }
         else
         {
-            m_currentIndex--;
+            CurrentIndex--;
             OnSelected();
         }
     }
