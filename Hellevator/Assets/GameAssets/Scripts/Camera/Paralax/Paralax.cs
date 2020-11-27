@@ -104,7 +104,7 @@ public class Paralax : MonoBehaviour
 			if (Input.GetKeyDown(KeyCode.L))
 			{
 				//print(this.gameObject.name + " movedDistance: " + movedDistance);
-				print(m_camera.transform.position.x);
+
 				countingTransition = !countingTransition;
 				if (!countingTransition)
 				{

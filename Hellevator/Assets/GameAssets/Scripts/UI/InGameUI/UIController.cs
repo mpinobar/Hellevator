@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UIController : PersistentSingleton<UIController>
 {
+    [SerializeField] Selectable m_selected;
+
     [Header("Parent references")]
     [SerializeField] Canvas m_canvas;
     [SerializeField] GameObject m_pausePanel;
@@ -25,6 +27,8 @@ public class UIController : PersistentSingleton<UIController>
 
 
     GameObject m_activePanel;
+
+    public Selectable Selected { get => m_selected; set => m_selected = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -116,6 +120,22 @@ public class UIController : PersistentSingleton<UIController>
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ShowPauseMenu();
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            Selected.NavigateUp();
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            Selected.NavigateLeft();
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Selected.NavigateDown();
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Selected.NavigateRight();
         }
     }
 }
