@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UIController : PersistentSingleton<UIController>
 {
     [Header("Parent references")]
-    [SerializeField] GameObject m_canvas;
+    [SerializeField] Canvas m_canvas;
     [SerializeField] GameObject m_pausePanel;
     [SerializeField] GameObject m_inventoryPanel;
     [SerializeField] GameObject m_mapPanel;
@@ -29,9 +29,9 @@ public class UIController : PersistentSingleton<UIController>
     // Start is called before the first frame update
     void Start()
     {
-        if (!m_canvas)
-            m_canvas = transform.GetChild(0).gameObject;
-        m_canvas.SetActive(false);
+        //if (!m_canvas)
+        //    m_canvas = transform.GetChild(0).gameObject.GetComponent<Canvas>();
+        //m_canvas.gameObject.SetActive(false);
         m_resumeButton.onClick.AddListener(Resume);
         m_inventoryButton.onClick.AddListener(ShowInventory);
         m_mapButton.onClick.AddListener(ShowMap);
@@ -44,14 +44,15 @@ public class UIController : PersistentSingleton<UIController>
 
     public void Resume()
     {
-        m_canvas.SetActive(false);
+        m_canvas.gameObject.SetActive(false);
         m_activePanel = null;
         Time.timeScale = 1f;
+        CameraManager.Instance.HideUIEffects();
     }
 
     public void Exit()
     {
-        m_canvas.SetActive(false);
+        m_canvas.gameObject.SetActive(false);
         Time.timeScale = 1f;
         m_activePanel = null;
         LevelManager.Instance.LoadMainMenu();
@@ -84,13 +85,21 @@ public class UIController : PersistentSingleton<UIController>
 
     public void ShowPauseMenu()
     {
+        if(m_canvas.worldCamera == null)
+        {
+            m_canvas.worldCamera = Camera.main;
+            m_canvas.sortingLayerName = "UI";
+            m_canvas.sortingOrder = 1000;
+        }
         ShowPanel(m_pausePanel);
+        CameraManager.Instance.ShowUIEffects();
         Time.timeScale = 0f;
+
     }
 
     private void ShowPanel(GameObject panelToShow)
     {
-        m_canvas.SetActive(true);
+        m_canvas.gameObject.SetActive(true);
         if(panelToShow != m_activePanel)
         {
             if(m_activePanel != null && m_activePanel != m_canvas)
