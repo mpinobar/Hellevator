@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class SelectableContainer : Selectable
+using UnityEngine.EventSystems;
+public class SelectableContainer : Selectable, IPointerExitHandler, IPointerEnterHandler
 {
     protected List<Selectable> m_selectables;
     [SerializeField] protected int m_currentIndex;
@@ -29,14 +29,14 @@ public class SelectableContainer : Selectable
 
     public int CurrentIndex
     {
-        get => m_currentIndex; 
+        get => m_currentIndex;
         set
         {
-            if(value < 0)
+            if (value < 0)
             {
                 value = 0;
             }
-            if(value >= Selectables.Count)
+            if (value >= Selectables.Count)
             {
                 value = Selectables.Count - 1;
             }
@@ -175,5 +175,13 @@ public class SelectableContainer : Selectable
             CurrentIndex--;
             OnSelected();
         }
+    }
+
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
     }
 }

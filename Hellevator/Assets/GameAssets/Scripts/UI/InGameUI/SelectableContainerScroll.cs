@@ -29,7 +29,7 @@ public class SelectableContainerScroll : SelectableContainer
         else
         {
             float newY = Mathf.Clamp (Mathf.Max(m_YToDisplace*(CurrentIndex),0),m_minY,m_maxY);
-            Debug.LogError(newY);
+            //Debug.LogError(newY);
             m_rectTransform.localPosition = new Vector3(m_rectTransform.localPosition.x, newY, m_rectTransform.localPosition.z);
             CurrentIndex++;
             OnSelected();
@@ -49,7 +49,7 @@ public class SelectableContainerScroll : SelectableContainer
         else
         {
             float newY = Mathf.Clamp (Mathf.Max(m_YToDisplace*(CurrentIndex-2),0),m_minY,m_maxY);
-            Debug.LogError(newY);
+            //Debug.LogError(newY);
             m_rectTransform.localPosition = new Vector3(m_rectTransform.localPosition.x, newY, m_rectTransform.localPosition.z);
             CurrentIndex--;
             OnSelected();

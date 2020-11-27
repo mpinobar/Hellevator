@@ -28,7 +28,18 @@ public class UIController : PersistentSingleton<UIController>
 
     GameObject m_activePanel;
 
-    public Selectable Selected { get => m_selected; set => m_selected = value; }
+    public Selectable Selected
+    {
+        get => m_selected; 
+        set
+        {
+            if(m_selected != null && value != m_selected)
+            {
+                m_selected.OnDeselected();
+            }
+            m_selected = value;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -89,12 +100,13 @@ public class UIController : PersistentSingleton<UIController>
 
     public void ShowPauseMenu()
     {
-        if(m_canvas.worldCamera == null)
+        if (m_canvas.worldCamera == null)
         {
             m_canvas.worldCamera = Camera.main;
             m_canvas.sortingLayerName = "UI";
             m_canvas.sortingOrder = 1000;
         }
+
         ShowPanel(m_pausePanel);
         CameraManager.Instance.ShowUIEffects();
         Time.timeScale = 0f;
@@ -104,9 +116,9 @@ public class UIController : PersistentSingleton<UIController>
     private void ShowPanel(GameObject panelToShow)
     {
         m_canvas.gameObject.SetActive(true);
-        if(panelToShow != m_activePanel)
+        if (panelToShow != m_activePanel)
         {
-            if(m_activePanel != null && m_activePanel != m_canvas)
+            if (m_activePanel != null && m_activePanel != m_canvas)
             {
                 m_activePanel.SetActive(false);
             }
@@ -136,6 +148,10 @@ public class UIController : PersistentSingleton<UIController>
         if (Input.GetKeyDown(KeyCode.L))
         {
             Selected.NavigateRight();
+        }
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            Selected.Press();
         }
     }
 }

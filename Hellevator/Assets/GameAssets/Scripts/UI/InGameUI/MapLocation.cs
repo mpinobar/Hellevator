@@ -12,18 +12,29 @@ public class MapLocation : MonoBehaviour
 
     private void Awake()
     {
-        m_locationImage = GetComponent<Image>();
+        LocationImage = GetComponent<Image>();
     }
 
     public string Location { get => m_location; set => m_location = value; }
+    public Image LocationImage
+    {
+        get
+        {
+            if (m_locationImage == null)
+                m_locationImage = GetComponent<Image>();
+
+            return m_locationImage;
+        }
+        set => m_locationImage = value;
+    }
 
     public void ActivateLocation()
     {
-        m_locationImage.color = Color.green;
+        LocationImage.color = Color.green;
     }
     public void DeactivateLocation()
     {
-        m_locationImage.color = Color.white;
+        LocationImage.color = Color.white;
     }
 
 }
