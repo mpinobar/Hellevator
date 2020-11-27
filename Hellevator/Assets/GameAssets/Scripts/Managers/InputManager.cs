@@ -75,10 +75,10 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             LevelManager.Instance.StartRestartingLevel();
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            LevelManager.Instance.LoadMainMenu();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    LevelManager.Instance.LoadMainMenu();
+        //}
     }
 
     private void LateUpdate()

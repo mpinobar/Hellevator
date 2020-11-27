@@ -32,15 +32,13 @@ public class MapController : MonoBehaviour
         }
     }
 
-
-    private void Update()
+    private void OnEnable()
     {
-        if (Input.GetKeyDown(KeyCode.M)){
-            if (!m_showingMap)
-                ShowMap();
-            else
-                HideMap();            
-        }
+        ShowMap();
+        //if (!m_showingMap)
+        //    ShowMap();
+        //else
+        //    HideMap();
     }
 
     private void HideMap()
