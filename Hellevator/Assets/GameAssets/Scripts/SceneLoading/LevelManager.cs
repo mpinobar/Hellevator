@@ -87,50 +87,25 @@ public class LevelManager : PersistentSingleton<LevelManager>
   
         if (m_isRestarting)
         {
-            //if (m_loadingScene.isDone)
-            //{
-            //UpdateLastCheckPointReference();
-
-
-            //CameraManager.Instance.CurrentCamera.enabled = false;
-            //CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
-            //CameraManager.Instance.CurrentCamera.enabled = true;
-            //ParalaxManager.Instance.SetUpSceneParalax();
-
-            //if (PossessionManager.Instance.ControlledDemon != null)
-            //{
-            //    PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
-            //}
-            //m_lastCheckPoint.SpawnPlayer();
-
+            
             m_isRestarting = false;
             Time.timeScale = 1;
-            //}
+            
         }
 
-        if (m_isSwitchingToNewScene)
+        if (m_isSwitchingToNewScene && m_loadingScene.progress >= 0.9f && !FadeManager.IsInTransition)
         {
+            m_loadingScene.allowSceneActivation = true;
+           
+            m_isSwitchingToNewScene = false;
             
-            if(m_loadingScene.progress >= 0.9f && m_canLoad)
-            {
-                //Debug.LogError("Done loading scene " + m_newSceneName);
-                //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
-                m_isSwitchingToNewScene = false;
-				AsyncOperation op = SceneManager.UnloadSceneAsync(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
-				PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName("PersistentGameObjects"));
-                m_loadingScene.allowSceneActivation = true;
-                CameraManager.Instance.FadeOut();
-                
-                //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
-                //op.completed += UnloadCompleted;
-            }
         }
     }
     
     private void UnloadCompleted(AsyncOperation obj)
     {
         //PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
-        //Debug.LogError("Unloaded successfully");
+        Debug.LogError("Unloaded successfully");
         //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
 
     }
@@ -205,10 +180,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
         }
-        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
-        {
-            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
-        }
+        //if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
+        //{
+        //    SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
+        //}
         if (m_lastCheckPoint)
         {
             //Debug.LogError("Trying to spawn player");
@@ -219,35 +194,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
     }
 
 
-    public void LoadCentralSceneFirstTime(LevelLoadManager newCentralScene)
-    {
-        CentralSceneLoadManager = newCentralScene;
-
-        if (!SceneManager.GetSceneByName("PersistentGameObjects").IsValid())
-        {
-            SceneManager.LoadSceneAsync("PersistentGameObjects", LoadSceneMode.Additive);
-        }
-
-        //for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
-        //{
-        //    AsyncOperation op = SceneManager.LoadSceneAsync(m_centralScene.AdjacentScenes[i]);
-        //    op.allowSceneActivation = false;
-        //    m_adjScenes.Add(CentralScene.AdjacentScenes[i],op);
-        //    //m_adjScenes[CentralScene.AdjacentScenes[i]].allowSceneActivation = false;
-        //}
-        //if (m_adjacentScenes == null)
-        //{
-        //    m_adjacentScenes = new List<string>();
-        //}
-        //for (int i = 0; i < newCentralScene.AdjacentScenes.Count; i++)
-        //{
-        //    m_adjacentScenes.Add(newCentralScene.AdjacentScenes[i]);
-
-        //}
-
-
-        //SceneManager.MoveGameObjectToScene(CameraManager.Instance.gameObject, SceneManager.GetSceneByName(m_centralScene.ThisSceneName));
-    }
 
     public void ChangeCentralScene(LevelLoadManager newCentralScene)
     {
@@ -314,6 +260,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         m_loadingScene.allowSceneActivation = false;
         m_loadingScene.completed += LoadSwitchSceneCompleted;
         m_isSwitchingToNewScene = true;
+        FadeManager.IsInTransition = true;
         FadeManager.IsRestarting = false;
         CanLoad = false;
         
@@ -325,6 +272,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
         PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
         CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
         PossessionManager.Instance.RemovePossessionFromExtraDemons();
+        SceneManager.UnloadSceneAsync(PreviousScene);
+        CameraManager.Instance.FadeOut();
     }
 
     public void LoadMainMenu()

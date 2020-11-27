@@ -58,7 +58,7 @@ public class PossessingLight : MonoBehaviour
 
                 if (m_travellingToLightPoint)
                 {
-                    m_forwardMovementTimer += Time.deltaTime;
+                    m_forwardMovementTimer += Time.deltaTime * m_speed;
 
                     m_desiredPosition = m_initialPosition + (m_lightTarget.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
 
@@ -85,7 +85,7 @@ public class PossessingLight : MonoBehaviour
                 }
                 else
                 {
-                    m_forwardMovementTimer += Time.deltaTime;
+                    m_forwardMovementTimer += Time.deltaTime * m_speed;
 
                     m_desiredPosition = m_initialPosition + (m_target.Torso.transform.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
 
@@ -204,7 +204,7 @@ public class PossessingLight : MonoBehaviour
 
                 if (m_travellingToLightPoint)
                 {
-                    m_forwardMovementTimer += Time.deltaTime;
+                    m_forwardMovementTimer += Time.deltaTime * m_speed;
 
                     m_desiredPosition = m_initialPosition + (m_lightTarget.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
 
@@ -231,7 +231,7 @@ public class PossessingLight : MonoBehaviour
                 }
                 else
                 {
-                    m_forwardMovementTimer += Time.unscaledDeltaTime;
+                    m_forwardMovementTimer += Time.unscaledDeltaTime * m_speed;
 
                     m_desiredPosition = m_initialPosition + (m_target.Torso.transform.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
 

@@ -75,10 +75,10 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             LevelManager.Instance.StartRestartingLevel();
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            LevelManager.Instance.LoadMainMenu();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    LevelManager.Instance.LoadMainMenu();
+        //}
     }
 
     private void LateUpdate()
@@ -295,23 +295,6 @@ public class InputManager : PersistentSingleton<InputManager>
     }
 
 
-    void PossesNearestDemon()
-    {
-        if (m_currentDemon != null && m_currentDemon.CanMove)
-            m_currentDemon.Die(true);
-
-        if (PossessionManager.Instance.ControllingMultipleDemons)
-        {
-            for (int i = 0; i < m_extraDemonsControlled.Count; i++)
-            {
-                if (m_extraDemonsControlled[i].CanMove)
-                {
-                    m_extraDemonsControlled[i].Die(true);
-                }
-            }
-        }
-
-    }
 
     void UseSkill()
     {
@@ -362,6 +345,12 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             Debug.LogError("Trying to remove a demon that wasn't possessed. Demon is " + demonToRemove.name);
         }
+    }
+
+    public void RemoveAllExtraDemonsControlled()
+    {
+        if(m_extraDemonsControlled != null)
+            m_extraDemonsControlled.Clear();
     }
 
     /*

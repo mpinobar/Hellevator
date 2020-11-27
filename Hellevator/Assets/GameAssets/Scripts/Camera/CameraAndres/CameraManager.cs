@@ -31,6 +31,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
 
 	ParalaxManager m_parallaxManager;
 
+	[SerializeField] GameObject m_UIEffects;
 
 	[Header("Shake")]
 	[SerializeField] float m_lightShakeAmplitude = 12f;
@@ -104,6 +105,15 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		}
 	}
 
+	public void ShowUIEffects()
+    {
+		m_UIEffects.SetActive(true);
+    }
+
+	public void HideUIEffects()
+    {
+		m_UIEffects.SetActive(false);
+    }
 	
 	/// <summary>
 	/// 
