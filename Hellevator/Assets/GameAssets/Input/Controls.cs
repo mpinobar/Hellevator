@@ -65,6 +65,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""InputMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""f4563e9f-8f84-4c6f-9acf-179012da031d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -298,6 +306,28 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""VerticalMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b95fa831-6899-431c-a8f1-2dd97c9bb42c"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InputMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b42f24c8-1420-4806-87f1-20edcacf27ed"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InputMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -312,6 +342,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_PlayerControls_InputPosMulti = m_PlayerControls.FindAction("InputPosMulti", throwIfNotFound: true);
         m_PlayerControls_InputInteract = m_PlayerControls.FindAction("InputInteract", throwIfNotFound: true);
         m_PlayerControls_VerticalMovement = m_PlayerControls.FindAction("VerticalMovement", throwIfNotFound: true);
+        m_PlayerControls_InputMenu = m_PlayerControls.FindAction("InputMenu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -367,6 +398,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_PlayerControls_InputPosMulti;
     private readonly InputAction m_PlayerControls_InputInteract;
     private readonly InputAction m_PlayerControls_VerticalMovement;
+    private readonly InputAction m_PlayerControls_InputMenu;
     public struct PlayerControlsActions
     {
         private @Controls m_Wrapper;
@@ -377,6 +409,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @InputPosMulti => m_Wrapper.m_PlayerControls_InputPosMulti;
         public InputAction @InputInteract => m_Wrapper.m_PlayerControls_InputInteract;
         public InputAction @VerticalMovement => m_Wrapper.m_PlayerControls_VerticalMovement;
+        public InputAction @InputMenu => m_Wrapper.m_PlayerControls_InputMenu;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -404,6 +437,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @VerticalMovement.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnVerticalMovement;
                 @VerticalMovement.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnVerticalMovement;
                 @VerticalMovement.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnVerticalMovement;
+                @InputMenu.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputMenu;
+                @InputMenu.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputMenu;
+                @InputMenu.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnInputMenu;
             }
             m_Wrapper.m_PlayerControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -426,6 +462,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @VerticalMovement.started += instance.OnVerticalMovement;
                 @VerticalMovement.performed += instance.OnVerticalMovement;
                 @VerticalMovement.canceled += instance.OnVerticalMovement;
+                @InputMenu.started += instance.OnInputMenu;
+                @InputMenu.performed += instance.OnInputMenu;
+                @InputMenu.canceled += instance.OnInputMenu;
             }
         }
     }
@@ -438,5 +477,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnInputPosMulti(InputAction.CallbackContext context);
         void OnInputInteract(InputAction.CallbackContext context);
         void OnVerticalMovement(InputAction.CallbackContext context);
+        void OnInputMenu(InputAction.CallbackContext context);
     }
 }
