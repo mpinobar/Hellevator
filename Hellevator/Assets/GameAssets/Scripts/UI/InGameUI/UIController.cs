@@ -27,13 +27,15 @@ public class UIController : PersistentSingleton<UIController>
 
 
     GameObject m_activePanel;
+    bool m_hasMovedVerticallyOnMenu;
+    bool m_hasMovedHorizontallyOnMenu;
 
     public Selectable Selected
     {
-        get => m_selected; 
+        get => m_selected;
         set
         {
-            if(m_selected != null && value != m_selected)
+            if (m_selected != null && value != m_selected)
             {
                 m_selected.OnDeselected();
             }
@@ -59,10 +61,16 @@ public class UIController : PersistentSingleton<UIController>
 
     public void Resume()
     {
-        m_canvas.gameObject.SetActive(false);
+        if (m_activePanel)
+        {
+            m_activePanel.SetActive(false);
+        }
         m_activePanel = null;
+        m_canvas.gameObject.SetActive(false);
         Time.timeScale = 1f;
         CameraManager.Instance.HideUIEffects();
+        InputManager.Instance.IsInMenu = false;
+
     }
 
     public void Exit()
@@ -71,6 +79,7 @@ public class UIController : PersistentSingleton<UIController>
         Time.timeScale = 1f;
         m_activePanel = null;
         LevelManager.Instance.LoadMainMenu();
+        InputManager.Instance.IsInMenu = false;
     }
 
     public void ShowInventory()
@@ -106,7 +115,7 @@ public class UIController : PersistentSingleton<UIController>
             m_canvas.sortingLayerName = "UI";
             m_canvas.sortingOrder = 1000;
         }
-
+        InputManager.Instance.IsInMenu = true;
         ShowPanel(m_pausePanel);
         CameraManager.Instance.ShowUIEffects();
         Time.timeScale = 0f;
@@ -127,31 +136,46 @@ public class UIController : PersistentSingleton<UIController>
         }
     }
 
-    private void Update()
+
+    public void NavigateMenu(float xInput, float yInput)
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+
+        if (!m_hasMovedHorizontallyOnMenu)
         {
-            ShowPauseMenu();
+            if (xInput > 0)
+            {
+                Selected.NavigateRight();
+                m_hasMovedHorizontallyOnMenu = true;
+            }
+            if (xInput < 0)
+            {
+                Selected.NavigateLeft();
+                m_hasMovedHorizontallyOnMenu = true;
+            }
         }
-        if (Input.GetKeyDown(KeyCode.I))
+        if (!m_hasMovedVerticallyOnMenu)
         {
-            Selected.NavigateUp();
+            if (yInput < 0)
+            {
+                Selected.NavigateDown();
+                m_hasMovedVerticallyOnMenu = true;
+            }
+            if (yInput > 0)
+            {
+                Selected.NavigateUp();
+                m_hasMovedVerticallyOnMenu = true;
+            }
         }
-        if (Input.GetKeyDown(KeyCode.J))
+
+        if(xInput == 0)
         {
-            Selected.NavigateLeft();
+            m_hasMovedHorizontallyOnMenu = false;
         }
-        if (Input.GetKeyDown(KeyCode.K))
+        if(yInput == 0)
         {
-            Selected.NavigateDown();
+            m_hasMovedVerticallyOnMenu = false;
         }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Selected.NavigateRight();
-        }
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            Selected.Press();
-        }
+
+
     }
 }

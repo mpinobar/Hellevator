@@ -14,7 +14,7 @@ public class InputManager : PersistentSingleton<InputManager>
     bool        m_isInInteactionTrigger = false;
     float       m_verticalInputValue;
     Vector3     m_direction = Vector3.one;
-
+    bool        m_isInMenu;
     public delegate void OnButtonPress();
 
     public event OnButtonPress OnInteract;
@@ -30,6 +30,7 @@ public class InputManager : PersistentSingleton<InputManager>
         get => m_isInInteactionTrigger; set => m_isInInteactionTrigger = value;
     }
     public float VerticalInputValue { get => m_verticalInputValue; set => m_verticalInputValue = value; }
+    public bool IsInMenu { get => m_isInMenu; set => m_isInMenu = value; }
 
     public override void Awake()
     {
@@ -46,10 +47,22 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.InputInteract.performed += ctx => Interact();
         m_controls.PlayerControls.InputShowRange.performed += ctx => UseSkill();
         m_controls.PlayerControls.InputPosMulti.performed += ctx => ToggleMultiplePosseion();
+        m_controls.PlayerControls.InputMenu.performed += ctx => InputMenu();
         //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
         UpdateDemonReference();
     }
 
+    public void InputMenu()
+    {
+        if (!IsInMenu)
+        {
+            UIController.Instance.ShowPauseMenu();
+        }
+        else
+        {
+            UIController.Instance.Resume();
+        }
+    }
 
     public void ResetPlayerInput()
     {
@@ -64,21 +77,34 @@ public class InputManager : PersistentSingleton<InputManager>
     // Update is called once per frame
     protected virtual void Update()
     {
-        FeedInputToMainDemon();
-
-        if (PossessionManager.Instance.ControllingMultipleDemons)
+        if (!m_isInMenu)
         {
-            FeedInputToExtraDemons();
+
+            FeedInputToMainDemon();
+
+            if (PossessionManager.Instance.ControllingMultipleDemons)
+            {
+                FeedInputToExtraDemons();
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                LevelManager.Instance.StartRestartingLevel();
+            }
         }
-
-        if (Input.GetKeyDown(KeyCode.R))
+        else
         {
-            LevelManager.Instance.StartRestartingLevel();
+            FeedInputToMenuNavigation();
         }
         //if (Input.GetKeyDown(KeyCode.Escape))
         //{
         //    LevelManager.Instance.LoadMainMenu();
         //}
+    }
+
+    void FeedInputToMenuNavigation()
+    {
+        UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
     }
 
     private void LateUpdate()
@@ -233,26 +259,34 @@ public class InputManager : PersistentSingleton<InputManager>
 
     void Jump()
     {
-        if (m_currentDemon != null && m_currentDemon.CanMove /*&& !m_isInInteactionTrigger*/)
+        if (!IsInMenu)
         {
-            m_currentDemon.ToggleWalkingParticles(false);
-            m_currentDemon.Jump();
-
-        }
-        //if (m_isInInteactionTrigger)
-        //{
-        //    OnInteract();
-        //}
-        if (PossessionManager.Instance.ControllingMultipleDemons)
-        {
-            for (int i = 0; i < m_extraDemonsControlled.Count; i++)
+            if (m_currentDemon != null && m_currentDemon.CanMove /*&& !m_isInInteactionTrigger*/)
             {
-                if (m_extraDemonsControlled[i].CanMove)
+                m_currentDemon.ToggleWalkingParticles(false);
+                m_currentDemon.Jump();
+
+            }
+            //if (m_isInInteactionTrigger)
+            //{
+            //    OnInteract();
+            //}
+            if (PossessionManager.Instance.ControllingMultipleDemons)
+            {
+                for (int i = 0; i < m_extraDemonsControlled.Count; i++)
                 {
-                    m_extraDemonsControlled[i].Jump();
+                    if (m_extraDemonsControlled[i].CanMove)
+                    {
+                        m_extraDemonsControlled[i].Jump();
+                    }
                 }
             }
         }
+        else
+        {
+            UIController.Instance.Selected.Press();
+        }
+        
     }
 
     void JumpButtonReleased()
