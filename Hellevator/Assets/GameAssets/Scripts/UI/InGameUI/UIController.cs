@@ -27,7 +27,8 @@ public class UIController : PersistentSingleton<UIController>
 
 
     GameObject m_activePanel;
-    bool m_hasMovedOnMenu;
+    bool m_hasMovedVerticallyOnMenu;
+    bool m_hasMovedHorizontallyOnMenu;
 
     public Selectable Selected
     {
@@ -138,34 +139,43 @@ public class UIController : PersistentSingleton<UIController>
 
     public void NavigateMenu(float xInput, float yInput)
     {
-        if (!m_hasMovedOnMenu)
+
+        if (!m_hasMovedHorizontallyOnMenu)
         {
             if (xInput > 0)
             {
                 Selected.NavigateRight();
-                m_hasMovedOnMenu = true;
+                m_hasMovedHorizontallyOnMenu = true;
             }
             if (xInput < 0)
             {
                 Selected.NavigateLeft();
-                m_hasMovedOnMenu = true;
+                m_hasMovedHorizontallyOnMenu = true;
             }
+        }
+        if (!m_hasMovedVerticallyOnMenu)
+        {
             if (yInput < 0)
             {
                 Selected.NavigateDown();
-                m_hasMovedOnMenu = true;
+                m_hasMovedVerticallyOnMenu = true;
             }
             if (yInput > 0)
             {
                 Selected.NavigateUp();
-                m_hasMovedOnMenu = true;
+                m_hasMovedVerticallyOnMenu = true;
             }
-            
         }
-        else if (yInput == 0 && xInput == 0)
+
+        if(xInput == 0)
         {
-            m_hasMovedOnMenu = false;
+            m_hasMovedHorizontallyOnMenu = false;
         }
+        if(yInput == 0)
+        {
+            m_hasMovedVerticallyOnMenu = false;
+        }
+
 
     }
 }
