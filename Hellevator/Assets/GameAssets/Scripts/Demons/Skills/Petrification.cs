@@ -14,7 +14,8 @@ public class Petrification : MonoBehaviour
     /// </summary>
     public void Petrify()
     {
-        Rigidbody2D platform = Instantiate(m_prefabToConvertInto, transform.position + Vector3.up*m_verticalOffsetToCreatePlatform, Quaternion.identity).GetComponent<Rigidbody2D>();
+        Rigidbody2D platform = Instantiate(m_prefabToConvertInto, transform.position + Vector3.up*m_verticalOffsetToCreatePlatform, Quaternion.identity, transform).GetComponent<Rigidbody2D>();
+        platform.transform.parent = null;
 
         if (!m_usesGravity)
         {
@@ -31,7 +32,7 @@ public class Petrification : MonoBehaviour
         }
         platform.GetComponent<DestructiblePlatform>().TurnsKinematicOnSpikesEnter = true;
         platform.GetComponent<DestructiblePlatform>().WillReappear = false;
-
+        
         //PossessionManager.Instance.RemoveDemonPossession(transform);
 
         Destroy(gameObject);
