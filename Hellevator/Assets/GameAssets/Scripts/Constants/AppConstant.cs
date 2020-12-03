@@ -42,7 +42,7 @@ public enum Key
 }
 public enum TriggerType
 {
-	OnStart, OnActivatedObject
+	OnStart, OnActivatedObject, Collider
 }
 
 
