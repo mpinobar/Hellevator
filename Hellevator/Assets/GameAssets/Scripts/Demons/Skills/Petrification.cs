@@ -10,7 +10,7 @@ public class Petrification : MonoBehaviour
     [SerializeField] float m_verticalOffsetToCreatePlatform = 1f;
 
     /// <summary>
-    /// Instantiates a platform, possesses a new demon and
+    /// Instantiates a platform and destroys the parent demon that created it
     /// </summary>
     public void Petrify()
     {
