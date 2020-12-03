@@ -40,7 +40,10 @@ public enum Key
 {
 	Kitchen, Restaurant, Storage, BelcebuRoom, BossKey
 }
-
+public enum TriggerType
+{
+	OnStart, OnActivatedObject, Collider
+}
 
 
 

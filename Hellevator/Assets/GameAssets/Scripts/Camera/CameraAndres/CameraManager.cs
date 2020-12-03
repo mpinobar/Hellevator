@@ -92,6 +92,11 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		}
 	}
 
+	public void SetUnlimitedSoftZone(bool isUnlimited)
+    {
+		m_currentCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_UnlimitedSoftZone = isUnlimited;
+    }
+
 	public void SetCameraFocus(Transform newCameraFocus)
 	{
 		if(newCameraFocus != null)
