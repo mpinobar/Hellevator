@@ -14,7 +14,9 @@ public class ActivateSpanwer : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+		print(collision.transform.root.name);
         DemonBase demon = collision.transform.root.GetComponent<DemonBase>();
+		print(demon.name);
         if(demon != null && demon.IsControlledByPlayer)
         {
             m_spawnerToActivate.enabled = true;

@@ -8,6 +8,7 @@ public class Petrification : MonoBehaviour
     [SerializeField] bool m_usesGravity;
     [SerializeField] bool m_conservesPlayerMomentum;
     [SerializeField] float m_verticalOffsetToCreatePlatform = 1f;
+	[SerializeField] bool m_platformTurnsKinematicOnCollisionEnter = true;
 
     /// <summary>
     /// Instantiates a platform and destroys the parent demon that created it
@@ -31,6 +32,7 @@ public class Petrification : MonoBehaviour
             platform.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
         platform.GetComponent<DestructiblePlatform>().TurnsKinematicOnSpikesEnter = true;
+        platform.GetComponent<DestructiblePlatform>().TurnsKinematicOnCollisionEnter = m_platformTurnsKinematicOnCollisionEnter;
         platform.GetComponent<DestructiblePlatform>().WillReappear = false;
         
         //PossessionManager.Instance.RemoveDemonPossession(transform);
