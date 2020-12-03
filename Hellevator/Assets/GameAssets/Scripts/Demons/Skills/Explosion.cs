@@ -40,6 +40,11 @@ public class Explosion : MonoBehaviour
                     demonInRange.IsPossessionBlocked = true;
                     demonInRange.GetComponent<Explosion>().DelayExplosion(m_chainExplosionDelay);
                 }
+                if (demonInRange.GetComponent<Petrification>())
+                {
+                    demonInRange.IsPossessionBlocked = true;
+                    demonInRange.GetComponent<Petrification>().Petrify();
+                }
 
                 if (!demonInRange.IsDead)
                 {
