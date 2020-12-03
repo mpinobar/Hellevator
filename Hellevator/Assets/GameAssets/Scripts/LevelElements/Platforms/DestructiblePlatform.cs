@@ -22,6 +22,7 @@ public class DestructiblePlatform : MonoBehaviour
     private Vector2 m_targetShakePosition;
     private bool m_willReappear = true;
     private bool m_turnsKinematicOnSpikesEnter;
+    private bool m_turnsKinematicOnCollisionEnter;
 
     LayerMask m_playerLayer;
     LayerMask m_bodyLayer;
@@ -31,8 +32,9 @@ public class DestructiblePlatform : MonoBehaviour
 
     public bool WillReappear { get => m_willReappear; set => m_willReappear = value; }
     public bool TurnsKinematicOnSpikesEnter { get => m_turnsKinematicOnSpikesEnter; set => m_turnsKinematicOnSpikesEnter = value; }
+	public bool TurnsKinematicOnCollisionEnter { get => m_turnsKinematicOnCollisionEnter; set => m_turnsKinematicOnCollisionEnter = value; }
 
-    private bool m_isParentMovingPlatform;
+	private bool m_isParentMovingPlatform;
 
     // Start is called before the first frame update
     void Start()
@@ -120,9 +122,20 @@ public class DestructiblePlatform : MonoBehaviour
         {
             if (!m_willReappear)
             {
-                GetComponent<Rigidbody2D>().isKinematic = true;
-                GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
-                HorizontalPeriodicPlatform hpp = collision.transform.GetComponent<HorizontalPeriodicPlatform>();
+				if(!GetComponent<Rigidbody2D>().isKinematic)
+				{
+					GetComponent<Rigidbody2D>().isKinematic = m_turnsKinematicOnCollisionEnter;
+					if (GetComponent<Rigidbody2D>().isKinematic)
+					{
+						GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+					}
+					else
+					{	
+						GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;				
+					}
+					GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+				}
+				HorizontalPeriodicPlatform hpp = collision.transform.GetComponent<HorizontalPeriodicPlatform>();
                 if (hpp)
                 {                   
                     m_bodyLayer = hpp.BodyLayer;
@@ -238,6 +251,7 @@ public class DestructiblePlatform : MonoBehaviour
             if(collision.GetComponent<Spikes>() != null)
             {
                 GetComponent<Rigidbody2D>().isKinematic = true;
+				print("Hello");
                 if (!m_willReappear)
                 {
                     GetComponent<Rigidbody2D>().isKinematic = true;
