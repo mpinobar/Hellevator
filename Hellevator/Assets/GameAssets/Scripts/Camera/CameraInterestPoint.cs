@@ -18,7 +18,7 @@ public class CameraInterestPoint : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey(m_ID) && PlayerPrefs.GetInt(m_ID) == 1)
+        if(m_ID != "" && PlayerPrefs.HasKey(m_ID) && PlayerPrefs.GetInt(m_ID) == 1)
         {
             m_hasPlayed = true;
             if (m_triggerType == TriggerType.Collider)
