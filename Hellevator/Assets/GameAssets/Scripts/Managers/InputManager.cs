@@ -15,6 +15,7 @@ public class InputManager : PersistentSingleton<InputManager>
     float       m_verticalInputValue;
     Vector3     m_direction = Vector3.one;
     bool        m_isInMenu;
+    bool        m_canControlCharacters = true;
     public delegate void OnButtonPress();
 
     public event OnButtonPress OnInteract;
@@ -79,18 +80,21 @@ public class InputManager : PersistentSingleton<InputManager>
     {
         if (!m_isInMenu)
         {
-
-            FeedInputToMainDemon();
-
-            if (PossessionManager.Instance.ControllingMultipleDemons)
+            if (m_canControlCharacters)
             {
-                FeedInputToExtraDemons();
-            }
+                FeedInputToMainDemon();
 
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                LevelManager.Instance.StartRestartingLevel();
+                if (PossessionManager.Instance.ControllingMultipleDemons)
+                {
+                    FeedInputToExtraDemons();
+                }
+
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    LevelManager.Instance.StartRestartingLevel();
+                }
             }
+            
         }
         else
         {
@@ -109,8 +113,11 @@ public class InputManager : PersistentSingleton<InputManager>
 
     private void LateUpdate()
     {
-        SetMainCharacterDirection();
-        SetExtraCharactersDirections();
+        if(m_canControlCharacters && !m_isInMenu)
+        {
+            SetMainCharacterDirection();
+            SetExtraCharactersDirections();
+        }       
     }
 
     private void FeedInputToExtraDemons()
@@ -328,7 +335,21 @@ public class InputManager : PersistentSingleton<InputManager>
         }
     }
 
+    /// <summary>
+    /// Player input wont be fed into possessed characters
+    /// </summary>
+    public void ReleasePlayerInput()
+    {
+        m_canControlCharacters = false;
+    }
 
+    /// <summary>
+    /// Player input will be fed into possessed characters
+    /// </summary>
+    public void RegainPlayerInput()
+    {
+        m_canControlCharacters = true;
+    }
 
     void UseSkill()
     {
