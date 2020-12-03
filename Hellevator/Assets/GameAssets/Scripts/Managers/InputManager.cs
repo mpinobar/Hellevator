@@ -341,6 +341,8 @@ public class InputManager : PersistentSingleton<InputManager>
     public void ReleasePlayerInput()
     {
         m_canControlCharacters = false;
+        //ResetPlayerInput();
+        //m_currentDemon.Move(0);
     }
 
     /// <summary>
