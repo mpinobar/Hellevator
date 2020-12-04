@@ -382,7 +382,7 @@ public class WeightedPreassurePlate : MonoBehaviour
             //m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
             if (!m_enemiesOnPreassurePlate.Contains(cmpDemon))
             {
-                Debug.LogError("Added demon " + cmpDemon.name + " collider is " + collision.name);
+                //Debug.LogError("Added demon " + cmpDemon.name + " collider is " + collision.name);
                 m_enemiesOnPreassurePlate.Add(cmpDemon);
                 m_currentWeight += cmpDemon.Weight;
             }
@@ -431,7 +431,7 @@ public class WeightedPreassurePlate : MonoBehaviour
             //}
             if (m_enemiesOnPreassurePlate.Contains(cmpDemon))
             {
-                Debug.LogError("Removed demon " + cmpDemon.name + " collider is " + collision.name);
+                //Debug.LogError("Removed demon " + cmpDemon.name + " collider is " + collision.name);
                 m_currentWeight -= cmpDemon.Weight;
                 //m_spikesData.RemoveAt(i);
                 m_enemiesOnPreassurePlate.Remove(cmpDemon);
