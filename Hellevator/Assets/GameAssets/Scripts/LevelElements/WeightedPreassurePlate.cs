@@ -42,7 +42,7 @@ public class WeightedPreassurePlate : MonoBehaviour
     [SerializeField] private ActivatedBase m_buttonActivatedObject;
     List<SpikesWeightData> m_spikesData;
     [SerializeField] private bool m_activatesProjectileSpawner;
-    
+
 
     //Sound variables
     [SerializeField] private AudioClip m_machineClip;
@@ -67,7 +67,7 @@ public class WeightedPreassurePlate : MonoBehaviour
             m_audioSource.volume = MusicManager.SfxVolume;
             m_audioSource.Stop();
         }
-        
+
         if (m_type == TypeOfPreassurePlate.Elevator)
         {
             m_startingPosition = m_parent.localPosition;
@@ -107,10 +107,10 @@ public class WeightedPreassurePlate : MonoBehaviour
                         {
                             m_percentage = 1f;
                         }
-                        
+
                         if (m_activatesProjectileSpawner)
                         {
-                            if(m_percentage >= 1)
+                            if (m_percentage >= 1)
                             {
                                 m_buttonActivatedObject.Activate();
                             }
@@ -122,16 +122,16 @@ public class WeightedPreassurePlate : MonoBehaviour
                         else
                         {
                             m_positionY = m_distanceToEndPosition * m_percentage;
-                            m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x , m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
+                            m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
                             m_LOpositionY = m_linkedObjectDistanceToEndPosition * m_percentage;
                             m_LOpositionX = m_linkedObjectDistanceToEndPosition * m_percentage;
-                            
+
 
                             Vector3 destination = new Vector3(m_linkedObjectStartingPosition.x + m_LOpositionX, m_linkedObjectStartingPosition.y + m_LOpositionY, m_linkedObjectStartingPosition.z);
 
                             m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, m_endPosition, m_linkedObjectSpeed * Time.deltaTime);
-                            
+
                             if (m_linkedObjectPosition.position == m_lastLOPosition)
                             {
                                 if (m_audioSource)
@@ -150,7 +150,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                             //{
                             //    m_audioSource.Play();
                             //}
-                            
+
                             m_lastLOPosition = m_linkedObjectPosition.position;
                             //m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
                         }
@@ -174,7 +174,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                             if (m_percentage >= 1)
                             {
                                 m_buttonActivatedObject.Activate();
-                                
+
                                 if (m_audioSource && !m_audioSource.isPlaying)
                                     m_audioSource.Play();
                             }
@@ -220,9 +220,9 @@ public class WeightedPreassurePlate : MonoBehaviour
                                 m_audioSource.Play();
                             }
                             m_lastLOPosition = m_linkedObjectPosition.position;
-                            
+
                             //m_linkedObjectPosition.position = Vector3.MoveTowards(m_linkedObjectPosition.position, destination, m_linkedObjectSpeed * Time.deltaTime);
-                        }                        
+                        }
                     }
                 }
                 break;
@@ -239,7 +239,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                                 //m_audioSource.Play();
                             }
                         }
-                        else if(!m_activatesProjectileSpawner)
+                        else if (!m_activatesProjectileSpawner)
                         {
                             m_percentage = m_currentWeight / m_weightNeeded;
                             if (m_percentage > 1f)
@@ -338,7 +338,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                     m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
                 }
-                    break;
+                break;
             case TypeOfPreassurePlate.None:
                 {
                     print("Type of preasureplate needs to be indicated to: " + this.gameObject.name);
@@ -353,71 +353,89 @@ public class WeightedPreassurePlate : MonoBehaviour
     // On trigger enter kill the character that collided. 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //Debug.LogError("Layer of GO " + collision.gameObject.name + ": " + (LayerMask.LayerToName(collision.gameObject.layer)));
+        //Debug.LogError("Layer 9 of GO " + collision.gameObject.name + ": " + (collision.gameObject.layer == 1 << 9));
+        if (LayerMask.LayerToName(collision.gameObject.layer) != "Player" && LayerMask.LayerToName(collision.gameObject.layer) != "Body")
+            return;
         DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
 
         if (cmpDemon != null)
         {
-            bool isCounted = false;
+            //bool isCounted = false;
 
-            for (int i = 0; i < m_spikesData.Count; i++)
-            {
-                //if the demon is already inside the spikes
-                if (cmpDemon == m_spikesData[i].AssociatedDemon)
-                {
-                    isCounted = true;
+            //for (int i = 0; i < m_spikesData.Count; i++)
+            //{
+            //    //if the demon is already inside the spikes
+            //    if (cmpDemon == m_spikesData[i].AssociatedDemon)
+            //    {
+            //        isCounted = true;
 
-                    //add the collider to the associated demon's collider list if it isnt already included
-                    if (!m_spikesData[i].Colliders.Contains(collision) && collision.gameObject.tag != "BodyCollider")
-                    {
-                        m_spikesData[i].Colliders.Add(collision);
-                    }
-                }
-            }
-            if (!isCounted)
+            //        //add the collider to the associated demon's collider list if it isnt already included
+            //        if (!m_spikesData[i].Colliders.Contains(collision) && collision.gameObject.tag != "BodyCollider")
+            //        {
+            //            m_spikesData[i].Colliders.Add(collision);
+            //        }
+            //    }
+            //}
+            //if (!isCounted)
+            //{
+            //m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
+            if (!m_enemiesOnPreassurePlate.Contains(cmpDemon))
             {
-                m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
+                Debug.LogError("Added demon " + cmpDemon.name + " collider is " + collision.name);
                 m_enemiesOnPreassurePlate.Add(cmpDemon);
                 m_currentWeight += cmpDemon.Weight;
-
             }
+
+            //}
 
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.GetComponentInParent<DemonBase>() != null && collision.gameObject.tag != "BodyCollider")
+        if (LayerMask.LayerToName(collision.gameObject.layer) != "Player" && LayerMask.LayerToName(collision.gameObject.layer) != "Body")
+            return;
+        if (collision.GetComponentInParent<DemonBase>() != null /*&& collision.gameObject.tag != "BodyCollider"*/)
         {
             DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
 
-            for (int i = 0; i < m_spikesData.Count; i++)
+            //for (int i = 0; i < m_spikesData.Count; i++)
+            //{
+            //    //if the demon is already inside the spikes
+            //    if (cmpDemon == m_spikesData[i].AssociatedDemon)
+            //    {
+            //        //remove the collider from the associated demon's collider list 
+            //        if (m_spikesData[i].Colliders.Contains(collision))
+            //        {
+            //            m_spikesData[i].Colliders.Remove(collision);
+
+            //            //all the limbs have exited the spikes
+            //            if (m_spikesData[i].Colliders.Count == 0)
+            //            {
+
+            //                m_currentWeight -= cmpDemon.Weight;
+            //                m_spikesData.RemoveAt(i);
+            //                m_enemiesOnPreassurePlate.Remove(cmpDemon);
+            //                cmpDemon.IsPossessionBlocked = false;
+            //            }
+            //            else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
+            //            {
+            //                m_enemiesOnPreassurePlate.Remove(cmpDemon);
+            //                m_currentWeight -= cmpDemon.Weight;
+            //                m_spikesData.RemoveAt(i);
+            //                cmpDemon.IsPossessionBlocked = false;
+            //            }
+            //        }
+            //    }
+            //}
+            if (m_enemiesOnPreassurePlate.Contains(cmpDemon))
             {
-                //if the demon is already inside the spikes
-                if (cmpDemon == m_spikesData[i].AssociatedDemon)
-                {
-                    //remove the collider from the associated demon's collider list 
-                    if (m_spikesData[i].Colliders.Contains(collision))
-                    {
-                        m_spikesData[i].Colliders.Remove(collision);
-
-                        //all the limbs have exited the spikes
-                        if (m_spikesData[i].Colliders.Count == 0)
-                        {
-
-                            m_currentWeight -= cmpDemon.Weight;
-                            m_spikesData.RemoveAt(i);
-                            m_enemiesOnPreassurePlate.Remove(cmpDemon);
-                            cmpDemon.IsPossessionBlocked = false;
-                        }
-                        else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
-                        {
-                            m_enemiesOnPreassurePlate.Remove(cmpDemon);
-                            m_currentWeight -= cmpDemon.Weight;
-                            m_spikesData.RemoveAt(i);
-                            cmpDemon.IsPossessionBlocked = false;
-                        }
-                    }
-                }
+                Debug.LogError("Removed demon " + cmpDemon.name + " collider is " + collision.name);
+                m_currentWeight -= cmpDemon.Weight;
+                //m_spikesData.RemoveAt(i);
+                m_enemiesOnPreassurePlate.Remove(cmpDemon);
+                cmpDemon.IsPossessionBlocked = false;
             }
         }
     }

@@ -25,6 +25,7 @@ public class BasicZombie : DemonBase
     [SerializeField] private float      m_groundCorrectionMultiplier = 3;
     [SerializeField] private float      m_airCorrectionMultiplier = 3;
     [SerializeField] private float      m_waitTimeResetPlatformTraversal = 0.5f;
+    [SerializeField] private float      m_maxFallSpeedVertical = 25f;
     
     private bool m_isOnLadder = false;
     private bool m_hasJumped;
@@ -208,6 +209,10 @@ public class BasicZombie : DemonBase
                 else
                 {
                     MyRgb.gravityScale = m_fourthGravity;
+                    if(MyRgb.velocity.y < -m_maxFallSpeedVertical)
+                    {
+                        MyRgb.velocity = new Vector2(MyRgb.velocity.x, -m_maxFallSpeedVertical);
+                    }
                 }
 
                 ToggleWalkingParticles(false);

@@ -8,7 +8,13 @@ public class SequenceMovingPlatform : ActivatedBase
     [SerializeField] List <Transform> m_waypoints;
     List<Vector3> m_waypointPositions;
     private int m_currentIndex = 0;
+    //private int m_nextIndex = 0;
     private int m_desiredIndex = 0;
+    private PlatformState m_state = PlatformState.Idle;
+    private enum PlatformState
+    {
+        Idle, Ascending, Descending
+    }
 
     public override void Activate()
     {
@@ -17,6 +23,14 @@ public class SequenceMovingPlatform : ActivatedBase
         if (m_desiredIndex > m_waypoints.Count)
         {
             m_desiredIndex = m_waypoints.Count;
+        }
+        if(m_desiredIndex > m_currentIndex)
+        {
+            if(m_state == PlatformState.Descending)
+            {
+                m_currentIndex++;
+            }
+            m_state = PlatformState.Ascending;
         }
     }
 
@@ -47,6 +61,10 @@ public class SequenceMovingPlatform : ActivatedBase
             {
                 m_currentIndex--;
             }
+            else
+            {
+                m_state = PlatformState.Idle;
+            }
         }
     }
 
@@ -57,6 +75,15 @@ public class SequenceMovingPlatform : ActivatedBase
         if (m_desiredIndex < 0)
         {
             m_desiredIndex = 0;
+        }
+
+        if (m_desiredIndex < m_currentIndex)
+        {
+            if (m_state == PlatformState.Ascending)
+            {
+                m_currentIndex--;
+            }
+            m_state = PlatformState.Descending;
         }
 
     }
