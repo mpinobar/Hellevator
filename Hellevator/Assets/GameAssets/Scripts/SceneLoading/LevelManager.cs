@@ -47,6 +47,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public bool CanLoad { get => m_canLoad; set => m_canLoad = value; }
     public string PreviousScene { get => m_previousScene; set => m_previousScene = value; }
     public string CheckPointSceneToLoad { get => m_checkPointSceneToLoad; set => m_checkPointSceneToLoad = value; }
+    public string NewSceneName { get => m_newSceneName; }
 
     private void Start()
     {
@@ -256,20 +257,18 @@ public class LevelManager : PersistentSingleton<LevelManager>
         m_previousScene = PossessionManager.Instance.ControlledDemon.gameObject.scene.name;
         CameraManager.Instance.FadeIn();
         m_newSceneName = newSceneName;
-        m_loadingScene = SceneManager.LoadSceneAsync(newSceneName, LoadSceneMode.Additive);
+        m_loadingScene = SceneManager.LoadSceneAsync(m_newSceneName.Split('_')[0], LoadSceneMode.Additive);
         m_loadingScene.allowSceneActivation = false;
         m_loadingScene.completed += LoadSwitchSceneCompleted;
         m_isSwitchingToNewScene = true;
         FadeManager.IsInTransition = true;
         FadeManager.IsRestarting = false;
-        CanLoad = false;
-        
-        
+        CanLoad = false;        
     }
 
     private void LoadSwitchSceneCompleted(AsyncOperation obj)
     {
-        PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
+        PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName.Split('_')[0]));
         CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
         PossessionManager.Instance.RemovePossessionFromExtraDemons();
         SceneManager.UnloadSceneAsync(PreviousScene);
