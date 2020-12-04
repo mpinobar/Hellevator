@@ -8,7 +8,7 @@ public class SequenceMovingPlatform : ActivatedBase
     [SerializeField] List <Transform> m_waypoints;
     List<Vector3> m_waypointPositions;
     private int m_currentIndex = 0;
-    private int m_nextIndex = 0;
+    //private int m_nextIndex = 0;
     private int m_desiredIndex = 0;
     private PlatformState m_state = PlatformState.Idle;
     private enum PlatformState
