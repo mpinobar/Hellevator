@@ -42,20 +42,6 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
     void Update()
     {
 
-
-        //if (Input.GetKeyDown(KeyCode.Y) && m_spikesData.Count > 0)
-        //{
-        //    for (int i = 0; i < m_spikesData.Count; i++)
-        //    {
-        //        for (int j = 0; j < m_spikesData[i].Colliders.Count; j++)
-        //        {
-        //            print(m_spikesData[i].Colliders[j].name);
-        //        }
-        //    }
-        //}
-
-
-
         if (m_endPosition)
         {
             if (m_returningToInitialPosition)
@@ -91,53 +77,26 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
         for (int i = 0; i < m_enemiesOnPreassurePlate.Count; i++)
         {
             m_enemiesOnPreassurePlate[i].transform.localScale = new Vector3(m_enemiesOnPreassurePlate[i].transform.localScale.x / m_enemiesOnPreassurePlate[i].transform.lossyScale.x,
-                                                                            m_enemiesOnPreassurePlate[i].transform.localScale.y / m_enemiesOnPreassurePlate[i].transform.lossyScale.y,1);
+                                                                            m_enemiesOnPreassurePlate[i].transform.localScale.y / m_enemiesOnPreassurePlate[i].transform.lossyScale.y, 1);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //Debug.LogError(LayerMask.LayerToName(collision.gameObject.layer));
+        //Debug.LogError(collision.gameObject.name);
         if (LayerMask.LayerToName(collision.gameObject.layer) != "Player" && LayerMask.LayerToName(collision.gameObject.layer) != "Body")
             return;
         DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
-
+        //Debug.LogError(cmpDemon.name);
         if (cmpDemon != null)
         {
             RaycastHit2D hit = Physics2D.Raycast(cmpDemon.Torso.position, Vector2.down, 2f, 1<<0);
             if (hit.transform != null && (hit.transform == transform || hit.transform == transform.GetChild(0)))
             {
-                //bool isCounted = false;
-
-                //if (m_spikesData == null)
-                //{
-                //    m_spikesData = new List<SpikesWeightData>();
-                //}
-
-                //for (int i = 0; i < m_spikesData.Count; i++)
-                //{
-                //    //if the demon is already inside the spikes
-                //    if (cmpDemon == m_spikesData[i].AssociatedDemon)
-                //    {
-                //        isCounted = true;
-
-                //        //add the collider to the associated demon's collider list if it isnt already included
-                //        if (!m_spikesData[i].Colliders.Contains(collision.collider) && collision.gameObject.tag != "BodyCollider")
-                //        {
-                //            m_spikesData[i].Colliders.Add(collision.collider);
-                //        }
-                //    }
-                //}
-                //if (!isCounted)
-                //{
-
-                //    m_spikesData.Add(new SpikesWeightData(cmpDemon, collision.collider));
-                    m_enemiesOnPreassurePlate.Add(cmpDemon);
-                    cmpDemon.transform.parent = transform;
-
-                //}
+                m_enemiesOnPreassurePlate.Add(cmpDemon);
+                cmpDemon.transform.parent = transform;
             }
-
-
         }
     }
 
@@ -150,52 +109,12 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
         if (cmpDemon != null)
         {
 
-            //for (int i = 0; i < m_spikesData.Count; i++)
-            //{
-            //    //if the demon is already inside the spikes
-            //    if (cmpDemon == m_spikesData[i].AssociatedDemon)
-            //    {
-
-            //        if (cmpDemon.IsControlledByPlayer)
-            //        {
-            //            m_spikesData.RemoveAt(i);
-            //            m_enemiesOnPreassurePlate.Remove(cmpDemon);
-            //            cmpDemon.transform.parent = null;
-            //            return;
-            //        }
-
-
-            //        //remove the collider from the associated demon's collider list 
-            //        if (m_spikesData[i].Colliders.Contains(collision.collider))
-            //        {
-            //            m_spikesData[i].Colliders.Remove(collision.collider);
-
-            //            //all the limbs have exited the spikes
-            //            if (m_spikesData[i].Colliders.Count == 0)
-            //            {
-            //                m_spikesData.RemoveAt(i);
-            //                m_enemiesOnPreassurePlate.Remove(cmpDemon);
-            //                cmpDemon.transform.parent = null;
-            //            }
-            //            else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].gameObject.layer == m_bodyLayer)
-            //            {
-            //                m_enemiesOnPreassurePlate.Remove(cmpDemon);
-            //                m_spikesData.RemoveAt(i);
-            //                cmpDemon.transform.parent = null;
-            //            }
-            //        }
-            //    }
-            //}
-
-
             if (m_enemiesOnPreassurePlate.Contains(cmpDemon) /*cmpDemon.IsControlledByPlayer*/)
             {
                 m_enemiesOnPreassurePlate.Remove(cmpDemon);
                 cmpDemon.transform.parent = null;
                 return;
             }
-
-
         }
     }
 }
