@@ -299,7 +299,7 @@ public abstract class DemonBase : MonoBehaviour
 
         }
 
-        if(gameObject.scene.name == "PersistentGameObjects")
+        if (gameObject.scene.name == "PersistentGameObjects")
         {
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(gameObject, PossessionManager.Instance.ControlledDemon.gameObject.scene);
         }
@@ -694,8 +694,10 @@ public abstract class DemonBase : MonoBehaviour
         if (PossessionManager.Instance.ControlledDemon)
             CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
 
-        if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
+        //AssignLastMask();
+        if(PossessionManager.Instance.ControlledDemon == this)
         {
+            LevelManager.Instance.MaskIndex = GetMaskIndex();
         }
 
         //m_PossessionCircle.enabled = true;
@@ -820,6 +822,16 @@ public abstract class DemonBase : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, transform.position + Vector3.right, m_dragMovement * Time.deltaTime);
     }
 
+    public int GetMaskIndex()
+    {
+        return m_demonMaskSprite.GetComponent<RandomSpriteAssignation>().MaskIndex;
+    }
+
+    public void AssignLastMask()
+    {
+        if (LevelManager.Instance.MaskIndex != -1)
+            m_demonMaskSprite.GetComponent<RandomSpriteAssignation>().AssignMaskByIndex(LevelManager.Instance.MaskIndex);
+    }
 
     public void SetRagdollNewGravity(float newGravity)
     {

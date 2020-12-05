@@ -251,7 +251,7 @@ public class DestructiblePlatform : MonoBehaviour
             if(collision.GetComponent<Spikes>() != null)
             {
                 GetComponent<Rigidbody2D>().isKinematic = true;
-				print("Hello");
+				//print("Hello");
                 if (!m_willReappear)
                 {
                     GetComponent<Rigidbody2D>().isKinematic = true;
