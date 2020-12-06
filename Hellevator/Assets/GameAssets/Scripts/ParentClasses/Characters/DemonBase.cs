@@ -895,7 +895,7 @@ public abstract class DemonBase : MonoBehaviour
         m_myRgb.isKinematic = active;
         if (!active)
         {
-
+            MyRgb.useFullKinematicContacts = true;
             m_myRgb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
         else
@@ -903,7 +903,7 @@ public abstract class DemonBase : MonoBehaviour
             m_isLerpingToResetBones = false;
             m_myRgb.constraints = RigidbodyConstraints2D.None;
         }
-
+        RagdollLogicCollider.GetComponent<Rigidbody2D>().isKinematic = true;
     }
 
     /// <summary>

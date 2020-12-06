@@ -84,12 +84,13 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.LogError(LayerMask.LayerToName(collision.gameObject.layer));
-        //Debug.LogError(collision.gameObject.name);
+
         if (LayerMask.LayerToName(collision.gameObject.layer) != "Player" && LayerMask.LayerToName(collision.gameObject.layer) != "Body")
             return;
+        //Debug.LogError("In " + collision.gameObject.name);
         DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
         //Debug.LogError(cmpDemon.name);
-        if (cmpDemon != null)
+        if (cmpDemon != null && !m_enemiesOnPreassurePlate.Contains(cmpDemon))
         {
             RaycastHit2D hit = Physics2D.Raycast(cmpDemon.Torso.position, Vector2.down, 2f, 1<<0);
             if (hit.transform != null && (hit.transform == transform || hit.transform == transform.GetChild(0)))
@@ -104,7 +105,7 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
     {
         if (LayerMask.LayerToName(collision.gameObject.layer) != "Player" && LayerMask.LayerToName(collision.gameObject.layer) != "Body")
             return;
-
+        //Debug.LogError("Out "+collision.gameObject.name);
         DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
         if (cmpDemon != null)
         {

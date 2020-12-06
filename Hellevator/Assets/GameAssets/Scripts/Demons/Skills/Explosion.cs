@@ -18,8 +18,8 @@ public class Explosion : MonoBehaviour
     public void CreateExplosion()
     {
         //Debug.DrawLine(transform.position, transform.position + transform.up * m_explosionRadius, Color.red, 2f);
-        m_demonCmp.RagdollLogicCollider.gameObject.SetActive(false);
-
+        //m_demonCmp.RagdollLogicCollider.gameObject.SetActive(false);
+        m_demonCmp.IsPossessionBlocked = true;
         ExplosionVisuals();
         m_demonCmp.enabled = false;
         
