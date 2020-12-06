@@ -279,7 +279,8 @@ public class BasicZombie : DemonBase
 
     public void UnparentBodyParts(float explosionForce)
     {
-        RagdollLogicCollider.gameObject.SetActive(false);
+        //RagdollLogicCollider.gameObject.SetActive(false);
+        IsPossessionBlocked = true;
         for (int i = 0; i < m_limbsToUnparent.Count; i++)
         {
             m_limbsToUnparent[i].transform.parent = null;
@@ -294,7 +295,8 @@ public class BasicZombie : DemonBase
     }
     public Transform UnparentLimbs()
     {
-        RagdollLogicCollider.gameObject.SetActive(false);
+        //RagdollLogicCollider.gameObject.SetActive(false);
+        IsPossessionBlocked = true;
         for (int i = 0; i < m_limbsToUnparent.Count-1; i++)
         {
             m_limbsToUnparent[i].transform.parent = null;

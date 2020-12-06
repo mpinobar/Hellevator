@@ -358,7 +358,7 @@ public class WeightedPreassurePlate : MonoBehaviour
         if (LayerMask.LayerToName(collision.gameObject.layer) != "Player" && LayerMask.LayerToName(collision.gameObject.layer) != "Body")
             return;
         DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
-
+        //Debug.LogError(cmpDemon);
         if (cmpDemon != null)
         {
             //bool isCounted = false;
