@@ -25,7 +25,8 @@ public class CheckPoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
+        DemonBase demon = collision.GetComponentInParent<DemonBase>();
+        if (demon && demon.IsControlledByPlayer)
         {
             ActivateCheckPoint();
             m_opening = true;
