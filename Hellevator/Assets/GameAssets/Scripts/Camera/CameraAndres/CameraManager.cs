@@ -182,7 +182,19 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		StopAllCoroutines();
         StartCoroutine(CameraShake(noise, m_medShakeDuration));
     }
+	public void CameraShakeMediumWithDelay(float time)
+	{
+		StartCoroutine(ShakeMediumAndDelay(time));
+	}
 
+	IEnumerator ShakeMediumAndDelay(float time)
+    {
+		yield return new WaitForSeconds(time);
+		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+		noise.m_AmplitudeGain = m_medShakeAmplitude;
+		StopAllCoroutines();
+		StartCoroutine(CameraShake(noise, m_medShakeDuration));
+	}
 	/// <summary>
 	/// Hace shake de la camara y para al cabo de un tiempo
 	/// </summary>

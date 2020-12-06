@@ -140,9 +140,16 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// </summary>
     public void StartRestartingLevel()
     {
+        StartCoroutine(DelayAndRestart(1.5f));
+    }
+
+    IEnumerator DelayAndRestart(float time)
+    {
+        yield return new WaitForSeconds(time);
         CameraManager.Instance.FadeIn();
         FadeManager.IsRestarting = true;
     }
+
     public void RestartLevel()
     {
         string nameToLoad = "R.1";
