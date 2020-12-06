@@ -69,7 +69,8 @@ public abstract class DemonBase : MonoBehaviour
     [ColorUsage(true, true)]
     /*[SerializeField] */
     private Color                       m_fireColorWhenNotPossessed;
-    [SerializeField] GameObject         overlay;
+    [SerializeField] GameObject         m_overlay;
+    [SerializeField] GameObject         m_trueDeathparticles;
 
     //IAReferences
     [Space]
@@ -246,11 +247,11 @@ public abstract class DemonBase : MonoBehaviour
         //m_initialGlowThickness = m_childSprites[3].material.GetFloat("_Thickness");
         //m_IKManager = GetComponent<IKManager2D>();
 
-        if (overlay)
+        if (m_overlay)
         {
-            overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+            m_overlay.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
 
-            overlay.SetActive(false);
+            m_overlay.SetActive(false);
         }
         else
         {
@@ -768,12 +769,12 @@ public abstract class DemonBase : MonoBehaviour
     IEnumerator LerpPossessionOverlay(bool active)
     {
         m_overlayActive = active;
-        overlay.transform.localScale = Vector3.one * MaximumPossessionRange * 5;
-        SpriteRenderer spr = overlay.GetComponent<SpriteRenderer>();
+        m_overlay.transform.localScale = Vector3.one * MaximumPossessionRange * 5;
+        SpriteRenderer spr = m_overlay.GetComponent<SpriteRenderer>();
         Color aux = spr.color;
         Color endColor = Color.black;
 
-        overlay.SetActive(true);
+        m_overlay.SetActive(true);
         if (active)
         {
             endColor.a = 1;
@@ -792,7 +793,7 @@ public abstract class DemonBase : MonoBehaviour
         spr.color = endColor;
         if (!active)
         {
-            overlay.SetActive(false);
+            m_overlay.SetActive(false);
         }
     }
 
@@ -1030,9 +1031,10 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
-    public void PlayTrueDeathParticles()
+    public void PlayTrueDeathEffects()
     {
-        Debug.LogError("True death");
+        m_trueDeathparticles.SetActive(true);
+        CameraManager.Instance.CameraShakeMediumWithDelay(1);
     }
 
     public void PlayDeathEffects()
