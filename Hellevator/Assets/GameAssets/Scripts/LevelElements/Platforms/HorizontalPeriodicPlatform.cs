@@ -113,8 +113,73 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
             {
                 m_enemiesOnPreassurePlate.Remove(cmpDemon);
                 cmpDemon.transform.parent = null;
+                if (cmpDemon.IsControlledByPlayer)
+                {
+
+                    Vector2 auxVelocity = cmpDemon.MyRgb.velocity;
+                    int dir;
+                    if (m_returningToInitialPosition)
+                    {
+                        if(transform.position.x > m_initialPosition.x)
+                        {
+                            dir = -1;
+                        }
+                        else if (transform.position.x < m_initialPosition.x)
+                        {
+                            dir = 1;
+                        }
+                        else
+                        {
+                            dir = 0;
+                        }
+                    }
+                    else
+                    {
+                        if (transform.position.x > m_endPos.x)
+                        {
+                            dir = -1;
+                        }
+                        else if (transform.position.x < m_endPos.x)
+                        {
+                            dir = 1;
+                        }
+                        else
+                        {
+                            dir = 0;
+                        }
+                    }
+                    //Debug.LogError(dir);
+                    auxVelocity += Vector2.right * dir * m_speed;
+                    //Debug.LogError("Aux velocity: " + auxVelocity);
+                    //cmpDemon.MyRgb.velocity = auxVelocity;
+                    StopAllCoroutines();
+                    StartCoroutine(Inertia((BasicZombie)cmpDemon, auxVelocity.x));
+                    //if (Mathf.Abs(auxVelocity.x) > Mathf.Abs(cmpDemon.MyRgb.velocity.x))
+                    //{
+                    //    cmpDemon.MyRgb.velocity = auxVelocity;
+                    //}
+                }
                 return;
             }
         }
     }
+
+    IEnumerator Inertia(BasicZombie character, float inertialVelocity)
+    {
+        float currentInertia = inertialVelocity;
+        float totalDecayTime = .5f;
+        float decayTime = totalDecayTime;
+
+        while(decayTime > 0)
+        {
+            decayTime -= Time.deltaTime;
+            currentInertia = inertialVelocity * (decayTime / totalDecayTime)*0.25f;
+            //Debug.LogError(currentInertia * 0.25f);
+            character.DragMovement(currentInertia);
+            yield return null;
+        }
+        character.DragMovement(0);
+
+    }
+
 }
