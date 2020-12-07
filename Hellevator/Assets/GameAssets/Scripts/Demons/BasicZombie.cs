@@ -332,7 +332,7 @@ public class BasicZombie : DemonBase
         }
     }
 
-    public void CheckTraversePlatform()
+    public bool CheckTraversePlatform()
     {
         if (IsGrounded())
         {
@@ -341,17 +341,19 @@ public class BasicZombie : DemonBase
             {
                 if (!m_tryingToTraversePlatform)
                 {
-                    m_tryingToTraversePlatform = true;
-                    StartCoroutine(DelayResetInputTraversePlatform(m_waitTimeResetPlatformTraversal));
+                    //m_tryingToTraversePlatform = true;
+                    //StartCoroutine(DelayResetInputTraversePlatform(m_waitTimeResetPlatformTraversal));
                 }
                 else
                 {
                     TraversePlatform(impact.transform);
                     StopAllCoroutines();
                     m_tryingToTraversePlatform = false;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     IEnumerator DelayResetInputTraversePlatform(float time)
@@ -401,6 +403,15 @@ public class BasicZombie : DemonBase
 
     public override void Jump()
     {
+        if(InputManager.Instance.VerticalInputValue < 0)
+        {
+            m_tryingToTraversePlatform = true;
+            bool traversed = CheckTraversePlatform();
+            if (traversed)
+                return;
+        }
+
+
         if (m_canJump)
         {
             if (m_jumpHasBeenPressOnAir)

@@ -40,7 +40,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6107091593830476851}
   serializedVersion: 6
-  lengthInSec: 0.5
+  lengthInSec: 0.25
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -115,7 +115,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.35
+      scalar: 0.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5122,6 +5122,16 @@ PrefabInstance:
         type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
       value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8443696505846755763, guid: 83f1ef56a7bbd4d479f982f13b136313,
+        type: 3}
+      propertyPath: VelocityModule.radial.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8443696505846755763, guid: 83f1ef56a7bbd4d479f982f13b136313,
+        type: 3}
+      propertyPath: lengthInSec
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 9131378202447049751, guid: 83f1ef56a7bbd4d479f982f13b136313,
         type: 3}
