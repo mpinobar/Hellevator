@@ -12,6 +12,7 @@ public class CameraInterestPoint : MonoBehaviour
     [SerializeField] private ActivatedBase m_triggeringObject;
     [SerializeField] private GameObject[] m_objectsToFollow;
     [SerializeField] float[] m_orthographicSizes;
+    [SerializeField] AnimationCurve m_cameraDamping;
     bool m_hasPlayed = false;
     int m_currentIndex = 0;
 
@@ -40,6 +41,7 @@ public class CameraInterestPoint : MonoBehaviour
     {
         float initialOrthographicSize = CameraManager.Instance.CurrentCamera.m_Lens.OrthographicSize;
         InputManager.Instance.ReleasePlayerInput();
+        CinemachineFramingTransposer ftposer = CameraManager.Instance.CurrentCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         m_hasPlayed = true;
         yield return new WaitForSeconds(delay);
         CameraManager.Instance.SetUnlimitedSoftZone(true);
@@ -48,6 +50,7 @@ public class CameraInterestPoint : MonoBehaviour
         while (m_currentIndex < m_objectsToFollow.Length)
         {
             time += Time.deltaTime;
+            ftposer.m_XDamping = ftposer.m_YDamping = m_cameraDamping.Evaluate(time * m_durationPerObject);
             CameraManager.Instance.ChangeOrtographicSizOfCurrentCamera(Mathf.Lerp(CameraManager.Instance.CurrentCamera.m_Lens.OrthographicSize, m_orthographicSizes[m_currentIndex], Time.deltaTime));
             if (time >= m_durationPerObject)
             {
@@ -72,6 +75,8 @@ public class CameraInterestPoint : MonoBehaviour
         CameraManager.Instance.ChangeOrtographicSizOfCurrentCamera(initialOrthographicSize);
         PlayerPrefs.SetInt(m_ID, 1);
         InputManager.Instance.RegainPlayerInput();
+        ftposer.m_XDamping = ftposer.m_YDamping = 1;
+
         yield return new WaitForSeconds(1);
         CameraManager.Instance.SetUnlimitedSoftZone(false);
     }
