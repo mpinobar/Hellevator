@@ -10,19 +10,21 @@ public class Explosion : MonoBehaviour
     [SerializeField] float              m_explosionForce;
     [SerializeField] LayerMask          m_explosionInteractionLayerMask;    
     BasicZombie                         m_demonCmp;
-
+    bool                                m_hasExploded = false;
     private void Start()
     {
         m_demonCmp = GetComponent<BasicZombie>();
     }
     public void CreateExplosion()
     {
+        if (m_hasExploded)
+            return;
         //Debug.DrawLine(transform.position, transform.position + transform.up * m_explosionRadius, Color.red, 2f);
         //m_demonCmp.RagdollLogicCollider.gameObject.SetActive(false);
         m_demonCmp.IsPossessionBlocked = true;
         ExplosionVisuals();
         m_demonCmp.enabled = false;
-        
+        m_hasExploded = true;
         //PossessionManager.Instance.RemoveDemonPossession(transform);
         Collider2D [] colliders = Physics2D.OverlapCircleAll(transform.position,m_explosionRadius,m_explosionInteractionLayerMask);
         DemonBase demonInRange;
@@ -62,12 +64,16 @@ public class Explosion : MonoBehaviour
             }
         }
 
-        m_demonCmp.UnparentBodyParts(m_explosionForce);       
+        m_demonCmp.UnparentBodyParts(m_explosionForce);
+        enabled = false;
         
     }
 
     public void DelayExplosion(float time)
     {
+        if (m_hasExploded)
+            return;
+        //m_hasExploded = true;
         Invoke(nameof(CreateExplosion), time);
     }
 
