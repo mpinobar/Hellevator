@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent (typeof (Collider2D))]
+[RequireComponent(typeof(Collider2D))]
 public class CheckPoint : MonoBehaviour
 {
     string m_sceneToLoad;
@@ -25,7 +25,8 @@ public class CheckPoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
+        DemonBase demon = collision.GetComponentInParent<DemonBase>();
+        if (demon && demon.IsControlledByPlayer)
         {
             ActivateCheckPoint();
             m_opening = true;
@@ -45,7 +46,7 @@ public class CheckPoint : MonoBehaviour
             m_openingValue -= Time.deltaTime;
             m_openingValue = Mathf.Clamp01(m_openingValue);
             m_spr.material.SetFloat("_Opening", m_openingValue);
-            if(m_openingValue <= 0)
+            if (m_openingValue <= 0)
             {
                 m_opening = false;
             }
@@ -67,7 +68,11 @@ public class CheckPoint : MonoBehaviour
         DemonBase spawnedDemon = Instantiate(m_demonToSpawn, transform.position - Vector3.up*2, Quaternion.identity);
         spawnedDemon.enabled = true;
         spawnedDemon.PossessedOnStart = true;
+        spawnedDemon.AssignLastMask();
         ActivateCheckPoint();
+        m_openingValue = 1;
+        m_spr.material.SetFloat("_Active", 1);
+        m_spr.material.SetFloat("_Opening", 1);
         //CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();
     }

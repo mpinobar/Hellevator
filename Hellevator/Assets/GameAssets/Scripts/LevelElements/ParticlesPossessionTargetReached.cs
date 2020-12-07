@@ -9,22 +9,32 @@ public class ParticlesPossessionTargetReached : MonoBehaviour
     [SerializeField] AnimationCurve m_animCurveScale;
     [SerializeField] AnimationCurve m_animCurveAlpha;
     [SerializeField] float m_speed = 2f;
+    [SerializeField] bool m_destroysOnCompleted = true;
+    [SerializeField] float m_delay = 0f;
     Transform m_targetToFollow;
     float m_initialScale;
+    SpriteRenderer spr;
     // Start is called before the first frame update
-    void Awake()
+    IEnumerator Start()
     {
+         spr = GetComponent<SpriteRenderer>();
+        spr.enabled = false;
+        yield return new WaitForSeconds(m_delay);
+        spr.enabled = true;
+
         StartCoroutine(Animate());
     }
 
-    
+
     private IEnumerator Animate()
     {
-        Vector3 scale;
         m_initialScale = transform.localScale.x;
+        Vector3 scale;
+
         float time = 0;
-        SpriteRenderer spr = GetComponent<SpriteRenderer>();
+        
         Color color = spr.color;
+        
         while (time < m_animCurveScale.length)
         {
             color.a = m_animCurveAlpha.Evaluate(time);
@@ -36,7 +46,12 @@ public class ParticlesPossessionTargetReached : MonoBehaviour
             time += Time.unscaledDeltaTime * m_speed;
             yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
         }
-        Destroy(gameObject);
+        if (m_destroysOnCompleted)
+            Destroy(gameObject);
+        else
+        {
+            spr.enabled = false;
+        }
     }
 
     //private IEnumerator AnimateReverse()

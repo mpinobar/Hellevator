@@ -63,6 +63,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	void Start()
     {
         SetupParallax();
+		//StartCoroutine(InAndOut());
     }
 
     public void SetupParallax()
@@ -171,7 +172,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 		noise.m_AmplitudeGain = m_lightShakeAmplitude;
 		StopAllCoroutines();
-		StartCoroutine(StopShaking(noise, m_lightShakeDuration));
+		StartCoroutine(CameraShake(noise, m_lightShakeDuration));
     }
 
 	public void CameraShakeMedium()
@@ -179,11 +180,28 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 		noise.m_AmplitudeGain = m_medShakeAmplitude;
 		StopAllCoroutines();
-        StartCoroutine(StopShaking(noise, m_medShakeDuration));
+        StartCoroutine(CameraShake(noise, m_medShakeDuration));
     }
+	public void CameraShakeMediumWithDelay(float time)
+	{
+		StartCoroutine(ShakeMediumAndDelay(time));
+	}
 
-
-	private IEnumerator StopShaking(CinemachineBasicMultiChannelPerlin noiseCmp, float time)
+	IEnumerator ShakeMediumAndDelay(float time)
+    {
+		yield return new WaitForSeconds(time);
+		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+		noise.m_AmplitudeGain = m_medShakeAmplitude;
+		StopAllCoroutines();
+		StartCoroutine(CameraShake(noise, m_medShakeDuration));
+	}
+	/// <summary>
+	/// Hace shake de la camara y para al cabo de un tiempo
+	/// </summary>
+	/// <param name="noiseCmp">El componente de ruido de la camara</param>
+	/// <param name="time">El tiempo que tarda en parar el shake</param>
+	/// <returns></returns>
+	private IEnumerator CameraShake(CinemachineBasicMultiChannelPerlin noiseCmp, float time)
     {
 		float timeRemaining = time;
 		//float amp = noiseCmp.m_AmplitudeGain;
@@ -195,4 +213,36 @@ public class CameraManager : TemporalSingleton<CameraManager>
         }
 		noiseCmp.m_AmplitudeGain = 0f;
     }
+	IEnumerator InAndOut()
+    {
+		bool goingOut = true;
+		float variance = 0f;
+		float maxVariance = 0.25f;
+		float speed = 0.08f;
+		while (true)
+        {
+            if (goingOut)
+            {
+				PlayerCamera.m_Lens.OrthographicSize += Time.deltaTime*speed;
+				variance += Time.deltaTime * speed;
+				if(variance >= maxVariance)
+                {
+					variance = 0f;
+					goingOut = !goingOut;
+                }
+            }
+            else
+            {
+				PlayerCamera.m_Lens.OrthographicSize -= Time.deltaTime * speed;
+				variance += Time.deltaTime * speed;
+				if (variance >= maxVariance)
+				{
+					variance = 0f;
+					goingOut = !goingOut;
+				}
+			}
+			yield return null;
+        }
+
+    }	
 }

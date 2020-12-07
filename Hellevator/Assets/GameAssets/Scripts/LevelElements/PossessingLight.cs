@@ -146,7 +146,7 @@ public class PossessingLight : MonoBehaviour
         if (m_pausesTime)
         {
             Time.timeScale = 0f;
-            StartCoroutine(ASD());
+            StartCoroutine(PauseTimeLookForAvailableCharacter());
         }
         //Debug.LogError("Possessing light towards " + destinationDemon.name + " from " + originDemon);
 
@@ -175,7 +175,7 @@ public class PossessingLight : MonoBehaviour
     //    m_lightSound = MusicManager.Instance.PlayAudioSFX(m_lightTravelClip, false);
     //}
 
-    private IEnumerator ASD()
+    private IEnumerator PauseTimeLookForAvailableCharacter()
     {
         ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
         for (int i = 0; i < particles.Length; i++)

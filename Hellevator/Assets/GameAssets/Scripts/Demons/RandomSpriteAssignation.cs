@@ -7,9 +7,12 @@ public class RandomSpriteAssignation : MonoBehaviour
     bool m_init;
 
     [SerializeField] Sprite [] m_availableSprites;
+    int m_maskIndex = 0;
+
+    public int MaskIndex { get => m_maskIndex; set => m_maskIndex = value; }
 
     // Start is called before the first frame update
-    void OnEnable()
+    void Start()
     {
         if (!m_init)
         {
@@ -20,16 +23,19 @@ public class RandomSpriteAssignation : MonoBehaviour
 
     private void AssignRandomSprite()
     {
-        if(m_availableSprites.Length > 0)
-        GetComponent<SpriteRenderer>().sprite = m_availableSprites[Random.Range(0, m_availableSprites.Length)];
-    }
-
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.U))
+        if (m_availableSprites.Length > 0)
         {
-            AssignRandomSprite();
+            m_maskIndex = Random.Range(0, m_availableSprites.Length);
+            GetComponent<SpriteRenderer>().sprite = m_availableSprites[m_maskIndex];
         }
+
     }
+
+    public void AssignMaskByIndex(int index)
+    {
+        //Debug.LogError("Index from levelManager: " + index);
+        GetComponent<SpriteRenderer>().sprite = m_availableSprites[index];
+        m_init = true;
+    }
+
 }

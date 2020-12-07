@@ -6,13 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : PersistentSingleton<LevelManager>
 {
-    
+
     [SerializeField] Puzzle[] m_scenePuzzles;
     private List<Vector3> m_checkPoints;
 
     private CheckPoint m_lastCheckPoint;
     private string m_checkPointSceneToLoad;
     private bool m_isRestarting;
+
+    /// <summary>
+    /// Indice de la mascara del penitente que ha muerto.
+    /// </summary>
+    private int m_maskIndex = -1;
 
     AsyncOperation m_loadingScene;
 
@@ -22,7 +27,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     LevelLoadManager m_centralScene;
 
     [SerializeField] GameObject cameraPrefab;
-    
+
     bool m_isSwitchingToNewScene;
     bool m_canLoad;
     string m_newSceneName;
@@ -47,6 +52,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public bool CanLoad { get => m_canLoad; set => m_canLoad = value; }
     public string PreviousScene { get => m_previousScene; set => m_previousScene = value; }
     public string CheckPointSceneToLoad { get => m_checkPointSceneToLoad; set => m_checkPointSceneToLoad = value; }
+    public string NewSceneName { get => m_newSceneName; }
+    public int MaskIndex { get => m_maskIndex; set { /*Debug.LogError(value);*/ m_maskIndex = value; } }
 
     private void Start()
     {
@@ -80,28 +87,28 @@ public class LevelManager : PersistentSingleton<LevelManager>
         m_lastCheckPoint = value;
         m_checkPointSceneToLoad = m_lastCheckPoint.SceneToLoad;
     }
-        
+
 
     private void Update()
     {
-  
+
         if (m_isRestarting)
         {
-            
+
             m_isRestarting = false;
             Time.timeScale = 1;
-            
+
         }
 
         if (m_isSwitchingToNewScene && m_loadingScene.progress >= 0.9f && !FadeManager.IsInTransition)
         {
             m_loadingScene.allowSceneActivation = true;
-           
+
             m_isSwitchingToNewScene = false;
-            
+
         }
     }
-    
+
     private void UnloadCompleted(AsyncOperation obj)
     {
         //PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
@@ -133,9 +140,16 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// </summary>
     public void StartRestartingLevel()
     {
+        StartCoroutine(DelayAndRestart(1.5f));
+    }
+
+    IEnumerator DelayAndRestart(float time)
+    {
+        yield return new WaitForSeconds(time);
         CameraManager.Instance.FadeIn();
         FadeManager.IsRestarting = true;
     }
+
     public void RestartLevel()
     {
         string nameToLoad = "R.1";
@@ -145,14 +159,14 @@ public class LevelManager : PersistentSingleton<LevelManager>
             //en este caso tengo que reiniciar la misma sala en la que he muerto
             nameToLoad = m_lastCheckPoint.SceneToLoad;
         }
-        else if(m_checkPointSceneToLoad != null && m_checkPointSceneToLoad.Length > 0)
+        else if (m_checkPointSceneToLoad != null && m_checkPointSceneToLoad.Length > 0)
         {
             //he muerto en una sala distinta al ultimo checkpoint en el que he muerto
             nameToLoad = m_checkPointSceneToLoad;
         }
         AsyncOperation op = SceneManager.LoadSceneAsync(nameToLoad);
-        if(m_adjacentScenes != null)
-         m_adjacentScenes.Clear();
+        if (m_adjacentScenes != null)
+            m_adjacentScenes.Clear();
         CentralSceneLoadManager = null;
         op.completed += LoadCompletedRestart;
 
@@ -166,16 +180,16 @@ public class LevelManager : PersistentSingleton<LevelManager>
     {
         //Debug.LogError("Has Checkpoint?" + (m_lastCheckPoint != null));
         if (m_checkPoints != null && m_checkPoints.Count > 0)
-        UpdateLastCheckPointReference();
+            UpdateLastCheckPointReference();
         //Debug.LogError("Has Checkpoint?" + (m_lastCheckPoint != null));
 
 
         CameraManager.Instance.CurrentCamera.enabled = false;
-        if(m_lastCheckPoint)
-        CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
+        if (m_lastCheckPoint)
+            CameraManager.Instance.CurrentCamera.transform.SetPositionAndRotation(new Vector3(m_lastCheckPoint.transform.position.x, m_lastCheckPoint.transform.position.y, CameraManager.Instance.CurrentCamera.transform.position.z), CameraManager.Instance.CurrentCamera.transform.rotation);
         CameraManager.Instance.CurrentCamera.enabled = true;
         CameraManager.Instance.SetupParallax();
-        
+
         if (PossessionManager.Instance.ControlledDemon != null)
         {
             PossessionManager.Instance.ControlledDemon.SetNotControlledByPlayer();
@@ -250,26 +264,24 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
     }
 
-    
+
     public void SwitchToAdjacentScene(string newSceneName)
     {
         m_previousScene = PossessionManager.Instance.ControlledDemon.gameObject.scene.name;
         CameraManager.Instance.FadeIn();
         m_newSceneName = newSceneName;
-        m_loadingScene = SceneManager.LoadSceneAsync(newSceneName, LoadSceneMode.Additive);
+        m_loadingScene = SceneManager.LoadSceneAsync(m_newSceneName.Split('_')[0], LoadSceneMode.Additive);
         m_loadingScene.allowSceneActivation = false;
         m_loadingScene.completed += LoadSwitchSceneCompleted;
         m_isSwitchingToNewScene = true;
         FadeManager.IsInTransition = true;
         FadeManager.IsRestarting = false;
         CanLoad = false;
-        
-        
     }
 
     private void LoadSwitchSceneCompleted(AsyncOperation obj)
     {
-        PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
+        PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName.Split('_')[0]));
         CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
         PossessionManager.Instance.RemovePossessionFromExtraDemons();
         SceneManager.UnloadSceneAsync(PreviousScene);

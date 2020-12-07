@@ -38,8 +38,6 @@ public class RagdollLogicalCollider : MonoBehaviour
                     sm.DetachCharacter(m_parentDemon);
                 }
             }
-
         }
-
     }
 }

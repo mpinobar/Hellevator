@@ -25,6 +25,7 @@ public class BasicZombie : DemonBase
     [SerializeField] private float      m_groundCorrectionMultiplier = 3;
     [SerializeField] private float      m_airCorrectionMultiplier = 3;
     [SerializeField] private float      m_waitTimeResetPlatformTraversal = 0.5f;
+    [SerializeField] private float      m_maxFallSpeedVertical = 25f;
     
     private bool m_isOnLadder = false;
     private bool m_hasJumped;
@@ -208,6 +209,10 @@ public class BasicZombie : DemonBase
                 else
                 {
                     MyRgb.gravityScale = m_fourthGravity;
+                    if(MyRgb.velocity.y < -m_maxFallSpeedVertical)
+                    {
+                        MyRgb.velocity = new Vector2(MyRgb.velocity.x, -m_maxFallSpeedVertical);
+                    }
                 }
 
                 ToggleWalkingParticles(false);
@@ -274,7 +279,8 @@ public class BasicZombie : DemonBase
 
     public void UnparentBodyParts(float explosionForce)
     {
-        RagdollLogicCollider.gameObject.SetActive(false);
+        //RagdollLogicCollider.gameObject.SetActive(false);
+        IsPossessionBlocked = true;
         for (int i = 0; i < m_limbsToUnparent.Count; i++)
         {
             m_limbsToUnparent[i].transform.parent = null;
@@ -289,7 +295,8 @@ public class BasicZombie : DemonBase
     }
     public Transform UnparentLimbs()
     {
-        RagdollLogicCollider.gameObject.SetActive(false);
+        //RagdollLogicCollider.gameObject.SetActive(false);
+        IsPossessionBlocked = true;
         for (int i = 0; i < m_limbsToUnparent.Count-1; i++)
         {
             m_limbsToUnparent[i].transform.parent = null;

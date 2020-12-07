@@ -47,6 +47,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     DemonBase m_demonShowingSkull;
 
     [SerializeField] int m_maxDemonsPossessed = 2;
+    [SerializeField] bool m_multiUnlockedFromStart = false;
 
     Boss boss;
 
@@ -65,6 +66,10 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             //PlayerPrefs.SetInt("MultiIsUnlocked", 1);
         }
 
+        if (m_multiUnlockedFromStart)
+        {
+            PlayerPrefs.SetInt("MultiIsUnlocked",1);
+        }
         int hasMultiUnlocked = PlayerPrefs.GetInt("MultiIsUnlocked");
         //		print(hasMultiUnlocked);
         if (hasMultiUnlocked == 0)
@@ -157,7 +162,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         DemonBase demonCmp = currentDemon.GetComponentInParent<DemonBase>();
         //Debug.LogError("possessed character died: " + currentDemon.name);
         if (ControlledDemon == demonCmp)
-        {
+        {            
             //Debug.LogError("it was the main character");
             if (m_extraDemonsControlled == null || m_extraDemonsControlled.Count == 0)
             {
@@ -299,9 +304,9 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 m_multiplePossessionWhenDead = false;
             }
             else if (m_extraDemonsControlled.Count == 0 && ControlledDemon == null)
-            {
+            {                
                 LevelManager.Instance.StartRestartingLevel();
-                ControlledDemon.PlayTrueDeathParticles();
+                ControlledDemon.PlayTrueDeathEffects();
             }
         }
     }
@@ -375,6 +380,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         else
         {
             LevelManager.Instance.StartRestartingLevel();
+            currentDemon.PlayTrueDeathEffects();
         }
     }
 

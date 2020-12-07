@@ -21,16 +21,42 @@ public class LevelLoadManager : MonoBehaviour
         //    //Debug.LogError("Loading scene as the first one: " + ThisSceneName);
         //    LevelManager.Instance.LoadCentralSceneFirstTime(this);
         //}
-        SetControlledCharacterPositionAfterEntering(LevelManager.Instance.PreviousScene);
+        if (LevelManager.Instance.NewSceneName != null && LevelManager.Instance.NewSceneName != "" && LevelManager.Instance.NewSceneName.Split('_') != null && LevelManager.Instance.NewSceneName.Split('_').Length > 1)
+        {
+           // Debug.LogError("1: "+ int.Parse(LevelManager.Instance.NewSceneName.Split('_')[1]));
+
+            SetControlledCharacterPositionAfterEntering(LevelManager.Instance.PreviousScene, int.Parse(LevelManager.Instance.NewSceneName.Split('_')[1]));
+        }
+        else
+        {
+            //Debug.LogError("2");
+            SetControlledCharacterPositionAfterEntering(LevelManager.Instance.PreviousScene);
+        }
         MusicManager.Instance.CheckMusic();
     }
 
     public void SetControlledCharacterPositionAfterEntering(string previousSceneName)
     {
+        //Debug.LogError("Previous: " + previousSceneName);
+        //LevelManager.Instance.PrintSceneName();
         for (int i = 0; i < transform.childCount; i++)
         {
             string triggerLinkedScene = transform.GetChild(i).GetComponent<TriggerSceneChange>().LinkedScene;
             if (triggerLinkedScene == previousSceneName && PossessionManager.Instance.ControlledDemon)
+            {
+                PossessionManager.Instance.ControlledDemon.gameObject.SetActive(true);
+                PossessionManager.Instance.ControlledDemon.transform.position = transform.GetChild(i).GetComponent<TriggerSceneChange>().PositionToSetAfterEntering.position;
+            }
+        }
+    }
+
+    public void SetControlledCharacterPositionAfterEntering(string previousSceneName, int id)
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            string triggerLinkedScene = transform.GetChild(i).GetComponent<TriggerSceneChange>().LinkedScene;
+
+        if (triggerLinkedScene.Split('_')[0] == previousSceneName && PossessionManager.Instance.ControlledDemon && id == int.Parse(triggerLinkedScene.Split('_')[1]))
             {
                 PossessionManager.Instance.ControlledDemon.gameObject.SetActive(true);
                 PossessionManager.Instance.ControlledDemon.transform.position = transform.GetChild(i).GetComponent<TriggerSceneChange>().PositionToSetAfterEntering.position;
