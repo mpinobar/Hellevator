@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class Lever : ActivatedBase
 {
     //[SerializeField] Key key;
     [SerializeField] ButtonActivatedDoor m_doorToUnlock;
     [SerializeField] float m_visualLeverSpeed = 2f;
+    [SerializeField] VideoClip m_clipToPlay;
     bool m_added;
     bool m_activated;
 
@@ -27,6 +29,10 @@ public class Lever : ActivatedBase
             m_doorToUnlock.Activate();
             ChangeLeverVisual();
             m_activated = true;
+            if (m_clipToPlay)
+            {
+                CameraManager.Instance.PlayVideo(m_clipToPlay);
+            }
         }
         
     }
