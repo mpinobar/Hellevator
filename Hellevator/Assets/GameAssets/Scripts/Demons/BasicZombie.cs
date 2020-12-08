@@ -87,6 +87,7 @@ public class BasicZombie : DemonBase
     public float JumpForce { get => m_jumpForce; }
     public bool SoyUnNiñoDeVerdad { get => m_SoyUnNiñoDeVerdad; set => m_SoyUnNiñoDeVerdad = value; }
     public bool TryingToGrabLadder { get => m_tryingToGrabLadder; set => m_tryingToGrabLadder = value; }
+    public bool IsOnLadder { get => m_isOnLadder; }
 
     #endregion
 
@@ -565,10 +566,9 @@ public class BasicZombie : DemonBase
         {
             m_hasJumped = false;
             m_hasDoubleJumped = false;
-            MyRgb.gravityScale = 0f;
-            m_myAnimator.SetBool("OnLadder", onLadder);
-
+            MyRgb.gravityScale = 0f;   
         }
+        m_myAnimator.SetBool("OnLadder", onLadder);
         m_faceCover.SetActive(onLadder);
     }
 
