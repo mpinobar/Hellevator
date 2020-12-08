@@ -47,6 +47,7 @@ public class LevelLoadManager : MonoBehaviour
             {
                 PossessionManager.Instance.ControlledDemon.gameObject.SetActive(true);
                 PossessionManager.Instance.ControlledDemon.transform.position = transform.GetChild(i).GetComponent<TriggerSceneChange>().PositionToSetAfterEntering.position;
+                ((BasicZombie)PossessionManager.Instance.ControlledDemon).SetOnLadder(false);
             }
         }
     }
