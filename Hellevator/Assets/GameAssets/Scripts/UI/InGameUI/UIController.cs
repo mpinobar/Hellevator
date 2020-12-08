@@ -167,15 +167,24 @@ public class UIController : PersistentSingleton<UIController>
             }
         }
 
-        if(xInput == 0)
+        if (xInput == 0)
         {
             m_hasMovedHorizontallyOnMenu = false;
         }
-        if(yInput == 0)
+        if (yInput == 0)
         {
             m_hasMovedVerticallyOnMenu = false;
         }
+    }
 
+    public void TryDiscoverNewZone(string zone)
+    {
+        if (!PlayerPrefs.HasKey(zone) || PlayerPrefs.GetInt(zone) != 2)
+        {
+            //Debug.LogError("Discovering zone " + zone);
+            PlayerPrefs.SetInt(zone, 1);
+            //Debug.LogError(PlayerPrefs.GetInt(zone));
+        }
 
     }
 }

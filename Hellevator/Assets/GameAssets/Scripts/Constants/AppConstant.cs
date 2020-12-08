@@ -17,9 +17,9 @@ public class AppPaths
 
 public class AppScenes
 {
-	public static readonly string 	MAIN_SCENE    = "Menu";
+	public static readonly string 	MENU_SCENE    = "Menu";
 	public static readonly string 	LOADING_SCENE = "Loading";
-	public static readonly string 	LEVEL_01    = "H.1";
+	public static readonly string 	INITIAL_SCENE    = "R.1";
     public static readonly string   LEVEL_COMPLETED = "LevelCompleted";
 }
 

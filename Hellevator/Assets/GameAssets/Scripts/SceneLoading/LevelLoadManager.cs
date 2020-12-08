@@ -16,6 +16,7 @@ public class LevelLoadManager : MonoBehaviour
         //Cursor.visible = false;
         ThisSceneName = gameObject.scene.name;
         LevelManager.Instance.CentralSceneLoadManager = this;
+        UIController.Instance.TryDiscoverNewZone(ThisSceneName);
         //if (LevelManager.Instance.CentralScene == null)
         //{
         //    //Debug.LogError("Loading scene as the first one: " + ThisSceneName);
@@ -46,6 +47,7 @@ public class LevelLoadManager : MonoBehaviour
             {
                 PossessionManager.Instance.ControlledDemon.gameObject.SetActive(true);
                 PossessionManager.Instance.ControlledDemon.transform.position = transform.GetChild(i).GetComponent<TriggerSceneChange>().PositionToSetAfterEntering.position;
+                ((BasicZombie)PossessionManager.Instance.ControlledDemon).SetOnLadder(false);
             }
         }
     }

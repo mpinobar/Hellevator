@@ -33,6 +33,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
     string m_newSceneName;
     string m_previousScene;
 
+    string m_checkpointPlayerPrefsID = "CPScene";
+
     bool m_hasKitchenKey;
     public CheckPoint LastCheckPoint
     {
@@ -55,9 +57,16 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public string NewSceneName { get => m_newSceneName; }
     public int MaskIndex { get => m_maskIndex; set { /*Debug.LogError(value);*/ m_maskIndex = value; } }
 
+    public override void Awake()
+    {
+        base.Awake();
+        if(PlayerPrefs.HasKey(m_checkpointPlayerPrefsID) && PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != null &&PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != "")
+            m_checkPointSceneToLoad = PlayerPrefs.GetString(m_checkpointPlayerPrefsID);
+    }
+
     private void Start()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
     }
 
     /// <summary>
@@ -88,6 +97,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
         m_checkPointSceneToLoad = m_lastCheckPoint.SceneToLoad;
     }
 
+    public void SaveSceneToLoad(string scene)
+    {
+        PlayerPrefs.SetString(m_checkpointPlayerPrefsID, scene);
+    }
 
     private void Update()
     {
@@ -112,7 +125,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     private void UnloadCompleted(AsyncOperation obj)
     {
         //PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName));
-        Debug.LogError("Unloaded successfully");
+        //Debug.LogError("Unloaded successfully");
         //Debug.LogError(PossessionManager.Instance.ControlledDemon.gameObject.scene.name);
 
     }
@@ -152,7 +165,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     public void RestartLevel()
     {
-        string nameToLoad = "R.1";
+        string nameToLoad = AppScenes.INITIAL_SCENE;
 
         if (m_lastCheckPoint)
         {
@@ -202,6 +215,11 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             //Debug.LogError("Trying to spawn player");
             m_lastCheckPoint.SpawnPlayer();
+        }
+        else
+        {
+            //Debug.LogError("Not found checkpoint to spawn player from");
+            FindObjectOfType<CheckPoint>().SpawnPlayer();
         }
         CameraManager.Instance.FadeOut();
         MusicManager.Instance.StartGameplayMusic();
@@ -277,6 +295,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         FadeManager.IsInTransition = true;
         FadeManager.IsRestarting = false;
         CanLoad = false;
+        UIController.Instance.TryDiscoverNewZone(m_newSceneName.Split('_')[0]);
     }
 
     private void LoadSwitchSceneCompleted(AsyncOperation obj)
@@ -290,6 +309,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     public void LoadMainMenu()
     {
-        SceneManager.LoadSceneAsync("Menu");
+        SceneManager.LoadSceneAsync(AppScenes.MENU_SCENE);
     }
 }

@@ -9,6 +9,7 @@ public class KeyActivatedDoor : MonoBehaviour
     [SerializeField] GameObject m_doorClosed;
     [SerializeField] GameObject m_doorOpen;
     [SerializeField] GameObject m_keyNeededText;
+    [SerializeField] string m_associatedMapID;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -48,6 +49,10 @@ public class KeyActivatedDoor : MonoBehaviour
     {
         m_doorClosed.gameObject.SetActive(false);
         m_doorOpen.gameObject.SetActive(true);
+        if(m_associatedMapID != null && m_associatedMapID != "")
+        {
+            PlayerPrefs.SetInt(m_associatedMapID, 1);
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
