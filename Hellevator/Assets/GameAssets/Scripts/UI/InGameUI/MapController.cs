@@ -34,11 +34,30 @@ public class MapController : MonoBehaviour
 
     private void OnEnable()
     {
+        UpdateMap();
         ShowMap();
         //if (!m_showingMap)
         //    ShowMap();
         //else
         //    HideMap();
+    }
+
+    private void UpdateMap()
+    {
+        for (int i = 0; i < m_mapLocations.Count; i++)
+        {
+            //Debug.LogError(m_mapLocations[i].Location + " location has key: " + PlayerPrefs.GetInt(m_mapLocations[i].Location));
+            if (PlayerPrefs.HasKey(m_mapLocations[i].Location) && PlayerPrefs.GetInt(m_mapLocations[i].Location) > 0)
+            {
+                //Debug.LogError("Showing in map zone " + m_mapLocations[i].Location);
+                m_mapLocations[i].ShowLocation();
+            }
+            else
+            {
+                //Debug.LogError("NOT Showing in map zone " + m_mapLocations[i].Location);
+                m_mapLocations[i].HideLocation();
+            }
+        }
     }
 
     private void HideMap()

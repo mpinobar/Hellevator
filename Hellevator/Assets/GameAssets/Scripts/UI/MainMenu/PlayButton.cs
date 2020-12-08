@@ -42,7 +42,8 @@ public class PlayButton : MonoBehaviour
         }
         else
         {
-            LevelManager.Instance.CheckPointSceneToLoad = "R.1";
+            if (!PlayerPrefs.HasKey("CPScene") || PlayerPrefs.GetString("CPScene") == null || PlayerPrefs.GetString("CPScene") == "")
+                LevelManager.Instance.CheckPointSceneToLoad = AppScenes.INITIAL_SCENE;
         }
         
     }

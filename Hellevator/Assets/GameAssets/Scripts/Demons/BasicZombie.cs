@@ -241,41 +241,64 @@ public class BasicZombie : DemonBase
     {
         if (m_skullIndicator)
         {
-
-            if (PossessionManager.Instance.DemonShowingSkull == this && (IsControlledByPlayer || IsInDanger || IsPossessionBlocked))
+            if (PossessionManager.Instance.MultiplePossessionWhenDead && !IsControlledByPlayer)
             {
-                PossessionManager.Instance.DemonShowingSkull = null;
-            }
+                if(PossessionManager.Instance.DemonShowingSkull == this)
+                    PossessionManager.Instance.DemonShowingSkull = null;
 
-            if (IsDead && PossessionManager.Instance.ControlledDemon != null && !IsInDanger && !PossessionManager.Instance.ControllingMultipleDemons && !IsPossessionBlocked)
-            {
                 DistanceToPlayer = Vector2.Distance(m_torso.transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
-                if (DistanceToPlayer <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
+                if (PossessionManager.Instance.CheckBodyInRange(this) && !IsPossessionBlocked && !IsInDanger && IsDead && PossessionManager.Instance.ControlledDemon != null)
                 {
-                    if (PossessionManager.Instance.DemonShowingSkull == null || PossessionManager.Instance.DemonShowingSkull == this || (PossessionManager.Instance.DemonShowingSkull != this && PossessionManager.Instance.DemonShowingSkull.DistanceToPlayer > DistanceToPlayer))
-                    {
-                        PossessionManager.Instance.DemonShowingSkull = this;
-                        m_skullIndicator.SetActive(true);
-                        m_skullIndicator.transform.position = m_torso.transform.position + Vector3.up * m_skullOffset;
-                    }
-                    else
-                    {
-                        m_skullIndicator.SetActive(false);
-                    }
-
+                    m_skullIndicator.SetActive(true);
                 }
                 else
                 {
-
+                    if (PossessionManager.Instance.DemonsShowingSkulls.Contains(this))
+                    {
+                        PossessionManager.Instance.DemonsShowingSkulls.Remove(this);
+                    }
                     m_skullIndicator.SetActive(false);
                 }
+
             }
             else
             {
-                m_skullIndicator.SetActive(false);
+                if (PossessionManager.Instance.DemonShowingSkull == this && (IsControlledByPlayer || IsInDanger || IsPossessionBlocked))
+                {
+                    PossessionManager.Instance.DemonShowingSkull = null;
+                }
+
+                if (IsDead && PossessionManager.Instance.ControlledDemon != null && !IsInDanger && !PossessionManager.Instance.ControllingMultipleDemons && !IsPossessionBlocked)
+                {
+                    DistanceToPlayer = Vector2.Distance(m_torso.transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
+                    if (DistanceToPlayer <= PossessionManager.Instance.ControlledDemon.MaximumPossessionRange)
+                    {
+                        if (PossessionManager.Instance.DemonShowingSkull == null || PossessionManager.Instance.DemonShowingSkull == this || (PossessionManager.Instance.DemonShowingSkull != this && PossessionManager.Instance.DemonShowingSkull.DistanceToPlayer > DistanceToPlayer))
+                        {
+                            PossessionManager.Instance.DemonShowingSkull = this;
+                            m_skullIndicator.SetActive(true);
+                            m_skullIndicator.transform.position = m_torso.transform.position + Vector3.up * m_skullOffset;
+                        }
+                        else
+                        {
+                            m_skullIndicator.SetActive(false);
+                        }
+
+                    }
+                    else
+                    {
+
+                        m_skullIndicator.SetActive(false);
+                    }
+                }
+                else
+                {
+                    m_skullIndicator.SetActive(false);
+                }
             }
+           
         }
-    }
+    }     
 
     public void UnparentBodyParts(float explosionForce)
     {

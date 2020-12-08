@@ -25,7 +25,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     public GameObject PossessionLight
     {
         get
-        { if(m_PossessionLight == null)
+        {
+            if (m_PossessionLight == null)
             {
                 string path = "PossessingLight";
                 m_PossessionLight = (GameObject)Resources.Load(path, typeof(GameObject));
@@ -34,6 +35,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
         set => m_PossessionLight = value;
     }
+
+    public List<DemonBase> DemonsShowingSkulls { get => m_demonsShowingSkulls; set => m_demonsShowingSkulls = value; }
 
     [SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
     [SerializeField] GameObject m_PossessionLight;
@@ -45,6 +48,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     bool m_multiplePossessionWhenDead;
     bool m_multiplePossessionIsUnlocked = false;
     DemonBase m_demonShowingSkull;
+    List<DemonBase> m_demonsShowingSkulls;
 
     [SerializeField] int m_maxDemonsPossessed = 2;
     [SerializeField] bool m_multiUnlockedFromStart = false;
@@ -68,7 +72,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
         if (m_multiUnlockedFromStart)
         {
-            PlayerPrefs.SetInt("MultiIsUnlocked",1);
+            PlayerPrefs.SetInt("MultiIsUnlocked", 1);
         }
         int hasMultiUnlocked = PlayerPrefs.GetInt("MultiIsUnlocked");
         //		print(hasMultiUnlocked);
@@ -162,7 +166,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         DemonBase demonCmp = currentDemon.GetComponentInParent<DemonBase>();
         //Debug.LogError("possessed character died: " + currentDemon.name);
         if (ControlledDemon == demonCmp)
-        {            
+        {
             //Debug.LogError("it was the main character");
             if (m_extraDemonsControlled == null || m_extraDemonsControlled.Count == 0)
             {
@@ -286,6 +290,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             if (m_extraDemonsControlled.Count > 1)
             {
                 m_controllingMultipleDemons = true;
+
                 if (m_extraDemonsControlled.Count > 1 && ControlledDemon == null)
                 {
                     ControlledDemon = m_extraDemonsControlled[0];
@@ -293,7 +298,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 }
                 InputManager.Instance.UpdateExtraDemonsControlled(m_extraDemonsControlled);
                 InputManager.Instance.UpdateDemonReference();
-                m_multiplePossessionWhenDead = false;
+                //m_multiplePossessionWhenDead = false;
             }
             else if (m_extraDemonsControlled.Count == 1)
             {
@@ -301,10 +306,10 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 m_extraDemonsControlled.Remove(ControlledDemon);
                 InputManager.Instance.UpdateExtraDemonsControlled(m_extraDemonsControlled);
                 InputManager.Instance.UpdateDemonReference();
-                m_multiplePossessionWhenDead = false;
+                //m_multiplePossessionWhenDead = false;
             }
             else if (m_extraDemonsControlled.Count == 0 && ControlledDemon == null)
-            {                
+            {
                 LevelManager.Instance.StartRestartingLevel();
                 ControlledDemon.PlayTrueDeathEffects();
             }
@@ -437,5 +442,43 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
     }
 
+    public bool CheckBodyInRange(DemonBase character)
+    {
+        if (m_demonsShowingSkulls == null)
+            m_demonsShowingSkulls = new List<DemonBase>();
+
+        if (m_demonsShowingSkulls.Count < m_maxDemonsPossessed && character.DistanceToPlayer < ControlledDemon.MaximumPossessionRange && !m_demonsShowingSkulls.Contains(character))
+        {
+            m_demonsShowingSkulls.Add(character);
+            return true;
+        }
+        else
+        {
+            if (!m_demonsShowingSkulls.Contains(character))
+            {
+                for (int i = 0; i < m_demonsShowingSkulls.Count; i++)
+                {
+                    if (character.DistanceToPlayer < m_demonsShowingSkulls[i].DistanceToPlayer && character.DistanceToPlayer < ControlledDemon.MaximumPossessionRange)
+                    {
+                        m_demonsShowingSkulls.RemoveAt(i);
+                        m_demonsShowingSkulls.Add(character);
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                if (character.DistanceToPlayer < ControlledDemon.MaximumPossessionRange)
+                    return true;
+                else
+                {
+                    m_demonsShowingSkulls.Remove(character);
+                    return false;
+                }
+            }
+
+        }
+        return false;
+    }
 
 }

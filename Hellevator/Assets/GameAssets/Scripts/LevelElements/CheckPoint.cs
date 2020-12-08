@@ -12,6 +12,7 @@ public class CheckPoint : MonoBehaviour
     [SerializeField] private DemonBase m_demonToSpawn;
     private float m_openingValue;
     SpriteRenderer m_spr;
+    [SerializeField] bool m_savesGameToPlayerPrefs = false;
 
     public string SceneToLoad { get => m_sceneToLoad; set => m_sceneToLoad = value; }
 
@@ -58,6 +59,10 @@ public class CheckPoint : MonoBehaviour
         LevelManager.Instance.SetLastCheckPoint(this);
         GetComponent<SpriteRenderer>().material.SetFloat("_Active", 1);
         GetComponent<SpriteRenderer>().material.SetFloat("_Opening", 0);
+        if (m_savesGameToPlayerPrefs)
+        {
+            LevelManager.Instance.SaveSceneToLoad(SceneToLoad);
+        }
     }
 
     /// <summary>

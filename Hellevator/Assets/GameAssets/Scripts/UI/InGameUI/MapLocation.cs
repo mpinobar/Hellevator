@@ -15,7 +15,7 @@ public class MapLocation : MonoBehaviour
         LocationImage = GetComponent<Image>();
     }
 
-    public string Location { get => m_location; set => m_location = value; }
+    public string Location { get => m_location;}
     public Image LocationImage
     {
         get
@@ -28,13 +28,30 @@ public class MapLocation : MonoBehaviour
         set => m_locationImage = value;
     }
 
+
     public void ActivateLocation()
     {
         LocationImage.color = Color.green;
     }
     public void DeactivateLocation()
     {
+
         LocationImage.color = Color.white;
     }
-
+    public void HideLocation()
+    {
+        LocationImage.enabled = false;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+    public void ShowLocation()
+    {
+        LocationImage.enabled = true;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(true);
+        }
+    }
 }

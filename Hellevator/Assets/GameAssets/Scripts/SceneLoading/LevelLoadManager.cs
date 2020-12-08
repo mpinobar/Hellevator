@@ -16,6 +16,7 @@ public class LevelLoadManager : MonoBehaviour
         //Cursor.visible = false;
         ThisSceneName = gameObject.scene.name;
         LevelManager.Instance.CentralSceneLoadManager = this;
+        UIController.Instance.TryDiscoverNewZone(ThisSceneName);
         //if (LevelManager.Instance.CentralScene == null)
         //{
         //    //Debug.LogError("Loading scene as the first one: " + ThisSceneName);
