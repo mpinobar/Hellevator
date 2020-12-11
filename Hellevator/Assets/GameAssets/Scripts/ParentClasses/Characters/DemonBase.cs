@@ -44,6 +44,7 @@ public abstract class DemonBase : MonoBehaviour
     [Header("Audio")]
     [SerializeField] protected AudioClip m_deathClip;
     [SerializeField] protected AudioClip m_jumpClip;
+    [SerializeField] protected AudioClip m_jumpGruntClip;
     [SerializeField] protected AudioClip m_landingClip;
 
     [Space]
