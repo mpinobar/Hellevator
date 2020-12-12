@@ -11,7 +11,9 @@ public class Explosion : MonoBehaviour
     [SerializeField] LayerMask          m_explosionInteractionLayerMask;    
     BasicZombie                         m_demonCmp;
     bool                                m_hasExploded = false;
-    private void Start()
+	[SerializeField] AudioClip m_explosionClip = null;
+
+	private void Start()
     {
         m_demonCmp = GetComponent<BasicZombie>();
     }
@@ -19,8 +21,9 @@ public class Explosion : MonoBehaviour
     {
         if (m_hasExploded)
             return;
-        //Debug.DrawLine(transform.position, transform.position + transform.up * m_explosionRadius, Color.red, 2f);
-        //m_demonCmp.RagdollLogicCollider.gameObject.SetActive(false);
+		//Debug.DrawLine(transform.position, transform.position + transform.up * m_explosionRadius, Color.red, 2f);
+		//m_demonCmp.RagdollLogicCollider.gameObject.SetActive(false);
+		MusicManager.Instance.PlayAudioSFX(m_explosionClip, false, 2f);
         m_demonCmp.IsPossessionBlocked = true;
         ExplosionVisuals();
         m_demonCmp.enabled = false;
