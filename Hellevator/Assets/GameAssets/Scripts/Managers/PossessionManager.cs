@@ -310,7 +310,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             }
             else if (m_extraDemonsControlled.Count == 0 && ControlledDemon == null)
             {
-                LevelManager.Instance.StartRestartingLevel();
+                LevelManager.Instance.StartRestartingLevelWithDelay();
                 ControlledDemon.PlayTrueDeathEffects();
             }
         }
@@ -384,7 +384,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
         else
         {
-            LevelManager.Instance.StartRestartingLevel();
+            LevelManager.Instance.StartRestartingLevelWithDelay();
             currentDemon.PlayTrueDeathEffects();
         }
     }

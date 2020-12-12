@@ -45,7 +45,10 @@ public class GuidedJumpPlatform : MonoBehaviour
         rgb.gravityScale = 0;
         rgb.isKinematic = true;
         rgb.velocity = Vector2.zero;
-
+        if (m_disappearsAfterOneSecond)
+        {
+            yield return new WaitForSeconds(0.75f);
+        }
         Vector3 posToMove = Vector3.zero;
         Vector3 initPos = characterToMove.position;
         float time = 0;

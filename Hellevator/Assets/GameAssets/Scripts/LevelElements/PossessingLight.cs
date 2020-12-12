@@ -45,7 +45,7 @@ public class PossessingLight : MonoBehaviour
                 if (m_target == null)
                 {
                     m_lightSound.Stop();
-                    LevelManager.Instance.StartRestartingLevel();
+                    LevelManager.Instance.StartRestartingLevelWithDelay();
                 }
                 else
                 {
@@ -191,7 +191,7 @@ public class PossessingLight : MonoBehaviour
                 if (m_target == null)
                 {
                     m_lightSound.Stop();
-                    LevelManager.Instance.StartRestartingLevel();
+                    LevelManager.Instance.StartRestartingLevelWithDelay();
                 }
                 else
                 {
