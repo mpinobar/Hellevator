@@ -35,7 +35,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     string m_checkpointPlayerPrefsID = "CPScene";
 
-    bool m_hasKitchenKey;
+	bool m_hasKitchenKey;
     public CheckPoint LastCheckPoint
     {
         get => m_lastCheckPoint;

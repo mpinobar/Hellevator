@@ -43,6 +43,7 @@ public abstract class DemonBase : MonoBehaviour
     [Space]
     [Header("Audio")]
     [SerializeField] protected AudioClip m_deathClip;
+    [SerializeField] protected AudioClip m_deathClipGasp;
     [SerializeField] protected AudioClip m_jumpClip;
     [SerializeField] protected AudioClip m_jumpGruntClip;
     [SerializeField] protected AudioClip m_landingClip;
@@ -1043,6 +1044,7 @@ public abstract class DemonBase : MonoBehaviour
         if (m_spiritFire.GetComponent<SpriteRenderer>().isVisible)
         {
             MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.35f);
+            MusicManager.Instance.PlayAudioSFX(m_deathClipGasp, false, 1f);
             GetComponent<BloodInstantiate>().InstantiateBlood();
         }
 

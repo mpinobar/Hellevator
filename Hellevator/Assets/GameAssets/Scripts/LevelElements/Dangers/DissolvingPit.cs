@@ -11,12 +11,25 @@ public class DissolvingPit : MonoBehaviour
     [SerializeField] ParticleSystem m_burstParticles;
     [SerializeField] ParticleSystem m_bubblesParticles;
     bool m_demonEatingAnimation;
-    private void Start()
+	bool m_clipIsPlaying = false;
+	float m_currentClipTimer = 0f;
+	float m_clipDuration = 0f;
+
+
+	private void Start()
     {
         m_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-    }
+		m_clipDuration = m_acidClip.length;
+	}
+	private void Update()
+	{
+		if(m_currentClipTimer > 0)
+		{
+			m_currentClipTimer -= Time.deltaTime;
+		}
+	}
 
-    private void OnTriggerEnter2D(Collider2D collision)
+	private void OnTriggerEnter2D(Collider2D collision)
     {
         DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
         if (cmpDemon != null)
@@ -25,7 +38,11 @@ public class DissolvingPit : MonoBehaviour
             {
                 if (m_spriteRenderer.isVisible)
                 {
-                    MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
+					if (m_currentClipTimer <= 0)
+					{
+						MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
+						m_currentClipTimer = m_clipDuration;
+					}
                 }
             }
             //the torso has entered the pit while being a ragdoll
@@ -58,7 +75,8 @@ public class DissolvingPit : MonoBehaviour
     {
         if (!m_demonEatingAnimation)
         {
-            MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
+			
+			//MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
             m_associatedFryingDemon.SetBool("Eat", true);
             m_demonEatingAnimation = true;
 

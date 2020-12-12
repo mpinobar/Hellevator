@@ -7,7 +7,9 @@ public class TriggerSceneChange : MonoBehaviour
     [SerializeField] string m_linkedScene;
     [SerializeField] Transform m_positionToSetAfterEntering;
 
-    public string LinkedScene { get => m_linkedScene; set => m_linkedScene = value; }
+	[SerializeField] AudioClip m_changeSceneSFX = null;
+
+	public string LinkedScene { get => m_linkedScene; set => m_linkedScene = value; }
     public Transform PositionToSetAfterEntering { get => m_positionToSetAfterEntering; set => m_positionToSetAfterEntering = value; }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -17,7 +19,8 @@ public class TriggerSceneChange : MonoBehaviour
         {
             if (demon.IsControlledByPlayer)
             {
-                PossessionManager.Instance.ChangeMainCharacter(demon);
+				MusicManager.Instance.PlayAudioSFX(m_changeSceneSFX, false, 2f);
+				PossessionManager.Instance.ChangeMainCharacter(demon);
                 LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
                 GetComponent<Collider2D>().enabled = false;
                 System.GC.Collect();
