@@ -89,9 +89,10 @@ public class InputManager : PersistentSingleton<InputManager>
                     FeedInputToExtraDemons();
                 }
 
-                if (Input.GetKeyDown(KeyCode.R))
+                if (Input.GetKeyDown(KeyCode.R) && !FadeManager.IsRestarting)
                 {
-                    LevelManager.Instance.StartRestartingLevel();
+                    
+                    LevelManager.Instance.StartRestartingLevelNoDelay();
                 }
             }
             
