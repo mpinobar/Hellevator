@@ -60,7 +60,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public override void Awake()
     {
         base.Awake();
-        if(PlayerPrefs.HasKey(m_checkpointPlayerPrefsID) && PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != null &&PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != "")
+        if (PlayerPrefs.HasKey(m_checkpointPlayerPrefsID) && PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != null && PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != "")
             m_checkPointSceneToLoad = PlayerPrefs.GetString(m_checkpointPlayerPrefsID);
     }
 
@@ -79,8 +79,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             m_checkPoints = new List<Vector3>();
         }
-      
-        if (!m_checkPoints.Contains(value.transform.position)) 
+
+        if (!m_checkPoints.Contains(value.transform.position))
             m_checkPoints.Add(value.transform.position);
 
         m_lastCheckPoint = value;
@@ -213,7 +213,9 @@ public class LevelManager : PersistentSingleton<LevelManager>
         else
         {
             //Debug.LogError("Not found checkpoint to spawn player from");
-            FindObjectOfType<CheckPoint>().SpawnPlayer();
+            CheckPoint cp = FindObjectOfType<CheckPoint>();
+            if (cp)
+                cp.SpawnPlayer();
         }
         CameraManager.Instance.FadeOut();
         MusicManager.Instance.StartGameplayMusic();

@@ -46,7 +46,7 @@ public class TraversablePlatform : MonoBehaviour
         {
             if (cmpDemon == PossessionManager.Instance.ControlledDemon && collision.transform.position.y > transform.position.y)
             {
-                if (!PossessionManager.Instance.MultiplePossessionIsUnlocked)
+                if (!PossessionManager.Instance.MultiplePossessionIsUnlocked && m_canvasShowTutorialTraversePlatform)
                 {
                     InputManager.Instance.IsInInteactionTrigger = true;
                     m_canvasShowTutorialTraversePlatform.SetActive(true);
