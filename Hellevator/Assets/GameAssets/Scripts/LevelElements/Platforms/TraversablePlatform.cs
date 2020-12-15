@@ -41,11 +41,12 @@ public class TraversablePlatform : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if(!PlayerPrefs.HasKey("TutorialTraverse") || PlayerPrefs.GetInt("TutorialTraverse") != 1)
+        DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
+        if (!PlayerPrefs.HasKey("TutorialTraverse") || PlayerPrefs.GetInt("TutorialTraverse") != 1)
         {
-            if (collision.transform.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon && collision.transform.position.y > transform.position.y)
+            if (cmpDemon == PossessionManager.Instance.ControlledDemon && collision.transform.position.y > transform.position.y)
             {
-                if (!PossessionManager.Instance.MultiplePossessionIsUnlocked)
+                if (!PossessionManager.Instance.MultiplePossessionIsUnlocked && m_canvasShowTutorialTraversePlatform)
                 {
                     InputManager.Instance.IsInInteactionTrigger = true;
                     m_canvasShowTutorialTraversePlatform.SetActive(true);
@@ -55,7 +56,19 @@ public class TraversablePlatform : MonoBehaviour
                 }
             }
         }
-        
+
+        if (((BasicZombie)cmpDemon).IsOnLadder)
+        {
+            Traverse();
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        DemonBase cmpDemon = collision.transform.GetComponentInParent<DemonBase>();
+        if (cmpDemon && ((BasicZombie)cmpDemon).IsOnLadder)
+        {
+            Traverse();
+        }
     }
 
 }

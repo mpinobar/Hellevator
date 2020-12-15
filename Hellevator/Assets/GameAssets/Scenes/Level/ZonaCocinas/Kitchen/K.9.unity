@@ -3298,7 +3298,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1040911197}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &639027338
+--- !u!114 &639027334
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3307,13 +3307,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 639027333}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28436af7ac6a6a149b55b765c0b205f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 18ba6e39e9b4b9b43b5f9b67b39b412e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_scenePuzzles:
-  - {fileID: 1815287101}
-  cameraPrefab: {fileID: 8135263280045498653, guid: edb5d90997c5e3c4084aa9c84ea21f52,
-    type: 3}
+  m_ID: K.9.1
+  m_completeWhenActive:
+  - {fileID: 125052736}
+  m_secondaryActivations:
+  - {fileID: 919919784}
+  - {fileID: 583978527}
+  - {fileID: 608937547}
 --- !u!4 &664995255 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1755612017708390015, guid: f218f30ea88c0dd4d9598f5b9726af23,
@@ -6001,7 +6004,7 @@ PrefabInstance:
     - target: {fileID: 3558451554793534631, guid: e73db34c6d0c2b9479f791f44709ec17,
         type: 3}
       propertyPath: m_linkedScene
-      value: K.7
+      value: K.7_2
       objectReference: {fileID: 0}
     - target: {fileID: 3558451554793534634, guid: e73db34c6d0c2b9479f791f44709ec17,
         type: 3}
@@ -10823,31 +10826,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 723222603}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1815287096 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4636515242581871336, guid: 3b4a618082956134baa42682f05fccff,
-    type: 3}
-  m_PrefabInstance: {fileID: 1550719091}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1815287101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815287096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18ba6e39e9b4b9b43b5f9b67b39b412e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ID: K.9.1
-  m_completeWhenActive:
-  - {fileID: 125052736}
-  m_secondaryActivations:
-  - {fileID: 583978527}
-  - {fileID: 608937547}
-  - {fileID: 919919784}
 --- !u!1001 &1816918602
 PrefabInstance:
   m_ObjectHideFlags: 0

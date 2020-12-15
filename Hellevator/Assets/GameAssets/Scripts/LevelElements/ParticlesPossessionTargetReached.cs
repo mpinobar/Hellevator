@@ -17,7 +17,7 @@ public class ParticlesPossessionTargetReached : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
-         spr = GetComponent<SpriteRenderer>();
+        spr = GetComponent<SpriteRenderer>();
         spr.enabled = false;
         yield return new WaitForSeconds(m_delay);
         spr.enabled = true;

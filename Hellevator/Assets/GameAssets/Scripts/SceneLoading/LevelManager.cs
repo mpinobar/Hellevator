@@ -60,7 +60,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public override void Awake()
     {
         base.Awake();
-        if(PlayerPrefs.HasKey(m_checkpointPlayerPrefsID) && PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != null &&PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != "")
+        if (PlayerPrefs.HasKey(m_checkpointPlayerPrefsID) && PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != null && PlayerPrefs.GetString(m_checkpointPlayerPrefsID) != "")
             m_checkPointSceneToLoad = PlayerPrefs.GetString(m_checkpointPlayerPrefsID);
     }
 
@@ -79,20 +79,10 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             m_checkPoints = new List<Vector3>();
         }
-        //bool foundInside = false;
-        //for (int i = 0; i < m_checkPoints.Count; i++)
-        //{
-        //    if (m_checkPoints[i] == value.transform.position)
-        //    {
-        //        foundInside = true;
-        //    }
-        //}
-        //if (!foundInside)
-        //{
-        //    m_checkPoints.Add(value.transform.position);
-        //    m_lastCheckPoint = value;
-        //}
-        m_checkPoints.Add(value.transform.position);
+
+        if (!m_checkPoints.Contains(value.transform.position))
+            m_checkPoints.Add(value.transform.position);
+
         m_lastCheckPoint = value;
         m_checkPointSceneToLoad = m_lastCheckPoint.SceneToLoad;
     }
@@ -151,11 +141,15 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// <summary>
     /// Resets the level and spawns the player at the checkpoints
     /// </summary>
-    public void StartRestartingLevel()
+    public void StartRestartingLevelWithDelay()
     {
-        StartCoroutine(DelayAndRestart(1.5f));
+        StartCoroutine(DelayAndRestart(2.5f));
     }
 
+    public void StartRestartingLevelNoDelay()
+    {
+        StartCoroutine(DelayAndRestart(0));
+    }
     IEnumerator DelayAndRestart(float time)
     {
         yield return new WaitForSeconds(time);
@@ -219,7 +213,9 @@ public class LevelManager : PersistentSingleton<LevelManager>
         else
         {
             //Debug.LogError("Not found checkpoint to spawn player from");
-            FindObjectOfType<CheckPoint>().SpawnPlayer();
+            CheckPoint cp = FindObjectOfType<CheckPoint>();
+            if (cp)
+                cp.SpawnPlayer();
         }
         CameraManager.Instance.FadeOut();
         MusicManager.Instance.StartGameplayMusic();
