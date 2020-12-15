@@ -30,6 +30,8 @@ public class DestructiblePlatform : MonoBehaviour
     List<SpikesWeightData> m_spikesData;
     private List<DemonBase> m_enemiesOnPreassurePlate;
 
+	[SerializeField] AudioClip m_dissapearingClip;
+
     public bool WillReappear { get => m_willReappear; set => m_willReappear = value; }
     public bool TurnsKinematicOnSpikesEnter { get => m_turnsKinematicOnSpikesEnter; set => m_turnsKinematicOnSpikesEnter = value; }
 	public bool TurnsKinematicOnCollisionEnter { get => m_turnsKinematicOnCollisionEnter; set => m_turnsKinematicOnCollisionEnter = value; }
@@ -116,6 +118,7 @@ public class DestructiblePlatform : MonoBehaviour
             if (hit.transform != null && hit.transform == transform)
             {
                 m_destroying = true;
+				MusicManager.Instance.PlayAudioSFX(m_dissapearingClip, false, 1f);
             }
         }
         else

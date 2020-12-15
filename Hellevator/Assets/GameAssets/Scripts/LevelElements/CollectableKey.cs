@@ -6,6 +6,7 @@ public class CollectableKey : MonoBehaviour
 {
     [SerializeField] Key key;
     [SerializeField] bool m_checkPlayerPrefs;
+	[SerializeField] AudioClip m_pickUpClip = null;
 
     private void Start()
     {
@@ -23,9 +24,9 @@ public class CollectableKey : MonoBehaviour
     {
         if (collision.GetComponentInParent<DemonBase>())
         {
+			MusicManager.Instance.PlayAudioSFX(m_pickUpClip, false, 2f);
             if (m_checkPlayerPrefs)
             {
-
                 if (PlayerPrefs.GetInt(key.ToString()) == 0)
                 {
                     Destroy(gameObject);

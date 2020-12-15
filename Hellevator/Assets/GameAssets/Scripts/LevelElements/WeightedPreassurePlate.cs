@@ -46,7 +46,8 @@ public class WeightedPreassurePlate : MonoBehaviour
 
     //Sound variables
     [SerializeField] private AudioClip m_machineClip;
-    private AudioSource m_audioSource;
+	[SerializeField] private AudioClip m_buttonActivatedSFX;
+	private AudioSource m_audioSource;
     Vector3 m_lastLOPosition;
 
     private float m_percentage = 0f;
@@ -234,6 +235,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                         if (m_currentWeight >= m_weightNeeded)
                         {
                             m_preassurePlateActivated = true;
+							MusicManager.Instance.PlayAudioSFX(m_buttonActivatedSFX, false, 2f);
                             if (m_audioSource && !m_audioSource.isPlaying)
                             {
                                 //m_audioSource.Play();

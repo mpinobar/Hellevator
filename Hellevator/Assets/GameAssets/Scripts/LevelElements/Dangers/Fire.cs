@@ -14,8 +14,9 @@ public class Fire : MonoBehaviour
     [SerializeField] LayerMask m_detectionLayer;
     RaycastHit2D[] m_impacts;
 
-    // Start is called before the first frame update
-    void Start()
+	[SerializeField] AudioClip m_bodyBurningClip;
+	// Start is called before the first frame update
+	void Start()
     {
         m_height = transform.localScale.x;
         m_startingPoint = transform.position - Vector3.up * m_height * 0.5f;
@@ -43,13 +44,15 @@ public class Fire : MonoBehaviour
                     if (LayerMask.LayerToName(m_impacts[i].transform.gameObject.layer) == "Player")
                     {
                         m_impacts[i].transform.GetComponent<DemonBase>().Die(false);
+						MusicManager.Instance.PlayAudioSFX(m_bodyBurningClip, false, 1f);
                         Destroy(m_impacts[i].transform.gameObject);
                     }
                     else if (LayerMask.LayerToName(m_impacts[i].transform.gameObject.layer) == "Ragdoll")
                     {
                         if (m_impacts[i].transform.GetComponentInParent<DemonBase>())
                         {
-                            Destroy(m_impacts[i].transform.GetComponentInParent<DemonBase>().gameObject);
+							MusicManager.Instance.PlayAudioSFX(m_bodyBurningClip, false, 1f);
+							Destroy(m_impacts[i].transform.GetComponentInParent<DemonBase>().gameObject);
                         }                        
                     }
                     else

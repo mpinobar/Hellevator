@@ -10,6 +10,7 @@ public class Puzzle : MonoBehaviour
     [SerializeField] ActivatedBase [] m_completeWhenActive;
     [SerializeField] ActivatedBase [] m_secondaryActivations;
 
+	[SerializeField] AudioClip m_clapOnPuzleCompleteClip = null;
     private void OnEnable()
     {
         CheckSolvePuzzle();
@@ -40,7 +41,7 @@ public class Puzzle : MonoBehaviour
             }
         }
         PuzzlesDataManager.SetPuzzleSolved(m_ID);
-
+		MusicManager.Instance.PlayAudioSFX(m_clapOnPuzleCompleteClip, false, 1f);
     }
 
     public void CheckSolvePuzzle()

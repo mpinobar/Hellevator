@@ -11,6 +11,7 @@ public class GuidedJumpPlatform : MonoBehaviour
     [SerializeField] float m_transitionSpeed;
     Collider2D m_collider;
     [SerializeField] bool m_disappearsAfterOneSecond;
+	[SerializeField] AudioClip m_springClip;
 
     private void Awake()
     {
@@ -32,6 +33,7 @@ public class GuidedJumpPlatform : MonoBehaviour
                 StartCoroutine(TransferToDestination(PossessionManager.Instance.ControlledDemon.transform));
 
                 transform.GetChild(1).GetComponent<Animator>().SetTrigger("Active");
+				MusicManager.Instance.PlayAudioSFX(m_springClip, false, 2f);
             }
 
         }

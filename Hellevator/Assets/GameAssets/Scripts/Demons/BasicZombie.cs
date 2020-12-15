@@ -452,6 +452,7 @@ public class BasicZombie : DemonBase
                 m_isHoldingJump = true;
                 m_myAnimator.SetTrigger("Jump");
                 MusicManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
+                MusicManager.Instance.PlayAudioSFX(m_jumpGruntClip, false, 2f);
                 m_isOnLadder = false;
             }
             else if (m_canDoubleJump && !m_hasDoubleJumped)
@@ -461,6 +462,7 @@ public class BasicZombie : DemonBase
                 m_hasDoubleJumped = true;
                 m_myAnimator.SetTrigger("Jump");
                 MusicManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
+                MusicManager.Instance.PlayAudioSFX(m_jumpGruntClip, false, 2f);
             }
             else if (m_hasJumped)
             {
