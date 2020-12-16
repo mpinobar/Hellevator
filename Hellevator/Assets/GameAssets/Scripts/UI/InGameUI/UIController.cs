@@ -16,6 +16,8 @@ public class UIController : PersistentSingleton<UIController>
     [SerializeField] GameObject m_collectiblesPanel;
     [SerializeField] GameObject m_settingsPanel;
 
+    [SerializeField] GameplayUIController m_gameplayPanel;
+
     [Header("Pause buttons references")]
     [SerializeField] Button m_resumeButton;
     [SerializeField] Button m_exitButton;
@@ -56,7 +58,7 @@ public class UIController : PersistentSingleton<UIController>
         m_settingsButton.onClick.AddListener(ShowSettings);
         m_bestiaryButton.onClick.AddListener(ShowBestiary);
         m_exitButton.onClick.AddListener(Exit);
-
+        ShowGameplayUI();
     }
 
     public void Resume()
@@ -65,12 +67,14 @@ public class UIController : PersistentSingleton<UIController>
         {
             m_activePanel.SetActive(false);
         }
-        m_activePanel = null;
         m_canvas.gameObject.SetActive(false);
+        
         Time.timeScale = 1f;
         CameraManager.Instance.HideUIEffects();
         InputManager.Instance.IsInMenu = false;
-
+        //ShowGameplayUI();
+        m_gameplayPanel.gameObject.SetActive(true);
+        m_activePanel = m_gameplayPanel.gameObject;
     }
 
     public void Exit()
@@ -107,6 +111,12 @@ public class UIController : PersistentSingleton<UIController>
         ShowPanel(m_bestiaryPanel);
     }
 
+    public void ShowGameplayUI()
+    {
+        m_canvas.gameObject.SetActive(false);
+        ShowPanel(m_gameplayPanel.gameObject);
+    }
+
     public void ShowPauseMenu()
     {
         if (m_canvas.worldCamera == null)
@@ -124,7 +134,8 @@ public class UIController : PersistentSingleton<UIController>
 
     private void ShowPanel(GameObject panelToShow)
     {
-        m_canvas.gameObject.SetActive(true);
+        if (panelToShow != m_gameplayPanel.gameObject)
+            m_canvas.gameObject.SetActive(true);
         if (panelToShow != m_activePanel)
         {
             if (m_activePanel != null && m_activePanel != m_canvas)
@@ -185,6 +196,15 @@ public class UIController : PersistentSingleton<UIController>
             PlayerPrefs.SetInt(zone, 1);
             //Debug.LogError(PlayerPrefs.GetInt(zone));
         }
+    } 
+    
+    public void PossessionDecisionTime(float time)
+    {
+        m_gameplayPanel.PossessionDecisionTime(time);
+    }
 
+    public void EndDecisionTime()
+    {
+        m_gameplayPanel.HideDecisionTimeBar();
     }
 }

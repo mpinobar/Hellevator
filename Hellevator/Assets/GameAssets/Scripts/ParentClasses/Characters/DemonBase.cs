@@ -1023,7 +1023,8 @@ public abstract class DemonBase : MonoBehaviour
             //Debug.LogError("Player died: " + name);
             UseSkill();
             CameraManager.Instance.CameraShakeMedium();
-            PossessionManager.Instance.RemoveDemonPossession(transform);
+            //PossessionManager.Instance.RemoveDemonPossession(transform);
+            PossessionManager.Instance.StartDeathChoice(transform);
         }
         else if (m_isControlledByIA)
         {
