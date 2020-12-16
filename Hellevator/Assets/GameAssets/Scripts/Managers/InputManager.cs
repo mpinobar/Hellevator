@@ -269,26 +269,37 @@ public class InputManager : PersistentSingleton<InputManager>
     {
         if (!IsInMenu)
         {
-            if (m_currentDemon != null && m_currentDemon.CanMove /*&& !m_isInInteactionTrigger*/)
+            if (PossessionManager.Instance.ChoosingWhenDead)
             {
-                m_currentDemon.ToggleWalkingParticles(false);
-                m_currentDemon.Jump();
-
+                PossessionManager.Instance.ChoosingWhenDead = false;
+                PossessionManager.Instance.MultiplePossessionWhenDead = true;
+                UIController.Instance.EndDecisionTime();
             }
-            //if (m_isInInteactionTrigger)
-            //{
-            //    OnInteract();
-            //}
-            if (PossessionManager.Instance.ControllingMultipleDemons)
+            else
             {
-                for (int i = 0; i < m_extraDemonsControlled.Count; i++)
+                if (m_currentDemon != null && m_currentDemon.CanMove /*&& !m_isInInteactionTrigger*/)
                 {
-                    if (m_extraDemonsControlled[i].CanMove)
+                    m_currentDemon.ToggleWalkingParticles(false);
+                    m_currentDemon.Jump();
+
+                }
+                //if (m_isInInteactionTrigger)
+                //{
+                //    OnInteract();
+                //}
+                if (PossessionManager.Instance.ControllingMultipleDemons)
+                {
+                    for (int i = 0; i < m_extraDemonsControlled.Count; i++)
                     {
-                        m_extraDemonsControlled[i].Jump();
+                        if (m_extraDemonsControlled[i].CanMove)
+                        {
+                            m_extraDemonsControlled[i].Jump();
+                        }
                     }
                 }
             }
+
+           
         }
         else
         {

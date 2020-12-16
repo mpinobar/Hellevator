@@ -15,7 +15,7 @@ public class Petrification : MonoBehaviour
     /// </summary>
     public void Petrify()
     {
-        Rigidbody2D platform = Instantiate(m_prefabToConvertInto, transform.position + Vector3.up*m_verticalOffsetToCreatePlatform, Quaternion.identity, transform).GetComponent<Rigidbody2D>();
+        Rigidbody2D platform = Instantiate(m_prefabToConvertInto, GetComponent<DemonBase>().Torso.position + Vector3.up*m_verticalOffsetToCreatePlatform, Quaternion.identity, transform).GetComponent<Rigidbody2D>();
         platform.transform.parent = null;
 
         if (!m_usesGravity)
