@@ -219,7 +219,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
         //float amp = noiseCmp.m_AmplitudeGain;
         while (timeRemaining > 0)
         {
-            timeRemaining -= Time.deltaTime;
+            timeRemaining -= Time.unscaledDeltaTime;
             noiseCmp.m_AmplitudeGain = Mathf.Lerp(noiseCmp.m_AmplitudeGain, 0, (1 - timeRemaining / time));
             yield return null;
         }

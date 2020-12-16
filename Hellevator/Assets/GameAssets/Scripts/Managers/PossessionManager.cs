@@ -6,7 +6,37 @@ using UnityEngine.UI;
 
 public class PossessionManager : PersistentSingleton<PossessionManager>
 {
-    private DemonBase m_controlledDemon;
+   
+    [SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
+    [SerializeField] GameObject m_PossessionLight;
+    [SerializeField] int m_maxDemonsPossessed = 2;
+    [SerializeField] bool m_multiUnlockedFromStart = false;
+    [SerializeField] float m_decisionTime = 1f;
+    
+    List<DemonBase>         m_extraDemonsControlled;
+    List<DemonBase>         m_demonsShowingSkulls;
+    PossessingLight         m_pLight;
+    DemonBase               m_controlledDemon;
+    DemonBase               m_demonShowingSkull;
+    Boss                    m_boss;
+
+    bool m_controllingMultipleDemons;
+    bool m_multiplePossessionWhenDead;
+    bool m_multiplePossessionIsUnlocked = false;
+    bool m_choosingWhenDead = false;
+    
+
+    #region Properties
+
+    public LayerMask RagdollBodyMask { get => m_ragdollBodyMask; }
+    public bool ControllingMultipleDemons { get => m_controllingMultipleDemons; }
+    public DemonBase DemonShowingSkull { get => m_demonShowingSkull; set => m_demonShowingSkull = value; }
+    public Boss Boss { get => m_boss; set => m_boss = value; }
+    public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
+    public bool MultiplePossessionIsUnlocked { get => m_multiplePossessionIsUnlocked; set => m_multiplePossessionIsUnlocked = value; }
+    public List<DemonBase> DemonsShowingSkulls { get => m_demonsShowingSkulls; set => m_demonsShowingSkulls = value; }
+    public bool ChoosingWhenDead { get => m_choosingWhenDead; set => m_choosingWhenDead = value; }
+
     public DemonBase ControlledDemon
     {
         get => m_controlledDemon; set => m_controlledDemon = value;
@@ -16,12 +46,6 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         get => m_pLight;
         set => m_pLight = value;
     }
-    public LayerMask RagdollBodyMask { get => m_ragdollBodyMask; }
-    public bool ControllingMultipleDemons { get => m_controllingMultipleDemons; }
-    public DemonBase DemonShowingSkull { get => m_demonShowingSkull; set => m_demonShowingSkull = value; }
-    public Boss Boss { get => boss; set => boss = value; }
-    public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
-    public bool MultiplePossessionIsUnlocked { get => m_multiplePossessionIsUnlocked; set => m_multiplePossessionIsUnlocked = value; }
     public GameObject PossessionLight
     {
         get
@@ -36,24 +60,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         set => m_PossessionLight = value;
     }
 
-    public List<DemonBase> DemonsShowingSkulls { get => m_demonsShowingSkulls; set => m_demonsShowingSkulls = value; }
-
-    [SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
-    [SerializeField] GameObject m_PossessionLight;
-    private PossessingLight m_pLight;
-
-    List<DemonBase> m_extraDemonsControlled;
-
-    bool m_controllingMultipleDemons;
-    bool m_multiplePossessionWhenDead;
-    bool m_multiplePossessionIsUnlocked = false;
-    DemonBase m_demonShowingSkull;
-    List<DemonBase> m_demonsShowingSkulls;
-
-    [SerializeField] int m_maxDemonsPossessed = 2;
-    [SerializeField] bool m_multiUnlockedFromStart = false;
-
-    Boss boss;
+    #endregion
 
     private void Start()
     {
@@ -117,7 +124,10 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         return null;
     }
 
-
+    /// <summary>
+    /// Mueve todos los personajes que se están controlando a la escena deseada
+    /// </summary>
+    /// <param name="centralScene">La escena a la que moverlos</param>
     public void MoveDemonsToCentralScene(Scene centralScene)
     {
         if (ControlledDemon.transform.parent == null)
@@ -141,27 +151,28 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
     }
 
+    /// <summary>
+    /// Mueve el personaje que el jugador está controlando a la escena deseada
+    /// </summary>
+    /// <param name="newScene">La escena a la que se quiere mover el personaje</param>
     public void MoveMainCharacterToScene(Scene newScene)
     {
         ControlledDemon.transform.parent = null;
         SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
-        //if (ControlledDemon.transform.parent == null)
-        //{
-        //    SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
-        //}
-        //else
-        //{
-        //    Transform parent = ControlledDemon.transform.parent;
-        //    ControlledDemon.transform.parent = null;
-        //    SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
-        //    ControlledDemon.transform.parent = parent;
-        //}
+        
     }
+
+    /// <summary>
+    /// Elimina el control sobre un personaje determinado
+    /// </summary>
+    /// <param name="currentDemon">El personaje que se quiere eliminar</param>
     public void RemoveDemonPossession(Transform currentDemon)
     {
-        if (boss)
+        Time.timeScale = 1f;
+        //m_choosingWhenDead = true;
+        if (m_boss)
         {
-            boss.ResetTimer();
+            m_boss.ResetTimer();
         }
         DemonBase demonCmp = currentDemon.GetComponentInParent<DemonBase>();
         //Debug.LogError("possessed character died: " + currentDemon.name);
@@ -219,8 +230,50 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 }
             }
         }
+        MultiplePossessionWhenDead = false;
     }
 
+    /// <summary>
+    /// Empieza la decision de escoger a multiples demonios o no en funcion de lo que se haya desbloqueado
+    /// </summary>
+    /// <param name="currentCharacter">Personaje con el que se ha muerto</param>
+    public void StartDeathChoice(Transform currentCharacter)
+    {
+        //Debug.LogError("Death choice");
+        MultiplePossessionWhenDead = false;
+        if (MultiplePossessionIsUnlocked && !ControllingMultipleDemons)
+            StartCoroutine(DelayToChoose(m_decisionTime, currentCharacter));
+        else
+            RemoveDemonPossession(currentCharacter);
+    }
+
+    /// <summary>
+    /// Delay para decidir controlar a uno o multiples personajes
+    /// </summary>
+    /// <param name="time">Tiempo que hay para decidir</param>
+    /// <param name="currentCharacter">El personaje con el que el jugador ha muerto</param>
+    /// <returns></returns>
+    private IEnumerator DelayToChoose(float time, Transform currentCharacter)
+    {
+        UIController.Instance.PossessionDecisionTime(time);
+        //Debug.LogError("StartingToDecide");
+        float decisionTime = time;
+        m_choosingWhenDead = true;
+        Time.timeScale = 0.1f;
+        while (decisionTime > 0 && ChoosingWhenDead)
+        {
+            decisionTime -= Time.unscaledDeltaTime;
+            yield return null;
+        }
+        //Debug.LogError("Decided with time remaining " + decisionTime);
+        RemoveDemonPossession(currentCharacter);
+    }
+
+    /// <summary>
+    /// Posee a los personajes cercanos, priorizando distancia y sin pasarse del limite de radio y de maximo especificado por la variable m_maxDemonsPossessed
+    /// </summary>
+    /// <param name="radiusLimit">Límite de radio en el que buscar</param>
+    /// <param name="currentDemon">Personaje que ha muerto y desde el que centrar la búsqueda</param>
     public void PossessAllDemonsInRange(float radiusLimit, Transform currentDemon)
     {
         //Debug.LogError("Controlling demons in range");
@@ -358,11 +411,9 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     {
         //Debug.LogError("Possessing nearest demon to " + currentDemon.name);
         DemonBase demonToPossess = LookForNearestDemon(radiusLimit, currentDemon.transform);//demonShowingSkull;//
-
+        m_choosingWhenDead = false;
         ControlledDemon = null;
         InputManager.Instance.UpdateDemonReference();
-
-
 
         if (demonToPossess != null)
         {
@@ -389,7 +440,10 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
     }
 
-
+    /// <summary>
+    /// Hace un cambio de un personaje principal (ControlledDemon)
+    /// </summary>
+    /// <param name="newMainCharacter">Nuevo personaje que queremos que sea el principal</param>
     public void ChangeMainCharacter(DemonBase newMainCharacter)
     {
         if (ControllingMultipleDemons)
@@ -403,6 +457,10 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
     }
 
+    /// <summary>
+    /// Le dice al demonio pasado como parámetro que ahora está controlado por el jugador. Engancha el demonio al InputManager
+    /// </summary>
+    /// <param name="demonToPossess">Personaje al que poseer</param>
     public void PossessNewDemon(DemonBase demonToPossess)
     {
         // Debug.LogError("Single possession of demon: " + demonToPossess.name);
@@ -419,7 +477,9 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
     }
 
-
+    /// <summary>
+    /// Elimina un personaje de la lista de personajes extra poseídos
+    /// </summary>
     public void RemovePossessionFromExtraDemons()
     {
         if (ControllingMultipleDemons)
@@ -442,6 +502,11 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
     }
 
+    /// <summary>
+    /// Comprueba si un cuerpo está en rango de posesión y si debería activar su calavera, indicando que es un personaje que se poseería en caso de muerte
+    /// </summary>
+    /// <param name="character">Personaje que se está comprobando con respecto a ControlledDemon</param>
+    /// <returns>Si está a rango y debe mostrar la calavera o no</returns>
     public bool CheckBodyInRange(DemonBase character)
     {
         if (m_demonsShowingSkulls == null)
