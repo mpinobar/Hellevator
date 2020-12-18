@@ -46,8 +46,8 @@ public class WeightedPreassurePlate : MonoBehaviour
 
     //Sound variables
     [SerializeField] private AudioClip m_machineClip;
-	[SerializeField] private AudioClip m_buttonActivatedSFX;
-	private AudioSource m_audioSource;
+    [SerializeField] private AudioClip m_buttonActivatedSFX;
+    private AudioSource m_audioSource;
     Vector3 m_lastLOPosition;
 
     private float m_percentage = 0f;
@@ -235,7 +235,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                         if (m_currentWeight >= m_weightNeeded)
                         {
                             m_preassurePlateActivated = true;
-							MusicManager.Instance.PlayAudioSFX(m_buttonActivatedSFX, false, 2f);
+                            MusicManager.Instance.PlayAudioSFX(m_buttonActivatedSFX, false, 2f);
                             if (m_audioSource && !m_audioSource.isPlaying)
                             {
                                 //m_audioSource.Play();
@@ -392,15 +392,30 @@ public class WeightedPreassurePlate : MonoBehaviour
             //}
 
         }
+        else
+        {
+            RagdollLogicalCollider ragdollCollider = collision.GetComponent<RagdollLogicalCollider>();
+            if (ragdollCollider)
+            {
+                cmpDemon = ragdollCollider.ParentDemon;
+                if (!m_enemiesOnPreassurePlate.Contains(cmpDemon))
+                {
+                    //Debug.LogError("Added demon " + cmpDemon.name + " collider is " + collision.name);
+                    m_enemiesOnPreassurePlate.Add(cmpDemon);
+                    m_currentWeight += cmpDemon.Weight;
+                }
+            }
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (LayerMask.LayerToName(collision.gameObject.layer) != "Player" && LayerMask.LayerToName(collision.gameObject.layer) != "Body")
             return;
-        if (collision.GetComponentInParent<DemonBase>() != null /*&& collision.gameObject.tag != "BodyCollider"*/)
+        DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
+        if (cmpDemon != null /*&& collision.gameObject.tag != "BodyCollider"*/)
         {
-            DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
+
 
             //for (int i = 0; i < m_spikesData.Count; i++)
             //{
@@ -438,6 +453,22 @@ public class WeightedPreassurePlate : MonoBehaviour
                 //m_spikesData.RemoveAt(i);
                 m_enemiesOnPreassurePlate.Remove(cmpDemon);
                 cmpDemon.IsPossessionBlocked = false;
+            }
+        }
+        else
+        {
+            RagdollLogicalCollider ragdollCollider = collision.GetComponent<RagdollLogicalCollider>();
+            if (ragdollCollider)
+            {
+                cmpDemon = ragdollCollider.ParentDemon;
+                if (m_enemiesOnPreassurePlate.Contains(cmpDemon))
+                {
+                    //Debug.LogError("Removed demon " + cmpDemon.name + " collider is " + collision.name);
+                    m_currentWeight -= cmpDemon.Weight;
+                    //m_spikesData.RemoveAt(i);
+                    m_enemiesOnPreassurePlate.Remove(cmpDemon);
+                    cmpDemon.IsPossessionBlocked = false;
+                }
             }
         }
     }
