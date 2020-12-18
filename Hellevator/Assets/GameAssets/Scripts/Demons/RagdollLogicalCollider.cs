@@ -38,6 +38,21 @@ public class RagdollLogicalCollider : MonoBehaviour
                     sm.DetachCharacter(m_parentDemon);
                 }
             }
+            if (!m_parentDemon.enabled)
+            {
+                SpawnerMatadero sm = GetComponentInParent<SpawnerMatadero>();
+                if (sm != null)
+                {                    
+                    sm.DetachPart(transform.parent);
+                    m_parentDemon.enabled = true;
+                }
+            }
         }
+    }
+
+    private void LateUpdate()
+    {
+        m_parentDemon.IsInDanger = true;
+        m_parentDemon.IsPossessionBlocked = true;
     }
 }
