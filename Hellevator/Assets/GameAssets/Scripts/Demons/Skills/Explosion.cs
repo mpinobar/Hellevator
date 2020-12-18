@@ -29,7 +29,7 @@ public class Explosion : MonoBehaviour
         m_demonCmp.enabled = false;
         m_hasExploded = true;
         //PossessionManager.Instance.RemoveDemonPossession(transform);
-        Collider2D [] colliders = Physics2D.OverlapCircleAll(transform.position,m_explosionRadius,m_explosionInteractionLayerMask);
+        Collider2D [] colliders = Physics2D.OverlapCircleAll(m_demonCmp.Torso.position,m_explosionRadius,m_explosionInteractionLayerMask);
         DemonBase demonInRange;
         DestructibleWall explodingWall;
         Boss boss;
@@ -59,7 +59,7 @@ public class Explosion : MonoBehaviour
             }
             if (explodingWall)
             {
-                explodingWall.Explode(transform.position, m_explosionForce);
+                explodingWall.Explode(m_demonCmp.Torso.position, m_explosionForce);
             }
             if (boss)
             {
@@ -83,6 +83,7 @@ public class Explosion : MonoBehaviour
     public void ExplosionVisuals()
     {
         m_explosionParticles.transform.parent = null;
+        m_explosionParticles.transform.position = m_demonCmp.Torso.position;
         m_explosionParticles.Play();
         for (int i = 0; i < m_explosionParticles.transform.childCount; i++)
         {
