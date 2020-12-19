@@ -61,6 +61,18 @@ public class DissolvingPit : MonoBehaviour
                 PlayParticles();
             }
         }
+        else
+        {
+            RagdollLogicalCollider ragdollCollider = collision.transform.GetComponent<RagdollLogicalCollider>();
+            if (ragdollCollider)
+            {
+                if (m_associatedFryingDemon)
+                    StartCoroutine(EatAnimation());
+                Destroy(ragdollCollider.ParentDemon.gameObject);
+                Destroy(ragdollCollider.transform.parent.gameObject);
+                PlayParticles();
+            }
+        }
     }
 
     private void PlayParticles()

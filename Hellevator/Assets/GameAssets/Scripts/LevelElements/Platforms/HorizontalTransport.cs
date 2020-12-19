@@ -75,6 +75,21 @@ public class HorizontalTransport : MonoBehaviour
             //}
 
         }
+        else
+        {
+            RagdollLogicalCollider ragdollCollider = collision.transform.GetComponent<RagdollLogicalCollider>();
+            if (ragdollCollider)
+            {
+                cmpDemon = ragdollCollider.ParentDemon;
+                if (!m_enemiesOnPreassurePlate.Contains(cmpDemon))
+                {
+                    //Debug.LogError("Added demon " + cmpDemon.name + " collider is " + collision.name);
+                    m_enemiesOnPreassurePlate.Add(cmpDemon);
+                    cmpDemon.DragMovement(m_speed * dir);
+                    //m_currentWeight += cmpDemon.Weight;
+                }
+            }
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -125,6 +140,24 @@ public class HorizontalTransport : MonoBehaviour
             //        }
             //    }
             //}
+        }
+        else
+        {
+            RagdollLogicalCollider ragdollCollider = collision.transform.GetComponent<RagdollLogicalCollider>();
+            if (ragdollCollider)
+            {
+                cmpDemon = ragdollCollider.ParentDemon;
+                if (m_enemiesOnPreassurePlate.Contains(cmpDemon))
+                {
+                    //Debug.LogError("Added demon " + cmpDemon.name + " collider is " + collision.name);
+                    StopAllCoroutines();
+                    cmpDemon.DragMovement(0);
+                    StartCoroutine(PushedBodyInertia(cmpDemon));
+                    //m_spikesData.RemoveAt(i);
+                    m_enemiesOnPreassurePlate.Remove(cmpDemon);
+                    //m_currentWeight += cmpDemon.Weight;
+                }
+            }
         }
     }
 
