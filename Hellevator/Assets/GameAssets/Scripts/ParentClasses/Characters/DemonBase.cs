@@ -698,7 +698,7 @@ public abstract class DemonBase : MonoBehaviour
             CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
 
         //AssignLastMask();
-        if(PossessionManager.Instance.ControlledDemon == this)
+        if (PossessionManager.Instance.ControlledDemon == this)
         {
             LevelManager.Instance.MaskIndex = GetMaskIndex();
         }
@@ -822,7 +822,10 @@ public abstract class DemonBase : MonoBehaviour
         {
             m_dragMovement = 0;
         }
-        transform.position = Vector2.MoveTowards(transform.position, transform.position + Vector3.right, m_dragMovement * Time.deltaTime);
+        if (Torso.parent != null && Torso.parent == transform)
+            transform.position = Vector2.MoveTowards(transform.position, transform.position + Vector3.right, m_dragMovement * Time.deltaTime);
+        else
+            Torso.position = Vector2.MoveTowards(Torso.position, Torso.position + Vector3.right, m_dragMovement * Time.deltaTime);
     }
 
     public int GetMaskIndex()
@@ -848,7 +851,8 @@ public abstract class DemonBase : MonoBehaviour
     {
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
-            m_limbsRbds[i].velocity = Vector2.zero;
+            if (m_limbsRbds[i])
+                m_limbsRbds[i].velocity = Vector2.zero;
         }
     }
 
