@@ -9,17 +9,19 @@ public class RagdollLogicalCollider : MonoBehaviour
 
     public DemonBase ParentDemon { get => m_parentDemon; set => m_parentDemon = value; }
 
+    bool m_inParts;
+
     private void Start()
     {
         m_parentDemon = GetComponentInParent<DemonBase>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-    {        
+    {
         if (collision.gameObject.layer == 0 << 0 || collision.gameObject.layer == 1 << 8)
         {
             if (m_parentDemon)
-            {   
+            {
                 //m_parentDemon.Torso
                 //Debug.LogError("Resetting ragdoll velocity of " + m_parentDemon.name);
                 m_parentDemon.ResetRagdollVelocity();
@@ -42,8 +44,9 @@ public class RagdollLogicalCollider : MonoBehaviour
             {
                 SpawnerMatadero sm = GetComponentInParent<SpawnerMatadero>();
                 if (sm != null)
-                {                    
+                {
                     sm.DetachPart(transform.parent);
+                    m_inParts = true;
                     m_parentDemon.enabled = true;
                 }
             }
@@ -52,7 +55,10 @@ public class RagdollLogicalCollider : MonoBehaviour
 
     private void LateUpdate()
     {
-        m_parentDemon.IsInDanger = true;
-        m_parentDemon.IsPossessionBlocked = true;
+        if (m_inParts)
+        {
+            m_parentDemon.IsInDanger = true;
+            m_parentDemon.IsPossessionBlocked = true;
+        }
     }
 }
