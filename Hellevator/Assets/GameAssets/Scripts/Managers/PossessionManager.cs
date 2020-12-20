@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class PossessionManager : PersistentSingleton<PossessionManager>
 {
-   
+
     [SerializeField] LayerMask m_ragdollBodyMask = 1<<8;
     [SerializeField] GameObject m_PossessionLight;
     [SerializeField] int m_maxDemonsPossessed = 2;
     [SerializeField] bool m_multiUnlockedFromStart = false;
     [SerializeField] float m_decisionTime = 1f;
-    
+
     List<DemonBase>         m_extraDemonsControlled;
     List<DemonBase>         m_demonsShowingSkulls;
     PossessingLight         m_pLight;
@@ -24,7 +24,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     bool m_multiplePossessionWhenDead;
     bool m_multiplePossessionIsUnlocked = false;
     bool m_choosingWhenDead = false;
-    
+
 
     #region Properties
 
@@ -159,7 +159,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     {
         ControlledDemon.transform.parent = null;
         SceneManager.MoveGameObjectToScene(ControlledDemon.gameObject, newScene);
-        
+
     }
 
     /// <summary>
@@ -174,7 +174,16 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         {
             m_boss.ResetTimer();
         }
+        bool shouldTurnOff = false;
+        if (!currentDemon.gameObject.activeSelf)
+        {
+            shouldTurnOff = true;
+            currentDemon.gameObject.SetActive(true);
+        }
+        //Debug.LogError(currentDemon.gameObject.activeSelf);
         DemonBase demonCmp = currentDemon.GetComponentInParent<DemonBase>();
+        if (shouldTurnOff)
+            currentDemon.gameObject.SetActive(false);
         //Debug.LogError("possessed character died: " + currentDemon.name);
         if (ControlledDemon == demonCmp)
         {

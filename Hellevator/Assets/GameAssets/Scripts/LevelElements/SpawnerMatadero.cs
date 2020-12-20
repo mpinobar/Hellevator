@@ -112,7 +112,7 @@ public class SpawnerMatadero : MonoBehaviour
             //characterToDetach.SetRagdollNewGravity(1);
             m_attachedParts.Remove(partToDetach);
             partToDetach.GetComponent<Rigidbody2D>().isKinematic = false;
-            Debug.LogError("Detaching part: " + partToDetach.name);
+            //Debug.LogError("Detaching part: " + partToDetach.name);
         }
     }
 
