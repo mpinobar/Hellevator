@@ -34,10 +34,10 @@ public class Petrification : MonoBehaviour
         platform.GetComponent<DestructiblePlatform>().TurnsKinematicOnSpikesEnter = true;
         platform.GetComponent<DestructiblePlatform>().TurnsKinematicOnCollisionEnter = m_platformTurnsKinematicOnCollisionEnter;
         platform.GetComponent<DestructiblePlatform>().WillReappear = false;
-        
+
         //PossessionManager.Instance.RemoveDemonPossession(transform);
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
         //gameObject.SetActive(false);
     }
 }

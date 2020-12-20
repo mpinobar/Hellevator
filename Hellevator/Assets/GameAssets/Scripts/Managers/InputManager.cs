@@ -262,7 +262,7 @@ public class InputManager : PersistentSingleton<InputManager>
 
 	void ToggleMultiplePosseion()
 	{
-		PossessionManager.Instance.ToggleMultiplePossesion();
+		//PossessionManager.Instance.ToggleMultiplePossesion();
 	}
 
     void Jump()
