@@ -21,6 +21,7 @@ public partial class IntroCanvas : MonoBehaviour
     private void Awake()
     {
         m_canvasMenu.SetActive(false);
+        PlayerPrefs.DeleteAll();
         
     }
     // Start is called before the first frame update
