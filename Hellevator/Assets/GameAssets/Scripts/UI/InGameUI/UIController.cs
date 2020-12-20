@@ -68,7 +68,7 @@ public class UIController : PersistentSingleton<UIController>
             m_activePanel.SetActive(false);
         }
         m_canvas.gameObject.SetActive(false);
-        
+
         Time.timeScale = 1f;
         CameraManager.Instance.HideUIEffects();
         InputManager.Instance.IsInMenu = false;
@@ -113,6 +113,10 @@ public class UIController : PersistentSingleton<UIController>
 
     public void ShowGameplayUI()
     {
+        for (int i = 1; i < m_canvas.transform.childCount - 2; i++)
+        {
+            m_canvas.transform.GetChild(i).gameObject.SetActive(false);
+        }
         m_canvas.gameObject.SetActive(false);
         ShowPanel(m_gameplayPanel.gameObject);
     }
@@ -196,8 +200,8 @@ public class UIController : PersistentSingleton<UIController>
             PlayerPrefs.SetInt(zone, 1);
             //Debug.LogError(PlayerPrefs.GetInt(zone));
         }
-    } 
-    
+    }
+
     public void PossessionDecisionTime(float time)
     {
         m_gameplayPanel.PossessionDecisionTime(time);
