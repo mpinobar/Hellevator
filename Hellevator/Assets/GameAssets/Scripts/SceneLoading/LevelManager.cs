@@ -66,8 +66,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void Start()
     {
-        //PlayerPrefs.DeleteAll();
-    }
+		//PlayerPrefs.DeleteAll
+	}
 
     /// <summary>
     /// Checks if the checkpoint has been already entered
@@ -172,7 +172,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
             nameToLoad = m_checkPointSceneToLoad;
         }
         AsyncOperation op = SceneManager.LoadSceneAsync(nameToLoad);
-        if (m_adjacentScenes != null)
+		if (m_adjacentScenes != null)
             m_adjacentScenes.Clear();
         CentralSceneLoadManager = null;
         op.completed += LoadCompletedRestart;
