@@ -32,7 +32,7 @@ public class CallElevatorButton : MonoBehaviour
         if (!active)
         {
             active = true;
-            MusicManager.Instance.PlayAudioSFX(m_buttonSoundClip, false);
+            AudioManager.Instance.PlayAudioSFX(m_buttonSoundClip, false);
             transform.GetChild(0).gameObject.SetActive(false);
             FindObjectOfType<IntroCanvas>().CallElevator();
         }

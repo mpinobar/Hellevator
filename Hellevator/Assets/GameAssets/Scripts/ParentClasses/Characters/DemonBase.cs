@@ -1048,8 +1048,8 @@ public abstract class DemonBase : MonoBehaviour
     {
         if (m_spiritFire.GetComponent<SpriteRenderer>().isVisible)
         {
-            MusicManager.Instance.PlayAudioSFX(m_deathClip, false, 0.35f);
-            MusicManager.Instance.PlayAudioSFX(m_deathClipGasp, false, 1f);
+            AudioManager.Instance.PlayAudioSFX(m_deathClip, false, 0.35f);
+            AudioManager.Instance.PlayAudioSFX(m_deathClipGasp, false, 1f);
             GetComponent<BloodInstantiate>().InstantiateBlood();
         }
 

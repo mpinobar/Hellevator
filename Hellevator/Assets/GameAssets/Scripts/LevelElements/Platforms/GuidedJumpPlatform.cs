@@ -33,7 +33,7 @@ public class GuidedJumpPlatform : MonoBehaviour
                 StartCoroutine(TransferToDestination(PossessionManager.Instance.ControlledDemon.transform));
 
                 transform.GetChild(1).GetComponent<Animator>().SetTrigger("Active");
-				MusicManager.Instance.PlayAudioSFX(m_springClip, false, 2f);
+				AudioManager.Instance.PlayAudioSFX(m_springClip, false, 2f);
             }
 
         }

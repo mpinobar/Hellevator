@@ -65,7 +65,7 @@ public class WeightedPreassurePlate : MonoBehaviour
         {
             m_audioSource.clip = m_machineClip;
             m_audioSource.loop = true;
-            m_audioSource.volume = MusicManager.SfxVolume;
+            m_audioSource.volume = AudioManager.SfxVolume;
             m_audioSource.Stop();
         }
 
@@ -235,7 +235,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                         if (m_currentWeight >= m_weightNeeded)
                         {
                             m_preassurePlateActivated = true;
-                            MusicManager.Instance.PlayAudioSFX(m_buttonActivatedSFX, false, 2f);
+                            AudioManager.Instance.PlayAudioSFX(m_buttonActivatedSFX, false, 2f);
                             if (m_audioSource && !m_audioSource.isPlaying)
                             {
                                 //m_audioSource.Play();

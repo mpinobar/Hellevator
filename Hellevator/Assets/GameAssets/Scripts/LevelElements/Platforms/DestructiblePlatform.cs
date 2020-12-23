@@ -118,7 +118,7 @@ public class DestructiblePlatform : MonoBehaviour
             if (hit.transform != null && hit.transform == transform)
             {
                 m_destroying = true;
-				MusicManager.Instance.PlayAudioSFX(m_dissapearingClip, false, 1f);
+				AudioManager.Instance.PlayAudioSFX(m_dissapearingClip, false, 1f);
             }
         }
         else

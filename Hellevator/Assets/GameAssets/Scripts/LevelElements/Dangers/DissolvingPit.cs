@@ -40,7 +40,7 @@ public class DissolvingPit : MonoBehaviour
                 {
 					if (m_currentClipTimer <= 0)
 					{
-						MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
+						AudioManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
 						m_currentClipTimer = m_clipDuration;
 					}
                 }

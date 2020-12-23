@@ -33,7 +33,7 @@ public class LevelLoadManager : MonoBehaviour
             //Debug.LogError("2");
             SetControlledCharacterPositionAfterEntering(LevelManager.Instance.PreviousScene);
         }
-        MusicManager.Instance.CheckMusic();
+        AudioManager.Instance.CheckMusic();
     }
 
     public void SetControlledCharacterPositionAfterEntering(string previousSceneName)

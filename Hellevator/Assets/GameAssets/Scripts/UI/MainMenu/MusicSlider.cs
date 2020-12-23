@@ -15,7 +15,7 @@ public class MusicSlider : MonoBehaviour
        
     public void ChangeValue()
     {
-        MusicManager.MusicVolume = m_slider.value;
-        MusicManager.Instance.ChangeBGMVolume(m_slider.value);
+        AudioManager.MusicVolume = m_slider.value;
+        AudioManager.Instance.ChangeBGMVolume(m_slider.value);
     }
 }

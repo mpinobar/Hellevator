@@ -15,6 +15,6 @@ public class SFXSlider : MonoBehaviour
 
     public void ChangeValue()
     {
-        MusicManager.SfxVolume = m_slider.value;
+        AudioManager.SfxVolume = m_slider.value;
     }
 }
