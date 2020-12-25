@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Glow : MonoBehaviour
 {
-    [SerializeField]
+    //[SerializeField]
     [ColorUsage(true, true)]
     Color m_currentColor;
     SpriteRenderer m_spriteRenderer;
@@ -18,7 +18,7 @@ public class Glow : MonoBehaviour
     void Start()
     {
         m_spriteRenderer = GetComponent<SpriteRenderer>();
-        m_currentColor = m_spriteRenderer.color;
+        m_currentColor = m_spriteRenderer.material.GetColor("_GlowColor");
 
         m_currentIntensity = m_initialIntensity;
     }
@@ -43,7 +43,7 @@ public class Glow : MonoBehaviour
                 m_glowing = true;
             }
         }
-        m_spriteRenderer.material.SetColor("_MainColor", m_currentColor * m_currentIntensity);
+        m_spriteRenderer.material.SetColor("_GlowColor", m_currentColor * m_currentIntensity);
         //m_currentColor = new Vector4(m_currentColor.r, m_currentColor.g, m_currentColor.b, m_currentIntensity);
     }
 }
