@@ -38,9 +38,9 @@ public class Shelter : MonoBehaviour
                     m_init = true;
                     if (m_audioPruebaBoss != null)
                     {
-                        MusicManager.Instance.StopMusic();
+                        AudioManager.Instance.StopMusic();
                         m_audioPruebaBoss.Play();
-                        m_audioPruebaBoss.volume = MusicManager.MusicVolume;
+                        m_audioPruebaBoss.volume = AudioManager.MusicVolume;
                         //print("AUDIO DE PRUEBAS ESTA SONANDO");
                     }
                 }

@@ -30,7 +30,7 @@ public class PlayButton : MonoBehaviour
 
     public void OnPlayPressed()
     {
-        MusicManager.Instance.PlayAudioSFX(m_buttonSoundClip, false);
+        AudioManager.Instance.PlayAudioSFX(m_buttonSoundClip, false);
         m_canvasController.ChangeState(MenuCameraState.Loading);
         if (m_goesToBoss)
         {

@@ -451,8 +451,8 @@ public class BasicZombie : DemonBase
                 m_coyoteTimeActive = false;
                 m_isHoldingJump = true;
                 m_myAnimator.SetTrigger("Jump");
-                MusicManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
-                MusicManager.Instance.PlayAudioSFX(m_jumpGruntClip, false, 2f);
+                AudioManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
+                AudioManager.Instance.PlayAudioSFX(m_jumpGruntClip, false, 2f);
                 m_isOnLadder = false;
             }
             else if (m_canDoubleJump && !m_hasDoubleJumped)
@@ -461,8 +461,8 @@ public class BasicZombie : DemonBase
                 MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
                 m_hasDoubleJumped = true;
                 m_myAnimator.SetTrigger("Jump");
-                MusicManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
-                MusicManager.Instance.PlayAudioSFX(m_jumpGruntClip, false, 2f);
+                AudioManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
+                AudioManager.Instance.PlayAudioSFX(m_jumpGruntClip, false, 2f);
             }
             else if (m_hasJumped)
             {
@@ -526,7 +526,7 @@ public class BasicZombie : DemonBase
             {
                 if (m_hasJumped)
                 {
-                    MusicManager.Instance.PlayAudioSFX(m_landingClip, false, 0.25f);
+                    AudioManager.Instance.PlayAudioSFX(m_landingClip, false, 0.25f);
                     m_jumpLandParticles.Play();
                     m_isJumping = false;
                 }

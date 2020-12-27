@@ -41,7 +41,7 @@ public class Puzzle : MonoBehaviour
             }
         }
         PuzzlesDataManager.SetPuzzleSolved(m_ID);
-		MusicManager.Instance.PlayAudioSFX(m_clapOnPuzleCompleteClip, false, 1f);
+		AudioManager.Instance.PlayAudioSFX(m_clapOnPuzleCompleteClip, false, 1f);
     }
 
     public void CheckSolvePuzzle()

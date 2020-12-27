@@ -218,7 +218,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
                 cp.SpawnPlayer();
         }
         CameraManager.Instance.FadeOut();
-        MusicManager.Instance.StartGameplayMusic();
+        AudioManager.Instance.StartGameplayMusic();
     }
 
 

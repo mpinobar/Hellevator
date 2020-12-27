@@ -31,10 +31,11 @@ public class Fire : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.DrawRay(m_startingPoint, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
-        //Debug.DrawRay(m_startingPoint - (m_size * 0.5f) * Vector2.right, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
-        //Debug.DrawRay(m_startingPoint + (m_size * 0.5f) * Vector2.right, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
-
+#if UNITY_EDITOR
+        Debug.DrawRay(m_startingPoint, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
+        Debug.DrawRay(m_startingPoint - (m_size * 0.5f) * Vector2.right, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
+        Debug.DrawRay(m_startingPoint + (m_size * 0.5f) * Vector2.right, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
+#endif
         m_impacts = Physics2D.BoxCastAll(m_startingPoint, m_size, 0, m_endPoint - m_startingPoint, m_height * m_currentFireAltitude, m_detectionLayer);
         if (m_impacts.Length > 0)
         {
@@ -48,7 +49,7 @@ public class Fire : MonoBehaviour
                         if (!m_hasPlayedAudio)
                         {
                             StartCoroutine(ResetPlayedAudio(1));
-                            MusicManager.Instance.PlayAudioSFX(m_bodyBurningClip, false, 1f);
+                            AudioManager.Instance.PlayAudioSFX(m_bodyBurningClip, false, 1f);
                         }
                         Destroy(m_impacts[i].transform.gameObject, 1f);
                     }
@@ -59,7 +60,7 @@ public class Fire : MonoBehaviour
                             if (!m_hasPlayedAudio)
                             {
                                 StartCoroutine(ResetPlayedAudio(1));
-                                MusicManager.Instance.PlayAudioSFX(m_bodyBurningClip, false, 1f);
+                                AudioManager.Instance.PlayAudioSFX(m_bodyBurningClip, false, 1f);
                             }
                             Destroy(m_impacts[i].transform.GetComponentInParent<DemonBase>().gameObject, 1f);
                         }
@@ -80,6 +81,7 @@ public class Fire : MonoBehaviour
             m_spriteRenderer.SetPropertyBlock(m_propertyBlock);
         }
     }
+    
     IEnumerator ResetPlayedAudio(float time)
     {
         yield return new WaitForSeconds(time);

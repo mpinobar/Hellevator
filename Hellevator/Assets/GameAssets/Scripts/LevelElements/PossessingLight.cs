@@ -63,7 +63,7 @@ public class PossessingLight : MonoBehaviour
                     m_desiredPosition = m_initialPosition + (m_lightTarget.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
 
                     m_distancePercentage = Vector2.Distance(m_desiredPosition, m_lightTarget.position) / m_initialDistance;
-                    m_lightSound.volume = m_distancePercentage * MusicManager.SfxVolume;
+                    m_lightSound.volume = m_distancePercentage * AudioManager.SfxVolume;
                     //transform.up = -(m_target.Torso.position - transform.position);
 
                     transform.position = m_desiredPosition + m_sidewaysVector * m_sidewaysMovement.Evaluate(/*m_distancePercentage*/m_forwardMovementTimer) * m_zigZagMovementAmplitude /** m_distancePercentage*/;
@@ -90,7 +90,7 @@ public class PossessingLight : MonoBehaviour
                     m_desiredPosition = m_initialPosition + (m_target.Torso.transform.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
 
                     m_distancePercentage = Vector2.Distance(m_desiredPosition, m_target.Torso.transform.position) / m_initialDistance;
-                    m_lightSound.volume = m_distancePercentage * MusicManager.SfxVolume;
+                    m_lightSound.volume = m_distancePercentage * AudioManager.SfxVolume;
                     //transform.up = -(m_target.Torso.position - transform.position);
 
                     transform.position = m_desiredPosition + m_sidewaysVector * m_sidewaysMovement.Evaluate(/*m_distancePercentage*/m_forwardMovementTimer) * m_zigZagMovementAmplitude /** m_distancePercentage*/;
@@ -119,7 +119,7 @@ public class PossessingLight : MonoBehaviour
         m_lastDemonPossessionRange = lastDemonPossessionRange;
         m_travelling = true;
         m_desiredPosition = transform.position;
-        m_lightSound = MusicManager.Instance.PlayAudioSFX(m_lightTravelClip, false);
+        m_lightSound = AudioManager.Instance.PlayAudioSFX(m_lightTravelClip, false);
         m_initialDistance = Vector2.Distance(transform.position, m_target.transform.position);
 
         Collider2D col = Physics2D.OverlapCircle(transform.position,m_initialDistance,m_lightTravelPoints);
@@ -209,7 +209,7 @@ public class PossessingLight : MonoBehaviour
                     m_desiredPosition = m_initialPosition + (m_lightTarget.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
 
                     m_distancePercentage = Vector2.Distance(m_desiredPosition, m_lightTarget.position) / m_initialDistance;
-                    m_lightSound.volume = m_distancePercentage * MusicManager.SfxVolume;
+                    m_lightSound.volume = m_distancePercentage * AudioManager.SfxVolume;
                     //transform.up = -(m_target.Torso.position - transform.position);
 
                     transform.position = m_desiredPosition + m_sidewaysVector * m_sidewaysMovement.Evaluate(/*m_distancePercentage*/m_forwardMovementTimer) * m_zigZagMovementAmplitude /** m_distancePercentage*/;
@@ -236,7 +236,7 @@ public class PossessingLight : MonoBehaviour
                     m_desiredPosition = m_initialPosition + (m_target.Torso.transform.position - m_initialPosition) * m_forwardMovement.Evaluate(m_forwardMovementTimer);
 
                     m_distancePercentage = Vector2.Distance(m_desiredPosition, m_target.Torso.transform.position) / m_initialDistance;
-                    m_lightSound.volume = m_distancePercentage * MusicManager.SfxVolume;
+                    m_lightSound.volume = m_distancePercentage * AudioManager.SfxVolume;
                     //transform.up = -(m_target.Torso.position - transform.position);
 
                     transform.position = m_desiredPosition + m_sidewaysVector * m_sidewaysMovement.Evaluate(/*m_distancePercentage*/m_forwardMovementTimer) * m_zigZagMovementAmplitude /** m_distancePercentage*/;

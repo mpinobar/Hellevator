@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MusicManager : PersistentSingleton<MusicManager>
+public class AudioManager : PersistentSingleton<AudioManager>
 {
     [Range (0,1)]
     [SerializeField] static float m_sfxVolume = 0.25f;
@@ -15,6 +15,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
     AudioSource m_BGM;
     float m_spatialBlendSFX = 0.35f;
     int m_musicClipIndex;
+       
 
     public static float MusicVolume
     {
@@ -60,37 +61,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
         if (m_BGM)
             m_BGM.Stop();
     }
-    private void Update()
-    {
-
-        //if (Input.GetKeyDown(KeyCode.G))
-        //{
-        //    QueueOutOfTuneClip();
-        //}
-        //if (!m_BGM.isPlaying && m_backgroundMusicClips != null)
-        //{
-        //    //int aux = m_currentBGMClip;
-        //    //while (aux == m_currentBGMClip && m_backgroundMusicClips.Count > 1)
-        //    //{
-        //    //    m_currentBGMClip = Random.Range(0, m_backgroundMusicClips.Count);
-        //    //}
-
-        //    m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
-        //    //m_musicClipIndex = (m_musicClipIndex + 1) % Mathf.Min(2, m_backgroundMusicClips.Count);
-        //    m_BGM.Play();
-        //}
-
-
-        int d = 0;
-        for (int i = 0; i < m_sourcesList.Count; i++)
-        {
-            if (!m_sourcesList[i].isPlaying)
-            {
-                d++;
-            }
-        }
-    }
-
+    
     public void StartGameplayMusic()
     {
         if (m_backgroundMusicClips != null && m_backgroundMusicClips.Count > 0)
@@ -156,6 +127,9 @@ public class MusicManager : PersistentSingleton<MusicManager>
 
             for (int i = 0; i < m_sourcesList.Count; i++)
             {
+                if (m_sourcesList[i].isPlaying && m_sourcesList[i].clip == clip)
+                    return null;
+
                 if (!m_sourcesList[i].isPlaying)
                 {
                     m_sourcesList[i].clip = clip;
@@ -181,7 +155,7 @@ public class MusicManager : PersistentSingleton<MusicManager>
         {
             m_sourcesList = new List<AudioSource>();
         }
-
+        float volume = volumeModifier;
         if (m_sourcesList.Count == 0)
         {
             CreateAudioSourceAndSetParametersForSFX(clip, looping);
@@ -192,10 +166,15 @@ public class MusicManager : PersistentSingleton<MusicManager>
 
             for (int i = 0; i < m_sourcesList.Count; i++)
             {
+                if (m_sourcesList[i].isPlaying && m_sourcesList[i].clip == clip)
+                {
+                    m_sourcesList[i].volume = m_sfxVolume * 0.5f * volumeModifier;
+                    volume *= 0.25f;
+                }
                 if (!m_sourcesList[i].isPlaying)
                 {
                     m_sourcesList[i].clip = clip;
-                    m_sourcesList[i].volume = m_sfxVolume * volumeModifier;
+                    m_sourcesList[i].volume = m_sfxVolume * volume;
                     m_sourcesList[i].loop = looping;
                     m_sourcesList[i].spatialBlend = m_spatialBlendSFX;
                     m_sourcesList[i].Play();
