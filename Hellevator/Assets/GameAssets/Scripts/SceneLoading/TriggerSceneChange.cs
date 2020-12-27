@@ -19,7 +19,7 @@ public class TriggerSceneChange : MonoBehaviour
         {
             if (demon.IsControlledByPlayer)
             {
-				MusicManager.Instance.PlayAudioSFX(m_changeSceneSFX, false, 2f);
+				AudioManager.Instance.PlayAudioSFX(m_changeSceneSFX, false, 2f);
 				PossessionManager.Instance.ChangeMainCharacter(demon);
                 LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
                 GetComponent<Collider2D>().enabled = false;
