@@ -65,6 +65,7 @@ public class Paralax : MonoBehaviour
     {
 		if (m_paralaxIsSetUp)
 		{
+			if(!m_camera)
 			m_camera = Camera.main.transform;
 
 			////Calculo de la nueva escala del fondo segun el ortographic size de la cámara 
