@@ -25,9 +25,7 @@ public class Paralax : MonoBehaviour
 	float worldScreenWidth = 0f;
 
 	int indexParalax = 0;
-
-
-
+	
 	float cameraDistMoved, previousCameraPosition, movedDistance = 0f;
 
 	private bool m_paralaxIsSetUp = false;
@@ -54,7 +52,7 @@ public class Paralax : MonoBehaviour
 
 		worldScreenHeight = m_cmpCamera.orthographicSize * 2.0f;
 		worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
-
+			
 
 		m_ratioX = m_lengthOG / worldScreenWidth;
 		m_ratioY = m_heightOG / worldScreenHeight;
@@ -93,7 +91,7 @@ public class Paralax : MonoBehaviour
 			cameraDistMoved = m_camera.transform.position.x - previousCameraPosition;
 			previousCameraPosition = m_camera.transform.position.x;
 
-			this.transform.position = new Vector3(this.transform.position.x + cameraDistMoved * m_parallaxSpeed, m_camera.position.y, this.transform.position.z);
+			this.transform.position = new Vector3(this.transform.position.x + cameraDistMoved * m_parallaxSpeed, m_camera.transform.position.y, this.transform.position.z);
 
 			//this.transform.Translate(new Vector3(cameraDistMoved * m_parallaxSpeed, 0, 0));
 			//m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);
