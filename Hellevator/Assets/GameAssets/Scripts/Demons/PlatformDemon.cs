@@ -22,6 +22,7 @@ public class PlatformDemon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(PossessionManager.Instance.ControlledDemon)
         m_animator.SetBool("Ready", Vector2.Distance(transform.position, PossessionManager.Instance.ControlledDemon.transform.position) < m_distanceToReady);
     }
 

@@ -1041,7 +1041,7 @@ public abstract class DemonBase : MonoBehaviour
     public void PlayTrueDeathEffects()
     {
         m_trueDeathparticles.SetActive(true);
-        CameraManager.Instance.CameraShakeMediumWithDelay(2);
+        CameraManager.Instance.CameraShakeMediumWithDelay(2f);
     }
 
     public void PlayDeathEffects()
