@@ -50,6 +50,7 @@ public class DissolvingPit : MonoBehaviour
             {
                 if (m_associatedFryingDemon)
                     StartCoroutine(EatAnimation());
+                cmpDemon.Die(true);
                 Destroy(cmpDemon.gameObject);
                 PlayParticles();
             }
