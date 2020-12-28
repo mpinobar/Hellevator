@@ -25,9 +25,7 @@ public class Paralax : MonoBehaviour
 	float worldScreenWidth = 0f;
 
 	int indexParalax = 0;
-
-
-
+	
 	float cameraDistMoved, previousCameraPosition, movedDistance = 0f;
 
 	private bool m_paralaxIsSetUp = false;
@@ -54,7 +52,7 @@ public class Paralax : MonoBehaviour
 
 		worldScreenHeight = m_cmpCamera.orthographicSize * 2.0f;
 		worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
-
+			
 
 		m_ratioX = m_lengthOG / worldScreenWidth;
 		m_ratioY = m_heightOG / worldScreenHeight;
@@ -65,25 +63,26 @@ public class Paralax : MonoBehaviour
     {
 		if (m_paralaxIsSetUp)
 		{
+			if(!m_camera)
 			m_camera = Camera.main.transform;
 
 			////Calculo de la nueva escala del fondo segun el ortographic size de la cámara 
 			m_length = this.GetComponentInChildren<SpriteRenderer>().bounds.size.x;
 			m_height = this.GetComponentInChildren<SpriteRenderer>().bounds.size.y;
 
-			worldScreenHeight = m_cmpCamera.orthographicSize * 2.0f;
-			worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
+			//worldScreenHeight = m_cmpCamera.orthographicSize * 2.0f;
+			//worldScreenWidth = worldScreenHeight / Screen.height * Screen.width;
 
-			for (int i = 0; i < m_backgrounds.Length; i++)
-			{
-				Vector3 localScale = m_backgrounds[i].transform.localScale;
+			//for (int i = 0; i < m_backgrounds.Length; i++)
+			//{
+			//	Vector3 localScale = m_backgrounds[i].transform.localScale;
 
-				localScale.y = m_ratioY * worldScreenHeight / m_heightOG;
-				localScale.x = m_ratioX * worldScreenWidth / m_lengthOG;
+			//	localScale.y = m_ratioY * worldScreenHeight / m_heightOG;
+			//	localScale.x = m_ratioX * worldScreenWidth / m_lengthOG;
 
-				m_backgrounds[i].transform.localScale = localScale;
-				m_backgrounds[i].transform.localPosition = new Vector3(m_backgrounds[i].transform.localPosition.x, 0, m_backgrounds[i].transform.localPosition.z);
-			}
+			//	m_backgrounds[i].transform.localScale = localScale;
+			//	m_backgrounds[i].transform.localPosition = new Vector3(m_backgrounds[i].transform.localPosition.x, 0, m_backgrounds[i].transform.localPosition.z);
+			//}
 
 
 			//Movimiento del fondo. 
@@ -92,7 +91,7 @@ public class Paralax : MonoBehaviour
 			cameraDistMoved = m_camera.transform.position.x - previousCameraPosition;
 			previousCameraPosition = m_camera.transform.position.x;
 
-			this.transform.position = new Vector3(this.transform.position.x + cameraDistMoved * m_parallaxSpeed, m_camera.position.y, this.transform.position.z);
+			this.transform.position = new Vector3(this.transform.position.x + cameraDistMoved * m_parallaxSpeed, m_camera.transform.position.y, this.transform.position.z);
 
 			//this.transform.Translate(new Vector3(cameraDistMoved * m_parallaxSpeed, 0, 0));
 			//m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);

@@ -1007,7 +1007,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public virtual void Die(bool playEffects)
     {
-
+        
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         HidePossessionRange();
@@ -1024,10 +1024,12 @@ public abstract class DemonBase : MonoBehaviour
 
         if (m_isControlledByPlayer)
         {
-            //Debug.LogError("Player died: " + name);
+          //Debug.LogError("Player died: " + name);
             UseSkill();
             CameraManager.Instance.CameraShakeMedium();
             //PossessionManager.Instance.RemoveDemonPossession(transform);
+            //SetNotControlledByPlayer();
+            CanMove = false;
             PossessionManager.Instance.StartDeathChoice(transform);
         }
         else if (m_isControlledByIA)
@@ -1041,7 +1043,7 @@ public abstract class DemonBase : MonoBehaviour
     public void PlayTrueDeathEffects()
     {
         m_trueDeathparticles.SetActive(true);
-        CameraManager.Instance.CameraShakeMediumWithDelay(2);
+        CameraManager.Instance.CameraShakeMediumWithDelay(2f);
     }
 
     public void PlayDeathEffects()
