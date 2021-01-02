@@ -101,10 +101,10 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             FeedInputToMenuNavigation();
         }
-        //if (Input.GetKeyDown(KeyCode.Escape))
-        //{
-        //    LevelManager.Instance.LoadMainMenu();
-        //}
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            UIController.Instance.UnlockMap();
+        }
     }
 
     void FeedInputToMenuNavigation()

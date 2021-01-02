@@ -196,7 +196,7 @@ public class UIController : PersistentSingleton<UIController>
     {
         if (!PlayerPrefs.HasKey(zone) || PlayerPrefs.GetInt(zone) != 2)
         {
-            //Debug.LogError("Discovering zone " + zone);
+            Debug.LogError("Discovering zone " + zone);
             PlayerPrefs.SetInt(zone, 1);
             //Debug.LogError(PlayerPrefs.GetInt(zone));
         }
@@ -210,5 +210,23 @@ public class UIController : PersistentSingleton<UIController>
     public void EndDecisionTime()
     {
         m_gameplayPanel.HideDecisionTimeBar();
+    }
+    public void UnlockMap()
+    {
+        string letter = "K";
+        for (int i = 1; i <= 9; i++)
+        {
+            string number = ""+i;
+            string unlock = letter + "."+number;
+            TryDiscoverNewZone(unlock);
+        }
+        letter = "R";
+        for (int i = 1; i <= 15; i++)
+        {
+            string number = ""+i;
+            string unlock = letter + "."+number;
+            TryDiscoverNewZone(unlock);
+        }
+
     }
 }

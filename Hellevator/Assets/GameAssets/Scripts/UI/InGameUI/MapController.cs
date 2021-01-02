@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MapController : MonoBehaviour
 {
 
-    [SerializeField] List<MapLocation> m_mapLocations;
+    List<MapLocation> m_mapLocations;
     [SerializeField] GameObject m_mapParent;
     private bool m_showingMap;
+
+    private void Start()
+    {        
+        m_mapLocations = GetComponentsInChildren<MapLocation>().ToList();
+    }
     public void ShowMap()
     {
         ActivateMap();
@@ -20,7 +26,7 @@ public class MapController : MonoBehaviour
         string playerScene = PossessionManager.Instance.ControlledDemon.gameObject.scene.name;
         for (int i = 0; i < m_mapLocations.Count; i++)
         {
-            if(m_mapLocations[i].Location == playerScene)
+            if (m_mapLocations[i].Location == playerScene)
             {
                 m_mapLocations[i].ActivateLocation();
             }
@@ -44,6 +50,10 @@ public class MapController : MonoBehaviour
 
     private void UpdateMap()
     {
+        if(m_mapLocations == null)
+        {
+            m_mapLocations = GetComponentsInChildren<MapLocation>().ToList();
+        }
         for (int i = 0; i < m_mapLocations.Count; i++)
         {
             //Debug.LogError(m_mapLocations[i].Location + " location has key: " + PlayerPrefs.GetInt(m_mapLocations[i].Location));
