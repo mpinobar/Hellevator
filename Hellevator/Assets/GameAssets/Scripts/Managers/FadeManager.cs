@@ -26,16 +26,26 @@ public class FadeManager : MonoBehaviour
     public static bool IsInTransition { get => m_isInTransition; set => m_isInTransition = value; }
 
     static bool m_isInTransition = false;
+
+    [SerializeField] SpriteRenderer[] bloodSprites;
     // Start is called before the first frame update
     void Start()
     {
         m_currentFadeState = FadeState.FadingOut;
+        for (int i = 0; i < bloodSprites.Length; i++)
+        {
+            bloodSprites[i].gameObject.SetActive(false);
+        }
         m_playerCanMove = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            StartCoroutine(SlightFade());
+        }
         switch (m_currentFadeState)
         {
             case FadeState.FadingIn:
@@ -113,6 +123,27 @@ public class FadeManager : MonoBehaviour
             PossessionManager.Instance.ControlledDemon.CanMove = false;
     }
 
-
+    public IEnumerator SlightFade()
+    {
+        m_blackPanel.gameObject.SetActive(true);
+        float slightFadeAlpha = 0.3f;
+        Color nextColor =new Color(Color.black.r, Color.black.g, Color.black.b, slightFadeAlpha);
+        Color bloodColor = Color.white;
+        bloodColor.a -= slightFadeAlpha;
+        float bloodAlphaFadeRate = 1/slightFadeAlpha;
+        int selectedSprite = Random.Range(0,bloodSprites.Length);
+        bloodSprites[selectedSprite].gameObject.SetActive(true);
+        while (slightFadeAlpha > 0)
+        {
+            bloodColor.a -= Time.unscaledDeltaTime * bloodAlphaFadeRate;
+            bloodSprites[selectedSprite].color = bloodColor;
+            nextColor.a = slightFadeAlpha;
+            m_blackPanel.color = nextColor;
+            slightFadeAlpha -= Time.unscaledDeltaTime;
+            yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
+        }
+        nextColor.a = 0;
+        m_blackPanel.color = nextColor;
+    }
 
 }
