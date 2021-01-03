@@ -67,7 +67,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         if (m_backgroundMusicClips != null && m_backgroundMusicClips.Count > 0)
         {
             m_BGM.Stop();
-            m_BGM.clip = m_backgroundMusicClips[1];
+            m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
             m_BGM.loop = true;
             m_BGM.Play();
         }
@@ -199,9 +199,22 @@ public class AudioManager : PersistentSingleton<AudioManager>
         m_sourcesList[m_sourcesList.Count - 1].Play();
     }
 
-    public void QueueOutOfTuneClip()
+    public void SetBackgroundMusicToKitchen()
     {
-        m_musicClipIndex = 2;
+        if(m_musicClipIndex != 2)
+        {
+            m_musicClipIndex = 2;
+            StartGameplayMusic();
+        }
+        
+    }
+    public void SetBackgroundMusicToRestaurant()
+    {
+        if (m_musicClipIndex != 1)
+        {
+            m_musicClipIndex = 1;
+            StartGameplayMusic();
+        }
     }
 
 }
