@@ -33,7 +33,7 @@ public class CallElevatorButton : MonoBehaviour
         {
             active = true;
             AudioManager.Instance.PlayAudioSFX(m_buttonSoundClip, false);
-            transform.GetChild(0).gameObject.SetActive(false);
+            //transform.GetChild(0).gameObject.SetActive(false);
             FindObjectOfType<IntroCanvas>().CallElevator();
         }
     }
