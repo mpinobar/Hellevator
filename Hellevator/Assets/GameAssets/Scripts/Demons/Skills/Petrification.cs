@@ -9,6 +9,7 @@ public class Petrification : MonoBehaviour
     [SerializeField] bool m_conservesPlayerMomentum;
     [SerializeField] float m_verticalOffsetToCreatePlatform = 1f;
 	[SerializeField] bool m_platformTurnsKinematicOnCollisionEnter = true;
+	[SerializeField] AudioClip m_createPetrificationClip;
 
     /// <summary>
     /// Instantiates a platform and destroys the parent demon that created it
@@ -17,6 +18,7 @@ public class Petrification : MonoBehaviour
     {
         Rigidbody2D platform = Instantiate(m_prefabToConvertInto, GetComponent<DemonBase>().Torso.position + Vector3.up*m_verticalOffsetToCreatePlatform, Quaternion.identity, transform).GetComponent<Rigidbody2D>();
         platform.transform.parent = null;
+		AudioManager.Instance.PlayAudioSFX(m_createPetrificationClip, false);
 
         if (!m_usesGravity)
         {
