@@ -23,9 +23,10 @@ public class ProjectileSpawner : ActivatedBase
     bool m_active;
     Animator m_anim;
 
+	[SerializeField] AudioClip m_spawnKnifeClip;
 
-    // Start is called before the first frame update
-    void Start()
+	// Start is called before the first frame update
+	void Start()
     {
         m_spriteCmp = GetComponentInChildren<SpriteRenderer>();
         if (m_spriteCmp)
@@ -81,6 +82,7 @@ public class ProjectileSpawner : ActivatedBase
                 if (m_anim)
                 {
                     m_anim.SetTrigger("Attack");
+					AudioManager.Instance.PlayAudioSFX(m_spawnKnifeClip, false);
                     StartCoroutine(DelayProjectile(m_waitFromAnimationStart));
                 }
                 else
