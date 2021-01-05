@@ -7,6 +7,7 @@ public class Spikes : MonoBehaviour
     //public bool debug;
     List<SpikesWeightData> m_spikesData;
     [SerializeField] bool m_pushesRagdoll;
+	[SerializeField] AudioClip m_sawClip;
 
     private void Awake()
     {
@@ -42,8 +43,11 @@ public class Spikes : MonoBehaviour
                 {
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                     cmpDemon.IsInDanger = true;
-                    
-                    cmpDemon.Die(true);
+					if (m_sawClip != null)
+					{
+						AudioManager.Instance.PlayAudioSFX(m_sawClip, false);
+					}
+					cmpDemon.Die(true);
                 }
                 else
                 {
@@ -51,7 +55,11 @@ public class Spikes : MonoBehaviour
                     {
                         m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
                         cmpDemon.IsInDanger = true;
-                        cmpDemon.Die(true);
+						if (m_sawClip != null)
+						{
+							AudioManager.Instance.PlayAudioSFX(m_sawClip, false);
+						}
+						cmpDemon.Die(true);
                     }
                 }
             }
@@ -112,7 +120,10 @@ public class Spikes : MonoBehaviour
             if (cmpDemon != null)
             {
                 cmpDemon.Die(true);
-                
+				if(m_sawClip != null)
+				{
+					AudioManager.Instance.PlayAudioSFX(m_sawClip, false);                
+				}
                 cmpDemon.ApplyForceToRagdoll((collision.transform.position - (Vector3) collision.contacts[0].point).normalized * 50f);
             }
         }
