@@ -12,21 +12,24 @@ public class Lever : ActivatedBase
     bool m_added;
     bool m_activated;
 
-    //private void OnEnable()
-    //{
-    //    if (PlayerPrefs.GetInt(key.ToString()) == 1)
-    //    {
-    //        ActivateImmediately();
-    //    }
-    //}
+	[SerializeField] AudioClip m_leverClip;
 
-    public override void Activate()
+	//private void OnEnable()
+	//{
+	//    if (PlayerPrefs.GetInt(key.ToString()) == 1)
+	//    {
+	//        ActivateImmediately();
+	//    }
+	//}
+
+	public override void Activate()
     {
         base.Activate();
         if (!m_activated)
         {
             //(PlayerPrefs.SetInt(key.ToString(), 1);
             m_doorToUnlock.Activate();
+			AudioManager.Instance.PlayAudioSFX(m_leverClip, false);
             ChangeLeverVisual();
             m_activated = true;
             if (m_clipToPlay)

@@ -6,9 +6,14 @@ public class DestructibleWall : ActivatedBase
 {    
     Collider2D[] m_parts;
     [SerializeField] float m_timeToDestroyPartAfterExplosion = 4f;
+
+	[SerializeField] AudioClip m_debrisClip;
+	bool m_playingSound = false;
+
     private void Awake()
     {
-        m_parts = ReturnComponentsInChildren<Collider2D>();
+		m_playingSound = false;
+		m_parts = ReturnComponentsInChildren<Collider2D>();
         for (int i = 0; i < m_parts.Length; i++)
         {
             if (!m_parts[i].GetComponent<Spikes>())
@@ -55,6 +60,12 @@ public class DestructibleWall : ActivatedBase
             m_parts[i].GetComponent<Rigidbody2D>().AddForce((m_parts[i].transform.position - origin).normalized * force, ForceMode2D.Impulse);
             Destroy(m_parts[i].gameObject, m_timeToDestroyPartAfterExplosion);
         }
+		if (!m_playingSound)
+		{
+		
+			AudioManager.Instance.PlayAudioSFX(m_debrisClip, false);
+			m_playingSound = true;
+		}
         Activate();
         Destroy(gameObject);
     }

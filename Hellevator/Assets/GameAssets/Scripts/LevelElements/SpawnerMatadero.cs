@@ -17,6 +17,7 @@ public class SpawnerMatadero : MonoBehaviour
     List<Transform> m_attachedParts;
 
     Vector2 m_movingDirection;
+	[SerializeField] AudioClip m_spawnerClip;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class SpawnerMatadero : MonoBehaviour
     void Start()
     {
         m_movingDirection = (m_endingPosition.position - m_startingPosition.position).normalized;
+		AudioManager.Instance.PlayAudioSFX(m_spawnerClip, true);
     }
 
     // Update is called once per frame

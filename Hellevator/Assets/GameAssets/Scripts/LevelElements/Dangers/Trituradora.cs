@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Trituradora : MonoBehaviour
 {
+	[SerializeField] AudioClip m_sawingClip;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         BasicZombie character = collision.GetComponentInParent<BasicZombie>();
         if (character)
         {
+			AudioManager.Instance.PlayAudioSFX(m_sawingClip, false);
             if (!character.IsDead)
             {
                 character.Die(true);
