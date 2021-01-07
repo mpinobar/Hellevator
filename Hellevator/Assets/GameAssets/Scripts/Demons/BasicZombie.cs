@@ -5,18 +5,23 @@ using UnityEditor;
 
 public class BasicZombie : DemonBase
 {
-	[Space]
-	[SerializeField] GameObject m_indicadorPosesionMultiActiva = null;
-	[Space]
+    [Space]
+    [SerializeField] GameObject m_indicadorPosesionMultiActiva = null;
+    [Space]
     #region Variables	
 
 
     [Header("Movement")]
     [SerializeField] List<GameObject>   m_limbsToUnparent;
     [SerializeField] private float      m_timeToDestroyLimbsAfterUnparenting = 10f;
+
+
     [SerializeField] private float      m_maxSpeed;
     [SerializeField] private float      m_acceleration = 7;
     [SerializeField] private float      m_deceleration = 7;
+
+
+
     [SerializeField] private float      m_jumpForce = 10;
     [SerializeField] private float      m_jumpForceSecond = 10;
     [SerializeField] private bool       m_canJump;
@@ -26,7 +31,7 @@ public class BasicZombie : DemonBase
     [SerializeField] private float      m_airCorrectionMultiplier = 3;
     [SerializeField] private float      m_waitTimeResetPlatformTraversal = 0.5f;
     [SerializeField] private float      m_maxFallSpeedVertical = 25f;
-    
+
     private bool m_isOnLadder = false;
     private bool m_hasJumped;
     private bool m_hasDoubleJumped;
@@ -92,7 +97,7 @@ public class BasicZombie : DemonBase
     #endregion
 
     public override void UseSkill()
-    {        
+    {
         if (GetComponent<Petrification>())
             GetComponent<Petrification>().Petrify();
         else if (GetComponent<Explosion>())
@@ -124,23 +129,23 @@ public class BasicZombie : DemonBase
 
     protected override void Update()
     {
-		base.Update();
+        base.Update();
 
-		if (!IsDead)
-		{
-			if (PossessionManager.Instance.MultiplePossessionWhenDead) 
-			{
-				m_indicadorPosesionMultiActiva.SetActive(true);
-			} 
-			else
-			{
-				m_indicadorPosesionMultiActiva.SetActive(false);
-			}
-		}
-		else
-		{
-			m_indicadorPosesionMultiActiva.SetActive(false);
-		}
+        if (!IsDead)
+        {
+            if (PossessionManager.Instance.MultiplePossessionWhenDead)
+            {
+                m_indicadorPosesionMultiActiva.SetActive(true);
+            }
+            else
+            {
+                m_indicadorPosesionMultiActiva.SetActive(false);
+            }
+        }
+        else
+        {
+            m_indicadorPosesionMultiActiva.SetActive(false);
+        }
 
         if (CanMove)
         {
@@ -210,7 +215,7 @@ public class BasicZombie : DemonBase
                 else
                 {
                     MyRgb.gravityScale = m_fourthGravity;
-                    if(MyRgb.velocity.y < -m_maxFallSpeedVertical)
+                    if (MyRgb.velocity.y < -m_maxFallSpeedVertical)
                     {
                         MyRgb.velocity = new Vector2(MyRgb.velocity.x, -m_maxFallSpeedVertical);
                     }
@@ -227,13 +232,13 @@ public class BasicZombie : DemonBase
         }
         m_myAnimator.SetFloat("xMovement", Mathf.Abs(MyRgb.velocity.x * 0.1f));
 
-        m_myAnimator.SetFloat("yMovement", Mathf.Abs(MyRgb.velocity.y * 0.1f));        
+        m_myAnimator.SetFloat("yMovement", Mathf.Abs(MyRgb.velocity.y * 0.1f));
 
 
     }
 
     private void LateUpdate()
-    {        
+    {
         SkullIndicator();
         VerticalMovementOnLadder(InputManager.Instance.VerticalInputValue);
     }
@@ -244,7 +249,7 @@ public class BasicZombie : DemonBase
         {
             if (PossessionManager.Instance.MultiplePossessionWhenDead && !IsControlledByPlayer)
             {
-                if(PossessionManager.Instance.DemonShowingSkull == this)
+                if (PossessionManager.Instance.DemonShowingSkull == this)
                     PossessionManager.Instance.DemonShowingSkull = null;
 
                 DistanceToPlayer = Vector2.Distance(m_torso.transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
@@ -297,9 +302,9 @@ public class BasicZombie : DemonBase
                     m_skullIndicator.SetActive(false);
                 }
             }
-           
+
         }
-    }     
+    }
 
     public void UnparentBodyParts(float explosionForce)
     {
@@ -321,7 +326,7 @@ public class BasicZombie : DemonBase
     {
         //RagdollLogicCollider.gameObject.SetActive(false);
         IsPossessionBlocked = true;
-        for (int i = 0; i < m_limbsToUnparent.Count-1; i++)
+        for (int i = 0; i < m_limbsToUnparent.Count - 1; i++)
         {
             m_limbsToUnparent[i].transform.parent = null;
             m_limbsToUnparent[i].GetComponent<HingeJoint2D>().enabled = false;
@@ -348,7 +353,7 @@ public class BasicZombie : DemonBase
         else if (verticalInput != 0)
         {
             m_tryingToGrabLadder = true;
-            
+
         }
         else
         {
@@ -380,6 +385,17 @@ public class BasicZombie : DemonBase
         return false;
     }
 
+    public void Slow(float m_slowPercentage)
+    {
+        m_maxSpeed *= (1 - m_slowPercentage * 0.01f);
+        //Debug.LogError("Slowing, setting max speed of " + name + " to " + MaxSpeed);
+    }
+    public void CancelSlow(float m_slowPercentage)
+    {
+        m_maxSpeed /= (1 - m_slowPercentage * 0.01f);
+        //Debug.LogError("Canceling slow, setting max speed of " + name + " to " + MaxSpeed);
+    }
+
     IEnumerator DelayResetInputTraversePlatform(float time)
     {
         yield return new WaitForSeconds(time);
@@ -394,7 +410,7 @@ public class BasicZombie : DemonBase
     public override void Move(float xInput)
     {
         float accel = m_acceleration;
-        if(xInput == 0)
+        if (xInput == 0)
         {
             accel = m_deceleration;
         }
@@ -412,8 +428,8 @@ public class BasicZombie : DemonBase
                 accel *= m_airCorrectionMultiplier;
             }
         }
-        
-        
+
+
         //if(xInput != 0)
         //{
         //    if (!m_walkingParticles.isPlaying)
@@ -427,7 +443,7 @@ public class BasicZombie : DemonBase
 
     public override void Jump()
     {
-        if(InputManager.Instance.VerticalInputValue < 0)
+        if (InputManager.Instance.VerticalInputValue < 0)
         {
             m_tryingToTraversePlatform = true;
             bool traversed = CheckTraversePlatform();
@@ -551,15 +567,15 @@ public class BasicZombie : DemonBase
         }
         else
         {
-            if(transform.parent != null)
+            if (transform.parent != null)
             {
                 SpawnerMatadero sm = GetComponentInParent<SpawnerMatadero>();
-                if(sm != null)
+                if (sm != null)
                 {
                     sm.DetachCharacter(this);
                 }
             }
-            
+
         }
     }
 
@@ -583,7 +599,7 @@ public class BasicZombie : DemonBase
         {
             m_hasJumped = false;
             m_hasDoubleJumped = false;
-            MyRgb.gravityScale = 0f;   
+            MyRgb.gravityScale = 0f;
         }
         m_myAnimator.SetBool("OnLadder", onLadder);
         m_faceCover.SetActive(onLadder);
