@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
+using Random = UnityEngine.Random;
 
 public class BasicZombie : DemonBase
 {
@@ -95,6 +97,9 @@ public class BasicZombie : DemonBase
     public bool IsOnLadder { get => m_isOnLadder; }
 
     #endregion
+
+
+    public Action OnJumped;
 
     public override void UseSkill()
     {
@@ -460,6 +465,7 @@ public class BasicZombie : DemonBase
             }
             if (!m_hasJumped || m_isOnLadder)
             {
+                OnJumped?.Invoke();
                 m_isJumping = true;
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
                 MyRgb.AddForce(Vector2.up * JumpForce);
@@ -470,15 +476,18 @@ public class BasicZombie : DemonBase
                 AudioManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
                 AudioManager.Instance.PlayAudioSFX(m_jumpGruntClip, false, 2f);
                 m_isOnLadder = false;
+                
             }
             else if (m_canDoubleJump && !m_hasDoubleJumped)
             {
+                OnJumped?.Invoke();
                 MyRgb.velocity = new Vector2(MyRgb.velocity.x, 0);
                 MyRgb.AddForce(Vector2.up * m_jumpForceSecond);
                 m_hasDoubleJumped = true;
                 m_myAnimator.SetTrigger("Jump");
                 AudioManager.Instance.PlayAudioSFX(m_jumpClip, false, 0.8f);
                 AudioManager.Instance.PlayAudioSFX(m_jumpGruntClip, false, 2f);
+                
             }
             else if (m_hasJumped)
             {
