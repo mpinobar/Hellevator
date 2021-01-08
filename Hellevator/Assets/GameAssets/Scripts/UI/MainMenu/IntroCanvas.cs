@@ -16,8 +16,12 @@ public partial class IntroCanvas : MonoBehaviour
     [SerializeField] GameObject m_canvasMenu;
     float m_fadeTime = 3;
     float m_tmp;
+    public static Action OnBegin;
+    [SerializeField] float m_delayToActivateMouseParallax;
 
+    public event Action ElevatorCalled;
     
+
     private void Awake()
     {
         m_canvasMenu.SetActive(false);
@@ -38,9 +42,15 @@ public partial class IntroCanvas : MonoBehaviour
         //}
     }
 
+
     // Update is called once per frame
     private void Update()
     {
+        if (Input.anyKeyDown)
+        {
+            OnBegin?.Invoke();
+        }
+
         if (m_fadingIn)
         {
             //fadeIn 
@@ -74,6 +84,7 @@ public partial class IntroCanvas : MonoBehaviour
         m_puertaIzquierda.GetComponent<AnimacionPuerta>().Started = true;
         m_puertaDerecha.GetComponent<AnimacionPuerta>().Started = true;
         GetComponentInChildren<BlinkingText>().gameObject.SetActive(false);
+        ElevatorCalled?.Invoke();
     }
     
 }

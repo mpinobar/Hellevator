@@ -50,6 +50,7 @@ public class Fire : MonoBehaviour
                         {
                             StartCoroutine(ResetPlayedAudio(1));
                             AudioManager.Instance.PlayAudioSFX(m_bodyBurningClip, false, 1f);
+                            m_hasPlayedAudio = true;
                         }
                         Destroy(m_impacts[i].transform.gameObject, 1f);
                     }
@@ -61,6 +62,7 @@ public class Fire : MonoBehaviour
                             {
                                 StartCoroutine(ResetPlayedAudio(1));
                                 AudioManager.Instance.PlayAudioSFX(m_bodyBurningClip, false, 1f);
+                                m_hasPlayedAudio = true;
                             }
                             Destroy(m_impacts[i].transform.GetComponentInParent<DemonBase>().gameObject, 1f);
                         }

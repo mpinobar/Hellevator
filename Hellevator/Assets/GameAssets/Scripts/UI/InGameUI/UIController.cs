@@ -58,7 +58,7 @@ public class UIController : PersistentSingleton<UIController>
         m_settingsButton.onClick.AddListener(ShowSettings);
         m_bestiaryButton.onClick.AddListener(ShowBestiary);
         m_exitButton.onClick.AddListener(Exit);
-        ShowGameplayUI();
+        LevelManager.LevelLoaded += ShowGameplayUI;
     }
 
     public void Resume()
@@ -196,7 +196,7 @@ public class UIController : PersistentSingleton<UIController>
     {
         if (!PlayerPrefs.HasKey(zone) || PlayerPrefs.GetInt(zone) != 2)
         {
-            Debug.LogError("Discovering zone " + zone);
+            //Debug.LogError("Discovering zone " + zone);
             PlayerPrefs.SetInt(zone, 1);
             //Debug.LogError(PlayerPrefs.GetInt(zone));
         }

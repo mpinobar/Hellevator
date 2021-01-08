@@ -10,12 +10,12 @@ public class AudioManager : PersistentSingleton<AudioManager>
     [Range(0, 1)]
     [SerializeField] static float m_musicVolume = 0.5f;
     List<AudioSource> m_sourcesList;
-
+    [SerializeField] float m_volumeFadeTransitionDuration = 1f;
     [SerializeField] List<AudioClip> m_backgroundMusicClips;
     AudioSource m_BGM;
     float m_spatialBlendSFX = 0.35f;
     int m_musicClipIndex;
-       
+
 
     public static float MusicVolume
     {
@@ -39,7 +39,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         base.Awake();
         m_sourcesList = new List<AudioSource>();
         m_BGM = gameObject.AddComponent<AudioSource>();
-        m_BGM.volume = m_musicVolume*0.5f;
+        m_BGM.volume = m_musicVolume * 0.5f;
         m_BGM.loop = true;
         if (m_backgroundMusicClips != null)
         {
@@ -61,7 +61,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         if (m_BGM)
             m_BGM.Stop();
     }
-    
+
     public void StartGameplayMusic()
     {
         if (m_backgroundMusicClips != null && m_backgroundMusicClips.Count > 0)
@@ -201,19 +201,43 @@ public class AudioManager : PersistentSingleton<AudioManager>
 
     public void SetBackgroundMusicToKitchen()
     {
-        if(m_musicClipIndex != 2)
+        if (m_musicClipIndex != 2)
         {
             m_musicClipIndex = 2;
-            StartGameplayMusic();
+            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
+
         }
+    }
+
+    IEnumerator MusicVolumeFadeInAndOut(float transitionTime)
+    {
+        float halfTime = transitionTime * 0.5f;
+        float startingVolume = m_BGM.volume;
+        float currentTime = 0;
+        float volumeChangeDelta = startingVolume*Time.deltaTime/halfTime;
         
+        while (currentTime < halfTime)
+        {
+            currentTime += Time.deltaTime;
+            m_BGM.volume = Mathf.Clamp(m_BGM.volume - volumeChangeDelta, 0, startingVolume);
+            yield return null;
+        }
+        StartGameplayMusic();
+        while (currentTime < transitionTime)
+        {
+            currentTime += Time.deltaTime;
+            m_BGM.volume = Mathf.Clamp(m_BGM.volume + volumeChangeDelta, 0, startingVolume);
+            yield return null;
+        }
+        m_BGM.volume = startingVolume;
     }
     public void SetBackgroundMusicToRestaurant()
     {
         if (m_musicClipIndex != 1)
         {
             m_musicClipIndex = 1;
-            StartGameplayMusic();
+            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
+
         }
     }
 

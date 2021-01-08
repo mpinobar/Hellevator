@@ -8,6 +8,7 @@ public class Spikes : MonoBehaviour
     List<SpikesWeightData> m_spikesData;
     [SerializeField] bool m_pushesRagdoll;
 	[SerializeField] AudioClip m_sawClip;
+    //int m_dataCount;
 
     private void Awake()
     {
@@ -39,6 +40,7 @@ public class Spikes : MonoBehaviour
             }
             if (!isCounted)
             {
+                //Debug.LogError(cmpDemon.name + " entered spike " + name);
                 if (cmpDemon.IsControlledByPlayer)
                 {
                     m_spikesData.Add(new SpikesWeightData(cmpDemon, collision));
@@ -77,11 +79,12 @@ public class Spikes : MonoBehaviour
         {
             m_spikesData[i].AssociatedDemon.IsInDanger = true;
         }
+        //m_dataCount = m_spikesData.Count;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.GetComponentInParent<DemonBase>() != null && collision.gameObject.tag != "BodyCollider")
+        if (collision.GetComponentInParent<DemonBase>() != null /*&& collision.gameObject.tag != "BodyCollider"*/)
         {
             DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
 
@@ -90,23 +93,26 @@ public class Spikes : MonoBehaviour
                 //if the demon is already inside the spikes
                 if (cmpDemon == m_spikesData[i].AssociatedDemon)
                 {
+                    m_spikesData.RemoveAt(i);
+                    cmpDemon.IsInDanger = false;
+                    //Debug.LogError(cmpDemon.name + " exited spike " + name);
                     //remove the collider from the associated demon's collider list 
-                    if (m_spikesData[i].Colliders.Contains(collision))
-                    {
-                        m_spikesData[i].Colliders.Remove(collision);
+                    //if (m_spikesData[i].Colliders.Contains(collision))
+                    //{
+                    //    m_spikesData[i].Colliders.Remove(collision);
 
-                        //all the limbs have exited the spikes
-                        if (m_spikesData[i].Colliders.Count == 0)
-                        {
-                            m_spikesData.RemoveAt(i);
-                            cmpDemon.IsInDanger = false;
-                        }
-                        else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
-                        {
-                            m_spikesData.RemoveAt(i);
-                            cmpDemon.IsInDanger = false;
-                        }
-                    }
+                    //    //all the limbs have exited the spikes
+                    //    if (m_spikesData[i].Colliders.Count == 0)
+                    //    {
+                    //        m_spikesData.RemoveAt(i);
+                    //        cmpDemon.IsInDanger = false;
+                    //    }
+                    //    else if (m_spikesData[i].Colliders.Count == 1 && m_spikesData[i].Colliders[0].tag == "BodyCollider")
+                    //    {
+                    //        m_spikesData.RemoveAt(i);
+                    //        cmpDemon.IsInDanger = false;
+                    //    }
+                    //}
                 }
             }
         }
