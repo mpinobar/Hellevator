@@ -22,6 +22,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     AsyncOperation m_loadingScene;
 
     //[SerializeField] private GameObject m_fade = null;
+    public static Action LevelLoaded;
 
     List<string> m_adjacentScenes;
     LevelLoadManager m_centralScene;
@@ -217,6 +218,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
             if (cp)
                 cp.SpawnPlayer();
         }
+        LevelLoaded?.Invoke();
         CameraManager.Instance.FadeOut();
         AudioManager.Instance.StartGameplayMusic();
     }
