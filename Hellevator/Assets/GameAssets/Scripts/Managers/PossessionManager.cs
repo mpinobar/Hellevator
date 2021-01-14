@@ -185,6 +185,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         if (shouldTurnOff)
             currentDemon.gameObject.SetActive(false);
         //Debug.LogError("possessed character died: " + currentDemon.name);
+        //Debug.LogError(ControlledDemon);
+        //Debug.LogError(currentDemon);
         if (ControlledDemon == demonCmp)
         {
             //Debug.LogError("it was the main character");
@@ -248,7 +250,9 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     /// <param name="currentCharacter">Personaje con el que se ha muerto</param>
     public void StartDeathChoice(Transform currentCharacter)
     {
-        //Debug.LogError("Death choice");
+        if (ChoosingWhenDead)
+            return;
+
         MultiplePossessionWhenDead = false;
         if (MultiplePossessionIsUnlocked && !ControllingMultipleDemons)
             StartCoroutine(DelayToChoose(m_decisionTime, currentCharacter));
@@ -276,6 +280,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         }
         //Debug.LogError("Decided with time remaining " + decisionTime);
         RemoveDemonPossession(currentCharacter);
+        m_choosingWhenDead = false;
     }
 
     /// <summary>

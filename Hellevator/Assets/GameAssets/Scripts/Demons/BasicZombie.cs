@@ -80,10 +80,10 @@ public class BasicZombie : DemonBase
     [SerializeField] private float m_ySpeedWhenReleasingEarly = 3f;
 
     [Header("Color")]
-    [ColorUsage(true,true)]
-    [SerializeField] Color m_colorSkullIndicatorExplosive;
-    [ColorUsage(true,true)]
-    [SerializeField] Color m_colorSkullIndicatorPetrification;
+    //[ColorUsage(true,true)]
+    //[SerializeField] Color m_colorSkullIndicatorExplosive;
+    //[ColorUsage(true,true)]
+    //[SerializeField] Color m_colorSkullIndicatorPetrification;
     [SerializeField] GameObject m_faceCover;
 
     #endregion
@@ -116,14 +116,14 @@ public class BasicZombie : DemonBase
         {
 
             m_skullOffset = m_skullIndicator.transform.position.y - m_torso.transform.position.y;
-            if (GetComponent<Explosion>() != null)
-            {
-                m_skullIndicator.GetComponent<SpriteRenderer>().color = m_colorSkullIndicatorExplosive;
-            }
-            else if (GetComponent<Petrification>() != null)
-            {
-                m_skullIndicator.GetComponent<SpriteRenderer>().color = m_colorSkullIndicatorPetrification;
-            }
+            //if (GetComponent<Explosion>() != null)
+            //{
+            //    m_skullIndicator.GetComponent<SpriteRenderer>().color = m_colorSkullIndicatorExplosive;
+            //}
+            //else if (GetComponent<Petrification>() != null)
+            //{
+            //    m_skullIndicator.GetComponent<SpriteRenderer>().color = m_colorSkullIndicatorPetrification;
+            //}
         }
         else
         {
@@ -324,7 +324,7 @@ public class BasicZombie : DemonBase
             if (explosionForce > 0)
                 m_limbsToUnparent[i].GetComponent<Rigidbody2D>().AddForce((Vector2.up + Random.Range(-2, 2) * Vector2.right) * explosionForce, ForceMode2D.Impulse);
         }
-        m_spiritFire.SetActive(false);
+        //m_spiritFire.SetActive(false);
         enabled = false;
     }
     public Transform UnparentLimbs()
