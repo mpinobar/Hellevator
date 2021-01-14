@@ -13,15 +13,12 @@ public class Lever : ActivatedBase
     bool m_activated;
 
 	[SerializeField] AudioClip m_leverClip;
+    [SerializeField] Transform m_rotatingObject;
 
-	//private void OnEnable()
-	//{
-	//    if (PlayerPrefs.GetInt(key.ToString()) == 1)
-	//    {
-	//        ActivateImmediately();
-	//    }
-	//}
 
+    /// <summary>
+    /// Visual de la palanca y de objeto linkado, play del audio y de video si tiene
+    /// </summary>
 	public override void Activate()
     {
         base.Activate();
@@ -72,30 +69,40 @@ public class Lever : ActivatedBase
         }        
     }
 
+    /// <summary>
+    /// Empieza la animacion de rotacion de la palanca
+    /// </summary>
     void ChangeLeverVisual()
     {        
         StartCoroutine(LeverVisualRotation());
     }
 
+    /// <summary>
+    /// Anima la palanca, rotandola
+    /// </summary>
+    /// <returns></returns>
     IEnumerator LeverVisualRotation()
     {
-        Transform visual = transform.GetChild(0).GetChild(1);
-        float currentAngle = visual.localEulerAngles.z;
+        //Transform visual = transform.GetChild(0).GetChild(1);
+        float currentAngle = m_rotatingObject.localEulerAngles.z;
         float endAngle = -currentAngle;
 
         while (currentAngle > endAngle)
         {            
             currentAngle -= Time.deltaTime * m_visualLeverSpeed;
-            visual.localEulerAngles = Vector3.forward * currentAngle;
+            m_rotatingObject.localEulerAngles = Vector3.forward * currentAngle;
             yield return null;
         }
     }
 
+    /// <summary>
+    /// Animacion inmediata y logica de activacion base y de objeto linkado
+    /// </summary>
     public override void ActivateImmediately()
     {
         base.ActivateImmediately();
         m_activated = true;
-        transform.GetChild(0).GetChild(1).localEulerAngles = -Vector3.forward * transform.GetChild(0).GetChild(1).localEulerAngles.z;
+        m_rotatingObject.localEulerAngles = -Vector3.forward * m_rotatingObject.localEulerAngles.z;
         m_doorToUnlock.ActivateImmediately();
     }
 }

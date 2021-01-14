@@ -56,23 +56,22 @@ public abstract class DemonBase : MonoBehaviour
     //[ColorUsage(true, true)]
     //private float                       m_distanceStartGlow = 10;
 
-    [ColorUsage(true, true)]
-    [SerializeField] private Color      m_colorWhenAvailable;
 
-    protected GameObject                m_spiritFire;
+    //protected GameObject                m_spiritFire;
     //private float                       m_distanceMaxGlow = 5;
     private bool                        m_isPossessionBlocked;
     private bool                        m_isControlledByPlayer;
     private bool                        m_overlayActive;
 
-    [ColorUsage(true,true)]
-    [SerializeField] private Color      m_fireColorWhenPossessed;
-    [SerializeField] private Color      m_spritesColor;
-    [ColorUsage(true, true)]
+    //[ColorUsage(true,true)]
+    //[SerializeField] private Color      m_fireColorWhenPossessed;
+    //[SerializeField] private Color      m_spritesColor;
+    //[ColorUsage(true, true)]
     /*[SerializeField] */
-    private Color                       m_fireColorWhenNotPossessed;
+    //private Color                       m_fireColorWhenNotPossessed;
     [SerializeField] GameObject         m_overlay;
     [SerializeField] GameObject         m_trueDeathparticles;
+    [SerializeField] SpriteRenderer     m_headSprite;
 
     //IAReferences
     [Space]
@@ -270,10 +269,10 @@ public abstract class DemonBase : MonoBehaviour
         //        m_spiritFire = m_childTransforms[i].gameObject;
         //    }
         //}
-        m_spiritFire = m_torso.GetChild(m_torso.childCount - 1).gameObject;
-        m_spiritFire.SetActive(true);
+        //m_spiritFire = m_torso.GetChild(m_torso.childCount - 1).gameObject;
+        //m_spiritFire.SetActive(true);
         IsInDanger = false;
-        m_fireColorWhenNotPossessed = m_spiritFire.GetComponent<SpriteRenderer>().material.GetColor("Color_7F039FD4");
+        //m_fireColorWhenNotPossessed = m_spiritFire.GetComponent<SpriteRenderer>().material.GetColor("Color_7F039FD4");
         /*
         m_initialPositionLeftGrab   = m_grabRayStartPositionLeft.localPosition;
         m_initialPositionRightGrab  = m_grabRayStartPositionRight.localPosition;
@@ -327,7 +326,7 @@ public abstract class DemonBase : MonoBehaviour
         //        HidePossessionRange();
         //    }
         //}
-        m_spiritFire.transform.rotation = Quaternion.identity;
+        //m_spiritFire.transform.rotation = Quaternion.identity;
 
         #region Shader outline
 
@@ -652,8 +651,9 @@ public abstract class DemonBase : MonoBehaviour
         //    m_childSprites[i].material.SetFloat("_Thickness", 0);
         //    m_childSprites[i].sortingLayerName = "Default";
         //}
-        m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenNotPossessed);
+        //m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenNotPossessed);
         //m_spiritFire.SetActive(true);
+        m_headSprite.color = Color.black;
         //m_PossessionCircle.enabled = false;
         m_myAnimator.enabled = false;
         //this.enabled = false;
@@ -672,7 +672,7 @@ public abstract class DemonBase : MonoBehaviour
         m_hasResetParentPosition = false;
         m_isControlledByPlayer = false;
         m_isDead = false;
-        m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenNotPossessed);
+        //m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenNotPossessed);
     }
 
     /// <summary>
@@ -692,7 +692,8 @@ public abstract class DemonBase : MonoBehaviour
         m_hasResetParentPosition = false;
         m_isControlledByIA = false;
         IsControlledByPlayer = true;
-        m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
+        m_headSprite.color = Color.white;
+        //m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
 
         if (PossessionManager.Instance.ControlledDemon)
             CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
@@ -1049,7 +1050,7 @@ public abstract class DemonBase : MonoBehaviour
 
     public void PlayDeathEffects()
     {
-        if (m_spiritFire.GetComponent<SpriteRenderer>().isVisible)
+        if (m_demonMaskSprite.GetComponent<SpriteRenderer>().isVisible)
         {
             AudioManager.Instance.PlayAudioSFX(m_deathClip, false, 0.35f);
             AudioManager.Instance.PlayAudioSFX(m_deathClipGasp, false, 1f);

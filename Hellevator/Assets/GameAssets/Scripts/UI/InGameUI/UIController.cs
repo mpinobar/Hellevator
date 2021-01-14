@@ -59,7 +59,12 @@ public class UIController : PersistentSingleton<UIController>
         m_bestiaryButton.onClick.AddListener(ShowBestiary);
         m_exitButton.onClick.AddListener(Exit);
         LevelManager.LevelLoaded += ShowGameplayUI;
+        if (LevelManager.Instance.gameObject.scene.name != "Menu")
+        {
+            ShowGameplayUI();
+        }
     }
+
 
     public void Resume()
     {
