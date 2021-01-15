@@ -10,26 +10,28 @@ public class DissolvingPit : MonoBehaviour
     SpriteRenderer m_spriteRenderer;
     [SerializeField] ParticleSystem m_burstParticles;
     [SerializeField] ParticleSystem m_bubblesParticles;
+    [SerializeField] float m_immersionSpeed = 0.5f;
+    [SerializeField] float m_timeToDestroy = 2.5f;
     bool m_demonEatingAnimation;
-	bool m_clipIsPlaying = false;
-	float m_currentClipTimer = 0f;
-	float m_clipDuration = 0f;
+    bool m_clipIsPlaying = false;
+    float m_currentClipTimer = 0f;
+    float m_clipDuration = 0f;
 
 
-	private void Start()
+    private void Start()
     {
         m_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-		m_clipDuration = m_acidClip.length;
-	}
-	private void Update()
-	{
-		if(m_currentClipTimer > 0)
-		{
-			m_currentClipTimer -= Time.deltaTime;
-		}
-	}
+        m_clipDuration = m_acidClip.length;
+    }
+    private void Update()
+    {
+        if (m_currentClipTimer > 0)
+        {
+            m_currentClipTimer -= Time.deltaTime;
+        }
+    }
 
-	private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
         if (cmpDemon != null)
@@ -38,11 +40,11 @@ public class DissolvingPit : MonoBehaviour
             {
                 if (m_spriteRenderer.isVisible)
                 {
-					if (m_currentClipTimer <= 0)
-					{
-						AudioManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
-						m_currentClipTimer = m_clipDuration;
-					}
+                    if (m_currentClipTimer <= 0)
+                    {
+                        AudioManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
+                        m_currentClipTimer = m_clipDuration;
+                    }
                 }
             }
             //the torso has entered the pit while being a ragdoll
@@ -51,7 +53,9 @@ public class DissolvingPit : MonoBehaviour
                 if (m_associatedFryingDemon)
                     StartCoroutine(EatAnimation());
                 cmpDemon.Die(true);
-                Destroy(cmpDemon.gameObject);
+                //Destroy(cmpDemon.gameObject);
+                StartCoroutine(SlowImmersion(cmpDemon));
+
                 PlayParticles();
             }
             else if (collision == cmpDemon.PlayerCollider)
@@ -59,6 +63,7 @@ public class DissolvingPit : MonoBehaviour
                 if (m_associatedFryingDemon)
                     StartCoroutine(EatAnimation());
                 cmpDemon.Die(false);
+                StartCoroutine(SlowImmersion(cmpDemon));
                 PlayParticles();
             }
         }
@@ -69,8 +74,9 @@ public class DissolvingPit : MonoBehaviour
             {
                 if (m_associatedFryingDemon)
                     StartCoroutine(EatAnimation());
-                Destroy(ragdollCollider.ParentDemon.gameObject);
-                Destroy(ragdollCollider.transform.parent.gameObject);
+
+                StartCoroutine(SlowImmersion(ragdollCollider));
+
                 PlayParticles();
             }
         }
@@ -88,8 +94,8 @@ public class DissolvingPit : MonoBehaviour
     {
         if (!m_demonEatingAnimation)
         {
-			
-			//MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
+
+            //MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
             m_associatedFryingDemon.SetBool("Eat", true);
             m_demonEatingAnimation = true;
 
@@ -98,4 +104,74 @@ public class DissolvingPit : MonoBehaviour
             m_associatedFryingDemon.SetBool("Eat", false);
         }
     }
+
+    private IEnumerator SlowImmersion(DemonBase characterToImmerse)
+    {
+        characterToImmerse.IsInDanger = true;
+        characterToImmerse.IsPossessionBlocked = true;
+        float timeToDestroy = m_timeToDestroy;
+        characterToImmerse.SetRagdollNewGravity(0);
+        ((BasicZombie)characterToImmerse).ResetRagdollVelocity();
+        ((BasicZombie)characterToImmerse).ResetVelocity();
+        Vector3 initialPoint = characterToImmerse.Torso.transform.position;
+        Vector3 endPoint = initialPoint - Vector3.up*2f;
+
+        Transform characterTransform = characterToImmerse.Torso.transform;
+
+        SpriteRenderer [] rends  = characterToImmerse.GetComponentsInChildren<SpriteRenderer>();
+        
+        for (int i = 0; i < rends.Length; i++)
+        {
+            rends[i].sortingLayerName = "Checkpoint";
+        }
+
+        while (timeToDestroy > 0)
+        {
+
+            characterTransform.position = Vector3.Lerp(characterTransform.position, endPoint, Time.deltaTime * m_immersionSpeed);
+            timeToDestroy -= Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(characterToImmerse.gameObject);
+
+    }
+
+    private IEnumerator SlowImmersion(RagdollLogicalCollider ragdollCollider)
+    {
+        DemonBase characterToImmerse = ragdollCollider.ParentDemon;
+
+        characterToImmerse.IsInDanger = true;
+        characterToImmerse.IsPossessionBlocked = true;
+        float timeToDestroy = m_timeToDestroy;
+        characterToImmerse.SetRagdollNewGravity(0);
+        ((BasicZombie)characterToImmerse).ResetRagdollVelocity();
+        ((BasicZombie)characterToImmerse).ResetVelocity();
+
+        Transform characterTransform = characterToImmerse.Torso.transform;
+
+        Vector3 initialPoint = characterTransform.position;
+        Vector3 endPoint = initialPoint - Vector3.up*2f;
+
+        SpriteRenderer [] rends  = characterToImmerse.GetComponentsInChildren<SpriteRenderer>();
+
+        for (int i = 0; i < rends.Length; i++)
+        {
+            rends[i].sortingLayerName = "Checkpoint";
+        }
+
+        while (timeToDestroy > 0)
+        {
+            characterToImmerse.IsInDanger = true;
+            characterToImmerse.IsPossessionBlocked = true;
+            characterTransform.position = Vector3.Lerp(characterTransform.position, endPoint, Time.deltaTime * m_immersionSpeed);
+            timeToDestroy -= Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(characterToImmerse.gameObject);
+        Destroy(ragdollCollider.gameObject);
+
+    }
+
 }
