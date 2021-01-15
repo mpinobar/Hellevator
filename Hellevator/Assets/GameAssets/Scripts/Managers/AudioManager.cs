@@ -125,6 +125,27 @@ public class AudioManager : PersistentSingleton<AudioManager>
         else
         {
 
+            int amountPlayingClip = 1; //empieza a 1 porque se cuenta el que queremos añadir
+            for (int i = 0; i < m_sourcesList.Count; i++)
+            {
+                if (m_sourcesList[i].isPlaying && m_sourcesList[i].clip == clip)
+                {
+                    amountPlayingClip++;
+                }
+            }
+
+            if(amountPlayingClip > 1)
+            {
+                for (int i = 0; i < m_sourcesList.Count; i++)
+                {
+                    if (m_sourcesList[i].isPlaying && m_sourcesList[i].clip == clip)
+                    {
+                        m_sourcesList[i].volume = SfxVolume / amountPlayingClip;
+                    }
+                }
+            }
+            
+
             for (int i = 0; i < m_sourcesList.Count; i++)
             {
                 if (m_sourcesList[i].isPlaying && m_sourcesList[i].clip == clip)
@@ -163,18 +184,31 @@ public class AudioManager : PersistentSingleton<AudioManager>
         }
         else
         {
+            int amountPlayingClip = 1; //empieza a 1 porque se cuenta el que queremos añadir
+            for (int i = 0; i < m_sourcesList.Count; i++)
+            {
+                if (m_sourcesList[i].isPlaying && m_sourcesList[i].clip == clip)
+                {
+                    amountPlayingClip++;
+                }
+            }
 
             for (int i = 0; i < m_sourcesList.Count; i++)
             {
                 if (m_sourcesList[i].isPlaying && m_sourcesList[i].clip == clip)
                 {
-                    m_sourcesList[i].volume = m_sfxVolume * 0.5f * volumeModifier;
-                    volume *= 0.25f;
+                    m_sourcesList[i].volume = SfxVolume * volumeModifier / amountPlayingClip;
                 }
+            }
+
+
+            for (int i = 0; i < m_sourcesList.Count; i++)
+            {
+
                 if (!m_sourcesList[i].isPlaying)
                 {
                     m_sourcesList[i].clip = clip;
-                    m_sourcesList[i].volume = m_sfxVolume * volume;
+                    m_sourcesList[i].volume = SfxVolume * volumeModifier / amountPlayingClip;
                     m_sourcesList[i].loop = looping;
                     m_sourcesList[i].spatialBlend = m_spatialBlendSFX;
                     m_sourcesList[i].Play();
@@ -215,7 +249,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         float startingVolume = m_BGM.volume;
         float currentTime = 0;
         float volumeChangeDelta = startingVolume*Time.deltaTime/halfTime;
-        
+
         while (currentTime < halfTime)
         {
             currentTime += Time.deltaTime;
