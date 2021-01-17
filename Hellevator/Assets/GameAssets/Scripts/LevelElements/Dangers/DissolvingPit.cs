@@ -16,7 +16,7 @@ public class DissolvingPit : MonoBehaviour
     bool m_clipIsPlaying = false;
     float m_currentClipTimer = 0f;
     float m_clipDuration = 0f;
-
+    [SerializeField] bool m_disablesSkills;
 
     private void Start()
     {
@@ -34,8 +34,13 @@ public class DissolvingPit : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
+        
         if (cmpDemon != null)
         {
+            if (m_disablesSkills)
+            {
+                GetComponent<SkillDisabler>()?.DisableSkills(collision);
+            }
             if (m_spriteRenderer)
             {
                 if (m_spriteRenderer.isVisible)
@@ -125,14 +130,14 @@ public class DissolvingPit : MonoBehaviour
             rends[i].sortingLayerName = "Checkpoint";
         }
 
-        while (timeToDestroy > 0)
+        while (timeToDestroy > 0 && characterTransform != null)
         {
-
             characterTransform.position = Vector3.Lerp(characterTransform.position, endPoint, Time.deltaTime * m_immersionSpeed);
             timeToDestroy -= Time.deltaTime;
             yield return null;
         }
 
+        if(characterToImmerse)
         Destroy(characterToImmerse.gameObject);
 
     }

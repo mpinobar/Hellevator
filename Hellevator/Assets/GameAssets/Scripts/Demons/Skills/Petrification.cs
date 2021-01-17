@@ -10,12 +10,17 @@ public class Petrification : MonoBehaviour
     [SerializeField] float m_verticalOffsetToCreatePlatform = 1f;
 	[SerializeField] bool m_platformTurnsKinematicOnCollisionEnter = true;
 	[SerializeField] AudioClip m_createPetrificationClip;
-
+    bool m_cantPetrify;
     /// <summary>
     /// Instantiates a platform and destroys the parent demon that created it
     /// </summary>
     public void Petrify()
     {
+        if (m_cantPetrify)
+        {
+            return;
+        }
+        Debug.LogError("Petrifying");
         Rigidbody2D platform = Instantiate(m_prefabToConvertInto, GetComponent<DemonBase>().Torso.position + Vector3.up*m_verticalOffsetToCreatePlatform, Quaternion.identity, transform).GetComponent<Rigidbody2D>();
         platform.transform.parent = null;
 		AudioManager.Instance.PlayAudioSFX(m_createPetrificationClip, false);
@@ -41,5 +46,10 @@ public class Petrification : MonoBehaviour
 
         gameObject.SetActive(false);
         //gameObject.SetActive(false);
+    }
+
+    public void SetCantPetrify()
+    {
+        m_cantPetrify = true;
     }
 }
