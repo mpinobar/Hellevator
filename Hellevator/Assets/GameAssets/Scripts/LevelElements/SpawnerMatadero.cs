@@ -97,7 +97,7 @@ public class SpawnerMatadero : MonoBehaviour
         if (m_spawnedCharacters.Contains(characterToDetach))
         {
             characterToDetach.transform.parent = null;
-            characterToDetach.SetRagdollNewGravity(1);
+            characterToDetach.SetRagdollNewGravity(5);
             m_spawnedCharacters.Remove(characterToDetach);
         }
         else
