@@ -80,7 +80,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 20063963f6f58074d892e1f3ab8fcad8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -102,7 +102,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b8704011eedcbac42a17d917d447ae14, type: 3}
-  m_Color: {r: 0.4805145, g: 0.3443396, b: 1, a: 1}
+  m_Color: {r: 0.98881483, g: 0.9858491, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -176,11 +176,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036e312f51dc84c4a9194bbabb2ab6ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_projectileToShoot: {fileID: 101655347924392807, guid: e341ed3325935bf4c9b504fe30aa2282,
+  m_deactivatesOnPuzzleCompletion: 0
+  m_projectileToShoot: {fileID: 101655347924392807, guid: 25e1a545de034fa4db791ef8f4dcb6ca,
     type: 3}
   m_direction: {fileID: 407510340447003189}
   m_initialWaitTimeBeforeShooting: 0
   m_timeIntervalBetweenShots: 2
+  m_waitFromAnimationStart: 2
   m_projectileSpeed: 8
   m_activatedWithButton: 0
-  m_spriteColor: {r: 0.86792445, g: 0.52458197, b: 0.26610893, a: 1}
+  m_spriteColor: {r: 0.72912055, g: 0.14951938, b: 0.9056604, a: 1}
+  m_spawnKnifeClip: {fileID: 0}
