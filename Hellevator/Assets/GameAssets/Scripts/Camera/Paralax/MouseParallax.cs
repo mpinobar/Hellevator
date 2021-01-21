@@ -20,7 +20,7 @@ public class MouseParallax : MonoBehaviour
     {
         cam = Camera.main;
         m_initialPosition = transform.localPosition;
-        IntroCanvas.OnBegin += () => Invoke(nameof(Activate), 5);
+        IntroCanvas.OnBegin += ActivateWithDelay;
     }
 
     // Update is called once per frame
@@ -41,5 +41,12 @@ public class MouseParallax : MonoBehaviour
     private void Activate()
     {
         active = true;
+        
+    }
+
+    private void ActivateWithDelay()
+    {
+        Invoke(nameof(Activate), 5);
+        IntroCanvas.OnBegin -= ActivateWithDelay;
     }
 }
