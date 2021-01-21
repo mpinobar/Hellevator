@@ -274,5 +274,14 @@ public class AudioManager : PersistentSingleton<AudioManager>
 
         }
     }
+    public void SetBackgroundMusicToMenu()
+    {
+        if (m_musicClipIndex != 0)
+        {
+            m_musicClipIndex = 0;
+            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
+
+        }
+    }
 
 }
