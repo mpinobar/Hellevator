@@ -237,13 +237,13 @@ public class UIController : PersistentSingleton<UIController>
     }
 
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            IsPointerOverUIElement();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        IsPointerOverUIElement();
+    //    }
+    //}
 
     ///Returns 'true' if we touched or hovering on Unity UI element.
     public static bool IsPointerOverUIElement()
