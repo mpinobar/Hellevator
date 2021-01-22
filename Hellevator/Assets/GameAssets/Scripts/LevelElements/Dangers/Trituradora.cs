@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class Trituradora : MonoBehaviour
 {
-	[SerializeField] AudioClip m_sawingClip;
+    [SerializeField] AudioClip m_sawingClip;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         BasicZombie character = collision.GetComponentInParent<BasicZombie>();
         if (character)
-        {
-			AudioManager.Instance.PlayAudioSFX(m_sawingClip, false);
+        {            
+            if (LayerMask.LayerToName(collision.gameObject.layer) != "Player" && LayerMask.LayerToName(collision.gameObject.layer) != "Body")
+                return;
+            
             if (!character.IsDead)
             {
+                AudioManager.Instance.PlayAudioSFX(m_sawingClip, false);
                 character.Die(true);
-            }else
+            }
+            else if (character.isActiveAndEnabled)
             {
+                AudioManager.Instance.PlayAudioSFX(m_sawingClip, false);
                 character.PlayDeathEffects();
             }
             if (character.GetComponentInParent<SpawnerMatadero>())
