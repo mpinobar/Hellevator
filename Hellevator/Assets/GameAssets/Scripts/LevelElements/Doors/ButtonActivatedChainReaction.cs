@@ -19,7 +19,14 @@ public class ButtonActivatedChainReaction : ActivatedBase
 			{
 				m_objectsInChain[0].Activate();
 				m_objectsInChain.Remove(m_objectsInChain[0]);
-				m_currentWaitTime = m_timeToWaitBetween;
+				if(m_objectsInChain.Count != 0)
+				{
+					m_currentWaitTime = m_timeToWaitBetween;
+				}
+				else
+				{
+					this.enabled = false;
+				}
 			}
 		}
 	}
