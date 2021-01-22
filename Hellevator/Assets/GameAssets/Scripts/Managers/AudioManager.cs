@@ -154,7 +154,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
                 if (!m_sourcesList[i].isPlaying)
                 {
                     m_sourcesList[i].clip = clip;
-                    m_sourcesList[i].volume = m_sfxVolume;
+                    m_sourcesList[i].volume = m_sfxVolume / amountPlayingClip;
                     m_sourcesList[i].spatialBlend = m_spatialBlendSFX;
                     m_sourcesList[i].loop = looping;
                     m_sourcesList[i].Play();
