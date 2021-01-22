@@ -49,6 +49,7 @@ public class UIController : PersistentSingleton<UIController>
     // Start is called before the first frame update
     void Start()
     {
+        //Debug.LogError("hello");
         //if (!m_canvas)
         //    m_canvas = transform.GetChild(0).gameObject.GetComponent<Canvas>();
         //m_canvas.gameObject.SetActive(false);

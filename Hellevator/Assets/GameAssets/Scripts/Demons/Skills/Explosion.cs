@@ -22,7 +22,7 @@ public class Explosion : MonoBehaviour
         
         if (m_hasExploded)
             return;
-        Debug.LogError("Exploding");
+        //Debug.LogError("Exploding");
         //Debug.DrawLine(transform.position, transform.position + transform.up * m_explosionRadius, Color.red, 2f);
         //m_demonCmp.RagdollLogicCollider.gameObject.SetActive(false);
         AudioManager.Instance.PlayAudioSFX(m_explosionClip, false, 2f);

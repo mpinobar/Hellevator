@@ -20,7 +20,7 @@ public class Petrification : MonoBehaviour
         {
             return;
         }
-        Debug.LogError("Petrifying");
+        //Debug.LogError("Petrifying");
         Rigidbody2D platform = Instantiate(m_prefabToConvertInto, GetComponent<DemonBase>().Torso.position + Vector3.up*m_verticalOffsetToCreatePlatform, Quaternion.identity, transform).GetComponent<Rigidbody2D>();
         platform.transform.parent = null;
 		AudioManager.Instance.PlayAudioSFX(m_createPetrificationClip, false);
