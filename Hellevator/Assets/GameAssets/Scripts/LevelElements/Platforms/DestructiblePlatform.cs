@@ -38,9 +38,11 @@ public class DestructiblePlatform : MonoBehaviour
 
 	private bool m_isParentMovingPlatform;
 
+    Dissolve m_dissolveCmp;
     // Start is called before the first frame update
     void Start()
     {
+        m_dissolveCmp = GetComponentInChildren<Dissolve>();
         m_collider = GetComponent<Collider2D>();
         rnd = GetComponent<SpriteRenderer>();
         if (m_decorado)
@@ -107,7 +109,10 @@ public class DestructiblePlatform : MonoBehaviour
         }
     }
 
-
+    private void CallReverseDissolve()
+    {
+        m_dissolveCmp.StartReverseDissolve();
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         DemonBase demon = collision.transform.root.GetComponent<DemonBase>();
@@ -118,6 +123,9 @@ public class DestructiblePlatform : MonoBehaviour
             if (hit.transform != null && hit.transform == transform)
             {
                 m_destroying = true;
+                m_dissolveCmp?.NormalizeValues(m_timeToDestroy);
+                m_dissolveCmp?.StartDissolve();
+                Invoke(nameof(CallReverseDissolve), m_timeToReappear + m_timeToDestroy);
 				AudioManager.Instance.PlayAudioSFX(m_dissapearingClip, false, 1f);
             }
         }

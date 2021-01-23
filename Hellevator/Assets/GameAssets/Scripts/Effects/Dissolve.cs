@@ -9,6 +9,7 @@ public class Dissolve : MonoBehaviour
     [SerializeField] float m_delayToStartDissolve = 1.5f;
     [SerializeField] float m_dissolveSpeed = 0.5f;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,11 +32,19 @@ public class Dissolve : MonoBehaviour
             m_mpblock.SetFloat(percentName, percent);
             m_spr.SetPropertyBlock(m_mpblock);
             yield return null;
-        }        
+        }
     }
-
+    public void NormalizeValues(float newValue)
+    {
+        //m_delayToStartDissolve = newValue;
+        m_dissolveSpeed = newValue;
+    }
     public void StartReverseDissolve()
     {
+        if (m_mpblock == null)
+            Start();
+        m_mpblock.SetFloat("_DissolvePercent", 0);
+        m_spr.SetPropertyBlock(m_mpblock);
         StartCoroutine(ReverseDissolveVisual());
     }
 
