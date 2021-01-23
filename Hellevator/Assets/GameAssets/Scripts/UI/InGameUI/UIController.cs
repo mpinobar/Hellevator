@@ -18,6 +18,7 @@ public class UIController : PersistentSingleton<UIController>
     [SerializeField] GameObject m_settingsPanel;
 
     [SerializeField] GameplayUIController m_gameplayPanel;
+    [SerializeField] BloodOverlay m_bloodOverlay;
 
     [Header("Pause buttons references")]
     [SerializeField] Button m_resumeButton;
@@ -126,6 +127,11 @@ public class UIController : PersistentSingleton<UIController>
         }
         m_canvas.gameObject.SetActive(false);
         ShowPanel(m_gameplayPanel.gameObject);
+    }
+
+    public void ShowBloodOverlay()
+    {
+        m_bloodOverlay.ShowOverlayAndFade();
     }
 
     public void ShowPauseMenu()
