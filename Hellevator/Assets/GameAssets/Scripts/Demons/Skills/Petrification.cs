@@ -48,6 +48,7 @@ public class Petrification : MonoBehaviour
         platformComponent.WillReappear = false;
 
         platformComponent.GetComponentInChildren<Dissolve>().StartReverseDissolve();
+        //platformComponent.GetComponentInChildren<Dissolve>().NormalizeValues(0.5f);
         //PossessionManager.Instance.RemoveDemonPossession(transform);
         GetComponent<DemonBase>().IsPossessionBlocked = true;
         Dissolve[] dissolves = GetComponentsInChildren<Dissolve>();

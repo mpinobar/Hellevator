@@ -39,12 +39,15 @@ public class DestructiblePlatform : MonoBehaviour
 	private bool m_isParentMovingPlatform;
 
     Dissolve m_dissolveCmp;
+
+    Rigidbody2D m_rgb;
     // Start is called before the first frame update
     void Start()
     {
         m_dissolveCmp = GetComponentInChildren<Dissolve>();
         m_collider = GetComponent<Collider2D>();
         rnd = GetComponent<SpriteRenderer>();
+        m_rgb = GetComponent<Rigidbody2D>();
         if (m_decorado)
         {
             m_initPos = m_decorado.transform.position;
@@ -123,7 +126,7 @@ public class DestructiblePlatform : MonoBehaviour
             if (hit.transform != null && hit.transform == transform)
             {
                 m_destroying = true;
-                m_dissolveCmp?.NormalizeValues(m_timeToDestroy);
+                m_dissolveCmp?.NormalizeValues(1/m_timeToDestroy);
                 m_dissolveCmp?.StartDissolve();
                 Invoke(nameof(CallReverseDissolve), m_timeToReappear + m_timeToDestroy);
 				AudioManager.Instance.PlayAudioSFX(m_dissapearingClip, false, 1f);
@@ -132,19 +135,19 @@ public class DestructiblePlatform : MonoBehaviour
         else
         {
             if (!m_willReappear)
-            {
-				if(!GetComponent<Rigidbody2D>().isKinematic)
+            {                
+				if(!m_rgb.isKinematic)
 				{
-					GetComponent<Rigidbody2D>().isKinematic = m_turnsKinematicOnCollisionEnter;
-					if (GetComponent<Rigidbody2D>().isKinematic)
-					{
-						GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+                    m_rgb.isKinematic = m_turnsKinematicOnCollisionEnter;
+					if (m_rgb.isKinematic)
+					{  
+                        m_rgb.constraints = RigidbodyConstraints2D.FreezePosition;
 					}
 					else
-					{	
-						GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;				
+					{
+                        m_rgb.constraints = RigidbodyConstraints2D.FreezePositionX;				
 					}
-					GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+                    m_rgb.constraints = RigidbodyConstraints2D.FreezeRotation;
 				}
 				HorizontalPeriodicPlatform hpp = collision.transform.GetComponent<HorizontalPeriodicPlatform>();
                 if (hpp)
@@ -208,12 +211,12 @@ public class DestructiblePlatform : MonoBehaviour
         {
             if(collision.GetComponent<Spikes>() != null)
             {
-                GetComponent<Rigidbody2D>().isKinematic = true;
+                m_rgb.isKinematic = true;
 				//print("Hello");
                 if (!m_willReappear)
                 {
-                    GetComponent<Rigidbody2D>().isKinematic = true;
-                    GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+                    m_rgb.isKinematic = true;
+                    m_rgb.constraints = RigidbodyConstraints2D.FreezePosition;
                     HorizontalPeriodicPlatform hpp = collision.transform.GetComponentInParent<HorizontalPeriodicPlatform>();
                     if (hpp)
                     {
@@ -224,9 +227,6 @@ public class DestructiblePlatform : MonoBehaviour
                     }
                 }
             }
-
-            
-
         }
     }
 }

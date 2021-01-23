@@ -1031,6 +1031,7 @@ public abstract class DemonBase : MonoBehaviour
             CameraManager.Instance.CameraShakeMedium();
             //PossessionManager.Instance.RemoveDemonPossession(transform);
             //SetNotControlledByPlayer();
+            UIController.Instance.ShowBloodOverlay();
             CanMove = false;
             PossessionManager.Instance.StartDeathChoice(transform);
         }
