@@ -33,4 +33,25 @@ public class Dissolve : MonoBehaviour
             yield return null;
         }        
     }
+
+    public void StartReverseDissolve()
+    {
+        StartCoroutine(ReverseDissolveVisual());
+    }
+
+    IEnumerator ReverseDissolveVisual()
+    {
+        yield return new WaitForSeconds(m_delayToStartDissolve);
+        string percentName = "_DissolvePercent";
+        float percent = 0;
+        while (percent < 1)
+        {
+            percent += Time.deltaTime * m_dissolveSpeed;
+            percent = Mathf.Clamp01(percent);
+            m_mpblock.SetFloat(percentName, percent);
+            m_spr.SetPropertyBlock(m_mpblock);
+            yield return null;
+        }
+    }
+
 }

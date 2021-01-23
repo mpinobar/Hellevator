@@ -230,6 +230,7 @@ public abstract class DemonBase : MonoBehaviour
     public float DistanceToPlayer { get => m_distanceToPlayer; set => m_distanceToPlayer = value; }
     public bool PossessedOnStart { get => m_possessedOnStart; set => m_possessedOnStart = value; }
     public GameObject DemonMaskSprite { get => m_demonMaskSprite; }
+    public Rigidbody2D[] LimbsRbds { get => m_limbsRbds; set => m_limbsRbds = value; }
 
 
     #endregion
