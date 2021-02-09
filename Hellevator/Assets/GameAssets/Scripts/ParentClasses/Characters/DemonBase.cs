@@ -1009,7 +1009,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public virtual void Die(bool playEffects)
     {
-        
+
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         HidePossessionRange();
@@ -1026,14 +1026,23 @@ public abstract class DemonBase : MonoBehaviour
 
         if (m_isControlledByPlayer)
         {
-          //Debug.LogError("Player died: " + name);
+            //Debug.LogError("Player died: " + name);
             UseSkill();
             CameraManager.Instance.CameraShakeMedium();
             //PossessionManager.Instance.RemoveDemonPossession(transform);
             //SetNotControlledByPlayer();
             UIController.Instance.ShowBloodOverlay();
             CanMove = false;
-            PossessionManager.Instance.StartDeathChoice(transform);
+            Catapult catapultCmp = GetComponent<Catapult>();
+            if (catapultCmp)
+            {
+                IsPossessionBlocked = true;
+                catapultCmp.ShowAim();
+            }
+            else
+            {
+                PossessionManager.Instance.StartDeathChoice(transform);
+            }
         }
         else if (m_isControlledByIA)
         {
