@@ -16,6 +16,7 @@ public class InputManager : PersistentSingleton<InputManager>
     Vector3     m_direction = Vector3.one;
     bool        m_isInMenu;
     bool        m_canControlCharacters = true;
+    bool        m_throwingHead = false;
     public delegate void OnButtonPress();
 
     public event OnButtonPress OnInteract;
@@ -32,6 +33,7 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     public float VerticalInputValue { get => m_verticalInputValue; set => m_verticalInputValue = value; }
     public bool IsInMenu { get => m_isInMenu; set => m_isInMenu = value; }
+    public bool ThrowingHead { get => m_throwingHead; set => m_throwingHead = value; }
 
     public override void Awake()
     {
@@ -274,6 +276,9 @@ public class InputManager : PersistentSingleton<InputManager>
                 PossessionManager.Instance.ChoosingWhenDead = false;
                 PossessionManager.Instance.MultiplePossessionWhenDead = true;
                 UIController.Instance.EndDecisionTime();
+            }else if (ThrowingHead)
+            {
+                PossessionManager.Instance.ControlledDemon.GetComponent<Catapult>().ThrowHead();
             }
             else
             {
