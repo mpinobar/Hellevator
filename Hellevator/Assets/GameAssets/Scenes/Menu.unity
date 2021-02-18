@@ -1448,6 +1448,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Global Light 2D
       objectReference: {fileID: 0}
+    - target: {fileID: 1959596418734705862, guid: 15123ca25a4313247a6b582ef806d835,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15123ca25a4313247a6b582ef806d835, type: 3}
 --- !u!1 &551216167
@@ -2201,13 +2206,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640831561}
-  m_LocalRotation: {x: -0, y: -0, z: -0.30050558, w: 0.9537801}
-  m_LocalPosition: {x: 0.004, y: -0.028, z: 0}
-  m_LocalScale: {x: 0.15771358, y: 0.15771358, z: 0.15771358}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.03, y: -0.03, z: 0}
+  m_LocalScale: {x: 0.21120903, y: 0.21120903, z: 0.21120903}
   m_Children: []
   m_Father: {fileID: 178159633}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -34.976}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &640831563
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2244,11 +2249,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 22627979
+  m_SortingLayer: 3
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 7d29ed75d36599549a629d235e8114ee, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 527d34753b94fdf499ba6b1e39ccb8e9, type: 3}
+  m_Color: {r: 0.08627451, g: 0.09019608, b: 0.2509804, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6055,6 +6060,7 @@ GameObject:
   - component: {fileID: 1451926873}
   - component: {fileID: 1451926872}
   - component: {fileID: 1451926871}
+  - component: {fileID: 1451926876}
   m_Layer: 5
   m_Name: IntroCanvas
   m_TagString: Untagged
@@ -6162,6 +6168,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1451926876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451926870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 646824eb81832bb4fbbfa0df0ccea4af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_newMusic: 0
 --- !u!1 &1469175632
 GameObject:
   m_ObjectHideFlags: 0
@@ -6191,6 +6210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 595088cd6e9fd6b4c9af0db1780483e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_volumeFadeTransitionDuration: 1
   m_backgroundMusicClips:
   - {fileID: 8300000, guid: 6446fd4b49b0ff5468116f3645499b79, type: 3}
   - {fileID: 8300000, guid: adbff3be0cf04934398d3b3533378c26, type: 3}

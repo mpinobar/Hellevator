@@ -33,7 +33,8 @@ public class CheckPoint : MonoBehaviour
             m_opening = true;
             if (!m_active)
             {
-                AudioManager.Instance.PlayAudioSFX(m_lightUpClip, false);
+                if(m_lightUpClip)
+                    AudioManager.Instance.PlayAudioSFX(m_lightUpClip, false);
                 m_active = true;
             }
         }

@@ -25,5 +25,6 @@ public class ChangeTextWithDelay : MonoBehaviour
     private void ChangeText()
     {
         m_tmpro.text = m_newText;
+        IntroCanvas.OnBegin -= DelayChangeText;
     }
 }

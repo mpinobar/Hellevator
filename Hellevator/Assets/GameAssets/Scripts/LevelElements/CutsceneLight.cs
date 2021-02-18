@@ -11,7 +11,6 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
     [SerializeField] private DemonBase m_demonToPosesAfterCutscene = null;
     [SerializeField] private float m_stopingDistance = 0f;
     [SerializeField] private float m_angularVelocity = 30f;
-    [SerializeField] private ElevatorLevelStart m_elevator;
     private Light2D m_light;
     private Vector3 m_currentDirection;
     private int m_currentDestination = 0;
@@ -19,24 +18,7 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
 
     private void Start()
     {
-        m_light = GetComponent<Light2D>();
-        if (LevelManager.Instance.IsRestarting)
-        {
-            if (LevelManager.Instance.CheckPoints.Count != 0)
-            {
-                DestroyCutscene();
-            }
-            else
-            {
-                CameraManager.Instance.SetCameraFocus(this.transform);
-                CameraManager.Instance.SetupParallax();
-            }
-        }
-        else
-        {
-            CameraManager.Instance.SetCameraFocus(this.transform);
-            CameraManager.Instance.SetupParallax();
-        }
+        m_light = GetComponent<Light2D>();       
     }
 
 
@@ -45,12 +27,11 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
     {
         if (LevelManager.Instance.LastCheckPoint == null)
         {
-            if (PossessionManager.Instance.ControlledDemon == null && !m_elevator.Travelling)
+            if (PossessionManager.Instance.ControlledDemon == null )
             {
                 if (m_currentDestination == m_lightRoute.Length)
                 {
                     PossessionManager.Instance.PossessNewDemon(m_demonToPosesAfterCutscene);
-                    m_elevator.CloseDoors();
                     Destroy(this.gameObject);
                 }
                 m_light.intensity = Mathf.Lerp(m_light.intensity, 1, Time.deltaTime);
@@ -65,7 +46,6 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
                     {
                         PossessionManager.Instance.PossessNewDemon(m_demonToPosesAfterCutscene);
                         CameraManager.Instance.ChangeFocusOfMainCameraTo(m_demonToPosesAfterCutscene.transform);
-                        m_elevator.CloseDoors();
                         Destroy(this.gameObject);
                     }
                 }
@@ -75,8 +55,6 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
         {
             DestroyCutscene();
         }
-
-
 
     }
 

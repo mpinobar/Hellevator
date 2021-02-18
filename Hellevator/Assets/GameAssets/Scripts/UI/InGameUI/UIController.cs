@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIController : PersistentSingleton<UIController>
@@ -17,6 +18,7 @@ public class UIController : PersistentSingleton<UIController>
     [SerializeField] GameObject m_settingsPanel;
 
     [SerializeField] GameplayUIController m_gameplayPanel;
+    [SerializeField] BloodOverlay m_bloodOverlay;
 
     [Header("Pause buttons references")]
     [SerializeField] Button m_resumeButton;
@@ -48,6 +50,7 @@ public class UIController : PersistentSingleton<UIController>
     // Start is called before the first frame update
     void Start()
     {
+        //Debug.LogError("hello");
         //if (!m_canvas)
         //    m_canvas = transform.GetChild(0).gameObject.GetComponent<Canvas>();
         //m_canvas.gameObject.SetActive(false);
@@ -124,6 +127,11 @@ public class UIController : PersistentSingleton<UIController>
         }
         m_canvas.gameObject.SetActive(false);
         ShowPanel(m_gameplayPanel.gameObject);
+    }
+
+    public void ShowBloodOverlay()
+    {
+        m_bloodOverlay.ShowOverlayAndFade();
     }
 
     public void ShowPauseMenu()
@@ -234,4 +242,45 @@ public class UIController : PersistentSingleton<UIController>
         }
 
     }
+
+
+    //private void Update()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        IsPointerOverUIElement();
+    //    }
+    //}
+
+    ///Returns 'true' if we touched or hovering on Unity UI element.
+    public static bool IsPointerOverUIElement()
+    {
+        return IsPointerOverUIElement(GetEventSystemRaycastResults());
+    }
+    ///Returns 'true' if we touched or hovering on Unity UI element.
+    public static bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+    {
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults [index];
+            if (curRaysastResult.gameObject.layer == LayerMask.NameToLayer("UI"))
+                return true;
+        }
+        return false;
+    }
+    ///Gets all event systen raycast results of current mouse or touch position.
+    static List<RaycastResult> GetEventSystemRaycastResults()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        List<RaycastResult> raysastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raysastResults);
+        foreach (var eventData2 in raysastResults)
+        {
+            Debug.Log(eventData2.gameObject.name);
+        }
+        return raysastResults;
+    }
+
+
 }

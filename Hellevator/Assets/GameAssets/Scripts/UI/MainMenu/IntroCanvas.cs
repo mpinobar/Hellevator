@@ -27,7 +27,11 @@ public partial class IntroCanvas : MonoBehaviour
         m_canvasMenu.SetActive(false);
         PlayerPrefs.DeleteAll();
         
+        //Action.RemoveAll(OnBegin, OnBegin);
+        OnBegin = null;       
+        
     }
+
     // Start is called before the first frame update
     void Start()
     {
