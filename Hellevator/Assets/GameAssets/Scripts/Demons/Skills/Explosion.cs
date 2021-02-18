@@ -19,13 +19,11 @@ public class Explosion : MonoBehaviour
     }
     public void CreateExplosion()
     {
-        
         if (m_hasExploded)
             return;
-        //Debug.LogError("Exploding");
-        //Debug.DrawLine(transform.position, transform.position + transform.up * m_explosionRadius, Color.red, 2f);
-        //m_demonCmp.RagdollLogicCollider.gameObject.SetActive(false);
-        AudioManager.Instance.PlayAudioSFX(m_explosionClip, false, 2f);
+		//Debug.DrawLine(transform.position, transform.position + transform.up * m_explosionRadius, Color.red, 2f);
+		//m_demonCmp.RagdollLogicCollider.gameObject.SetActive(false);
+		AudioManager.Instance.PlayAudioSFX(m_explosionClip, false, 2f);
         CameraManager.Instance.CameraShakeMedium();
         m_demonCmp.IsPossessionBlocked = true;
         ExplosionVisuals();
@@ -93,8 +91,5 @@ public class Explosion : MonoBehaviour
             m_explosionParticles.transform.GetChild(i).GetComponent<ParticleSystem>().Play();
         }
     }
-    public void SetCantExplode()
-    {
-        m_hasExploded = true;
-    }
+
 }

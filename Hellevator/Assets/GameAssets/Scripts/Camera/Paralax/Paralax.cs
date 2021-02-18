@@ -94,7 +94,7 @@ public class Paralax : MonoBehaviour
 			this.transform.position = new Vector3(this.transform.position.x + cameraDistMoved * m_parallaxSpeed, m_camera.transform.position.y, this.transform.position.z);
 
 			//this.transform.Translate(new Vector3(cameraDistMoved * m_parallaxSpeed, 0, 0));
-			m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);
+			//m_backgrounds[m_indexBackgroundInFront].localPosition = new Vector3(indexParalax * m_length, 0, 0);
 
 
 			movedDistance = movedDistance + cameraDistMoved * (1 - m_parallaxSpeed);

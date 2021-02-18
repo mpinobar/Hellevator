@@ -4,28 +4,13 @@ using UnityEngine;
 
 public class BackgroundMusicChange : MonoBehaviour
 {
-
-    private enum MusicToChangeTo
+    [SerializeField] bool m_changesToKitchen;
+    private void OnEnable()
     {
-        Menu, Restaurant, Kitchen
-    }
-
-    [SerializeField] MusicToChangeTo m_newMusic = MusicToChangeTo.Restaurant;
-    //[SerializeField] bool m_changesToKitchen;
-    private void Start()
-    {
-        if (m_newMusic == MusicToChangeTo.Kitchen)
-        {
+        if (m_changesToKitchen)
             AudioManager.Instance.SetBackgroundMusicToKitchen();
-        }
-        else if (m_newMusic == MusicToChangeTo.Restaurant)
-        {
+        else
             AudioManager.Instance.SetBackgroundMusicToRestaurant();
-        }
-        else if (m_newMusic == MusicToChangeTo.Menu)
-        {
-            AudioManager.Instance.SetBackgroundMusicToMenu();
-        }
 
     }
 }

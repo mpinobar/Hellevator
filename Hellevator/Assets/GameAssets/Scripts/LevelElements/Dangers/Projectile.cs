@@ -14,7 +14,6 @@ public class Projectile : MonoBehaviour
     Rigidbody2D m_rgb;
 
     bool m_countingDown = true;
-    [SerializeField] bool m_isBossProjectile = false;
     private void OnEnable()
     {
         if (!m_rgb)
@@ -25,7 +24,6 @@ public class Projectile : MonoBehaviour
         pos.z = 0;
         transform.position = pos;
         m_timeToDeactivateTimer = m_timeToDeactivate;
-        GetComponent<Collider2D>().enabled = true;
     }
     public float Speed
     {
@@ -63,7 +61,7 @@ public class Projectile : MonoBehaviour
         }
         if (m_destroyOnScenaryImpact)
         {
-            if (m_isBossProjectile)
+            if (transform.childCount > 0)
             {
                 //es proyectil de boss
                 StopBossKnifeLogic();                

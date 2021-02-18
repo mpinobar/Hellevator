@@ -230,7 +230,6 @@ public abstract class DemonBase : MonoBehaviour
     public float DistanceToPlayer { get => m_distanceToPlayer; set => m_distanceToPlayer = value; }
     public bool PossessedOnStart { get => m_possessedOnStart; set => m_possessedOnStart = value; }
     public GameObject DemonMaskSprite { get => m_demonMaskSprite; }
-    public Rigidbody2D[] LimbsRbds { get => m_limbsRbds; set => m_limbsRbds = value; }
 
 
     #endregion
@@ -1009,7 +1008,7 @@ public abstract class DemonBase : MonoBehaviour
     /// </summary>
     public virtual void Die(bool playEffects)
     {
-
+        
         MyRgb.velocity = Vector2.zero;
         ToggleWalkingParticles(false);
         HidePossessionRange();
@@ -1026,23 +1025,13 @@ public abstract class DemonBase : MonoBehaviour
 
         if (m_isControlledByPlayer)
         {
-            //Debug.LogError("Player died: " + name);
+          //Debug.LogError("Player died: " + name);
             UseSkill();
             CameraManager.Instance.CameraShakeMedium();
             //PossessionManager.Instance.RemoveDemonPossession(transform);
             //SetNotControlledByPlayer();
-            UIController.Instance.ShowBloodOverlay();
             CanMove = false;
-            Catapult catapultCmp = GetComponent<Catapult>();
-            if (catapultCmp)
-            {
-                IsPossessionBlocked = true;
-                catapultCmp.ShowAim();
-            }
-            else
-            {
-                PossessionManager.Instance.StartDeathChoice(transform);
-            }
+            PossessionManager.Instance.StartDeathChoice(transform);
         }
         else if (m_isControlledByIA)
         {
