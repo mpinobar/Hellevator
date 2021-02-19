@@ -21,6 +21,30 @@ public class Cerberus : MonoBehaviour
     [SerializeField] SpriteRenderer [] m_mandibulas;
 
     List<DemonBase> m_charactersInView;
+    [SerializeField] GameObject [] m_eyes;
+    bool m_waiting;
+
+    private CerberusState CurrentState
+    {
+        get => m_currentState; set
+        {
+            if (value == CerberusState.Chasing)
+            {
+                for (int i = 0; i < m_eyes.Length; i++)
+                {
+                    m_eyes[i].SetActive(true);
+                }
+            }
+            else if (value == CerberusState.Patrol)
+            {
+                for (int i = 0; i < m_eyes.Length; i++)
+                {
+                    m_eyes[i].SetActive(false);
+                }
+            }
+            m_currentState = value;
+        }
+    }
 
 
     private enum CerberusState
@@ -53,19 +77,36 @@ public class Cerberus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_currentState == CerberusState.Patrol)
+        Debug.DrawRay((Vector2)transform.position + Vector2.up, (-transform.right * transform.localScale.x) * 8f, Color.green);
+        RaycastHit2D impact = Physics2D.Raycast((Vector2)transform.position+Vector2.up,-transform.right * transform.localScale.x,8f,1<<0);
+        if (impact)
         {
-            Patrol();
+            Debug.LogError(impact.transform.name);
         }
-        else if (m_currentState == CerberusState.Chasing)
+        m_waiting = impact;
+        //if (m_currentState == CerberusState.Patrol && m_waiting)
+        //{
+
+        //}
+
+        if (!m_waiting)
         {
-            Chase();
+            if (CurrentState == CerberusState.Patrol)
+            {
+                Patrol();
+            }
+            else if (CurrentState == CerberusState.Chasing)
+            {
+                Chase();
+            }
         }
-        m_animator.SetBool("Run", m_currentState != CerberusState.Eating);
+
+        m_animator.SetBool("Run", !m_waiting);
     }
 
     private void Patrol()
     {
+
         transform.position = Vector3.MoveTowards(transform.position, m_patrolPositions[m_currentPatrolIndex], m_speed * Time.deltaTime);
         if (m_patrolPositions[m_currentPatrolIndex].x < transform.position.x)
         {
@@ -101,13 +142,16 @@ public class Cerberus : MonoBehaviour
         if (Vector3.Distance(transform.position, m_charactersInView[indexOfNearestDemon].Torso.position) < m_distanceToEat)
         {
             Eat(m_charactersInView[indexOfNearestDemon]);
-
+        }
+        else if (Mathf.Abs(transform.position.x - m_charactersInView[indexOfNearestDemon].Torso.position.x) < 3f)
+        {
+            m_waiting = true;
         }
     }
 
     private void Eat(DemonBase characterToEat)
     {
-        m_currentState = CerberusState.Eating;
+        CurrentState = CerberusState.Eating;
         StartCoroutine(EatCoroutine(characterToEat));
     }
 
@@ -135,11 +179,13 @@ public class Cerberus : MonoBehaviour
         Destroy(characterToEat.gameObject);
         if (m_charactersInView.Count > 0)
         {
-            m_currentState = CerberusState.Chasing;
+            CurrentState = CerberusState.Chasing;
+
         }
         else
         {
-            m_currentState = CerberusState.Patrol;
+            CurrentState = CerberusState.Patrol;
+
         }
     }
 
@@ -150,9 +196,10 @@ public class Cerberus : MonoBehaviour
         {
             m_charactersInView.Add(cmpDemon);
             //si es el primero que añado, es que antes estaba en patrulla y tengo que empezar a perseguir
-            if (m_charactersInView.Count == 1 && m_currentState != CerberusState.Eating)
+            if (m_charactersInView.Count == 1 && CurrentState != CerberusState.Eating)
             {
-                m_currentState = CerberusState.Chasing;
+                CurrentState = CerberusState.Chasing;
+
             }
         }
     }
@@ -162,9 +209,10 @@ public class Cerberus : MonoBehaviour
         if (cmpDemon && m_charactersInView.Contains(cmpDemon))
         {
             m_charactersInView.Remove(cmpDemon);
-            if (m_charactersInView.Count == 0 && m_currentState != CerberusState.Eating)
+            if (m_charactersInView.Count == 0 && CurrentState != CerberusState.Eating)
             {
-                m_currentState = CerberusState.Patrol;
+                CurrentState = CerberusState.Patrol;
+
             }
         }
     }
