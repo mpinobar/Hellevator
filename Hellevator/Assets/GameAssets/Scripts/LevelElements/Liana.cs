@@ -16,9 +16,10 @@ public class Liana : MonoBehaviour
 
     float m_initialEulerZValue;
     float m_endAngle;
+    bool m_characterGrabbed;
     private void Start()
     {
-        m_initialEulerZValue = m_visual.localEulerAngles.z;
+        //m_initialEulerZValue = m_visual.localEulerAngles.z;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -30,31 +31,32 @@ public class Liana : MonoBehaviour
                 m_character = cmpDemon;
                 m_character.OnJumped += ReleaseDemon;
                 GrabDemon(m_character);
-                StartCoroutine(Animate(cmpDemon));
+                StartCoroutine(DragDemon(cmpDemon));
             }
         }
     }
 
-    private static void GrabDemon(BasicZombie cmpDemon)
+    private void GrabDemon(BasicZombie cmpDemon)
     {
         cmpDemon.SetOnLadder(true);
         //cmpDemon.CanMove = false;
         cmpDemon.MyRgb.isKinematic = true;
+        m_characterGrabbed = true;
     }
 
-    private IEnumerator Animate(BasicZombie cmpDemon)
+    private IEnumerator DragDemon(BasicZombie cmpDemon)
     {
-        float time = 0;
-        m_endAngle = m_delayToRelease * m_rotationSpeed;
-        while (time < m_delayToRelease)
+        //float time = 0;
+        //m_endAngle = m_delayToRelease * m_rotationSpeed;
+        while (m_characterGrabbed)
         {
-            time += Time.deltaTime;
-            m_visual.localEulerAngles += Vector3.forward * m_rotationSpeed * Time.deltaTime;
+            //time += Time.deltaTime;
+            //m_visual.localEulerAngles += Vector3.forward * m_rotationSpeed * Time.deltaTime;
             cmpDemon.transform.position = Vector3.Lerp(cmpDemon.transform.position, m_colliderTransform.position - Vector3.up * m_characterVerticalOffsetOnGrabbed, Time.deltaTime * m_characterFollowSpeed);
             yield return null;
         }
 
-        ReleaseDemon();
+        //ReleaseDemon();
     }
 
     private void ReleaseDemon()
@@ -70,11 +72,12 @@ public class Liana : MonoBehaviour
 
     IEnumerator ReturnToOrigin()
     {
-        while (Mathf.Abs(m_visual.localEulerAngles.z - m_initialEulerZValue) > 2)
-        {
-            m_visual.localEulerAngles -= Vector3.forward * m_rotationSpeed * Time.deltaTime;
-            yield return null;
-        }
+        //while (Mathf.Abs(m_visual.localEulerAngles.z - m_initialEulerZValue) > 2)
+        //{
+        //    m_visual.localEulerAngles -= Vector3.forward * m_rotationSpeed * Time.deltaTime;
+        //    yield return null;
+        //}
+        yield return new WaitForSeconds(0.25f);
         m_colliderTransform.GetComponent<Collider2D>().enabled = true;
     }
 }

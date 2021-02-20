@@ -11,7 +11,7 @@ public class Cerberus : MonoBehaviour
     [SerializeField] float m_offsetWaitWhenInterruptedByObstacle = 5f;
     [SerializeField] Transform[] m_patrolTransforms;
     [SerializeField] Transform m_mouthTransform;
-
+    [SerializeField] float m_obstacleDetectionHeight = 3f;
     int m_currentPatrolIndex = 0;
     Vector3[] m_patrolPositions;
     CerberusState m_currentState = CerberusState.Patrol;
@@ -78,7 +78,7 @@ public class Cerberus : MonoBehaviour
     void Update()
     {
         //Debug.DrawRay((Vector2)transform.position + Vector2.up, (-transform.right * transform.localScale.x) * 8f, Color.green);
-        RaycastHit2D impact = Physics2D.Raycast((Vector2)transform.position+Vector2.up,-transform.right * transform.localScale.x,8f,1<<0);
+        RaycastHit2D impact = Physics2D.Raycast((Vector2)transform.position+Vector2.up*m_obstacleDetectionHeight,-transform.right * transform.localScale.x,8f,1<<0);
         //if (impact)
         //{
         //    Debug.LogError(impact.transform.name);
