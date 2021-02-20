@@ -8,6 +8,7 @@ public class Liana : MonoBehaviour
     [SerializeField] float m_delayToRelease = 1;
     [SerializeField] float m_rotationSpeed = 30;
     [SerializeField] float m_characterVerticalOffsetOnGrabbed = 2f;
+    [SerializeField] float m_characterFollowSpeed = 8f;
     [SerializeField] Transform m_visual;
     [SerializeField] Transform m_colliderTransform;
 
@@ -49,7 +50,7 @@ public class Liana : MonoBehaviour
         {
             time += Time.deltaTime;
             m_visual.localEulerAngles += Vector3.forward * m_rotationSpeed * Time.deltaTime;
-            cmpDemon.transform.position = Vector3.Lerp(cmpDemon.transform.position, m_colliderTransform.position - Vector3.up * m_characterVerticalOffsetOnGrabbed, Time.deltaTime * 4.5f);
+            cmpDemon.transform.position = Vector3.Lerp(cmpDemon.transform.position, m_colliderTransform.position - Vector3.up * m_characterVerticalOffsetOnGrabbed, Time.deltaTime * m_characterFollowSpeed);
             yield return null;
         }
 
