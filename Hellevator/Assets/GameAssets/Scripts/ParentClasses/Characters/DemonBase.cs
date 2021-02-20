@@ -845,7 +845,8 @@ public abstract class DemonBase : MonoBehaviour
     {
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
-            m_limbsRbds[i].gravityScale = newGravity;
+            if (m_limbsRbds[i])
+                m_limbsRbds[i].gravityScale = newGravity;
         }
     }
 

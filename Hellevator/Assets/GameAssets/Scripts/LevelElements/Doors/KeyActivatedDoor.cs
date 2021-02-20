@@ -21,10 +21,10 @@ public class KeyActivatedDoor : MonoBehaviour
 
     private void OnEnable()
     {
-        if (PlayerPrefs.GetInt(key.ToString()) == 1 /*|| LevelManager.Instance.HasKitchenKey*/)
-        {
-            OpenDoor();
-        }
+        //if (PlayerPrefs.GetInt(key.ToString()) == 1 /*|| LevelManager.Instance.HasKitchenKey*/)
+        //{
+        //    OpenDoor();
+        //}
     }
 
     private void CheckOpenDoor()
