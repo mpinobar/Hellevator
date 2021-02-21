@@ -34,7 +34,7 @@ public class DissolvingPit : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
-        
+
         if (cmpDemon != null)
         {
             if (m_disablesSkills)
@@ -124,7 +124,7 @@ public class DissolvingPit : MonoBehaviour
         Transform characterTransform = characterToImmerse.Torso.transform;
 
         SpriteRenderer [] rends  = characterToImmerse.GetComponentsInChildren<SpriteRenderer>();
-        
+
         for (int i = 0; i < rends.Length; i++)
         {
             rends[i].sortingLayerName = "Checkpoint";
@@ -137,8 +137,8 @@ public class DissolvingPit : MonoBehaviour
             yield return null;
         }
 
-        if(characterToImmerse)
-        Destroy(characterToImmerse.gameObject);
+        if (characterToImmerse)
+            Destroy(characterToImmerse.gameObject);
 
     }
 
@@ -165,7 +165,7 @@ public class DissolvingPit : MonoBehaviour
             rends[i].sortingLayerName = "Checkpoint";
         }
 
-        while (timeToDestroy > 0)
+        while (timeToDestroy > 0 && characterToImmerse != null)
         {
             characterToImmerse.IsInDanger = true;
             characterToImmerse.IsPossessionBlocked = true;
@@ -174,8 +174,10 @@ public class DissolvingPit : MonoBehaviour
             yield return null;
         }
 
-        Destroy(characterToImmerse.gameObject);
-        Destroy(ragdollCollider.gameObject);
+        if (characterToImmerse.gameObject)
+            Destroy(characterToImmerse.gameObject);
+        if (ragdollCollider.gameObject)
+            Destroy(ragdollCollider.transform.root.gameObject);
 
     }
 
