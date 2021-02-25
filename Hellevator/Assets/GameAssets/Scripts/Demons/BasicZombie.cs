@@ -317,6 +317,7 @@ public class BasicZombie : DemonBase
         IsPossessionBlocked = true;
         for (int i = 0; i < m_limbsToUnparent.Count; i++)
         {
+            if(m_limbsToUnparent[i].transform.parent)
             m_limbsToUnparent[i].transform.parent = null;
             m_limbsToUnparent[i].GetComponent<HingeJoint2D>().enabled = false;
             m_limbsToUnparent[i].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
