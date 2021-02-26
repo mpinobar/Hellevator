@@ -31,6 +31,7 @@ public class TriggerSceneChange : MonoBehaviour
         {
             if (demon.IsControlledByPlayer)
             {
+                //Debug.LogError(demon.name);
                 //Debug.LogError("Loading scene " + m_linkedScene);
 				AudioManager.Instance.PlayAudioSFX(m_changeSceneSFX, false, 2f);
 				PossessionManager.Instance.ChangeMainCharacter(demon);
