@@ -28,6 +28,10 @@ public class PersistentSingleton<T> : MonoBehaviour where T : Component
 
     public virtual void Awake()
     {
+        if(transform.parent != null)
+        {
+            transform.parent = null;
+        }
         DontDestroyOnLoad(this.gameObject);
         if (_instance == null)
         {
