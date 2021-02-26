@@ -8,7 +8,7 @@ public class CleaningDemonStop: MonoBehaviour
     {
         if (collision.GetComponent<DestructionCart>())
         {
-            Debug.LogError("WALL STOPS CLEANING DEMON");
+            //Debug.LogError("WALL STOPS CLEANING DEMON");
             collision.GetComponentInParent<CleaningDemon>().Stop();
         }
     }

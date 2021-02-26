@@ -88,7 +88,7 @@ public class CleaningDemon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.LogError(m_currentState.ToString());
+        //Debug.LogError(m_currentState.ToString());
 
         if (!m_stunned)
         {
