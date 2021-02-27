@@ -165,6 +165,12 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Movimiento adicional en caso de que se salga el cuerpo de la plataforma
+    /// </summary>
+    /// <param name="character">Personaje al que aplicar la inercia</param>
+    /// <param name="inertialVelocity">Velocidad de la inercia aplicada</param>
+    /// <returns></returns>
     IEnumerator Inertia(BasicZombie character, float inertialVelocity)
     {
         float currentInertia = inertialVelocity;

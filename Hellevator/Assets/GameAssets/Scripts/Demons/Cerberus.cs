@@ -9,20 +9,25 @@ public class Cerberus : MonoBehaviour
     [SerializeField] float m_speed = 3.5f;
     [SerializeField] float m_distanceToEat = 2f;
     [SerializeField] float m_offsetWaitWhenInterruptedByObstacle = 5f;
-    [SerializeField] Transform[] m_patrolTransforms;
-    [SerializeField] Transform m_mouthTransform;
     [SerializeField] float m_obstacleDetectionHeight = 3f;
-    int m_currentPatrolIndex = 0;
-    Vector3[] m_patrolPositions;
-    CerberusState m_currentState = CerberusState.Patrol;
-    Rigidbody2D m_RGB;
-    Animator m_animator;
+
+    [SerializeField] Transform[]    m_patrolTransforms;
+    [SerializeField] Transform      m_mouthTransform;
 
     [SerializeField] SpriteRenderer [] m_mandibulas;
 
-    List<DemonBase> m_charactersInView;
     [SerializeField] GameObject [] m_eyes;
-    bool m_waiting;
+
+    int     m_currentPatrolIndex = 0;
+    bool    m_waiting;
+
+    Rigidbody2D     m_RGB;
+    Animator        m_animator;
+    List<DemonBase> m_charactersInView;
+
+    CerberusState   m_currentState = CerberusState.Patrol;
+    Vector3[]       m_patrolPositions;
+
 
     private CerberusState CurrentState
     {
@@ -77,17 +82,9 @@ public class Cerberus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.DrawRay((Vector2)transform.position + Vector2.up, (-transform.right * transform.localScale.x) * 8f, Color.green);
         RaycastHit2D impact = Physics2D.Raycast((Vector2)transform.position+Vector2.up*m_obstacleDetectionHeight,-transform.right * transform.localScale.x,8f,1<<0);
-        //if (impact)
-        //{
-        //    Debug.LogError(impact.transform.name);
-        //}
-        m_waiting = impact;
-        //if (m_currentState == CerberusState.Patrol && m_waiting)
-        //{
 
-        //}
+        m_waiting = impact;
 
         if (!m_waiting)
         {
@@ -104,6 +101,9 @@ public class Cerberus : MonoBehaviour
         m_animator.SetBool("Run", !m_waiting);
     }
 
+    /// <summary>
+    /// Patrulla entre los puntos designados
+    /// </summary>
     private void Patrol()
     {
 
@@ -123,6 +123,9 @@ public class Cerberus : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Perseguir al jugador en horizontal. Si no se llega por diferencia de alturas, se queda parado en su misma posicion en X
+    /// </summary>
     private void Chase()
     {
 
@@ -149,12 +152,21 @@ public class Cerberus : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Comienza la corrutina de comerse a un personaje
+    /// </summary>
+    /// <param name="characterToEat">Personaje al que comerse</param>
     private void Eat(DemonBase characterToEat)
     {
         CurrentState = CerberusState.Eating;
         StartCoroutine(EatCoroutine(characterToEat));
     }
 
+    /// <summary>
+    /// Se come al personaje (lo mata y luego lo destruye)
+    /// </summary>
+    /// <param name="characterToEat">Personaje al que comerse</param>
+    /// <returns></returns>
     private IEnumerator EatCoroutine(DemonBase characterToEat)
     {
         m_animator.SetTrigger("Attack");
