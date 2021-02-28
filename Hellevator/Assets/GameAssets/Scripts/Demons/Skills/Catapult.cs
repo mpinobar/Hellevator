@@ -41,9 +41,10 @@ public class Catapult : MonoBehaviour
         m_headTransform.localScale = Vector3.one;
         m_headTransform.GetComponent<HingeJoint2D>().enabled = false;
         m_headTransform.GetComponent<Collider2D>().enabled = true;
-        m_headTransform.GetComponent<Rigidbody2D>().isKinematic = false;
-        m_headTransform.GetComponent<Rigidbody2D>().gravityScale = 8f;
-        m_headTransform.GetComponent<Rigidbody2D>().velocity = direction.normalized * m_throwVelocity;
+        Rigidbody2D headRigidbody = m_headTransform.GetComponent<Rigidbody2D>();
+        headRigidbody.isKinematic = false;
+        headRigidbody.gravityScale = 8f;
+        headRigidbody.velocity = direction.normalized * m_throwVelocity;
     }
 
     IEnumerator SlowDown()
