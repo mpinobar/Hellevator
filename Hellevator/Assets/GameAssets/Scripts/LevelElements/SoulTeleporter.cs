@@ -1,37 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoulSyphon : MonoBehaviour
+public class SoulTeleporter : MonoBehaviour
 {
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    DemonBase character = collision.GetComponentInParent<DemonBase>();
-    //    if (character)
-    //    {
-    //        character.IsPossessionBlocked = true;
-    //    }
-    //}
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    DemonBase character = collision.GetComponentInParent<DemonBase>();
-    //    if (character)
-    //    {
-    //        character.IsPossessionBlocked = false;
-    //    }
-    //}
-
     [SerializeField] float m_rotationSpeed = 540f;
     [SerializeField] float m_translationSpeed = 2f;
 
     Transform m_rotation;
     Transform m_translation;
 
+    [SerializeField] SoulTeleporter m_connectingTeleporter;
 
+    Collider2D m_collider;
     private void Awake()
     {
+        m_collider = GetComponent<Collider2D>();
         m_rotation = transform.GetChild(0);
-        m_translation= m_rotation.transform.GetChild(0);
+        m_translation = m_rotation.transform.GetChild(0);
     }
     public void Spiral(Transform light)
     {
@@ -41,6 +28,8 @@ public class SoulSyphon : MonoBehaviour
     private IEnumerator SpiralCoroutine(Transform light)
     {
         float timeToKill = 2f;
+        //m_connectingTeleporter.DeactivateCollider();
+        light.GetComponent<Collider2D>().enabled = false;
         while (timeToKill > 0 && light)
         {
             timeToKill -= Time.deltaTime;
@@ -50,6 +39,19 @@ public class SoulSyphon : MonoBehaviour
             light.position = m_translation.position;
             yield return null;
         }
-        light.GetComponent<PossessingLight>().KillLightAndRestart();
+        
+        light.position = m_connectingTeleporter.transform.position;
+        //Invoke(nameof(ReactivateCollider), 0.75f);
+        light.GetComponent<PossessingLight>().SetFreeFromAttraction();
+    }
+
+    private void DeactivateCollider()
+    {
+        m_collider.enabled = false;
+        
+    }
+    private void ReactivateCollider()
+    {
+        m_collider.enabled = true;
     }
 }

@@ -284,4 +284,19 @@ public class AudioManager : PersistentSingleton<AudioManager>
         }
     }
 
+    /// <summary>
+    /// Loops all sfx audio sources and stops if it finds a source playing the clip
+    /// </summary>
+    /// <param name="clipToStop">The clip to stop playing</param>
+    public void StopSFX(AudioClip clipToStop)
+    {
+        for (int i = 0; i < m_sourcesList.Count; i++)
+        {
+            if(m_sourcesList[i].clip == clipToStop && m_sourcesList[i].isPlaying)
+            {
+                m_sourcesList[i].Stop();
+            }
+        }
+    }
+
 }
