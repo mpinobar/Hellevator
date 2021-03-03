@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class ButtonActivatedDoor : ActivatedBase
 {	
@@ -8,6 +9,7 @@ public class ButtonActivatedDoor : ActivatedBase
 	[SerializeField] private Transform m_endPosition;
 	private bool m_opening = false;
 
+	
     private void Update()
 	{
 		if (m_opening)
@@ -27,6 +29,7 @@ public class ButtonActivatedDoor : ActivatedBase
 	{
 		base.Activate();
 		m_opening = true;
+		
 	}
 
     public override void ActivateImmediately()
@@ -34,5 +37,10 @@ public class ButtonActivatedDoor : ActivatedBase
 		base.ActivateImmediately();
 		transform.position = m_endPosition.position;
 		enabled = false;
+		
 	}
+	public void ChangeEndPosition(Vector3 newPosition)
+    {
+		m_endPosition.position = newPosition;
+    }
 }
