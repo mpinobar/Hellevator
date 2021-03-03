@@ -82,7 +82,9 @@ public class Cerberus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit2D impact = Physics2D.Raycast((Vector2)transform.position+Vector2.up*m_obstacleDetectionHeight,-transform.right * transform.localScale.x,8f,1<<0);
+        Vector2 origin = (Vector2)transform.position+Vector2.up*m_obstacleDetectionHeight- (Vector2)transform.right * transform.localScale.x * 5f;
+        //Debug.DrawRay(origin, -transform.right * transform.localScale.x * 3f, Color.green);
+        RaycastHit2D impact = Physics2D.Raycast(origin,-transform.right * transform.localScale.x,3f,1<<0);
 
         m_waiting = impact;
 
@@ -95,6 +97,26 @@ public class Cerberus : MonoBehaviour
             else if (CurrentState == CerberusState.Chasing)
             {
                 Chase();
+            }
+        }
+        else
+        {
+            if (m_charactersInView.Count > 0)
+            {
+                int indexOfNearestDemon = 0;
+                for (int i = 0; i < m_charactersInView.Count; i++)
+                {
+                    if (Vector3.Distance(transform.position, m_charactersInView[indexOfNearestDemon].Torso.transform.position) > Vector3.Distance(transform.position, m_charactersInView[i].Torso.transform.position))
+                    {
+                        indexOfNearestDemon = i;
+                    }
+                }
+                
+                //Vector3 positionToMoveTo = m_charactersInView[indexOfNearestDemon].Torso.transform.position;
+                if (impact.distance > Vector3.Distance(origin, m_charactersInView[indexOfNearestDemon].Torso.transform.position))
+                {
+                    Chase();
+                }
             }
         }
 

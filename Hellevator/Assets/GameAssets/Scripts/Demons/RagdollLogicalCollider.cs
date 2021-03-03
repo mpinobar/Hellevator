@@ -11,8 +11,11 @@ public class RagdollLogicalCollider : MonoBehaviour
 
     bool m_inParts;
 
+    List<Spikes> m_triggeringSpikes;
+
     private void Start()
     {
+        m_triggeringSpikes = new List<Spikes>();
         m_parentDemon = GetComponentInParent<DemonBase>();
     }
 
@@ -59,6 +62,28 @@ public class RagdollLogicalCollider : MonoBehaviour
         {
             m_parentDemon.IsInDanger = true;
             m_parentDemon.IsPossessionBlocked = true;
+        }
+        if(m_triggeringSpikes.Count > 0)
+            m_parentDemon.IsInDanger = true;        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out Spikes spikes))
+        {
+            m_triggeringSpikes.Add(spikes);
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out Spikes spikes))
+        {
+            if (m_triggeringSpikes.Contains(spikes))
+                m_triggeringSpikes.Remove(spikes);
+            if(m_triggeringSpikes.Count == 0)
+            {
+                m_parentDemon.IsInDanger = false;
+            }
         }
     }
 }
