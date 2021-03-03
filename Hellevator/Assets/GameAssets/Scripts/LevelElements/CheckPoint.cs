@@ -47,7 +47,7 @@ public class CheckPoint : MonoBehaviour
         {
             m_openingValue -= Time.deltaTime;
             m_openingValue = Mathf.Clamp01(m_openingValue);
-            m_spr.material.SetFloat("_Opening", m_openingValue);
+            m_spr?.material.SetFloat("_Opening", m_openingValue);
             if (m_openingValue <= 0)
             {
                 m_opening = false;
@@ -58,8 +58,8 @@ public class CheckPoint : MonoBehaviour
     private void ActivateCheckPoint()
     {
         LevelManager.Instance.SetLastCheckPoint(this);
-        GetComponent<SpriteRenderer>().material.SetFloat("_Active", 1);
-        GetComponent<SpriteRenderer>().material.SetFloat("_Opening", 0);
+        m_spr?.material.SetFloat("_Active", 1);
+        m_spr?.material.SetFloat("_Opening", 0);
         if (m_savesGameToPlayerPrefs)
         {
             LevelManager.Instance.SaveSceneToLoad(SceneToLoad);
@@ -77,8 +77,8 @@ public class CheckPoint : MonoBehaviour
         spawnedDemon.AssignLastMask();
         ActivateCheckPoint();
         m_openingValue = 1;
-        m_spr.material.SetFloat("_Active", 1);
-        m_spr.material.SetFloat("_Opening", 1);
+        m_spr?.material.SetFloat("_Active", 1);
+        m_spr?.material.SetFloat("_Opening", 1);
         //CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();
     }
