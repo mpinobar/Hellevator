@@ -76,6 +76,7 @@ public class WeightedPreassurePlate : MonoBehaviour
         }
         else
         {
+            if(m_parent)
             m_startingPosition = m_parent.transform.position;
             m_distanceToEndPosition = Vector3.Distance(m_startingPosition, m_pressurePlateEndPosition.position);
         }
@@ -337,6 +338,7 @@ public class WeightedPreassurePlate : MonoBehaviour
                         }
                     }
                     m_positionY = m_distanceToEndPosition * m_percentage;
+                    if(m_parent)
                     m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
                 }
