@@ -203,7 +203,7 @@ public class Cerberus : MonoBehaviour
         m_mandibulas[0].sortingLayerName = "Foreground";
         m_mandibulas[1].sortingLayerName = "Foreground";
         yield return new WaitForSeconds(m_timeToEatCorpse);
-        yield return StartCoroutine(IdleEating(m_timeToEatCorpse));
+        //yield return StartCoroutine(IdleEating(m_timeToEatCorpse));
         characterToEat.Die(true);
         float time = 0;
         float maxTime = 0.75f/animationSpeed;
