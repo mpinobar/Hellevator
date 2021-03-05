@@ -16,14 +16,14 @@ public class PositionSaver : MonoBehaviour
     {
         m_doorCMP = GetComponent<ButtonActivatedDoor>();
         
-        SetPosition();
-        GetComponent<ActivatedBase>().OnActivated += SavePosition;     
+        //SetPosition();
+        //GetComponent<ActivatedBase>().OnActivated += SavePosition;     
         
     }
 
     private void OnDisable()
     {
-        GetComponent<ActivatedBase>().OnActivated -= SavePosition;
+        //GetComponent<ActivatedBase>().OnActivated -= SavePosition;
     }
     private void SetPosition()
     {
@@ -31,13 +31,11 @@ public class PositionSaver : MonoBehaviour
         {
             if (PlayerPrefs.GetInt(m_elevatorPositionKey) == 0)
             {
-                transform.position = m_downTransform.position;
-                m_doorCMP.ChangeEndPosition(m_upTransform.position);
+                SetPositionDown();
             }
             else if (PlayerPrefs.GetInt(m_elevatorPositionKey) == 1)
             {
-                transform.position = m_upTransform.position;
-                m_doorCMP.ChangeEndPosition(m_downTransform.position);
+                SetPositionUp();
             }
         }
         else
@@ -45,6 +43,25 @@ public class PositionSaver : MonoBehaviour
             transform.position = m_downTransform.position;
         }
     }
+
+    public void SetPositionUp()
+    {
+        //Debug.LogError("Setting position up");
+        transform.position = m_upTransform.position;
+        if (!m_doorCMP)
+            Start();
+        m_doorCMP.ChangeEndPosition(m_downTransform.position);
+    }
+
+    public void SetPositionDown()
+    {
+        //Debug.LogError("Setting position down");
+        transform.position = m_downTransform.position;
+        if (!m_doorCMP)
+            Start();
+        m_doorCMP.ChangeEndPosition(m_upTransform.position);
+    }
+
     public void SavePosition()
     {
         if (PlayerPrefs.GetInt(m_elevatorPositionKey) == 0)

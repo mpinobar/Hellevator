@@ -17,6 +17,7 @@ public class Cerberus : MonoBehaviour
     [SerializeField] SpriteRenderer [] m_mandibulas;
 
     [SerializeField] GameObject [] m_eyes;
+    [SerializeField] float m_timeToEatCorpse = 0.5f;
 
     int     m_currentPatrolIndex = 0;
     bool    m_waiting;
@@ -111,7 +112,7 @@ public class Cerberus : MonoBehaviour
                         indexOfNearestDemon = i;
                     }
                 }
-                
+
                 //Vector3 positionToMoveTo = m_charactersInView[indexOfNearestDemon].Torso.transform.position;
                 if (impact.distance > Vector3.Distance(origin, m_charactersInView[indexOfNearestDemon].Torso.transform.position))
                 {
@@ -192,15 +193,21 @@ public class Cerberus : MonoBehaviour
     private IEnumerator EatCoroutine(DemonBase characterToEat)
     {
         m_animator.SetTrigger("Attack");
+        float fixedAnimationTime = 0.5f;
+        float animationSpeed = fixedAnimationTime/m_timeToEatCorpse;
+        float previousAnimationSpeed = m_animator.speed;
+        m_animator.speed = animationSpeed;
         characterToEat.CanMove = false;
         characterToEat.IsPossessionBlocked = true;
         characterToEat.Torso.GetComponent<Rigidbody2D>().isKinematic = true;
         m_mandibulas[0].sortingLayerName = "Foreground";
         m_mandibulas[1].sortingLayerName = "Foreground";
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(m_timeToEatCorpse);
+        yield return StartCoroutine(IdleEating(m_timeToEatCorpse));
         characterToEat.Die(true);
         float time = 0;
-        while (time < 0.75f)
+        float maxTime = 0.75f/animationSpeed;
+        while (time < maxTime)
         {
             characterToEat.Torso.position = Vector3.MoveTowards(characterToEat.Torso.position, m_mouthTransform.position, Time.deltaTime * 8f);
             time += Time.deltaTime;
@@ -211,6 +218,7 @@ public class Cerberus : MonoBehaviour
         m_mandibulas[1].sortingLayerName = "Default";
         m_charactersInView.Remove(characterToEat);
         Destroy(characterToEat.gameObject);
+        m_animator.speed = previousAnimationSpeed;
         if (m_charactersInView.Count > 0)
         {
             CurrentState = CerberusState.Chasing;
@@ -221,6 +229,13 @@ public class Cerberus : MonoBehaviour
             CurrentState = CerberusState.Patrol;
 
         }
+    }
+
+    IEnumerator IdleEating(float time)
+    {
+        m_animator.SetTrigger("IdleEating");
+        yield return new WaitForSeconds(m_timeToEatCorpse);
+        m_animator.SetTrigger("EndAttack");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
