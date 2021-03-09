@@ -250,6 +250,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     /// <param name="currentCharacter">Personaje con el que se ha muerto</param>
     public void StartDeathChoice(Transform currentCharacter)
     {
+
         if (ChoosingWhenDead)
             return;
 
@@ -272,7 +273,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         //Debug.LogError("StartingToDecide");
         float decisionTime = time;
         m_choosingWhenDead = true;
-        Time.timeScale = 0.1f;
+        Time.timeScale = 0;
         while (decisionTime > 0 && ChoosingWhenDead)
         {
             decisionTime -= Time.unscaledDeltaTime;
