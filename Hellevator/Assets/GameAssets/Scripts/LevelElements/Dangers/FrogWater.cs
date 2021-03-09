@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class FrogWater : MonoBehaviour
 {
-    Frog m_frog;
+    AmphibianDemon m_frog;
 
     private void Start()
     {
-        m_frog = GetComponentInChildren<Frog>();
+        m_frog = GetComponentInChildren<AmphibianDemon>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

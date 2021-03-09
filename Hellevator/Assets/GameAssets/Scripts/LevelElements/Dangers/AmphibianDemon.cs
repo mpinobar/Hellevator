@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Frog : MonoBehaviour
+public class AmphibianDemon : MonoBehaviour
 {
     [SerializeField] List<Transform> m_patrolPoints;
     int m_patrolIndex;
