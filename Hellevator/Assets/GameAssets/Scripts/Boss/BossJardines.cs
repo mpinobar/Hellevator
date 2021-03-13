@@ -19,12 +19,54 @@ public class BossJardines : MonoBehaviour
     [SerializeField] Transform m_swimmingEndPoint = null;
     Vector3 m_initialPosition;
     Animator m_animator;
+    [Space]
+    [SerializeField] AnimationCurve m_xMovementJumpToWater;
+    [SerializeField] AnimationCurve m_yMovementJumpToWater;
+    [SerializeField] float m_jumpToWaterSpeed;
+    [SerializeField] float m_animationDelayBeforeJumping;
+    [SerializeField] float m_animationDelayBeforeSwimming;
+    [Space]
+    [SerializeField] AnimationCurve m_xMovementJumpOutOfWater;
+    [SerializeField] AnimationCurve m_yMovementJumpOutOfWater;
+    [SerializeField] float m_jumpOutOfWaterSpeed;
+    [Space]
 
+    bool m_canGetHurt;
+    [SerializeField] int m_lives = 3;
+
+    [SerializeField] SpriteRenderer m_button;
+    [SerializeField] Material m_materialWhenInactive;
+    [SerializeField] Material m_materialWhenActive;
+
+    Glow glowCMP;
+    public bool CanGetHurt
+    {
+        get => m_canGetHurt;
+        set
+        {
+            if (value)
+            {
+                m_button.material = m_materialWhenActive;
+                glowCMP.enabled = true;
+            }
+            else
+            {
+                m_button.material = m_materialWhenInactive;
+                glowCMP.enabled = false;
+            }
+            m_canGetHurt = value;
+        }
+    }
+    private void Awake()
+    {
+        glowCMP = m_button.GetComponent<Glow>();
+        glowCMP.enabled = false;
+    }
     // Start is called before the first frame update
     void Start()
     {
         m_initialPosition = transform.position;
-        m_animator = GetComponent<Animator>();
+        m_animator = GetComponentInChildren<Animator>();
         if (!m_spawnedDemon)
             m_spawnedDemon = Instantiate(m_prefabAnifibio);
         m_spawnedDemon.gameObject.SetActive(false);
@@ -35,22 +77,23 @@ public class BossJardines : MonoBehaviour
 
     public void StartCombat()
     {
-        StartCoroutine(SurfaceBehavior());
+        //StartCoroutine(SurfaceBehavior());
+        StartCoroutine(BelowWaterBehavior());
     }
 
     IEnumerator SurfaceBehavior()
     {
-        Debug.LogError("Starting surface behavior");
+        transform.GetChild(0).localScale = Vector3.one;
+        transform.GetChild(0).localEulerAngles = Vector3.forward * 5;
+        transform.GetChild(0).localPosition = new Vector3(6.12f, 1.13f, 0);
         yield return new WaitForSeconds(m_delayToSpawn);
-        Debug.LogError("Spawning amphibian demon");
-        //m_animator.SetTrigger("AVISO DE SPAWNEAR ANFIBIO");
-        
+
+        m_animator.SetTrigger("spawnDemon");
+
         m_spawnedDemon.gameObject.SetActive(true);
         m_spawnedDemon.ReturnToPatrol();
         m_spawnedDemon.transform.position = m_spawnTransformAnfibio.position;
         yield return new WaitForSeconds(m_surfaceTime);
-        Debug.LogError("GOING INTO WATER");
-        //m_animator.SetTrigger("AVISO DE IR AL AGUA");
         StartCoroutine(BelowWaterBehavior());
     }
 
@@ -58,33 +101,119 @@ public class BossJardines : MonoBehaviour
     {
         m_spawnedDemon.StopAllCoroutines();
         m_spawnedDemon.gameObject.SetActive(false);
-        transform.position = m_pointToJumpToSwim.position;
-        Debug.LogError("Jumped into water, starting to swim");
+        m_animator.SetBool("swimming", true);
+        yield return StartCoroutine(JumpThroughAnimationCurve(transform, m_initialPosition, m_pointToJumpToSwim.position, m_xMovementJumpToWater, m_yMovementJumpToWater, m_jumpToWaterSpeed, m_animationDelayBeforeJumping));
+        CanGetHurt = true;
         m_swimmingTimer = m_swimmingTime;
         Transform target = m_swimmingEndPoint;
+        Vector3 delayedSwimmingEndpoint = m_swimmingEndPoint.position;
+        delayedSwimmingEndpoint.x = m_pointToJumpToSwim.position.x + 3;
+        //StartCoroutine(RotationCoroutine(m_animator.transform.parent, m_animator.transform.parent.localEulerAngles.z, -8, 1));
+
+        transform.GetChild(0).localScale = Vector3.one;
+        transform.GetChild(0).localEulerAngles = Vector3.forward * -6.5f;
+        transform.GetChild(0).localPosition = new Vector3(6.12f, 1.13f, 0);
+
         while (m_swimmingTimer > 0)
         {
             m_swimmingTimer -= Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, target.position, m_swimmingSpeed * Time.deltaTime);
+            if (m_swimmingTimer < (m_swimmingTime - m_animationDelayBeforeSwimming))
+                transform.position = Vector3.MoveTowards(transform.position, target.position, m_swimmingSpeed * Time.deltaTime);
+            else
+            {
+                transform.position = Vector3.MoveTowards(transform.position, delayedSwimmingEndpoint, m_swimmingSpeed * Time.deltaTime);
+                transform.position += Vector3.up * Time.deltaTime * 0.5f;
+            }
             if (Vector3.Distance(transform.position, target.position) <= 0.5f)
             {
-                if(target == m_swimmingEndPoint)
+                if (target == m_swimmingEndPoint)
                 {
                     target = m_pointToJumpToSwim;
+                    transform.GetChild(0).localScale = Vector3.one - Vector3.right * 2;
+                    transform.GetChild(0).localEulerAngles = Vector3.forward * 12;
+                    transform.GetChild(0).localPosition = new Vector3(-8.25f, 1.13f, 0);
                 }
                 else
                 {
                     target = m_swimmingEndPoint;
+                    transform.GetChild(0).localScale = Vector3.one;
+                    transform.GetChild(0).localEulerAngles = Vector3.forward * -6.5f;
+                    transform.GetChild(0).localPosition = new Vector3(6.12f, 1.13f, 0);
                 }
             }
             yield return null;
         }
+        transform.GetChild(0).localScale = Vector3.one - Vector3.right * 2;
+        transform.GetChild(0).localEulerAngles = Vector3.forward * 12;
+        transform.GetChild(0).localPosition = new Vector3(-8.25f, 1.13f, 0);
+        target = m_pointToJumpToSwim;
+        while (Vector3.Distance(transform.position, target.position) >= 0.5f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, target.position, m_swimmingSpeed * Time.deltaTime);
+            yield return null;
+        }
 
-        //Debug.LogError("END OF WATER BEHAVIOR");
-        //m_animator.SetTrigger("SALIR DE AGUA TRIGGER");
-        transform.position = m_initialPosition;
+        CanGetHurt = false;
+        m_animator.SetBool("swimming", false);
+        yield return StartCoroutine(JumpThroughAnimationCurve(transform, m_pointToJumpToSwim.position, m_initialPosition, m_xMovementJumpOutOfWater, m_yMovementJumpOutOfWater, m_jumpOutOfWaterSpeed));
+        //StartCoroutine(RotationCoroutine(m_animator.transform.parent, m_animator.transform.parent.localEulerAngles.z, 0, 1));
         StartCoroutine(SurfaceBehavior());
     }
 
+    IEnumerator JumpThroughAnimationCurve(Transform characterToMove, Vector3 startPos, Vector3 endPos, AnimationCurve xMovement, AnimationCurve yMovement, float animationSpeed, float initialWaitTime = 0f)
+    {
+        yield return new WaitForSeconds(initialWaitTime);
+        float iterator = 0f;
+        characterToMove.position = startPos;
+        Vector3 nextPosition = startPos;
+        while (iterator < 1)
+        {
+            iterator += Time.deltaTime * animationSpeed;
+            nextPosition.x = startPos.x + (endPos.x - startPos.x) * xMovement.Evaluate(iterator);
+            nextPosition.y = startPos.y + (endPos.y - startPos.y) * yMovement.Evaluate(iterator);
+            characterToMove.position = nextPosition;
+            yield return null;
+        }
+    }
 
+    IEnumerator RotationCoroutine(Transform character, float start, float end, float speed)
+    {
+        Vector3 rotation = new Vector3(0,0,start);
+        character.localEulerAngles = rotation;
+        float t = 1;
+        while (t > 0)
+        {
+            t -= Time.deltaTime * speed;
+            rotation.z = Mathf.Lerp(rotation.z, end, speed * Time.deltaTime);
+            character.localEulerAngles = rotation;
+            yield return null;
+        }
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (CanGetHurt)
+        {
+            collision.transform.TryGetComponent(out DemonBase player);
+            if (player && player.IsControlledByPlayer)
+            {
+                ((BasicZombie)player).ResetJumps();
+                CanGetHurt = false;
+                TakeDamage();
+            }
+        }
+    }
+
+    private void TakeDamage()
+    {
+        m_lives--;
+        if (m_lives <= 0)
+        {
+            StopAllCoroutines();
+            m_animator.SetTrigger("dead");
+        }
+        else
+            m_animator.SetTrigger("hurt");
+    }
 }

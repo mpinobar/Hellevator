@@ -15,9 +15,10 @@ public class AmphibianDemon : MonoBehaviour
     [SerializeField] float m_maxHeight;
     [SerializeField] float m_jumpSpeed;
     Transform m_target;
-
+    Animator m_animator;
     private void Start()
     {
+        m_animator = GetComponentInChildren<Animator>();
         StartCoroutine(Patrol());
     }
 
@@ -26,11 +27,11 @@ public class AmphibianDemon : MonoBehaviour
         //Debug.LogError("Starting chase");
         float time = 0f;
         Vector3 offsetPosition = m_target.position - Vector3.up*m_verticalOffsetChase;
-        while (Vector2.Distance(transform.position, offsetPosition) > 0.5f)
+        while (Vector2.Distance(transform.position, offsetPosition) > 2.5f)
         {
             offsetPosition = m_target.position - Vector3.up * m_verticalOffsetChase;
             transform.position += (offsetPosition - transform.position).normalized * m_movementSpeed * Time.deltaTime;
-            transform.up = Vector3.Lerp(transform.up, (offsetPosition - transform.position), m_rotationSpeed * Time.deltaTime);
+            transform.right = Vector3.Lerp(transform.right, (transform.position- offsetPosition), m_rotationSpeed * Time.deltaTime);
             yield return null;
         }
 
@@ -39,7 +40,7 @@ public class AmphibianDemon : MonoBehaviour
             time += Time.deltaTime;
             offsetPosition = m_target.position - Vector3.up * m_verticalOffsetChase;
             transform.position += (offsetPosition - transform.position).normalized * m_movementSpeed * Time.deltaTime;
-            transform.up = Vector3.Lerp(transform.up, Vector3.up, m_rotationSpeed * Time.deltaTime);
+            transform.right = Vector3.Lerp(transform.right, Vector3.right, m_rotationSpeed * Time.deltaTime);
             yield return null;
         }
         float animTime = 0;
@@ -59,7 +60,16 @@ public class AmphibianDemon : MonoBehaviour
         while (true)
         {
             transform.position += (m_patrolPoints[m_patrolIndex].position - transform.position).normalized * m_movementSpeed * Time.deltaTime;
-            transform.up = (m_patrolPoints[m_patrolIndex].position - transform.position).normalized;
+            if(m_patrolPoints[m_patrolIndex].position.x < transform.position.x)
+            {
+                transform.localScale = Vector3.one;
+                transform.localEulerAngles = Vector3.one - Vector3.forward + Vector3.forward * 81f;
+            }
+            else
+            {
+                transform.localScale = Vector3.one - Vector3.up * 2;
+                transform.localEulerAngles = Vector3.one - Vector3.forward + Vector3.forward * 97f;
+            }
             if (Vector2.Distance(transform.position, m_patrolPoints[m_patrolIndex].position) < 0.5f)
             {
                 m_patrolIndex = (m_patrolIndex + 1) % m_patrolPoints.Count;
