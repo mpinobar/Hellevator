@@ -18,8 +18,9 @@ public class SpiderWeb : MonoBehaviour
     {
         if (collision.TryGetComponent(out BasicZombie cmpDemon))
         {
-            if (cmpDemon.IsControlledByPlayer)
+            if (!cmpDemon.IsDead && cmpDemon.IsControlledByPlayer)
             {
+                cmpDemon.CanJump = false;
                 cmpDemon.Slow(m_slowPercentage);
                 m_spider?.SetTarget(cmpDemon.transform);
             }
@@ -32,6 +33,7 @@ public class SpiderWeb : MonoBehaviour
         {
             if (cmpDemon.IsControlledByPlayer)
             {
+                cmpDemon.CanJump = true;
                 cmpDemon.CancelSlow(m_slowPercentage);
                 m_spider?.ReturnToInitialPosition();
             }

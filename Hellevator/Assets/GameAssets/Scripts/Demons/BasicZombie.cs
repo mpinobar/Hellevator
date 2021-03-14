@@ -95,6 +95,7 @@ public class BasicZombie : DemonBase
     public bool SoyUnNiñoDeVerdad { get => m_SoyUnNiñoDeVerdad; set => m_SoyUnNiñoDeVerdad = value; }
     public bool TryingToGrabLadder { get => m_tryingToGrabLadder; set => m_tryingToGrabLadder = value; }
     public bool IsOnLadder { get => m_isOnLadder; }
+    public bool CanJump { get => m_canJump; set => m_canJump = value; }
 
     #endregion
 

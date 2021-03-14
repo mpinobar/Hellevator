@@ -8,7 +8,7 @@ public class BossJardines : MonoBehaviour
     [SerializeField] float m_delayToSpawn = 2f;
     [SerializeField] float m_swimmingTime = 15f;
     float m_swimmingTimer = 15f;
-    [SerializeField] float m_surfaceTime = 15f;
+    [SerializeField] float m_surfaceTimeBeforeJumping = 15f;
     [SerializeField] float m_swimmingSpeed = 5f;
     //float m_surfaceTimer = 15f;
 
@@ -77,8 +77,8 @@ public class BossJardines : MonoBehaviour
 
     public void StartCombat()
     {
-        //StartCoroutine(SurfaceBehavior());
-        StartCoroutine(BelowWaterBehavior());
+        StartCoroutine(SurfaceBehavior());
+        //StartCoroutine(BelowWaterBehavior());
     }
 
     IEnumerator SurfaceBehavior()
@@ -86,17 +86,30 @@ public class BossJardines : MonoBehaviour
         transform.GetChild(0).localScale = Vector3.one;
         transform.GetChild(0).localEulerAngles = Vector3.forward * 5;
         transform.GetChild(0).localPosition = new Vector3(6.12f, 1.13f, 0);
-        yield return new WaitForSeconds(m_delayToSpawn);
+        yield return new WaitForSeconds(3);
+        int numSpawns = 3;
 
-        m_animator.SetTrigger("spawnDemon");
+        while (numSpawns > 0)
+        {
+            Debug.LogError("Spawning frog, number of spawn: " + numSpawns);
+            m_animator.SetTrigger("spawnDemon");
+            yield return new WaitForSeconds(1);
+            numSpawns--;
+            m_spawnedDemon.gameObject.SetActive(true);
+            m_spawnedDemon.transform.position = m_spawnTransformAnfibio.position;
+            m_spawnedDemon.ReturnToPatrol();
+            yield return new WaitForSeconds(m_delayToSpawn);
+        }
 
-        m_spawnedDemon.gameObject.SetActive(true);
-        m_spawnedDemon.ReturnToPatrol();
-        m_spawnedDemon.transform.position = m_spawnTransformAnfibio.position;
-        yield return new WaitForSeconds(m_surfaceTime);
+        //m_spawnedDemon.gameObject.SetActive(true);
+        //m_spawnedDemon.ReturnToPatrol();
+        //m_spawnedDemon.transform.position = m_spawnTransformAnfibio.position;
+        yield return new WaitForSeconds(m_surfaceTimeBeforeJumping);
         StartCoroutine(BelowWaterBehavior());
     }
 
+
+    Transform target;
     IEnumerator BelowWaterBehavior()
     {
         m_spawnedDemon.StopAllCoroutines();
@@ -105,7 +118,7 @@ public class BossJardines : MonoBehaviour
         yield return StartCoroutine(JumpThroughAnimationCurve(transform, m_initialPosition, m_pointToJumpToSwim.position, m_xMovementJumpToWater, m_yMovementJumpToWater, m_jumpToWaterSpeed, m_animationDelayBeforeJumping));
         CanGetHurt = true;
         m_swimmingTimer = m_swimmingTime;
-        Transform target = m_swimmingEndPoint;
+        target = m_swimmingEndPoint;
         Vector3 delayedSwimmingEndpoint = m_swimmingEndPoint.position;
         delayedSwimmingEndpoint.x = m_pointToJumpToSwim.position.x + 3;
         //StartCoroutine(RotationCoroutine(m_animator.transform.parent, m_animator.transform.parent.localEulerAngles.z, -8, 1));
@@ -201,6 +214,7 @@ public class BossJardines : MonoBehaviour
                 ((BasicZombie)player).ResetJumps();
                 CanGetHurt = false;
                 TakeDamage();
+
             }
         }
     }
@@ -214,6 +228,12 @@ public class BossJardines : MonoBehaviour
             m_animator.SetTrigger("dead");
         }
         else
+        {
             m_animator.SetTrigger("hurt");
+            target = m_pointToJumpToSwim;
+            transform.GetChild(0).localScale = Vector3.one - Vector3.right * 2;
+            transform.GetChild(0).localEulerAngles = Vector3.forward * 12;
+            transform.GetChild(0).localPosition = new Vector3(-8.25f, 1.13f, 0);
+        }
     }
 }

@@ -10,7 +10,7 @@ public class BossStartJardines : MonoBehaviour
         collision.TryGetComponent(out DemonBase demon);
         if(demon && demon.IsControlledByPlayer)
         {
-            Debug.LogError("Starting combat");
+            //Debug.LogError("Starting combat");
             m_boss.StartCombat();
             gameObject.SetActive(false);
         }

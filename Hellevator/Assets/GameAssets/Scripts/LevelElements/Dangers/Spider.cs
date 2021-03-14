@@ -22,7 +22,7 @@ public class Spider : MonoBehaviour
     {
         if (m_target)
         {
-            transform.position = Vector3.Lerp(transform.position, m_target.position, m_spiderSpeed * Time.deltaTime);
+            transform.position += (m_target.position - transform.position).normalized * m_spiderSpeed * Time.deltaTime;
             transform.up = Vector3.Lerp(transform.up, (m_target.position - transform.position), m_rotationSpeed * Time.deltaTime);
         }
     }
@@ -38,7 +38,7 @@ public class Spider : MonoBehaviour
 
         while (Vector3.Distance(m_initialPosition, transform.position) > 2f)
         {
-            transform.position += (m_initialPosition - transform.position) * m_spiderSpeed * Time.deltaTime;
+            transform.position += (m_initialPosition - transform.position).normalized * m_spiderSpeed * Time.deltaTime;
             transform.up = Vector3.Lerp(transform.up, (m_initialPosition - transform.position), m_rotationSpeed * Time.deltaTime);
             yield return null;
         }
@@ -61,8 +61,12 @@ public class Spider : MonoBehaviour
     {
         if (collision.TryGetComponent(out BasicZombie cmpDemon))
         {
-            m_target = null;
-            cmpDemon.Die(true);
+            if (!cmpDemon.IsDead)
+            {
+                m_target = null;
+                cmpDemon.Die(true);
+                ReturnToInitialPosition();
+            }
         }
     }
 }

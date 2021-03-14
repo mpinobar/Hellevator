@@ -174,9 +174,9 @@ public class DissolvingPit : MonoBehaviour
             yield return null;
         }
 
-        if (characterToImmerse.gameObject)
+        if (characterToImmerse && characterToImmerse.gameObject)
             Destroy(characterToImmerse.gameObject);
-        if (ragdollCollider.gameObject)
+        if (characterToImmerse && ragdollCollider.gameObject)
             Destroy(ragdollCollider.transform.root.gameObject);
 
     }

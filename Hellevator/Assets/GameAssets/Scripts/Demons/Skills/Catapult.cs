@@ -15,6 +15,8 @@ public class Catapult : MonoBehaviour
     [SerializeField] Transform m_headSprite;
     LineRenderer lr;
     [SerializeField] LayerMask m_defaultMask;
+
+    bool m_hasThrown;
     private void Awake()
     {
         m_demon = GetComponent<DemonBase>();
@@ -25,8 +27,12 @@ public class Catapult : MonoBehaviour
     /// </summary>
     public void ShowAim()
     {
-        m_demon.CanMove = false;
-        StartCoroutine(SelectLandingSpot());
+        if (!m_hasThrown)
+        {
+            m_hasThrown = true;
+            m_demon.CanMove = false;
+            StartCoroutine(SelectLandingSpot());
+        }
     }
     /// <summary>
     /// Primero ralentiza el tiempo y dice al input manager que se está apuntando
@@ -82,11 +88,11 @@ public class Catapult : MonoBehaviour
 
 
         Vector3 [] drawnPoints = Ballistics.GetBallisticPath(m_demon.Torso.position, direction.normalized, m_throwVelocity, Time.unscaledDeltaTime,8f);
-        for (int i = 1; i < drawnPoints.Length; i++)
-        {
-            Debug.DrawRay(drawnPoints[i - 1], drawnPoints[i] - drawnPoints[i - 1], Color.green);
+        //for (int i = 1; i < drawnPoints.Length; i++)
+        //{
+        //    Debug.DrawRay(drawnPoints[i - 1], drawnPoints[i] - drawnPoints[i - 1], Color.green);
 
-        }
+        //}
         Vector3[] interr = Ballistics.GetBallisticPathInterrupted(drawnPoints,m_defaultMask);
         lr.positionCount = interr.Length;
         lr.SetPositions(interr);
@@ -181,7 +187,8 @@ public class Catapult : MonoBehaviour
         public static Vector3[] GetBallisticPath(Vector3 startPos, Vector3 forward, float velocity, float timeResolution, float gravity, float maxTime = Mathf.Infinity)
         {
 
-            maxTime = Mathf.Min(maxTime, GetTimeOfFlight(velocity, Vector3.Angle(forward, Vector3.up) * Mathf.Deg2Rad, startPos.y));
+            maxTime = Mathf.Min(maxTime, GetTimeOfFlight(velocity, Vector3.Angle(forward, Vector3.right) * Mathf.Deg2Rad, startPos.y, gravity));
+            //Debug.LogError(maxTime);
             Vector3[] positions = new Vector3[Mathf.CeilToInt(maxTime / timeResolution)];
             Vector3 velVector = forward * velocity;
             int index = 0;
@@ -235,7 +242,8 @@ public class Catapult : MonoBehaviour
             RaycastHit2D hit;
             for (int i = 1; i < arc.Length; i++)
             {
-                hit = Physics2D.Raycast(arc[i - 1], arc[i] - arc[i - 1], (arc[i] - arc[i - 1]).magnitude, lm);
+                hit = Physics2D.Raycast(arc[i - 1], arc[i] - arc[i - 1], (arc[i] - arc[i - 1]).magnitude/*, lm*/);
+                //Debug.LogError(hit.transform.name);
                 if (hit.transform != null && !hit.collider.isTrigger && IsInLayerMask(hit.transform.gameObject.layer, lm))
                 {
                     return interruptedPath.ToArray();
@@ -253,6 +261,7 @@ public class Catapult : MonoBehaviour
                 //                Debug.DrawRay (arc [i - 1], arc [i] - arc [i - 1], Color.green, 10f);
                 //            }
             }
+            //Debug.LogError("uninterrupted trajectory. Arc length: " + arc.Length);
             return interruptedPath.ToArray();
         }
 
@@ -281,13 +290,13 @@ public class Catapult : MonoBehaviour
 
         public static float CalculateMaxRange(float muzzleVelocity)
         {
-            return (muzzleVelocity * muzzleVelocity) / -Physics.gravity.y;
+            return (muzzleVelocity * muzzleVelocity) / (-Physics.gravity.y * 8);
         }
 
-        public static float GetTimeOfFlight(float vel, float angle, float height)
+        public static float GetTimeOfFlight(float vel, float angle, float height, float gravity)
         {
-
-            return (2.0f * vel * Mathf.Sin(angle)) / -Physics.gravity.y;
+            //Debug.LogError("Velocity: " + vel + ". Angle: " + angle + ".");
+            return (2.0f * vel * Mathf.Sin(angle)) / (-Physics.gravity.y*gravity);
         }
 
     }
