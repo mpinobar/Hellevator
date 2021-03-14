@@ -4,13 +4,8 @@ using UnityEngine;
 
 public class FrogWater : MonoBehaviour
 {
-    Frog m_frog;
-
-    private void Start()
-    {
-        m_frog = GetComponentInChildren<Frog>();
-    }
-
+    [SerializeField] AmphibianDemon m_frog;
+     
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out BasicZombie cmpDemon))

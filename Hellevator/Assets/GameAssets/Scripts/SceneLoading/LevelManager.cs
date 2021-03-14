@@ -294,6 +294,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         FadeManager.IsRestarting = false;
         CanLoad = false;
         UIController.Instance.TryDiscoverNewZone(m_newSceneName.Split('_')[0]);
+        //Debug.LogError("Started loading scene " + m_newSceneName);
     }
 
     private void LoadSwitchSceneCompleted(AsyncOperation obj)
@@ -303,6 +304,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         PossessionManager.Instance.RemovePossessionFromExtraDemons();
         SceneManager.UnloadSceneAsync(PreviousScene);
         CameraManager.Instance.FadeOut();
+        //Debug.LogError("Finished loading scene" + NewSceneName);
     }
 
     public void LoadMainMenu()
