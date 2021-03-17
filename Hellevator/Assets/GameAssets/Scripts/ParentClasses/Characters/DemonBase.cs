@@ -1070,6 +1070,10 @@ public abstract class DemonBase : MonoBehaviour
         }
 
     }
+    public void DeactivateAnimator()
+    {
+        m_myAnimator.enabled = false;
+    }
 
     /// <summary>
     /// Check to see if the character is grounded

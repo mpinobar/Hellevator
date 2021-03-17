@@ -9,8 +9,9 @@ public class Liana : MonoBehaviour
     [SerializeField] float m_rotationSpeed = 30;
     [SerializeField] float m_characterVerticalOffsetOnGrabbed = 2f;
     [SerializeField] float m_characterFollowSpeed = 8f;
-    [SerializeField] Transform m_visual;
+    //[SerializeField] Transform m_visual;
     [SerializeField] Transform m_colliderTransform;
+    [SerializeField] Transform m_collidedPosition;
 
     BasicZombie m_character;
 
@@ -48,11 +49,14 @@ public class Liana : MonoBehaviour
     {
         //float time = 0;
         //m_endAngle = m_delayToRelease * m_rotationSpeed;
+        m_collidedPosition.transform.position = cmpDemon.transform.position;
+        m_collidedPosition.transform.localPosition -= Vector3.right * m_collidedPosition.transform.localPosition.x;
+        m_collidedPosition.transform.localPosition += transform.up * 0.15f;
         while (m_characterGrabbed)
         {
             //time += Time.deltaTime;
             //m_visual.localEulerAngles += Vector3.forward * m_rotationSpeed * Time.deltaTime;
-            cmpDemon.transform.position = Vector3.Lerp(cmpDemon.transform.position, m_colliderTransform.position - Vector3.up * m_characterVerticalOffsetOnGrabbed, Time.deltaTime * m_characterFollowSpeed);
+            cmpDemon.transform.position = Vector3.Lerp(cmpDemon.transform.position, m_collidedPosition.position - Vector3.up * m_characterVerticalOffsetOnGrabbed, Time.deltaTime * m_characterFollowSpeed);
             yield return null;
         }
 
