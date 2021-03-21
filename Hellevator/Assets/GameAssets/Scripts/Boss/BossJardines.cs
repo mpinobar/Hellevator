@@ -127,7 +127,7 @@ public class BossJardines : MonoBehaviour
         transform.GetChild(0).localEulerAngles = Vector3.forward * -6.5f;
         transform.GetChild(0).localPosition = new Vector3(6.12f, 1.13f, 0);
 
-        while (m_swimmingTimer > 0)
+        while (m_swimmingTimer > 0 && m_canGetHurt)
         {
             m_swimmingTimer -= Time.deltaTime;
             if (m_swimmingTimer < (m_swimmingTime - m_animationDelayBeforeSwimming))
@@ -226,6 +226,7 @@ public class BossJardines : MonoBehaviour
         {
             StopAllCoroutines();
             m_animator.SetTrigger("dead");
+            StartCoroutine(Sink());
         }
         else
         {
@@ -234,6 +235,15 @@ public class BossJardines : MonoBehaviour
             transform.GetChild(0).localScale = Vector3.one - Vector3.right * 2;
             transform.GetChild(0).localEulerAngles = Vector3.forward * 12;
             transform.GetChild(0).localPosition = new Vector3(-8.25f, 1.13f, 0);
+        }
+    }
+
+    IEnumerator Sink()
+    {
+        while (true)
+        {
+            transform.position += Vector3.down * Time.deltaTime*5f;
+            yield return null;
         }
     }
 }

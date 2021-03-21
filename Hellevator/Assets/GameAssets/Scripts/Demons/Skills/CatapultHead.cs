@@ -8,6 +8,10 @@ public class CatapultHead : MonoBehaviour
     Collider2D m_collider;
     BasicZombie m_demon;
     public bool m_active;
+    Vector3 m_lastPosition;
+
+    public Vector3 LastPosition { get => m_lastPosition; set => m_lastPosition = value; }
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -17,20 +21,22 @@ public class CatapultHead : MonoBehaviour
         m_active = false;
     }
 
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (m_active)
-        {            
+        {
+            Debug.LogError(m_RGB.velocity);
             m_demon.Torso.parent = null;
             m_demon.transform.position = transform.position;
             m_demon.Torso = transform;
             PossessionManager.Instance.StartDeathChoice(m_demon.transform);
-            m_collider.enabled = false;            
+            m_collider.enabled = false;
             m_active = false;
             StartCoroutine(SetGravityOfhead());
         }
     }
-    
+
     IEnumerator SetGravityOfhead()
     {
         yield return new WaitForSeconds(0.05f);
