@@ -119,7 +119,7 @@ public class Catapult : MonoBehaviour
         headRigidbody.gravityScale = 8f;
         headRigidbody.transform.position = m_demon.Torso.position;
         headRigidbody.velocity = directionToThrowHead.normalized * m_throwVelocity;
-        Debug.LogError("Set velocity as: " + directionToThrowHead.normalized * m_throwVelocity);
+        //Debug.LogError("Set velocity as: " + directionToThrowHead.normalized * m_throwVelocity);
         lr.positionCount = 0;
     }
 
@@ -242,7 +242,7 @@ public class Catapult : MonoBehaviour
             List<Vector3> interruptedPath = new List<Vector3>();
             if (arc != null && arc.Length > 0)
             {
-                interruptedPath[0] = arc[0];
+                interruptedPath.Add(arc[0]);
             }
             else
             {

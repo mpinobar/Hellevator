@@ -26,7 +26,7 @@ public class CatapultHead : MonoBehaviour
     {
         if (m_active)
         {
-            Debug.LogError(m_RGB.velocity);
+            //Debug.LogError(m_RGB.velocity);
             m_demon.Torso.parent = null;
             m_demon.transform.position = transform.position;
             m_demon.Torso = transform;
