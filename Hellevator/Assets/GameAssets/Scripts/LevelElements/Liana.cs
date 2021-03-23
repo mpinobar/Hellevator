@@ -49,9 +49,12 @@ public class Liana : MonoBehaviour
     {
         //float time = 0;
         //m_endAngle = m_delayToRelease * m_rotationSpeed;
-        m_collidedPosition.transform.position = cmpDemon.transform.position;
-        m_collidedPosition.transform.localPosition -= Vector3.right * m_collidedPosition.transform.localPosition.x;
-        m_collidedPosition.transform.localPosition += transform.up * 0.15f;
+        m_collidedPosition.position = cmpDemon.transform.position;
+        m_collidedPosition.localPosition -= Vector3.right * m_collidedPosition.localPosition.x;
+        m_collidedPosition.localPosition += transform.up * 0.15f;
+        float maxYPosition = Mathf.Max(m_collidedPosition.transform.localPosition.y,-9.5f);
+        m_collidedPosition.localPosition = new Vector3(m_collidedPosition.localPosition.x, maxYPosition, 0);
+
         while (m_characterGrabbed)
         {
             //time += Time.deltaTime;
@@ -69,6 +72,7 @@ public class Liana : MonoBehaviour
         m_character.OnJumped -= ReleaseDemon;
         m_character.SetOnLadder(false);
         m_character.CanMove = true;
+        m_characterGrabbed = false;
         m_character.MyRgb.isKinematic = false;
         m_colliderTransform.GetComponent<Collider2D>().enabled = false;
         StartCoroutine(ReturnToOrigin());
@@ -83,5 +87,12 @@ public class Liana : MonoBehaviour
         //}
         yield return new WaitForSeconds(0.25f);
         m_colliderTransform.GetComponent<Collider2D>().enabled = true;
+    }
+    private void Update()
+    {
+        if (m_characterGrabbed && m_character.IsDead)
+        {
+            ReleaseDemon();
+        }
     }
 }
