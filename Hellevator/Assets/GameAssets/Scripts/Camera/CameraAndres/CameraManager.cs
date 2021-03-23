@@ -327,4 +327,10 @@ public class CameraManager : TemporalSingleton<CameraManager>
         }
         FadeOut();
     }
+
+
+	public void SetCurrentLiveCamera(CinemachineVirtualCamera newLiveCamera)
+	{
+		m_playerCamera = newLiveCamera;
+	}
 }
