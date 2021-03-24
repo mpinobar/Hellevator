@@ -34,6 +34,7 @@ public class InputManager : PersistentSingleton<InputManager>
     public float VerticalInputValue { get => m_verticalInputValue; set => m_verticalInputValue = value; }
     public bool IsInMenu { get => m_isInMenu; set => m_isInMenu = value; }
     public bool ThrowingHead { get => m_throwingHead; set => m_throwingHead = value; }
+    public float MoveInputValue { get => m_moveInputValue; }
 
     public override void Awake()
     {

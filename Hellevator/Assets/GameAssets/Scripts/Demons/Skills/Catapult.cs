@@ -44,6 +44,8 @@ public class Catapult : MonoBehaviour
         yield return SlowDown();
         InputManager.Instance.ThrowingHead = true;
         float timeToThrowHead = m_timeToThrowHead;
+        Vector3 lastMousePosition = Input.mousePosition;
+        directionToThrowHead = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
         if (timeToThrowHead > 0)
         {
 
@@ -59,23 +61,22 @@ public class Catapult : MonoBehaviour
         {
             while (true)
             {
-                directionToThrowHead = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
+                if (Input.mousePosition != lastMousePosition)
+                {
+                    lastMousePosition = Input.mousePosition;
+                    directionToThrowHead = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
+                }
+                else
+                {
+                    directionToThrowHead += (InputManager.Instance.VerticalInputValue * Vector2.up + InputManager.Instance.MoveInputValue * Vector2.right) /** Time.deltaTime*/;
+                }
                 DrawTrajectory(directionToThrowHead);
                 yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
             }
-        }
-        ThrowHead();
+        }        
     }
 
 
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.L))
-        {
-            directionToThrowHead = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
-            DrawTrajectory(directionToThrowHead);
-        }
-    }
     private void DrawTrajectory(Vector2 direction)
     {
         //Vector2[] points = new Vector2[m_segments];
@@ -88,7 +89,7 @@ public class Catapult : MonoBehaviour
         //}
 
 
-        Vector3 [] drawnPoints = Ballistics.GetBallisticPath(m_demon.Torso.position, direction.normalized, m_throwVelocity, Time.unscaledDeltaTime,8f);
+        Vector3 [] drawnPoints = Ballistics.GetBallisticPath(m_headTransform.position, direction.normalized, m_throwVelocity, Time.unscaledDeltaTime,8f);
         //for (int i = 1; i < drawnPoints.Length; i++)
         //{
         //    Debug.DrawRay(drawnPoints[i - 1], drawnPoints[i] - drawnPoints[i - 1], Color.green);
@@ -107,17 +108,16 @@ public class Catapult : MonoBehaviour
         m_headSprite.transform.parent = null;
         Time.timeScale = 1;
         InputManager.Instance.ThrowingHead = false;
-        directionToThrowHead = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
         m_headTransform.parent = null;
         m_headTransform.localScale = Vector3.one;
         m_headTransform.GetComponent<HingeJoint2D>().enabled = false;
         m_headTransform.GetComponent<Collider2D>().enabled = true;
         m_headTransform.GetComponent<CatapultHead>().m_active = true;
-        m_headTransform.GetComponent<CatapultHead>().LastPosition = m_demon.Torso.position;
+        m_headTransform.GetComponent<CatapultHead>().LastPosition = m_headTransform.position;
         Rigidbody2D headRigidbody = m_headTransform.GetComponent<Rigidbody2D>();
         headRigidbody.isKinematic = false;
         headRigidbody.gravityScale = 8f;
-        headRigidbody.transform.position = m_demon.Torso.position;
+        headRigidbody.transform.position = m_headTransform.position;
         headRigidbody.velocity = directionToThrowHead.normalized * m_throwVelocity;
         //Debug.LogError("Set velocity as: " + directionToThrowHead.normalized * m_throwVelocity);
         lr.positionCount = 0;
