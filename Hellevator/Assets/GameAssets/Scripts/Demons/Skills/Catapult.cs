@@ -104,7 +104,7 @@ public class Catapult : MonoBehaviour
     {
         StopAllCoroutines();
         m_demon.DeactivateAnimator();
-        CameraManager.Instance.SetCameraFocus(m_headTransform);
+        CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(m_headTransform);
         m_headSprite.transform.parent = null;
         Time.timeScale = 1;
         InputManager.Instance.ThrowingHead = false;
