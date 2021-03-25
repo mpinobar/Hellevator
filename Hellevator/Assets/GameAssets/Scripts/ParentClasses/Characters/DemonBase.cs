@@ -700,7 +700,7 @@ public abstract class DemonBase : MonoBehaviour
         //m_spiritFire.GetComponent<SpriteRenderer>().material.SetColor("Color_7F039FD4", m_fireColorWhenPossessed);
 
         if (PossessionManager.Instance.ControlledDemon)
-            CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+            CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(PossessionManager.Instance.ControlledDemon.transform);
 
         //AssignLastMask();
         if (PossessionManager.Instance.ControlledDemon == this)

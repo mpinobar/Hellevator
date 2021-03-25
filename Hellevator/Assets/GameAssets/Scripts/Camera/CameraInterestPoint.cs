@@ -45,7 +45,7 @@ public class CameraInterestPoint : MonoBehaviour
         m_hasPlayed = true;
         yield return new WaitForSeconds(delay);
         CameraManager.Instance.SetUnlimitedSoftZone(true);
-        CameraManager.Instance.ChangeFocusOfMainCameraTo(m_objectsToFollow[0].transform);
+        CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(m_objectsToFollow[0].transform);
         float time = 0f;
         while (m_currentIndex < m_objectsToFollow.Length)
         {
@@ -60,12 +60,12 @@ public class CameraInterestPoint : MonoBehaviour
                 if (m_currentIndex < m_objectsToFollow.Length)
                 {
 
-                    CameraManager.Instance.ChangeFocusOfMainCameraTo(m_objectsToFollow[m_currentIndex].transform);
+                    CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(m_objectsToFollow[m_currentIndex].transform);
                 }
             }
             yield return null;
         }
-        CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+        CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(PossessionManager.Instance.ControlledDemon.transform);
         while (Mathf.Abs(initialOrthographicSize - CameraManager.Instance.CurrentCamera.m_Lens.OrthographicSize) > 0.15f)
         {
             CameraManager.Instance.ChangeOrtographicSizOfCurrentCamera(Mathf.Lerp(CameraManager.Instance.CurrentCamera.m_Lens.OrthographicSize, initialOrthographicSize, Time.deltaTime * 3f));
