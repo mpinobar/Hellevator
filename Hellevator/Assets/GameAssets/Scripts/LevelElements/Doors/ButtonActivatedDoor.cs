@@ -8,7 +8,7 @@ public class ButtonActivatedDoor : ActivatedBase
 	[SerializeField] private float m_speed;
 	[SerializeField] private Transform m_endPosition;
 	private bool m_opening = false;
-
+	[SerializeField] ButtonActivatedDoor m_simultaneousActivation;
 	
     private void Update()
 	{
@@ -28,6 +28,7 @@ public class ButtonActivatedDoor : ActivatedBase
 	public override void Activate()
 	{
 		base.Activate();
+		m_simultaneousActivation?.Activate();
 		m_opening = true;
 		
 	}
@@ -35,6 +36,7 @@ public class ButtonActivatedDoor : ActivatedBase
     public override void ActivateImmediately()
     {
 		base.ActivateImmediately();
+		m_simultaneousActivation?.ActivateImmediately();
 		transform.position = m_endPosition.position;
 		enabled = false;
 		

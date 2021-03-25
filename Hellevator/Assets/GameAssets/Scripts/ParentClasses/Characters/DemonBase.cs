@@ -308,7 +308,10 @@ public abstract class DemonBase : MonoBehaviour
         }
     }
 
-
+    public void StopLerpResetRagdoll()
+    {
+        m_isLerpingToResetBones = false;
+    }
 
     protected virtual void Update()
     {

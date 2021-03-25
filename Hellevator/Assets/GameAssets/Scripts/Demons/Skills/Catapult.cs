@@ -29,6 +29,7 @@ public class Catapult : MonoBehaviour
     {
         if (!m_hasThrown)
         {
+            m_demon.StopLerpResetRagdoll();
             m_hasThrown = true;
             m_demon.CanMove = false;
             StartCoroutine(SelectLandingSpot());
@@ -112,10 +113,13 @@ public class Catapult : MonoBehaviour
         m_headTransform.GetComponent<HingeJoint2D>().enabled = false;
         m_headTransform.GetComponent<Collider2D>().enabled = true;
         m_headTransform.GetComponent<CatapultHead>().m_active = true;
+        m_headTransform.GetComponent<CatapultHead>().LastPosition = m_demon.Torso.position;
         Rigidbody2D headRigidbody = m_headTransform.GetComponent<Rigidbody2D>();
         headRigidbody.isKinematic = false;
         headRigidbody.gravityScale = 8f;
+        headRigidbody.transform.position = m_demon.Torso.position;
         headRigidbody.velocity = directionToThrowHead.normalized * m_throwVelocity;
+        //Debug.LogError("Set velocity as: " + directionToThrowHead.normalized * m_throwVelocity);
         lr.positionCount = 0;
     }
 
@@ -235,14 +239,20 @@ public class Catapult : MonoBehaviour
 
         public static Vector3[] GetBallisticPathInterrupted(Vector3[] arc, LayerMask lm)
         {
-            List<Vector3> interruptedPath = new List<Vector3>
+            List<Vector3> interruptedPath = new List<Vector3>();
+            if (arc != null && arc.Length > 0)
             {
-                arc[0]
-            };
+                interruptedPath.Add(arc[0]);
+            }
+            else
+            {
+                Debug.LogError("Calculated trajectory is empty");
+                return null;
+            }
             RaycastHit2D hit;
             for (int i = 1; i < arc.Length; i++)
             {
-                hit = Physics2D.Raycast(arc[i - 1], arc[i] - arc[i - 1], (arc[i] - arc[i - 1]).magnitude/*, lm*/);
+                hit = Physics2D.CircleCast(arc[i - 1], 1.06f, arc[i] - arc[i - 1], (arc[i] - arc[i - 1]).magnitude/*, lm*/);
                 //Debug.LogError(hit.transform.name);
                 if (hit.transform != null && !hit.collider.isTrigger && IsInLayerMask(hit.transform.gameObject.layer, lm))
                 {
@@ -296,7 +306,7 @@ public class Catapult : MonoBehaviour
         public static float GetTimeOfFlight(float vel, float angle, float height, float gravity)
         {
             //Debug.LogError("Velocity: " + vel + ". Angle: " + angle + ".");
-            return (2.0f * vel * Mathf.Sin(angle)) / (-Physics.gravity.y*gravity);
+            return (2.0f * vel * Mathf.Sin(angle)) / (-Physics.gravity.y * gravity);
         }
 
     }
