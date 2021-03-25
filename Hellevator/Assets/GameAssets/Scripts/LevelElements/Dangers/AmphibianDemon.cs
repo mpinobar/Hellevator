@@ -79,6 +79,7 @@ public class AmphibianDemon : MonoBehaviour
             //transform.right = Vector3.Lerp(transform.right, Vector3.right, m_rotationSpeed * Time.deltaTime);
             yield return null;
         }
+        
         float animTime = 0;
         //Vector3 endPosition = offsetPosition + Vector3.up*m_maxHeight;
         while (animTime < 1)
@@ -88,6 +89,7 @@ public class AmphibianDemon : MonoBehaviour
             yield return null;
         }
         m_patrolIndex = m_patrolPoints.Count - 1;
+        m_detectionTrigger.SetActive(false);
         ReturnToPatrol();
     }
 
@@ -110,7 +112,7 @@ public class AmphibianDemon : MonoBehaviour
             if (Vector2.Distance(transform.position, m_patrolPoints[m_patrolIndex].position) < 0.5f)
             {
                 gameObject.SetActive(false);
-                Debug.LogError("Deactivating frog");
+
                 //m_patrolIndex = (m_patrolIndex + 1) % m_patrolPoints.Count;
             }
             yield return null;
