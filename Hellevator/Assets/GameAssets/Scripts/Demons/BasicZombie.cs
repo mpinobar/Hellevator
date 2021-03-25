@@ -89,7 +89,7 @@ public class BasicZombie : DemonBase
     #endregion
 
     #region Properties
-    public float MaxSpeed { get => m_maxSpeed; }
+    public float MaxSpeed { get => m_maxSpeed; set => m_maxSpeed = value; }
     public float Acceleration { get => m_acceleration; }
     public float JumpForce { get => m_jumpForce; }
     public bool SoyUnNiñoDeVerdad { get => m_SoyUnNiñoDeVerdad; set => m_SoyUnNiñoDeVerdad = value; }
