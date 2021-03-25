@@ -205,7 +205,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                     //Debug.LogError("SHOULD possess multiple characters on death");
                     ControlledDemon = null;
                     PossessAllDemonsInRange(currentDemon.GetComponent<DemonBase>().MaximumPossessionRange, currentDemon);
-                    CameraManager.Instance.ChangeFocusOfMainCameraTo(ControlledDemon.transform);
+                    CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(ControlledDemon.transform);
                 }
             }
             else
@@ -217,7 +217,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
                 InputManager.Instance.RemoveExtraDemonControlled(ControlledDemon);
                 InputManager.Instance.UpdateDemonReference();
-                CameraManager.Instance.ChangeFocusOfMainCameraTo(ControlledDemon.transform);
+                CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(ControlledDemon.transform);
                 if (m_extraDemonsControlled.Count == 0)
                 {
                     //Debug.LogError("last one of the extra characters died");
@@ -233,7 +233,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 m_extraDemonsControlled.Remove(demonCmp);
                 InputManager.Instance.RemoveExtraDemonControlled(demonCmp);
                 demonCmp.SetNotControlledByPlayer();
-                CameraManager.Instance.ChangeFocusOfMainCameraTo(ControlledDemon.transform);
+                CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(ControlledDemon.transform);
                 if (m_extraDemonsControlled.Count == 0)
                 {
                     //Debug.LogError("last one of the extra characters died");
@@ -442,11 +442,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
             m_pLight.transform.position = currentDemon.transform.position;
             m_pLight.Begin(demonToPossess, currentDemon.MaximumPossessionRange, currentDemon);
 
-            CameraManager.Instance.ChangeFocusOfMainCameraTo(m_pLight.transform);
-            if (CameraManager.Instance.CurrentCamera == CameraManager.Instance.PlayerCamera)
-            {
-            }
-            //CameraManager.Instance.FollowGhost(m_pLight.transform);
+            CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(m_pLight.transform);
         }
         else
         {

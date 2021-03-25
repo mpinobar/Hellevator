@@ -6,19 +6,18 @@ using Cinemachine;
 public class CameraChangeOnTrigger : MonoBehaviour
 {
 
-	[SerializeField] GameObject m_cameraToChangeTo = null;
+	[SerializeField] CinemachineVirtualCamera m_cameraToChangeTo = null;
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.TryGetComponent<DemonBase>(out DemonBase demon))
 		{
-			Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject.SetActive(false);
-			m_cameraToChangeTo.SetActive(true);
+			CameraManager.Instance.SetCurrentLiveCamera(m_cameraToChangeTo);
 		}
 	}
 
 
-
+	#region
 	//    [SerializeField] CameraManager cameraManager;
 	//    [SerializeField] Transform pointToLook;
 
@@ -121,4 +120,6 @@ public class CameraChangeOnTrigger : MonoBehaviour
 	//           cameraManager.ChangeCamTarget();
 	//        }
 	//    }
+	#endregion
+
 }
