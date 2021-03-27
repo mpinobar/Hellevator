@@ -7,9 +7,7 @@ using Random = UnityEngine.Random;
 
 public class BasicZombie : DemonBase
 {
-    [Space]
-    [SerializeField] GameObject m_indicadorPosesionMultiActiva = null;
-    [Space]
+
     #region Variables	
 
 
@@ -136,22 +134,6 @@ public class BasicZombie : DemonBase
     protected override void Update()
     {
         base.Update();
-
-        if (!IsDead)
-        {
-            if (PossessionManager.Instance.MultiplePossessionWhenDead)
-            {
-                m_indicadorPosesionMultiActiva.SetActive(true);
-            }
-            else
-            {
-                m_indicadorPosesionMultiActiva.SetActive(false);
-            }
-        }
-        else
-        {
-            m_indicadorPosesionMultiActiva.SetActive(false);
-        }
 
         if (CanMove)
         {
