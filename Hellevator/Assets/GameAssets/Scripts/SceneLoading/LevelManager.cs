@@ -300,7 +300,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     private void LoadSwitchSceneCompleted(AsyncOperation obj)
     {
         PossessionManager.Instance.MoveMainCharacterToScene(SceneManager.GetSceneByName(m_newSceneName.Split('_')[0]));
-        CameraManager.Instance.ChangeFocusOfMainCameraTo(PossessionManager.Instance.ControlledDemon.transform);
+        CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(PossessionManager.Instance.ControlledDemon.transform);
         PossessionManager.Instance.RemovePossessionFromExtraDemons();
         SceneManager.UnloadSceneAsync(PreviousScene);
         CameraManager.Instance.FadeOut();

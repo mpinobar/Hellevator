@@ -8,10 +8,14 @@ public class DeathWithDelay : MonoBehaviour
     List<SpikesWeightData> m_spikesData;
     [SerializeField] float m_killDelay = 1f;
     [SerializeField] AudioClip m_audioClip;
+    Animator m_animator;
+    [SerializeField] Transform m_attachedTransform;
+    [SerializeField] float m_delayToAttach;
     //int m_dataCount;
 
     private void Awake()
     {
+        m_animator = GetComponentInChildren<Animator>();
         m_spikesData = new List<SpikesWeightData>();
     }
 
@@ -55,10 +59,24 @@ public class DeathWithDelay : MonoBehaviour
     private IEnumerator KillWithDelay(DemonBase character, float delay)
     {
         //Animate here
+        if (m_animator)
+        {
+            m_animator.SetTrigger("Eat");
+        }
+        yield return new WaitForSeconds(m_delayToAttach);
         if (m_audioClip)
             AudioManager.Instance.PlayAudioSFX(m_audioClip, false);
-        yield return new WaitForSeconds(delay);
+        float t = 0;
+        while(t < delay)
+        {
+            character.Torso.transform.position = Vector3.Lerp(character.Torso.transform.position, m_attachedTransform.position, 3 * Time.deltaTime);
+            t += Time.deltaTime;
+
+            yield return null;
+        }
         character.Die(true);
+        character.transform.position = character.Torso.position;
+        character.gameObject.SetActive(false);
     }
 
     private void LateUpdate()

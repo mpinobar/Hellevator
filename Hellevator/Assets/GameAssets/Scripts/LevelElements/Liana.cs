@@ -14,10 +14,12 @@ public class Liana : MonoBehaviour
     [SerializeField] Transform m_collidedPosition;
 
     BasicZombie m_character;
-
+    float m_moveSpeed;
     float m_initialEulerZValue;
     float m_endAngle;
     bool m_characterGrabbed;
+
+    float m_minY = -9.5f;
     private void Start()
     {
         //m_initialEulerZValue = m_visual.localEulerAngles.z;
@@ -49,13 +51,18 @@ public class Liana : MonoBehaviour
     {
         //float time = 0;
         //m_endAngle = m_delayToRelease * m_rotationSpeed;
-        m_collidedPosition.transform.position = cmpDemon.transform.position;
-        m_collidedPosition.transform.localPosition -= Vector3.right * m_collidedPosition.transform.localPosition.x;
-        m_collidedPosition.transform.localPosition += transform.up * 0.15f;
+        m_collidedPosition.position = cmpDemon.transform.position;
+        m_collidedPosition.localPosition -= Vector3.right * m_collidedPosition.localPosition.x;
+        m_collidedPosition.localPosition += transform.up * 0.15f;
+        float maxYPosition = Mathf.Max(m_collidedPosition.transform.localPosition.y, m_minY);
+        m_collidedPosition.localPosition = new Vector3(m_collidedPosition.localPosition.x, maxYPosition, 0);
+        m_moveSpeed = cmpDemon.MaxSpeed;
+        cmpDemon.MaxSpeed = 0;
         while (m_characterGrabbed)
         {
             //time += Time.deltaTime;
             //m_visual.localEulerAngles += Vector3.forward * m_rotationSpeed * Time.deltaTime;
+            m_collidedPosition.localPosition = new Vector3(0, Mathf.Clamp(m_collidedPosition.localPosition.y + InputManager.Instance.VerticalInputValue * Time.deltaTime * m_moveSpeed, m_minY, 0), 0);
             cmpDemon.transform.position = Vector3.Lerp(cmpDemon.transform.position, m_collidedPosition.position - Vector3.up * m_characterVerticalOffsetOnGrabbed, Time.deltaTime * m_characterFollowSpeed);
             yield return null;
         }
@@ -69,9 +76,11 @@ public class Liana : MonoBehaviour
         m_character.OnJumped -= ReleaseDemon;
         m_character.SetOnLadder(false);
         m_character.CanMove = true;
+        m_characterGrabbed = false;
         m_character.MyRgb.isKinematic = false;
         m_colliderTransform.GetComponent<Collider2D>().enabled = false;
         StartCoroutine(ReturnToOrigin());
+        m_character.MaxSpeed = m_moveSpeed;
     }
 
     IEnumerator ReturnToOrigin()
@@ -83,5 +92,12 @@ public class Liana : MonoBehaviour
         //}
         yield return new WaitForSeconds(0.25f);
         m_colliderTransform.GetComponent<Collider2D>().enabled = true;
+    }
+    private void Update()
+    {
+        if (m_characterGrabbed && m_character.IsDead)
+        {
+            ReleaseDemon();
+        }
     }
 }

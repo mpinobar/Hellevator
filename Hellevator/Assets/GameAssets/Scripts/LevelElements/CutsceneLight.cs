@@ -45,7 +45,7 @@ public class CutsceneLight : TemporalSingleton<CutsceneLight>
                     if (m_currentDestination == m_lightRoute.Length)
                     {
                         PossessionManager.Instance.PossessNewDemon(m_demonToPosesAfterCutscene);
-                        CameraManager.Instance.ChangeFocusOfMainCameraTo(m_demonToPosesAfterCutscene.transform);
+                        CameraManager.Instance.ChangeFocusOfCurrentActiveCameraTo(m_demonToPosesAfterCutscene.transform);
                         Destroy(this.gameObject);
                     }
                 }

@@ -57,7 +57,7 @@ public class TraversablePlatform : MonoBehaviour
             }
         }
 
-        if (((BasicZombie)cmpDemon).IsOnLadder)
+        if (cmpDemon && ((BasicZombie)cmpDemon).IsOnLadder)
         {
             Traverse();
         }

@@ -7,9 +7,7 @@ using Random = UnityEngine.Random;
 
 public class BasicZombie : DemonBase
 {
-    [Space]
-    [SerializeField] GameObject m_indicadorPosesionMultiActiva = null;
-    [Space]
+
     #region Variables	
 
 
@@ -89,7 +87,7 @@ public class BasicZombie : DemonBase
     #endregion
 
     #region Properties
-    public float MaxSpeed { get => m_maxSpeed; }
+    public float MaxSpeed { get => m_maxSpeed; set => m_maxSpeed = value; }
     public float Acceleration { get => m_acceleration; }
     public float JumpForce { get => m_jumpForce; }
     public bool SoyUnNiñoDeVerdad { get => m_SoyUnNiñoDeVerdad; set => m_SoyUnNiñoDeVerdad = value; }
@@ -136,22 +134,6 @@ public class BasicZombie : DemonBase
     protected override void Update()
     {
         base.Update();
-
-        if (!IsDead)
-        {
-            if (PossessionManager.Instance.MultiplePossessionWhenDead)
-            {
-                m_indicadorPosesionMultiActiva.SetActive(true);
-            }
-            else
-            {
-                m_indicadorPosesionMultiActiva.SetActive(false);
-            }
-        }
-        else
-        {
-            m_indicadorPosesionMultiActiva.SetActive(false);
-        }
 
         if (CanMove)
         {
