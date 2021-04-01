@@ -6,7 +6,7 @@ using UnityEngine;
 public class Boss : MonoBehaviour
 {
     Animator m_bossAnimator;
-    [SerializeField] Projectile m_knifePrefab;
+    [SerializeField] BossProjectile m_knifePrefab;
     [SerializeField] Halo m_haloPrefab;
     [SerializeField] Color m_colorWhenHurt;
     [SerializeField] float m_haloSpawnHeight = 10f;
@@ -74,7 +74,7 @@ public class Boss : MonoBehaviour
         }
 
         m_playerSeenAttackTimer = 0f;
-        m_doorToCloseUponStart.SetActive(false);
+        if(m_doorToCloseUponStart) m_doorToCloseUponStart.SetActive(false);
         m_bossAnimator = GetComponent<Animator>();
         m_currentHealth = m_maxHealth;
     }
@@ -216,22 +216,22 @@ public class Boss : MonoBehaviour
         yield return new WaitForSeconds(delay);
         if(target != null)
         {
-            Projectile knife = Instantiate(m_knifePrefab, target.position + Vector3.up * m_knifeSpawnHeight, Quaternion.identity);
+            BossProjectile knife = Instantiate(m_knifePrefab, target.position + Vector3.up * m_knifeSpawnHeight, Quaternion.identity);
             knife.transform.localEulerAngles = Vector3.forward * 180;
             knife.Speed = m_knifeSpeed;
-            knife.DestroyOnScenaryImpact = !initial;
+            //knife.DestroyOnScenaryImpact = !initial;
         }
         m_playerSeenAttackTimer = 0f;
         
     }
     public void CloseEntrance()
     {
-        m_doorToCloseUponStart.SetActive(true);
+        m_doorToCloseUponStart?.SetActive(true);
     }
 
     private void OpenEntrance()
     {
-        m_doorToCloseUponStart.SetActive(false);
+        if(m_doorToCloseUponStart) m_doorToCloseUponStart.SetActive(false);
 		GameObject newBossKey = Instantiate(m_bossKey, m_bossKeySpawnPoint.position, Quaternion.identity);
     }
 

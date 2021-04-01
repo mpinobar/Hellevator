@@ -125,11 +125,9 @@ public class DestructiblePlatform : MonoBehaviour
             
             if (hit.transform != null && hit.transform == transform)
             {
-                m_destroying = true;
-                m_dissolveCmp?.NormalizeValues(1/m_timeToDestroy);
-                m_dissolveCmp?.StartDissolve();
+                StartDestroyPlatform();
                 Invoke(nameof(CallReverseDissolve), m_timeToReappear + m_timeToDestroy);
-				AudioManager.Instance.PlayAudioSFX(m_dissapearingClip, false, 1f);
+                AudioManager.Instance.PlayAudioSFX(m_dissapearingClip, false, 1f);
             }
         }
         else
@@ -184,6 +182,14 @@ public class DestructiblePlatform : MonoBehaviour
         }
 
     }
+
+    public void StartDestroyPlatform()
+    {
+        m_destroying = true;
+        m_dissolveCmp?.NormalizeValues(1 / m_timeToDestroy);
+        m_dissolveCmp?.StartDissolve();
+    }
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (m_isParentMovingPlatform)

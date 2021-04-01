@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Fire : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class Fire : MonoBehaviour
 
     [SerializeField] AudioClip m_bodyBurningClip;
     bool m_hasPlayedAudio;
+
+    public bool m_fireCovered;
     // Start is called before the first frame update
     void Start()
     {
@@ -69,6 +72,7 @@ public class Fire : MonoBehaviour
                     }
                     else
                     {
+                        m_fireCovered = true;
                         m_currentFireAltitude = Mathf.Clamp01(m_impacts[i].distance / m_height);
                         m_propertyBlock.SetFloat("_height", Mathf.Clamp01(m_currentFireAltitude));
                         m_spriteRenderer.SetPropertyBlock(m_propertyBlock);
@@ -78,6 +82,7 @@ public class Fire : MonoBehaviour
         }
         else
         {
+            m_fireCovered = false;
             m_currentFireAltitude = Mathf.Clamp01(Mathf.Lerp(m_currentFireAltitude, 1, Time.deltaTime));
             m_propertyBlock.SetFloat("_height", Mathf.Clamp01(m_currentFireAltitude));
             m_spriteRenderer.SetPropertyBlock(m_propertyBlock);

@@ -91,7 +91,6 @@ public class BossJardines : MonoBehaviour
 
         while (numSpawns > 0)
         {
-            Debug.LogError("Spawning frog, number of spawn: " + numSpawns);
             m_animator.SetTrigger("spawnDemon");
             yield return new WaitForSeconds(1);
             numSpawns--;
