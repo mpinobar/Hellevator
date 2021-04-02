@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class InputManager : PersistentSingleton<InputManager>
 {
@@ -58,14 +59,19 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public void InputMenu()
     {
-        if (!IsInMenu)
+        //Debug.LogError(SceneManager.GetActiveScene().name);
+        if (SceneManager.GetActiveScene().name != "Menu")
         {
-            UIController.Instance.ShowPauseMenu();
+            if (!IsInMenu)
+            {
+                UIController.Instance.ShowPauseMenu();
+            }
+            else
+            {
+                UIController.Instance.Resume();
+            }
         }
-        else
-        {
-            UIController.Instance.Resume();
-        }
+        
     }
 
     public void ResetPlayerInput()
@@ -112,7 +118,10 @@ public class InputManager : PersistentSingleton<InputManager>
 
     void FeedInputToMenuNavigation()
     {
-        UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
+        if (SceneManager.GetActiveScene().name != "Menu")
+        {
+            UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
+        }        
     }
 
     private void LateUpdate()
