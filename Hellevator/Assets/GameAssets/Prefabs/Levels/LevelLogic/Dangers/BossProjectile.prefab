@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 1443210981833681747}
   - component: {fileID: 2070186813956354403}
   - component: {fileID: 5637600136865285331}
-  - component: {fileID: 5603417562185444775}
   - component: {fileID: 4182950864593196940}
+  - component: {fileID: 7453274413782753599}
+  - component: {fileID: 5904699977328251173}
   m_Layer: 16
   m_Name: BossProjectile
   m_TagString: Untagged
@@ -103,24 +104,8 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
---- !u!58 &5603417562185444775
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101655347924392807}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!114 &4182950864593196940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,3 +118,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6869f159b84fa954d9cedc047464e840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_timeToDeactivate: 5
+  distanceToStop: 7
+  defaultLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  distanceToSet: 1.5
+--- !u!70 &7453274413782753599
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101655347924392807}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.014679909, y: 0.57195663}
+  m_Size: {x: 1.0259571, y: 2.2176743}
+  m_Direction: 0
+--- !u!114 &5904699977328251173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101655347924392807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4bc9e761fa28154a81a60e9f967c48e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_pushesRagdoll: 0
+  m_sawClip: {fileID: 0}
