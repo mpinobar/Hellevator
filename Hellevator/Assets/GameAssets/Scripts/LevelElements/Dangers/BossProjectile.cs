@@ -36,7 +36,8 @@ public class BossProjectile : MonoBehaviour
         }
     }
 
-
+    [SerializeField] float distanceToStop = 2;
+    [SerializeField] LayerMask defaultLayer = 1<<0;
     private void Update()
     {
         //if (m_countingDown)
@@ -51,7 +52,21 @@ public class BossProjectile : MonoBehaviour
             m_rgb.velocity = m_dragVelocity;
         }
     }
-
+    [SerializeField] float distanceToSet = 2f;
+    private void FixedUpdate()
+    {
+        if (Speed != 0)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position,transform.up,Mathf.Infinity,defaultLayer);
+            //Debug.LogError("hit " + hit.transform.name + "distance "+hit.distance);
+            if (hit.distance < distanceToStop)
+            {
+                transform.position = (Vector3) hit.point - transform.up * distanceToSet;
+                m_rgb.isKinematic = true;
+                Speed = 0;
+            }
+        }
+    }
     public void DeactivateProjectile()
     {
         gameObject.SetActive(false);
@@ -59,23 +74,21 @@ public class BossProjectile : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.GetComponentInParent<DemonBase>() != null)
-        {
-            collision.GetComponentInParent<DemonBase>().Die(true);
-        }
-        else if(collision.TryGetComponent(out HorizontalTransport transport))
+    {        
+        if (collision.TryGetComponent(out HorizontalTransport transport))
         {
             //Debug.LogError("Colliding with platform");
+            Speed = 0;
             m_rgb.isKinematic = true;
             m_dragging = true;
             m_dragVelocity = Vector2.right * transport.m_speed * transport.dir;
         }
         else
         {
+            m_rgb.isKinematic = true;
             Speed = 0;
         }
-        
+
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
