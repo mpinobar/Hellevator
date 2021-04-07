@@ -46,6 +46,8 @@ public class Catapult : MonoBehaviour
         float timeToThrowHead = m_timeToThrowHead;
         Vector3 lastMousePosition = Input.mousePosition;
         directionToThrowHead = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
+        Vector2 newDirection = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
+        DrawTrajectory(directionToThrowHead);
         if (timeToThrowHead > 0)
         {
 
@@ -63,17 +65,23 @@ public class Catapult : MonoBehaviour
             {
                 if (Input.mousePosition != lastMousePosition)
                 {
+                    //Debug.LogError("Recalculating distance");
                     lastMousePosition = Input.mousePosition;
-                    directionToThrowHead = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
+                    newDirection = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
+                    if (Vector2.Distance(newDirection, directionToThrowHead) > 0.1)
+                    {
+                        directionToThrowHead = newDirection;
+                    }
+                    DrawTrajectory(directionToThrowHead);
                 }
-                else
+                else if (InputManager.Instance.VerticalInputValue != 0 || InputManager.Instance.MoveInputValue != 0)
                 {
-                    directionToThrowHead += (InputManager.Instance.VerticalInputValue * Vector2.up + InputManager.Instance.MoveInputValue * Vector2.right) /** Time.deltaTime*/;
+                    directionToThrowHead += (InputManager.Instance.VerticalInputValue * Vector2.up + InputManager.Instance.MoveInputValue * Vector2.right) * Time.unscaledDeltaTime * 20;
+                    DrawTrajectory(directionToThrowHead);
                 }
-                DrawTrajectory(directionToThrowHead);
                 yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
             }
-        }        
+        }
     }
 
 
@@ -252,7 +260,7 @@ public class Catapult : MonoBehaviour
             RaycastHit2D hit;
             for (int i = 1; i < arc.Length; i++)
             {
-                hit = Physics2D.CircleCast(arc[i - 1], 1.06f, arc[i] - arc[i - 1], (arc[i] - arc[i - 1]).magnitude/*, lm*/);
+                hit = Physics2D.CircleCast(arc[i - 1], 0.4f, arc[i] - arc[i - 1], (arc[i] - arc[i - 1]).magnitude/*, lm*/);
                 //Debug.LogError(hit.transform.name);
                 if (hit.transform != null && !hit.collider.isTrigger && IsInLayerMask(hit.transform.gameObject.layer, lm))
                 {
