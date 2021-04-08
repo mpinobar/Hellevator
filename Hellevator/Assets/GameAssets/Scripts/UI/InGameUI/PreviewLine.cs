@@ -14,8 +14,8 @@ public class PreviewLine : MonoBehaviour
     Vector3 [] positions;
     private IEnumerator Start()
     {
-        yield return null;
         m_sprites = new List<Transform>();
+        yield return null;
         for (int i = 0; i < 60; i++)
         {
             m_sprites.Add(Instantiate(m_spritePrefab));
