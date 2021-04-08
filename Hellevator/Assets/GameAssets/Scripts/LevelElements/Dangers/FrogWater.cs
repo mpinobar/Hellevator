@@ -5,10 +5,13 @@ using UnityEngine;
 public class FrogWater : MonoBehaviour
 {
     [SerializeField] AmphibianDemon m_frog;
-     
+    bool m_active;
+
+    public bool Active { get => m_active; set => m_active = value; }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out BasicZombie cmpDemon))
+        if (Active && collision.TryGetComponent(out BasicZombie cmpDemon))
         {
             if (cmpDemon.IsControlledByPlayer)
             {
@@ -19,12 +22,12 @@ public class FrogWater : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out BasicZombie cmpDemon))
-        {
-            if (cmpDemon.IsControlledByPlayer)
-            {
-                m_frog?.ReturnToPatrol();
-            }
-        }
+        //if (Active && collision.TryGetComponent(out BasicZombie cmpDemon))
+        //{
+        //    if (cmpDemon.IsControlledByPlayer)
+        //    {
+        //        m_frog?.ReturnToPatrol();
+        //    }
+        //}
     }
 }
