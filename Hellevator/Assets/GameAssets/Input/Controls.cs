@@ -309,6 +309,17 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""84d68c3b-3b50-4f22-ab96-1f62c3d56161"",
+                    ""path"": ""<Gamepad>/leftStick/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""VerticalMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""b95fa831-6899-431c-a8f1-2dd97c9bb42c"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
