@@ -17,7 +17,7 @@ public class AmphibianDemon : MonoBehaviour
     Transform m_target;
     Animator m_animator;
 
-    [SerializeField] GameObject m_detectionTrigger;
+    [SerializeField] FrogWater m_detectionTrigger;
 
     float m_initialScale;
     private void Start()
@@ -29,12 +29,15 @@ public class AmphibianDemon : MonoBehaviour
     private void OnEnable()
     {
         m_initialScale = transform.localScale.x;
-        m_detectionTrigger.SetActive(true);
+        m_detectionTrigger.Active = true;
+        m_detectionTrigger.gameObject.SetActive(true);
     }
 
     private void OnDisable()
     {
-        m_detectionTrigger.SetActive(false);        
+        m_detectionTrigger.Active = false;
+        if(m_detectionTrigger)
+        m_detectionTrigger.gameObject.SetActive(false);
     }
 
     private IEnumerator Chase()
@@ -45,6 +48,7 @@ public class AmphibianDemon : MonoBehaviour
         while (Vector2.Distance(transform.position, offsetPosition) > 2.5f)
         {
             offsetPosition = m_target.position - Vector3.up * m_verticalOffsetChase;
+            offsetPosition.y = Mathf.Min(4, offsetPosition.y);
             if(offsetPosition.x < transform.position.x)
             {
                 transform.localScale = Vector3.one * m_initialScale;
@@ -64,6 +68,7 @@ public class AmphibianDemon : MonoBehaviour
         {
             time += Time.deltaTime;
             offsetPosition = m_target.position - Vector3.up * m_verticalOffsetChase;
+            offsetPosition.y = Mathf.Min(4, offsetPosition.y);
             transform.position += (offsetPosition - transform.position).normalized * m_movementSpeed * Time.deltaTime;
             if(transform.localScale.y < 0)
             {
@@ -88,8 +93,9 @@ public class AmphibianDemon : MonoBehaviour
             transform.position = offsetPosition + Vector3.up * m_maxHeight * m_heightCurve.Evaluate(animTime);
             yield return null;
         }
-        m_patrolIndex = m_patrolPoints.Count - 1;
-        m_detectionTrigger.SetActive(false);
+        m_patrolIndex = 1;
+        m_detectionTrigger.Active = false;
+        m_detectionTrigger.gameObject.SetActive(false);
         ReturnToPatrol();
     }
 
@@ -141,6 +147,7 @@ public class AmphibianDemon : MonoBehaviour
             if (cmpDemon.IsControlledByPlayer)
             {
                 cmpDemon.Die(true);
+                m_detectionTrigger.Active = false;
                 ReturnToPatrol();
             }
         }

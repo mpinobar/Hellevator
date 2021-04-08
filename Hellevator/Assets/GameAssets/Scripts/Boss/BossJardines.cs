@@ -37,7 +37,7 @@ public class BossJardines : MonoBehaviour
     [SerializeField] SpriteRenderer m_button;
     [SerializeField] Material m_materialWhenInactive;
     [SerializeField] Material m_materialWhenActive;
-
+    [SerializeField] GameObject m_activateOnDeath;
     Glow glowCMP;
     public bool CanGetHurt
     {
@@ -77,8 +77,8 @@ public class BossJardines : MonoBehaviour
 
     public void StartCombat()
     {
-        StartCoroutine(SurfaceBehavior());
-        //StartCoroutine(BelowWaterBehavior());
+        //StartCoroutine(SurfaceBehavior());
+        StartCoroutine(BelowWaterBehavior());
     }
 
     IEnumerator SurfaceBehavior()
@@ -213,7 +213,8 @@ public class BossJardines : MonoBehaviour
                 ((BasicZombie)player).ResetJumps();
                 CanGetHurt = false;
                 TakeDamage();
-
+                player.MyRgb.velocity = new Vector2(player.MyRgb.velocity.x, 0);
+                player.MyRgb.AddForce(Vector2.up * ((BasicZombie)player).JumpForce*1.5f);
             }
         }
     }
@@ -226,6 +227,7 @@ public class BossJardines : MonoBehaviour
             StopAllCoroutines();
             m_animator.SetTrigger("dead");
             StartCoroutine(Sink());
+            m_activateOnDeath.SetActive(true);
         }
         else
         {
