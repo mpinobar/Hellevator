@@ -19,6 +19,7 @@ public class PreviewLine : MonoBehaviour
         for (int i = 0; i < 60; i++)
         {
             m_sprites.Add(Instantiate(m_spritePrefab));
+            m_sprites[i].transform.position = -Vector3.forward * 500;
         }
     }
 
