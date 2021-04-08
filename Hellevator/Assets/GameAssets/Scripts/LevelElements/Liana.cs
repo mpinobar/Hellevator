@@ -56,6 +56,7 @@ public class Liana : MonoBehaviour
         m_collidedPosition.localPosition += transform.up * 0.15f;
         float maxYPosition = Mathf.Max(m_collidedPosition.transform.localPosition.y, m_minY);
         m_collidedPosition.localPosition = new Vector3(m_collidedPosition.localPosition.x, maxYPosition, 0);
+        if(m_moveSpeed == 0)
         m_moveSpeed = cmpDemon.MaxSpeed;
         cmpDemon.MaxSpeed = 0;
         while (m_characterGrabbed)

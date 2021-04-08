@@ -12,12 +12,14 @@ public class PreviewLine : MonoBehaviour
 
     List<Transform> m_sprites;
     Vector3 [] positions;
-    private void Awake()
+    private IEnumerator Start()
     {
         m_sprites = new List<Transform>();
+        yield return null;
         for (int i = 0; i < 60; i++)
         {
             m_sprites.Add(Instantiate(m_spritePrefab));
+            m_sprites[i].transform.position = -Vector3.forward * 500;
         }
     }
 

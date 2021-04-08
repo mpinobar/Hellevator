@@ -96,13 +96,13 @@ public class LevelManager : PersistentSingleton<LevelManager>
     private void Update()
     {
 
-        if (m_isRestarting)
-        {
+        //if (m_isRestarting)
+        //{
 
-            m_isRestarting = false;
-            Time.timeScale = 1;
+        //    m_isRestarting = false;
+        //    Time.timeScale = 1;
 
-        }
+        //}
 
         if (m_isSwitchingToNewScene && m_loadingScene.progress >= 0.9f && !FadeManager.IsInTransition)
         {
@@ -144,15 +144,20 @@ public class LevelManager : PersistentSingleton<LevelManager>
     /// </summary>
     public void StartRestartingLevelWithDelay()
     {
+        if (m_isRestarting)
+            return;
         StartCoroutine(DelayAndRestart(2.5f));
     }
 
     public void StartRestartingLevelNoDelay()
     {
+        if (m_isRestarting)
+            return;
         StartCoroutine(DelayAndRestart(0));
     }
     IEnumerator DelayAndRestart(float time)
     {
+        
         yield return new WaitForSeconds(time);
         CameraManager.Instance.FadeIn();
         FadeManager.IsRestarting = true;
@@ -221,6 +226,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         LevelLoaded?.Invoke();
         CameraManager.Instance.FadeOut();
         AudioManager.Instance.StartGameplayMusic();
+        m_isRestarting = false;
     }
 
 
