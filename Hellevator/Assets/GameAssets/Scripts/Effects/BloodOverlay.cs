@@ -23,7 +23,10 @@ public class BloodOverlay : MonoBehaviour
         m_spr = GetComponent<Image>();
        // m_pblock = new MaterialPropertyBlock();
         m_initialBloodColor = m_spr.material.GetColor(m_bloodColorName);
-        m_initialBloodColor.a = 1;        
+        m_initialBloodColor.a = 1;
+        m_currentColor = m_initialBloodColor;
+        m_currentColor.a = 0;
+        m_spr.material.SetColor(m_bloodColorName, m_currentColor);
     }
 
     //private void Update()

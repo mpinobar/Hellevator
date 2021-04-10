@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIController : PersistentSingleton<UIController>
 {
@@ -62,8 +63,9 @@ public class UIController : PersistentSingleton<UIController>
         m_bestiaryButton.onClick.AddListener(ShowBestiary);
         m_exitButton.onClick.AddListener(Exit);
         LevelManager.LevelLoaded += ShowGameplayUI;
-        if (LevelManager.Instance.gameObject.scene.name != "Menu")
+        if (SceneManager.GetActiveScene().name != "Menu")
         {
+            //Debug.LogError("gameplay ui");
             ShowGameplayUI();
         }
     }

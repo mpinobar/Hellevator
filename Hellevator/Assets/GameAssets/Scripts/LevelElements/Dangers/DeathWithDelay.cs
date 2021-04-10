@@ -75,7 +75,8 @@ public class DeathWithDelay : MonoBehaviour
             yield return null;
         }
         character.Die(true);
-        Destroy(character.gameObject);
+        character.transform.position = character.Torso.position;
+        character.gameObject.SetActive(false);
     }
 
     private void LateUpdate()

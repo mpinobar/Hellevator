@@ -90,14 +90,16 @@ public class CameraManager : TemporalSingleton<CameraManager>
             m_currentCamera.Follow = m_currentCameraFocus;
 
         }
-    }
+    }	
 
 	public void SetCurrentLiveCamera(CinemachineVirtualCamera newLiveCamera)
 	{
-		m_currentCamera.gameObject.SetActive(false);
+		newLiveCamera.Priority = 1;
+		m_currentCamera.Priority = 0;
+
 		m_currentCamera = newLiveCamera;
 		ChangeFocusOfCurrentActiveCameraTo(m_currentCameraFocus);
-		m_currentCamera.gameObject.SetActive(true);
+
 	}
 
 	#region CameraEffects
@@ -127,7 +129,6 @@ public class CameraManager : TemporalSingleton<CameraManager>
 
 	public void CameraShakeMedium()
 	{
-		print(m_currentCamera);
 		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 		noise.m_AmplitudeGain = m_medShakeAmplitude;
 		StopAllCoroutines();

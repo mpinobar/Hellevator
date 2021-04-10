@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class InputManager : PersistentSingleton<InputManager>
 {
@@ -34,6 +35,7 @@ public class InputManager : PersistentSingleton<InputManager>
     public float VerticalInputValue { get => m_verticalInputValue; set => m_verticalInputValue = value; }
     public bool IsInMenu { get => m_isInMenu; set => m_isInMenu = value; }
     public bool ThrowingHead { get => m_throwingHead; set => m_throwingHead = value; }
+    public float MoveInputValue { get => m_moveInputValue; }
 
     public override void Awake()
     {
@@ -57,14 +59,19 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public void InputMenu()
     {
-        if (!IsInMenu)
+        //Debug.LogError(SceneManager.GetActiveScene().name);
+        if (SceneManager.GetActiveScene().name != "Menu")
         {
-            UIController.Instance.ShowPauseMenu();
+            if (!IsInMenu)
+            {
+                UIController.Instance.ShowPauseMenu();
+            }
+            else
+            {
+                UIController.Instance.Resume();
+            }
         }
-        else
-        {
-            UIController.Instance.Resume();
-        }
+
     }
 
     public void ResetPlayerInput()
@@ -93,11 +100,11 @@ public class InputManager : PersistentSingleton<InputManager>
 
                 if (Input.GetKeyDown(KeyCode.R) && !FadeManager.IsRestarting)
                 {
-                    
+
                     LevelManager.Instance.StartRestartingLevelNoDelay();
                 }
             }
-            
+
         }
         else
         {
@@ -111,23 +118,26 @@ public class InputManager : PersistentSingleton<InputManager>
 
     void FeedInputToMenuNavigation()
     {
-        UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
+        if (SceneManager.GetActiveScene().name != "Menu")
+        {
+            UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
+        }
     }
 
     private void LateUpdate()
     {
-        if(m_canControlCharacters && !m_isInMenu)
+        if (m_canControlCharacters && !m_isInMenu)
         {
             SetMainCharacterDirection();
             SetExtraCharactersDirections();
-        }       
+        }
     }
 
     private void FeedInputToExtraDemons()
     {
         for (int i = 0; i < m_extraDemonsControlled.Count; i++)
         {
-            if(m_extraDemonsControlled[i] != null)
+            if (m_extraDemonsControlled[i] != null)
             {
                 if (m_extraDemonsControlled[i].CanMove)
                 {
@@ -173,7 +183,7 @@ public class InputManager : PersistentSingleton<InputManager>
                 m_extraDemonsControlled.RemoveAt(i);
                 i--;
             }
-            
+
         }
     }
 
@@ -229,7 +239,7 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             for (int i = 0; i < m_extraDemonsControlled.Count; i++)
             {
-                if(m_extraDemonsControlled[i].MovementDirection == 0)
+                if (m_extraDemonsControlled[i].MovementDirection == 0)
                 {
                     m_extraDemonsControlled[i].transform.localScale = new Vector3(Mathf.Abs(m_extraDemonsControlled[i].transform.localScale.x) / m_extraDemonsControlled[i].transform.lossyScale.x, m_extraDemonsControlled[i].transform.localScale.y / m_extraDemonsControlled[i].transform.lossyScale.y, 1);
                 }
@@ -262,10 +272,10 @@ public class InputManager : PersistentSingleton<InputManager>
         }
     }
 
-	void ToggleMultiplePosseion()
-	{
-		//PossessionManager.Instance.ToggleMultiplePossesion();
-	}
+    void ToggleMultiplePosseion()
+    {
+        //PossessionManager.Instance.ToggleMultiplePossesion();
+    }
 
     void Jump()
     {
@@ -276,7 +286,8 @@ public class InputManager : PersistentSingleton<InputManager>
                 PossessionManager.Instance.ChoosingWhenDead = false;
                 PossessionManager.Instance.MultiplePossessionWhenDead = true;
                 UIController.Instance.EndDecisionTime();
-            }else if (ThrowingHead)
+            }
+            else if (ThrowingHead)
             {
                 PossessionManager.Instance.ControlledDemon.GetComponent<Catapult>().ThrowHead();
             }
@@ -304,13 +315,13 @@ public class InputManager : PersistentSingleton<InputManager>
                 }
             }
 
-           
+
         }
         else
         {
             UIController.Instance.Selected.Press();
         }
-        
+
     }
 
     void JumpButtonReleased()
@@ -393,7 +404,7 @@ public class InputManager : PersistentSingleton<InputManager>
     public void UpdateDemonReference()
     {
         m_currentDemon = PossessionManager.Instance.ControlledDemon;
-        
+
     }
 
     public void UpdateExtraDemonsControlled(List<DemonBase> controlledDemons)
@@ -423,7 +434,7 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public void RemoveAllExtraDemonsControlled()
     {
-        if(m_extraDemonsControlled != null)
+        if (m_extraDemonsControlled != null)
             m_extraDemonsControlled.Clear();
     }
 
