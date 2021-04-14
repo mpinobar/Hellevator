@@ -17,7 +17,7 @@ public class Fire : MonoBehaviour
 
     [SerializeField] AudioClip m_bodyBurningClip;
     bool m_hasPlayedAudio;
-
+    List<GameObject> m_detections;
     public bool m_fireCovered;
     // Start is called before the first frame update
     void Start()
@@ -28,7 +28,8 @@ public class Fire : MonoBehaviour
         m_spriteRenderer = GetComponent<SpriteRenderer>();
         m_propertyBlock = new MaterialPropertyBlock();
         m_spriteRenderer.GetPropertyBlock(m_propertyBlock);
-        m_size = new Vector2(transform.localScale.y * 0.5f, 1);
+        m_size = new Vector2(transform.localScale.y * 0.75f, 1);
+        m_detections = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -44,7 +45,7 @@ public class Fire : MonoBehaviour
         {
             for (int i = 0; i < m_impacts.Length; i++)
             {
-                if (m_impacts[i].transform != null)
+                if (m_impacts[i].transform != null && m_detections.Contains(m_impacts[i].transform.gameObject))
                 {
                     if (LayerMask.LayerToName(m_impacts[i].transform.gameObject.layer) == "Player")
                     {
@@ -57,7 +58,7 @@ public class Fire : MonoBehaviour
                         }
                         Destroy(m_impacts[i].transform.gameObject, 1f);
                     }
-                    else if (LayerMask.LayerToName(m_impacts[i].transform.gameObject.layer) == "Ragdoll")
+                    else if (LayerMask.LayerToName(m_impacts[i].transform.gameObject.layer) == "Body")
                     {
                         if (m_impacts[i].transform.GetComponentInParent<DemonBase>())
                         {
@@ -88,11 +89,21 @@ public class Fire : MonoBehaviour
             m_spriteRenderer.SetPropertyBlock(m_propertyBlock);
         }
     }
-    
+
     IEnumerator ResetPlayedAudio(float time)
     {
         yield return new WaitForSeconds(time);
         m_hasPlayedAudio = false;
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (LayerMask.LayerToName(collision.transform.gameObject.layer) == "Body" || LayerMask.LayerToName(collision.transform.gameObject.layer) == "Player" || collision.GetComponent<DestructiblePlatform>() != null)
+            m_detections.Add(collision.gameObject);
+    }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (m_detections.Contains(collision.gameObject))
+            m_detections.Remove(collision.gameObject);
+    }
 }

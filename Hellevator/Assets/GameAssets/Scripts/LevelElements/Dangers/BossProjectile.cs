@@ -37,7 +37,7 @@ public class BossProjectile : MonoBehaviour
     }
 
     [SerializeField] float distanceToStop = 2;
-    [SerializeField] LayerMask defaultLayer = 1<<0;
+    [SerializeField] LayerMask raycastLayer = 1<<0;
     private void Update()
     {
         //if (m_countingDown)
@@ -57,7 +57,7 @@ public class BossProjectile : MonoBehaviour
     {
         if (Speed != 0)
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position,transform.up,Mathf.Infinity,defaultLayer);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position,transform.up,Mathf.Infinity,raycastLayer);
             //Debug.LogError("hit " + hit.transform.name + "distance "+hit.distance);
             if (hit.distance < distanceToStop)
             {
@@ -74,21 +74,30 @@ public class BossProjectile : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
-    {        
-        if (collision.TryGetComponent(out HorizontalTransport transport))
+    {
+        //if (collision.TryGetComponent(out HorizontalTransport transport))
+        //{
+        //    //Debug.LogError("Colliding with platform");
+        //    //Speed = 0;
+        //    //m_rgb.isKinematic = true;
+        //    //m_dragging = true;
+        //    //m_dragVelocity = Vector2.right * transport.m_speed * transport.dir;
+        //}
+        //else
+        //{
+        //    m_rgb.isKinematic = true;
+        //    Speed = 0;
+        //    GetComponent<Collider2D>().enabled = false;
+        //}
+        if (collision.TryGetComponent(out DemonBase dem))
         {
-            //Debug.LogError("Colliding with platform");
-            Speed = 0;
-            m_rgb.isKinematic = true;
-            m_dragging = true;
-            m_dragVelocity = Vector2.right * transport.m_speed * transport.dir;
+            dem.Die(true);
+            transform.parent = dem.DemonMaskSprite.transform.parent;
         }
-        else
-        {
-            m_rgb.isKinematic = true;
-            Speed = 0;
-        }
-
+        m_rgb.isKinematic = true;
+        Speed = 0;
+        GetComponent<Collider2D>().enabled = false;
+        EndBossKnife();
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -101,5 +110,21 @@ public class BossProjectile : MonoBehaviour
         }
     }
 
+    private void EndBossKnife()
+    {
+        Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position,1);
+        for (int i = 0; i < cols.Length; i++)
+        {
+            if(cols[i].TryGetComponent(out DemonBase dem))
+            {
+                dem.IsInDanger = false;
 
+                return;
+            }else if(cols[i].TryGetComponent(out RagdollLogicalCollider rlc))
+            {
+                rlc.ParentDemon.IsInDanger = false;
+                return;
+            }
+        }
+    }
 }
