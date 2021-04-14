@@ -11,6 +11,7 @@ public class Caldero : MonoBehaviour
     private bool m_covered = false;
     float m_changeSpeed;
     [SerializeField] Fire m_cauldronFire;
+    bool canExplode = true;
     private void Awake()
     {
         m_changeSpeed = 1 / m_timeToExplode;
@@ -19,12 +20,14 @@ public class Caldero : MonoBehaviour
     private void Update()
     {
         m_covered = m_cauldronFire.m_fireCovered;
-
+        if (m_covered)
+            if (!canExplode)
+                m_covered = false;
         if (m_covered)
         {
             if (m_explodeTimer < m_timeToExplode)
                 m_explodeTimer += Time.deltaTime;
-            else
+            else if (canExplode)
                 Explode();
             m_spr.color = Color.Lerp(m_spr.color, Color.red, Time.deltaTime * m_changeSpeed);
         }
@@ -32,6 +35,8 @@ public class Caldero : MonoBehaviour
         {
             if (m_explodeTimer > 0)
                 m_explodeTimer -= Time.deltaTime;
+            else
+                canExplode = true;
             m_spr.color = Color.Lerp(m_spr.color, Color.white, Time.deltaTime * m_changeSpeed);
         }
     }
@@ -41,6 +46,7 @@ public class Caldero : MonoBehaviour
     public void Explode()
     {
         Instantiate(m_explosionPrefab, transform.position, Quaternion.identity);
+        canExplode = false;
     }
         
 }

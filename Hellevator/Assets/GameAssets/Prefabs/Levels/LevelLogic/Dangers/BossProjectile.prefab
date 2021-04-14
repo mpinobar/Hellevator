@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 5637600136865285331}
   - component: {fileID: 4182950864593196940}
   - component: {fileID: 7453274413782753599}
-  - component: {fileID: 5904699977328251173}
   m_Layer: 16
   m_Name: BossProjectile
   m_TagString: Untagged
@@ -120,9 +119,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_timeToDeactivate: 5
   distanceToStop: 7
-  defaultLayer:
+  raycastLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 1281
   distanceToSet: 1.5
 --- !u!70 &7453274413782753599
 CapsuleCollider2D:
@@ -137,20 +136,6 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.014679909, y: 0.57195663}
-  m_Size: {x: 1.0259571, y: 2.2176743}
+  m_Offset: {x: -0.042440414, y: 0.63898087}
+  m_Size: {x: 0.24866104, y: 2.3517227}
   m_Direction: 0
---- !u!114 &5904699977328251173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101655347924392807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4bc9e761fa28154a81a60e9f967c48e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_pushesRagdoll: 0
-  m_sawClip: {fileID: 0}

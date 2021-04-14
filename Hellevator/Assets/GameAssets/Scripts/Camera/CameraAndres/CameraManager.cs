@@ -176,7 +176,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		{
 			timeRemaining -= Time.unscaledDeltaTime;
 			noiseCmp.m_AmplitudeGain = Mathf.Lerp(noiseCmp.m_AmplitudeGain, 0, (1 - timeRemaining / time));
-			yield return null;
+			yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
 		}
 		noiseCmp.m_AmplitudeGain = 0f;
 	}
