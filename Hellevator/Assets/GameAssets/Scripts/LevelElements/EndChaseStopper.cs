@@ -14,6 +14,7 @@ public class EndChaseStopper : MonoBehaviour
             {
                 plataformaPersecucion.Deactivate();
                 door.Activate();
+                CameraManager.Instance.CameraShakeMedium();
             }
         }
     }
