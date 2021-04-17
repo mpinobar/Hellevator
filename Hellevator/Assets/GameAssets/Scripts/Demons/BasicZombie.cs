@@ -377,6 +377,7 @@ public class BasicZombie : DemonBase
     public void Slow(float m_slowPercentage)
     {
         m_maxSpeed *= (1 - m_slowPercentage * 0.01f);
+        MyRgb.velocity = new Vector3(MyRgb.velocity.x, 0, 0);
         //Debug.LogError("Slowing, setting max speed of " + name + " to " + MaxSpeed);
     }
     public void CancelSlow(float m_slowPercentage)

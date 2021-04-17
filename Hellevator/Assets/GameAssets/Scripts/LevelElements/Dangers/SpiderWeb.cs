@@ -23,6 +23,7 @@ public class SpiderWeb : MonoBehaviour
                 cmpDemon.CanJump = false;
                 cmpDemon.Slow(m_slowPercentage);
                 m_spider?.SetTarget(cmpDemon.transform);
+                Debug.LogError("Entrando a telaraña");
             }
         }
     }
@@ -36,6 +37,8 @@ public class SpiderWeb : MonoBehaviour
                 cmpDemon.CanJump = true;
                 cmpDemon.CancelSlow(m_slowPercentage);
                 m_spider?.ReturnToInitialPosition();
+                cmpDemon.ResetJumps();
+                Debug.LogError("Saliendo de telaraña");
             }
         }
     }
