@@ -34,6 +34,16 @@ public class AudioManager : PersistentSingleton<AudioManager>
         m_BGM.volume = v * 0.5f;
     }
 
+    public void PauseMusic()
+    {
+
+        m_BGM.Pause();
+    }
+
+    public void ResumeMusic()
+    {
+        m_BGM.UnPause();
+    }
     public override void Awake()
     {
         base.Awake();
