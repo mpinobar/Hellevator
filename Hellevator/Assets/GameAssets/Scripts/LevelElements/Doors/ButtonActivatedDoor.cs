@@ -46,9 +46,4 @@ public class ButtonActivatedDoor : ActivatedBase
 		m_endPosition.position = newPosition;
     }
 
-    public override void Deactivate()
-    {
-        base.Deactivate();
-		m_opening = false;
-    }
 }
