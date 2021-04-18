@@ -43,13 +43,6 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
 
 		m_playerCanvas.SetActive(true);
 
-		//m_dialogueTxt.gameObject.SetActive(true);
-		//if(dialogue.CurrentIcon != null)
-		//{
-		//	m_playerIcon.sprite = dialogue.CurrentIcon;
-		//}
-		//m_boxImage.SetActive(true);
-
 		sentences.Clear();
 
         foreach (string sentence in currentDialogue.Sentences)
@@ -111,8 +104,5 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
 	{
 		m_dialogueTxt.gameObject.SetActive(false);
  		m_playerCanvas.SetActive(false);
-		//m_playerIcon.sprite = null;
-		//m_boxImage.SetActive(false);
-		currentDialogue.Triggerer.DestroyTrigger();
 	}
 }
