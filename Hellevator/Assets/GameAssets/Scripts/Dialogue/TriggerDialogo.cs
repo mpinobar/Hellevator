@@ -24,8 +24,9 @@ public class TriggerDialogo : MonoBehaviour
 		if (m_conversationStartsInstantly && m_onTigger)
 		{
 			DialogueManager.Instance.StartTalking(dialogue, m_canvasForDialogue);
+			InputManager.Instance.ResetPlayerInput();
 
-            if (m_isRepeatable)
+            if (!m_isRepeatable)
             {
 				DestroyTrigger();
             }
@@ -35,14 +36,15 @@ public class TriggerDialogo : MonoBehaviour
 
 	protected void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((PossessionManager.Instance.ControlledDemon != null) && (collision.transform.root.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
+		if ((PossessionManager.Instance.ControlledDemon != null) && (collision.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
 		{
 			if (m_playerStartsConversation)
 			{
-				m_canvasForDialogue = PossessionManager.Instance.ControlledDemon.GetComponentInChildren<Canvas>().gameObject;
+				m_canvasForDialogue = PossessionManager.Instance.ControlledDemon.GetComponentInChildren<Canvas>().transform.GetChild(0).gameObject;
 			}
 
 			m_onTigger = true;
+			InputManager.Instance.IsInInteactionTrigger = true;
 
 			if (m_conversationStartsInstantly)
 			{
@@ -59,6 +61,7 @@ public class TriggerDialogo : MonoBehaviour
 	{
 		if ((PossessionManager.Instance.ControlledDemon != null) && (collision.transform.root.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
 		{
+			InputManager.Instance.IsInInteactionTrigger = false;
 			m_onTigger = false;
 
 			if (!m_conversationStartsInstantly)
@@ -71,5 +74,15 @@ public class TriggerDialogo : MonoBehaviour
 	public void DestroyTrigger()
 	{
 		this.gameObject.SetActive(false);
+	}
+
+	public void StartDialogue(GameObject canvas)
+    {
+		m_canvasForDialogue = canvas;
+
+		m_onTigger = true;
+		InputManager.Instance.IsInInteactionTrigger = true;
+
+		Event();
 	}
 }

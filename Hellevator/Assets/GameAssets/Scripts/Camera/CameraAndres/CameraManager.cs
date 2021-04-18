@@ -99,7 +99,6 @@ public class CameraManager : TemporalSingleton<CameraManager>
 
 		m_currentCamera = newLiveCamera;
 		ChangeFocusOfCurrentActiveCameraTo(m_currentCameraFocus);
-
 	}
 
 	#region CameraEffects

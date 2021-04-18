@@ -82,9 +82,15 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
         m_dialogueTxt.text = "";
         foreach (char letter in sentence.ToCharArray())
         {
+            for (int i = 0; i < 4; i++)// CAMBIAR EL 4 POR OTRO NUMERO, ES EL NUM DE FRAMES QUE HAY ENTRE CADA CHAR
+            {
+				yield return null;
+            }
             m_dialogueTxt.text = m_dialogueTxt.text + letter;
             yield return null;
         }
+
+		coroutineActive = false;
     }
     public void EndDialogue()
     {
