@@ -17,6 +17,7 @@ public class Satan : MonoBehaviour
 
     [SerializeField] HandAttackSatan m_verticalHandAttack;
     [SerializeField] float m_verticalHandAttackDuration;
+    [SerializeField] float m_verticalOffsetToSpawn;
     [SerializeField] HandAttackSatan m_horizontalHandAttack;
     [SerializeField] float m_horizontalHandAttackDuration;
 
@@ -92,6 +93,7 @@ public class Satan : MonoBehaviour
     {
         m_anim.SetTrigger("VerticalAttack");
         m_verticalHandAttack.Enabled = true;
+        m_verticalHandAttack.transform.position = PossessionManager.Instance.ControlledDemon.transform.position + Vector3.up * m_verticalOffsetToSpawn;
         yield return new WaitForSeconds(m_verticalHandAttackDuration);
         m_verticalHandAttack.Enabled = false;
     }
