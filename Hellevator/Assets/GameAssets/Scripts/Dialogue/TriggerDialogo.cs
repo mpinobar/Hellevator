@@ -2,38 +2,87 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerDialogo : TriggerEvent
+public class TriggerDialogo : MonoBehaviour
 {
-	[SerializeField] private DialogueStart questDialogue = null;
-	
-	//[SerializeField] private bool m_conversationAtBeginingOfLevel = false;
-	private bool conversationStarted = false;
+	[Tooltip("Dejar vacio si la conversacion comienza con el jugador hablando")]
+	[SerializeField] private GameObject m_canvasForDialogue = null;
+	[SerializeField] private bool m_playerStartsConversation = false;
 
-	protected void Start()
+	[Space]
+	[SerializeField] private GameObject m_canStartConversationIndicator = null; //El gameobject que tenga un indicador de que puedes empezar a hablar con alguien
+	[SerializeField] private bool m_conversationStartsInstantly = false;
+	private bool m_onTigger = false;
+
+	[Space]
+	[SerializeField] private bool m_isRepeatable = false;
+
+	[Space]
+	[SerializeField] protected Dialogue dialogue;
+
+	protected void Event()
 	{
-		InputManager.Instance.OnInteract += Event;
-		m_startsOnEnter = true;
+		if (m_conversationStartsInstantly && m_onTigger)
+		{
+			DialogueManager.Instance.StartTalking(dialogue, m_canvasForDialogue);
+			InputManager.Instance.ResetPlayerInput();
+
+            if (!m_isRepeatable)
+            {
+				DestroyTrigger();
+            }
+		}
 	}
 
-	protected override void Event()
+
+	protected void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (!conversationStarted && isInTrigger)
+		if ((PossessionManager.Instance.ControlledDemon != null) && (collision.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
 		{
-			PossessionManager.Instance.ControlledDemon.CanMove = false;
-			DialogueManager.Instance.PressXToTalk.SetActive(false);
-			questDialogue.StartTalking(this);
-			conversationStarted = true;
-		}
-		else if(conversationStarted && isInTrigger)
-		{
-			DialogueManager.Instance.NextSentence();
+			if (m_playerStartsConversation)
+			{
+				m_canvasForDialogue = PossessionManager.Instance.ControlledDemon.GetComponentInChildren<Canvas>().transform.GetChild(0).gameObject;
+			}
+
+			m_onTigger = true;
+			InputManager.Instance.IsInInteactionTrigger = true;
+
+			if (m_conversationStartsInstantly)
+			{
+				Event();
+			}
+			else
+			{
+				m_canStartConversationIndicator.SetActive(true);
+			}
 		}
 	}
 
-	public override void DestroyTrigger()
+	private void OnTriggerExit2D(Collider2D collision)
 	{
-		InputManager.Instance.IsInInteactionTrigger = false;
-		isInTrigger = false;
-		Destroy(this.gameObject);
+		if ((PossessionManager.Instance.ControlledDemon != null) && (collision.transform.root.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
+		{
+			InputManager.Instance.IsInInteactionTrigger = false;
+			m_onTigger = false;
+
+			if (!m_conversationStartsInstantly)
+			{
+				m_canStartConversationIndicator.SetActive(false);
+			}
+		}
+	}
+
+	public void DestroyTrigger()
+	{
+		this.gameObject.SetActive(false);
+	}
+
+	public void StartDialogue(GameObject canvas)
+    {
+		m_canvasForDialogue = canvas;
+
+		m_onTigger = true;
+		InputManager.Instance.IsInInteactionTrigger = true;
+
+		Event();
 	}
 }
