@@ -557,4 +557,10 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         return false;
     }
 
+    public void ClearMultiplePossession()
+    {
+        RemovePossessionFromExtraDemons();
+        m_controllingMultipleDemons = false;
+    }
+
 }

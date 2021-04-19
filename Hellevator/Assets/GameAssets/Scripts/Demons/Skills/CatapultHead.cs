@@ -21,7 +21,20 @@ public class CatapultHead : MonoBehaviour
         m_active = false;
     }
 
+    float airTimer;
+    private void Update()
+    {
+        if (m_active)
+        {
+            airTimer += Time.deltaTime;
+            if (airTimer >= 3)
+            {
+                m_active = false;
+                LevelManager.Instance.RestartLevel();
+            }
+        }
 
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (m_active)

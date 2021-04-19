@@ -146,6 +146,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     {
         if (m_isRestarting)
             return;
+        StopAllCoroutines();
         StartCoroutine(DelayAndRestart(2.5f));
     }
 
@@ -153,11 +154,12 @@ public class LevelManager : PersistentSingleton<LevelManager>
     {
         if (m_isRestarting)
             return;
+        StopAllCoroutines();
         StartCoroutine(DelayAndRestart(0));
     }
     IEnumerator DelayAndRestart(float time)
     {
-        
+        m_isRestarting = true;
         yield return new WaitForSeconds(time);
         CameraManager.Instance.FadeIn();
         FadeManager.IsRestarting = true;
@@ -187,6 +189,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
         {
             m_isRestarting = true;
         }
+        PossessionManager.Instance.ClearMultiplePossession();
+        InputManager.Instance.ThrowingHead = false;
     }
 
     private void LoadCompletedRestart(AsyncOperation obj)
@@ -227,6 +231,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         CameraManager.Instance.FadeOut();
         AudioManager.Instance.StartGameplayMusic();
         m_isRestarting = false;
+        
     }
 
 

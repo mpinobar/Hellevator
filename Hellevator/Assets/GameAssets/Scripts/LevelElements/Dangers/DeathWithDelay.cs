@@ -75,7 +75,13 @@ public class DeathWithDelay : MonoBehaviour
             yield return null;
         }
         character.Die(true);
+        character.Torso.parent = null;
         character.transform.position = character.Torso.position;
+        character.Torso.parent = character.transform;
+        if(character.TryGetComponent(out Catapult cat))
+        {
+            
+        }else
         character.gameObject.SetActive(false);
     }
 
