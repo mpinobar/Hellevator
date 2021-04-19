@@ -46,7 +46,7 @@ public class Catapult : MonoBehaviour
         float timeToThrowHead = m_timeToThrowHead;
         Vector3 lastMousePosition = Input.mousePosition;
         directionToThrowHead = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
-        Vector2 newDirection = CameraManager.Instance.MainCamera.ScreenToWorldPoint(Input.mousePosition) - m_demon.Torso.position;
+        Vector2 newDirection;
         DrawTrajectory(directionToThrowHead);
         if (timeToThrowHead > 0)
         {
@@ -129,6 +129,7 @@ public class Catapult : MonoBehaviour
         headRigidbody.velocity = directionToThrowHead.normalized * m_throwVelocity;
         //Debug.LogError("Set velocity as: " + directionToThrowHead.normalized * m_throwVelocity);
         lr.positionCount = 0;
+        
     }
 
     IEnumerator SlowDown()
@@ -196,10 +197,10 @@ public class Catapult : MonoBehaviour
         /// <param name="timeResolution">Time from frame to frame.</param>
         /// <param name="maxTime">Max time to simulate, will be clamped to reach height 0 (aprox.).</param>
 
-        public static Vector3[] GetBallisticPath(Vector3 startPos, Vector3 forward, float velocity, float timeResolution, float gravity, float maxTime = Mathf.Infinity)
+        public static Vector3[] GetBallisticPath(Vector3 startPos, Vector3 forward, float velocity, float timeResolution, float gravity, float maxTime = 3)
         {
 
-            maxTime = Mathf.Min(maxTime, GetTimeOfFlight(velocity, Vector3.Angle(forward, Vector3.right) * Mathf.Deg2Rad, startPos.y, gravity));
+            //maxTime = Mathf.Min(maxTime, GetTimeOfFlight(velocity, Vector3.Angle(forward, Vector3.right) * Mathf.Deg2Rad, startPos.y, gravity));
             //Debug.LogError(maxTime);
             Vector3[] positions = new Vector3[Mathf.CeilToInt(maxTime / timeResolution)];
             Vector3 velVector = forward * velocity;

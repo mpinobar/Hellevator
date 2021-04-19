@@ -62,6 +62,7 @@ public class PreviewLine : MonoBehaviour
                     else
                         m_sprites[i].position = -Vector3.forward * 500;
                 }
+                //Debug.LogError(positions.Length);
                 m_sprites[positions.Length - 1].up = m_sprites[positions.Length - 1].position - m_sprites[positions.Length - 2].position;
             }
         }

@@ -44,6 +44,7 @@ public class PossessingLight : MonoBehaviour
                 m_target = PossessionManager.Instance.LookForNearestDemon(m_lastDemonPossessionRange, transform, m_originDemon);
                 if (m_target == null)
                 {
+                    if(m_lightSound)
                     m_lightSound.Stop();
                     LevelManager.Instance.StartRestartingLevelWithDelay();
                 }
@@ -55,7 +56,6 @@ public class PossessingLight : MonoBehaviour
             else
             {
                 //m_desiredPosition = Vector3.Lerp(m_desiredPosition, m_target.Torso.position, m_speed * Time.deltaTime * Mathf.Max(0.5f, m_distancePercentage));
-
                 if (m_travellingToLightPoint && m_lightTarget)
                 {
                     //m_forwardMovementTimer += Time.deltaTime * m_speed;

@@ -330,6 +330,13 @@ public class BasicZombie : DemonBase
     private void OnDisable()
     {
         m_skullIndicator.SetActive(false);
+        if (PossessionManager.Instance.DemonShowingSkull == this)
+            PossessionManager.Instance.DemonShowingSkull = null;
+        else if (PossessionManager.Instance.DemonsShowingSkulls != null && PossessionManager.Instance.DemonsShowingSkulls.Contains(this))
+        {
+            Debug.LogError("a");
+            PossessionManager.Instance.DemonsShowingSkulls.Remove(this);
+        }
     }
 
     public void VerticalMovementOnLadder(float verticalInput)
@@ -603,4 +610,5 @@ public class BasicZombie : DemonBase
     {
         MyRgb.velocity = new Vector2(0, MyRgb.velocity.y);
     }
+
 }
