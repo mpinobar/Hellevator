@@ -49,6 +49,8 @@ public class CameraManager : TemporalSingleton<CameraManager>
     [SerializeField] float m_heavyShakeAmplitude = 80f;
     [SerializeField] float m_heavyShakeDuration = 1f;
 
+    [SerializeField] float m_megaShakeAmplitude = 150f;
+    [SerializeField] float m_megaShakeDuration = 3f;
     public override void Awake()
     {
         if (_instance == null)
@@ -162,6 +164,26 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		StartCoroutine(CameraShake(noise, m_heavyShakeDuration));
 	}
 
+	public void CameraShakeMega()
+	{
+		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+		noise.m_AmplitudeGain = m_megaShakeAmplitude;
+		StopAllCoroutines();
+		StartCoroutine(MegaCameraShakeSlowDown(noise, m_megaShakeDuration));
+	}
+	private IEnumerator MegaCameraShakeSlowDown(CinemachineBasicMultiChannelPerlin noiseCmp, float time)
+	{
+		float timeRemaining = time;
+		float initialGain = noiseCmp.m_AmplitudeGain;
+		//float amp = noiseCmp.m_AmplitudeGain;
+		while (timeRemaining > 0)
+		{
+			timeRemaining -= Time.unscaledDeltaTime;
+			noiseCmp.m_AmplitudeGain = Mathf.Lerp(initialGain, 0, (1 - timeRemaining / time));
+			yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
+		}
+		noiseCmp.m_AmplitudeGain = 0f;
+	}
 	/// <summary>
 	/// Hace shake de la camara y para al cabo de un tiempo
 	/// </summary>

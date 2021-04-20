@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 public class Satan : MonoBehaviour
 {
-    private enum Phase
+    public enum Phase
     {
         First, Second, Third, Interphase
     }
@@ -16,10 +16,10 @@ public class Satan : MonoBehaviour
     float m_attackTimer;
 
     [SerializeField] HandAttackSatan m_verticalHandAttack;
-    [SerializeField] float m_verticalHandAttackDuration;
+    //[SerializeField] float m_verticalHandAttackDuration;
     [SerializeField] float m_verticalOffsetToSpawn;
     [SerializeField] HandAttackSatan m_horizontalHandAttack;
-    [SerializeField] float m_horizontalHandAttackDuration;
+    //[SerializeField] float m_horizontalHandAttackDuration;
 
     [Header("Rayo")]
     [SerializeField] Rayo m_rayo;
@@ -35,7 +35,7 @@ public class Satan : MonoBehaviour
 
     Animator m_anim;
     Vector2 m_bossPosition;
-
+    public static Action OnInterphase;
     private void Start()
     {
         m_attackTimer = m_timeBetweenAttacks;
@@ -58,14 +58,21 @@ public class Satan : MonoBehaviour
             m_attackTimer = m_timeBetweenAttacks;
         }
     }
-
+    public void SetPhase(Phase newPhase)
+    {
+        m_phase = newPhase;
+        if (newPhase == Phase.Interphase)
+            OnInterphase?.Invoke();
+    }
     private void Attack()
     {
         float f = Random.value;
         if (f < 0.33f)
-            StartCoroutine(VerticalHandAttack(PossessionManager.Instance.ControlledDemon.transform)); 
+            /*StartCoroutine(*/
+            VerticalHandAttack(/*PossessionManager.Instance.ControlledDemon.transform)*/);
         else if (f < 0.66f)
-            StartCoroutine(HorizontalHandAttack(PossessionManager.Instance.ControlledDemon.transform));
+            /*StartCoroutine(*/
+            HorizontalHandAttack(/*PossessionManager.Instance.ControlledDemon.transform)*/);
         else if (f <= 1)
             StartCoroutine(AtaqueRayo(PossessionManager.Instance.ControlledDemon.transform));
         m_attackTimer = m_timeBetweenAttacks;
@@ -89,40 +96,47 @@ public class Satan : MonoBehaviour
         }
     }
 
-    IEnumerator VerticalHandAttack(Transform target)
+    void VerticalHandAttack(/*Transform target*/)
     {
-        m_anim.SetTrigger("VerticalAttack");
-        m_verticalHandAttack.Enabled = true;
+        if (m_anim)
+            m_anim.SetTrigger("VerticalAttack");
+        m_verticalHandAttack.gameObject.SetActive(true);
         m_verticalHandAttack.transform.position = PossessionManager.Instance.ControlledDemon.transform.position + Vector3.up * m_verticalOffsetToSpawn;
-        yield return new WaitForSeconds(m_verticalHandAttackDuration);
-        m_verticalHandAttack.Enabled = false;
+        //yield return new WaitForSeconds(m_verticalHandAttackDuration);
+        //m_verticalHandAttack.Enabled = false;
     }
 
-    IEnumerator HorizontalHandAttack(Transform target)
+    void HorizontalHandAttack(/*Transform target*/)
     {
-        m_anim.SetTrigger("HorizontalAttack");
-        m_horizontalHandAttack.Enabled = true;
-        yield return new WaitForSeconds(m_horizontalHandAttackDuration);
-        m_horizontalHandAttack.Enabled = false;
+        if (m_anim)
+            m_anim.SetTrigger("HorizontalAttack");
+        m_horizontalHandAttack.gameObject.SetActive(true);
+        //yield return new WaitForSeconds(m_horizontalHandAttackDuration);
+        //m_horizontalHandAttack.Enabled = false;
     }
     IEnumerator AtaqueRayo(Transform target)
     {
-        m_anim.SetTrigger("Rayo");
+        if (m_anim)
+            m_anim.SetTrigger("Rayo");
+        m_rayo.transform.position = new Vector3(PossessionManager.Instance.ControlledDemon.transform.position.x, PossessionManager.Instance.ControlledDemon.transform.position.y + 14.3f, 0);
         m_rayo.gameObject.SetActive(false);
-        m_previewRayo.gameObject.SetActive(true);
-        float t = 0;
-        Vector2 posicionPreview = target.position;
-        posicionPreview.y = m_previewRayo.position.y;
-        while (t < m_tiempoPreviewRayo)
+        if (m_previewRayo)
         {
-            t += Time.deltaTime;
-            posicionPreview.x = target.position.x;
-            m_previewRayo.position = posicionPreview;
-            yield return null;
+            m_previewRayo.gameObject.SetActive(true);
+            float t = 0;
+            Vector2 posicionPreview = target.position;
+            posicionPreview.y = m_previewRayo.position.y;
+            while (t < m_tiempoPreviewRayo)
+            {
+                t += Time.deltaTime;
+                posicionPreview.x = target.position.x;
+                m_previewRayo.position = posicionPreview;
+                yield return null;
+            }
+            yield return new WaitForSeconds(m_delayAparicionRayo);
         }
-        yield return new WaitForSeconds(m_delayAparicionRayo);
 
         m_rayo.gameObject.SetActive(true);
-    }   
+    }
 
 }
