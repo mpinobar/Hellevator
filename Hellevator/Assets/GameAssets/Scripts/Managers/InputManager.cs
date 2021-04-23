@@ -16,6 +16,7 @@ public class InputManager : PersistentSingleton<InputManager>
     float       m_verticalInputValue;
     Vector3     m_direction = Vector3.one;
     bool        m_isInMenu;
+    bool        m_isInDialogue = false;
     bool        m_canControlCharacters = true;
     bool        m_throwingHead = false;
     public delegate void OnButtonPress();
@@ -30,12 +31,17 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     public bool IsInInteactionTrigger
     {
-        get => m_isInInteactionTrigger; set => m_isInInteactionTrigger = value;
+        get => m_isInInteactionTrigger; 
+        set
+        {
+            m_isInInteactionTrigger = value;
+        }
     }
     public float VerticalInputValue { get => m_verticalInputValue; set => m_verticalInputValue = value; }
     public bool IsInMenu { get => m_isInMenu; set => m_isInMenu = value; }
     public bool ThrowingHead { get => m_throwingHead; set => m_throwingHead = value; }
     public float MoveInputValue { get => m_moveInputValue; }
+    public bool IsInDialogue { get => m_isInDialogue; set => m_isInDialogue = value; }
 
     public override void Awake()
     {
@@ -89,7 +95,11 @@ public class InputManager : PersistentSingleton<InputManager>
     {
         if (!m_isInMenu)
         {
-            if (m_canControlCharacters)
+            if (m_isInDialogue)
+            {
+                //Inputs de dialogo
+            }
+            else if (m_canControlCharacters)
             {
                 FeedInputToMainDemon();
 
@@ -266,6 +276,7 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     void Interact()
     {
+        print(IsInInteactionTrigger);
         if (IsInInteactionTrigger)
         {
             OnInteract();
