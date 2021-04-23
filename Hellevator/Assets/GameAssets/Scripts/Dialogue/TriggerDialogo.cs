@@ -44,7 +44,9 @@ public class TriggerDialogo : MonoBehaviour
 			}
 
 			m_onTigger = true;
+			print(InputManager.Instance.IsInInteactionTrigger);
 			InputManager.Instance.IsInInteactionTrigger = true;
+			print(InputManager.Instance.IsInInteactionTrigger);
 
 			if (m_conversationStartsInstantly)
 			{
@@ -61,6 +63,7 @@ public class TriggerDialogo : MonoBehaviour
 	{
 		if ((PossessionManager.Instance.ControlledDemon != null) && (collision.transform.root.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
 		{
+			print("I exit");
 			InputManager.Instance.IsInInteactionTrigger = false;
 			m_onTigger = false;
 

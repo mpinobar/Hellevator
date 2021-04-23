@@ -31,7 +31,11 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     public bool IsInInteactionTrigger
     {
-        get => m_isInInteactionTrigger; set => m_isInInteactionTrigger = value;
+        get => m_isInInteactionTrigger; 
+        set
+        {
+            m_isInInteactionTrigger = value;
+        }
     }
     public float VerticalInputValue { get => m_verticalInputValue; set => m_verticalInputValue = value; }
     public bool IsInMenu { get => m_isInMenu; set => m_isInMenu = value; }
@@ -272,6 +276,7 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     void Interact()
     {
+        print(IsInInteactionTrigger);
         if (IsInInteactionTrigger)
         {
             OnInteract();
