@@ -19,6 +19,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
     private Dialogue currentDialogue;
 	private GameObject currentImage;
 
+	private bool conversationEnded = true;
 
 	public override void Awake()
     {
@@ -32,7 +33,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
 
 	public void StartTalking(Dialogue dialogue, GameObject canvasText)
     {
-		print(dialogue.Sentences[0]);
+		conversationEnded = false;
 		m_playerCanvas = canvasText;
 		m_playerCanvas.SetActive(true);
 		m_dialogueTxt = canvasText.GetComponentInChildren<TextMeshProUGUI>();
@@ -57,25 +58,29 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
 
 	public void NextSentence()
     {
-        if (coroutineActive)
-        {
-			StopAllCoroutines();
-			m_dialogueTxt.text = sentence;
-			coroutineActive = false;
-        }
-        else
-        {
-			if (sentences.Count == 0)
+		if (!conversationEnded) 
+		{
+			if (coroutineActive)
 			{
-				EndDialogue();
-				return;
+				StopAllCoroutines();
+				m_dialogueTxt.text = sentence;
+				coroutineActive = false;
 			}
+			else
+			{
+				if (sentences.Count == 0)
+				{
+					conversationEnded = true;
+					EndDialogue();
+					return;
+				}
 
-			sentence = sentences.Dequeue();
-			StopAllCoroutines();
-			coroutineActive = true;
-			StartCoroutine(WriteSentence(sentence));
-		}        
+				sentence = sentences.Dequeue();
+				StopAllCoroutines();
+				coroutineActive = true;
+				StartCoroutine(WriteSentence(sentence));
+			}
+		}       
     }
     IEnumerator WriteSentence(string sentence)
     {
