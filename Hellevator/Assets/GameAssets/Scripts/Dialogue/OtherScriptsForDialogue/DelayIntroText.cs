@@ -6,6 +6,7 @@ public class DelayIntroText : MonoBehaviour
 {
     [SerializeField] private TriggerDialogo m_dialogo = null;
 	[SerializeField] private float m_timeBeforeStartDialogue = 0f;
+    [SerializeField] private GameObject m_canvas = null;
 	private float m_currentTimer = 0f;
 	private bool m_counting = false;
 
@@ -16,7 +17,14 @@ public class DelayIntroText : MonoBehaviour
 			m_currentTimer -= Time.deltaTime;
 			if(m_currentTimer <= 0)
             {
-				m_dialogo.StartDialogue(PossessionManager.Instance.ControlledDemon.GetComponentInChildren<Canvas>().transform.GetChild(0).gameObject);
+                if(m_canvas != null)
+                {
+				    m_dialogo.StartDialogue(m_canvas);
+                }
+                else
+                {
+				    m_dialogo.StartDialogue(PossessionManager.Instance.ControlledDemon.GetComponentInChildren<Canvas>().transform.GetChild(0).gameObject);
+                }
                 m_counting = false;
                 Destroy(this.gameObject);
             }
