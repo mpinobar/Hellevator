@@ -32,7 +32,9 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
 
 	public void StartTalking(Dialogue dialogue, GameObject canvasText)
     {
+		print(dialogue.Sentences[0]);
 		m_playerCanvas = canvasText;
+		m_playerCanvas.SetActive(true);
 		m_dialogueTxt = canvasText.GetComponentInChildren<TextMeshProUGUI>();
 
 
@@ -40,8 +42,6 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
 		PossessionManager.Instance.ControlledDemon.StopMovement();
 
 		currentDialogue = dialogue;
-
-		m_playerCanvas.SetActive(true);
 
 		sentences.Clear();
 
@@ -108,7 +108,6 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
     }
 	public void DeactivateTextAndImage()
 	{
-		m_dialogueTxt.gameObject.SetActive(false);
  		m_playerCanvas.SetActive(false);
 	}
 }
