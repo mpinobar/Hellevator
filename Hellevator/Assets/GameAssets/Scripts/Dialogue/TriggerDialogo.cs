@@ -15,55 +15,60 @@ public class TriggerDialogo : MonoBehaviour
 
 	[Space]
 	[SerializeField] private bool m_isRepeatable = false;
+	private bool m_hasBeingPlayed = false;
 
 	[Space]
 	[SerializeField] protected Dialogue dialogue;
 
 	protected void Event()
 	{
-		if (m_conversationStartsInstantly && m_onTigger)
-		{
-			DialogueManager.Instance.StartTalking(dialogue, m_canvasForDialogue);
-			InputManager.Instance.ResetPlayerInput();
+        if (!m_hasBeingPlayed)
+        {
+			if (m_conversationStartsInstantly && m_onTigger)
+			{
+				DialogueManager.Instance.StartTalking(dialogue, m_canvasForDialogue);
+				InputManager.Instance.ResetPlayerInput();
 
-            if (!m_isRepeatable)
-            {
-				DestroyTrigger();
-            }
+				if (!m_isRepeatable)
+				{
+					m_hasBeingPlayed = true;
+
+				}
+			}
 		}
 	}
 
 
 	protected void OnTriggerEnter2D(Collider2D collision)
 	{
-		if ((PossessionManager.Instance.ControlledDemon != null) && (collision.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
-		{
-			if (m_playerStartsConversation)
+        if (!m_hasBeingPlayed)
+        {
+			if ((PossessionManager.Instance.ControlledDemon != null) && (collision.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
 			{
-				m_canvasForDialogue = PossessionManager.Instance.ControlledDemon.GetComponentInChildren<Canvas>().transform.GetChild(0).gameObject;
-			}
+				if (m_playerStartsConversation)
+				{
+					m_canvasForDialogue = PossessionManager.Instance.ControlledDemon.GetComponentInChildren<Canvas>().transform.GetChild(0).gameObject;
+				}
 
-			m_onTigger = true;
-			print(InputManager.Instance.IsInInteactionTrigger);
-			InputManager.Instance.IsInInteactionTrigger = true;
-			print(InputManager.Instance.IsInInteactionTrigger);
+				m_onTigger = true;
+				InputManager.Instance.IsInInteactionTrigger = true;
 
-			if (m_conversationStartsInstantly)
-			{
-				Event();
+				if (m_conversationStartsInstantly)
+				{
+					Event();
+				}
+				else
+				{
+					m_canStartConversationIndicator.SetActive(true);
+				}
 			}
-			else
-			{
-				m_canStartConversationIndicator.SetActive(true);
-			}
-		}
+		}		
 	}
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
 		if ((PossessionManager.Instance.ControlledDemon != null) && (collision.transform.root.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
 		{
-			print("I exit");
 			InputManager.Instance.IsInInteactionTrigger = false;
 			m_onTigger = false;
 
