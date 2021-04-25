@@ -245,9 +245,37 @@ public class AudioManager : PersistentSingleton<AudioManager>
 
     public void SetBackgroundMusicToKitchen()
     {
-        if (m_musicClipIndex != 2)
+        if (m_musicClipIndex != 3)
         {
-            m_musicClipIndex = 2;
+            m_musicClipIndex = 3;
+            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
+
+        }
+    }
+
+    public void SetBackgroundMusicToStorage()
+    {
+        if (m_musicClipIndex != 1)
+        {
+            m_musicClipIndex = 1;
+            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
+
+        }
+    }
+    public void SetBackgroundMusicToGardens()
+    {
+        if (m_musicClipIndex != 4)
+        {
+            m_musicClipIndex = 4;
+            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
+
+        }
+    }
+    public void SetBackgroundMusicToRooms()
+    {
+        if (m_musicClipIndex != 5)
+        {
+            m_musicClipIndex = 5;
             StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
 
         }
@@ -277,9 +305,9 @@ public class AudioManager : PersistentSingleton<AudioManager>
     }
     public void SetBackgroundMusicToRestaurant()
     {
-        if (m_musicClipIndex != 1)
+        if (m_musicClipIndex != 2)
         {
-            m_musicClipIndex = 1;
+            m_musicClipIndex = 2;
             StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
 
         }

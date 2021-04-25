@@ -7,7 +7,7 @@ public class BackgroundMusicChange : MonoBehaviour
 
     private enum MusicToChangeTo
     {
-        Menu, Restaurant, Kitchen
+        Menu, Storage, Restaurant, Kitchen
     }
 
     [SerializeField] MusicToChangeTo m_newMusic = MusicToChangeTo.Restaurant;
@@ -25,6 +25,10 @@ public class BackgroundMusicChange : MonoBehaviour
         else if (m_newMusic == MusicToChangeTo.Menu)
         {
             AudioManager.Instance.SetBackgroundMusicToMenu();
+        }
+        else if (m_newMusic == MusicToChangeTo.Storage)
+        {
+            AudioManager.Instance.SetBackgroundMusicToStorage();
         }
 
     }
