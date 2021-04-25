@@ -70,7 +70,7 @@ public class AscensorHabitaciones : MonoBehaviour
         while (distance > 1)
         {
             distance = Mathf.Abs(PossessionManager.Instance.ControlledDemon.transform.position.x - m_positionToSet.position.x);
-            PossessionManager.Instance.ControlledDemon.Move((m_positionToSet.position - PossessionManager.Instance.ControlledDemon.transform.position).x / distance);
+            PossessionManager.Instance.ControlledDemon.MyRgb.velocity = new Vector3(((m_positionToSet.position - PossessionManager.Instance.ControlledDemon.transform.position).x * ((BasicZombie)PossessionManager.Instance.ControlledDemon).MaxSpeed / distance), PossessionManager.Instance.ControlledDemon.MyRgb.velocity.y, 0);
             yield return null;
         }
         //Debug.LogError("Finished moving character to position");
