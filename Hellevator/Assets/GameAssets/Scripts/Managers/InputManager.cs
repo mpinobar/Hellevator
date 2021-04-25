@@ -276,7 +276,7 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     void Interact()
     {
-        print(IsInInteactionTrigger);
+
         if (IsInInteactionTrigger)
         {
             OnInteract();
