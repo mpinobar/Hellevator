@@ -296,7 +296,7 @@ public class InputManager : PersistentSingleton<InputManager>
 
     void Jump()
     {
-        if (!IsInMenu)
+        if (!IsInMenu && !IsInDialogue)
         {
             if (PossessionManager.Instance.ChoosingWhenDead)
             {
