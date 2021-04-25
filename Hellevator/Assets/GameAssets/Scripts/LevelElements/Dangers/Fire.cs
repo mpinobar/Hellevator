@@ -29,18 +29,18 @@ public class Fire : MonoBehaviour
         m_propertyBlock = new MaterialPropertyBlock();
         m_spriteRenderer.GetPropertyBlock(m_propertyBlock);
         m_size = new Vector2(transform.localScale.y * 0.75f, 1);
-        m_detections = new List<GameObject>();
+        m_detections = new List<GameObject>();        
     }
 
     // Update is called once per frame
     void Update()
     {
 #if UNITY_EDITOR
-        Debug.DrawRay(m_startingPoint, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
-        Debug.DrawRay(m_startingPoint - (m_size * 0.5f) * Vector2.right, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
-        Debug.DrawRay(m_startingPoint + (m_size * 0.5f) * Vector2.right, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
+        //Debug.DrawRay(m_startingPoint, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
+        //Debug.DrawRay(m_startingPoint - (m_size * 0.5f) * Vector2.right, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
+        //Debug.DrawRay(m_startingPoint + (m_size * 0.5f) * Vector2.right, (m_endPoint - m_startingPoint) * m_currentFireAltitude, Color.green);
 #endif
-        m_impacts = Physics2D.BoxCastAll(m_startingPoint, m_size, 0, m_endPoint - m_startingPoint, m_height * m_currentFireAltitude, m_detectionLayer);
+        m_impacts = Physics2D.BoxCastAll(m_startingPoint, m_size, 0, m_endPoint - m_startingPoint, m_height * m_currentFireAltitude, m_detectionLayer);        
         if (m_impacts.Length > 0)
         {
             for (int i = 0; i < m_impacts.Length; i++)
@@ -103,6 +103,7 @@ public class Fire : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        //Debug.LogError(collision.transform);
         if (m_detections.Contains(collision.gameObject))
             m_detections.Remove(collision.gameObject);
     }

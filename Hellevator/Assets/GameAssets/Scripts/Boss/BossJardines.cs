@@ -87,7 +87,7 @@ public class BossJardines : MonoBehaviour
         transform.GetChild(0).localEulerAngles = Vector3.forward * 5;
         transform.GetChild(0).localPosition = new Vector3(6.12f, 1.13f, 0);
         yield return new WaitForSeconds(3);
-        int numSpawns = 3;
+        int numSpawns = 1;
 
         while (numSpawns > 0)
         {
