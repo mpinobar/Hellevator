@@ -72,11 +72,13 @@ public class Catapult : MonoBehaviour
                     {
                         directionToThrowHead = newDirection;
                     }
+                    directionToThrowHead.Normalize();
                     DrawTrajectory(directionToThrowHead);
                 }
                 else if (InputManager.Instance.VerticalInputValue != 0 || InputManager.Instance.MoveInputValue != 0)
                 {
-                    directionToThrowHead += (InputManager.Instance.VerticalInputValue * Vector2.up + InputManager.Instance.MoveInputValue * Vector2.right) * Time.unscaledDeltaTime * 20;
+                    directionToThrowHead += (InputManager.Instance.VerticalInputValue * Vector2.up + InputManager.Instance.MoveInputValue * Vector2.right) * Time.unscaledDeltaTime;
+                    directionToThrowHead.Normalize();
                     DrawTrajectory(directionToThrowHead);
                 }
                 yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
@@ -120,6 +122,7 @@ public class Catapult : MonoBehaviour
         m_headTransform.localScale = Vector3.one;
         m_headTransform.GetComponent<HingeJoint2D>().enabled = false;
         m_headTransform.GetComponent<Collider2D>().enabled = true;
+        m_headTransform.GetComponent<Collider2D>().offset = Vector2.zero;
         m_headTransform.GetComponent<CatapultHead>().m_active = true;
         m_headTransform.GetComponent<CatapultHead>().LastPosition = m_headTransform.position;
         Rigidbody2D headRigidbody = m_headTransform.GetComponent<Rigidbody2D>();
@@ -261,7 +264,7 @@ public class Catapult : MonoBehaviour
             RaycastHit2D hit;
             for (int i = 1; i < arc.Length; i++)
             {
-                hit = Physics2D.CircleCast(arc[i - 1], 0.4f, arc[i] - arc[i - 1], (arc[i] - arc[i - 1]).magnitude/*, lm*/);
+                hit = Physics2D.CircleCast(arc[i - 1], 0.503f, arc[i] - arc[i - 1], (arc[i] - arc[i - 1]).magnitude/*, lm*/);
                 //Debug.LogError(hit.transform.name);
                 if (hit.transform != null && !hit.collider.isTrigger && IsInLayerMask(hit.transform.gameObject.layer, lm))
                 {

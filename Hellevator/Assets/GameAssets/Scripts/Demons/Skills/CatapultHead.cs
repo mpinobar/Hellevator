@@ -26,6 +26,7 @@ public class CatapultHead : MonoBehaviour
     {
         if (m_active)
         {
+            
             airTimer += Time.deltaTime;
             if (airTimer >= 3)
             {

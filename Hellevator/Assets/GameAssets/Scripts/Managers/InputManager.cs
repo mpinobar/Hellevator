@@ -71,11 +71,17 @@ public class InputManager : PersistentSingleton<InputManager>
             if (!IsInMenu)
             {
                 UIController.Instance.ShowPauseMenu();
+                Cursor.visible = true;
             }
             else
             {
+                Cursor.visible = false;
                 UIController.Instance.Resume();
             }
+        }
+        else
+        {
+            Cursor.visible = true;
         }
 
     }
@@ -120,10 +126,10 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             FeedInputToMenuNavigation();
         }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            UIController.Instance.UnlockMap();
-        }
+        //if (Input.GetKeyDown(KeyCode.J))
+        //{
+        //    UIController.Instance.UnlockMap();
+        //}
     }
 
     void FeedInputToMenuNavigation()
