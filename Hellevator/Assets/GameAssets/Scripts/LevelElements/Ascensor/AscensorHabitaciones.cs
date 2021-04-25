@@ -19,6 +19,15 @@ public class AscensorHabitaciones : MonoBehaviour
     {
         m_shouldShowInitialAnimation = PlayerPrefs.GetInt("ElevatorAnim") == 0;
         ActivateButtons();
+        
+    }
+
+    private void Start()
+    {
+        if (m_shouldShowInitialAnimation)
+        {
+            ShowInitialAnimation();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -27,11 +36,11 @@ public class AscensorHabitaciones : MonoBehaviour
         {
             if (character.IsControlledByPlayer)
             {
-                if (m_shouldShowInitialAnimation)
-                {
-                    ShowInitialAnimation();
-                    return;
-                }
+                //if (m_shouldShowInitialAnimation)
+                //{
+                //    ShowInitialAnimation();
+                //    return;
+                //}
 
                 ActivateButtons();
 
@@ -47,7 +56,7 @@ public class AscensorHabitaciones : MonoBehaviour
             if (PlayerPrefs.GetInt(m_buttonsToCheck[i]) == 1 && PlayerPrefs.GetInt(m_activatedButtons[i]) == 0)
             {
                 PlayerPrefs.SetInt(m_activatedButtons[i], 1);
-                Debug.LogError("New button to activate" + i);
+                //Debug.LogError("New button to activate" + i);
                 StartCoroutine(AnimateNewButtonActivated(i));
             }
         }
@@ -55,28 +64,27 @@ public class AscensorHabitaciones : MonoBehaviour
 
     private IEnumerator AnimateNewButtonActivated(int button)
     {
-        Debug.LogError("Starting to move character");
+        //Debug.LogError("Starting to move character");
         float distance = Mathf.Abs(PossessionManager.Instance.ControlledDemon.transform.position.x - m_positionToSet.position.x);
         PossessionManager.Instance.ControlledDemon.CanMove = false;
         while (distance > 1)
         {
             distance = Mathf.Abs(PossessionManager.Instance.ControlledDemon.transform.position.x - m_positionToSet.position.x);
-            PossessionManager.Instance.ControlledDemon.Move((m_positionToSet.position - PossessionManager.Instance.ControlledDemon.transform.position).x / distance);
+            PossessionManager.Instance.ControlledDemon.MyRgb.velocity = new Vector3(((m_positionToSet.position - PossessionManager.Instance.ControlledDemon.transform.position).x * ((BasicZombie)PossessionManager.Instance.ControlledDemon).MaxSpeed / distance), PossessionManager.Instance.ControlledDemon.MyRgb.velocity.y, 0);
             yield return null;
         }
-        Debug.LogError("Finished moving character to position");
+        //Debug.LogError("Finished moving character to position");
         ((BasicZombie)PossessionManager.Instance.ControlledDemon).SetOnLadder(true);
         yield return new WaitForSeconds(1);
         m_buttons[button].SetActive(true);
-        Debug.LogError("Set button");
+        //Debug.LogError("Set button");
         yield return new WaitForSeconds(1);
         ((BasicZombie)PossessionManager.Instance.ControlledDemon).SetOnLadder(false);
         AnimateElevatorMovement(button);
     }
 
     void AnimateElevatorMovement(int sceneIndex)
-    {
-        Debug.LogError("Setting left trigger scene change to: " + sceneIndex);
+    {        
         CloseElevatorDoors();
         PossessionManager.Instance.ControlledDemon.CanMove = false;
         SetSceneChangers(sceneIndex);
@@ -127,7 +135,7 @@ public class AscensorHabitaciones : MonoBehaviour
 
     IEnumerator ShakeAndFade()
     {
-        Debug.LogError("Animating elevator movement ");
+        //Debug.LogError("Animating elevator movement ");
         m_elevatorFade.gameObject.SetActive(true);
         CameraManager.Instance.CameraShakeLight3S();
         yield return new WaitForSeconds(3);
@@ -142,7 +150,7 @@ public class AscensorHabitaciones : MonoBehaviour
             if (PlayerPrefs.GetInt(m_activatedButtons[i]) == 1)
             {
                 min = i;
-                Debug.LogError("Activating button" + i);
+                //Debug.LogError("Activating button" + i);
                 m_buttons[i].SetActive(true);
                 if(i == 0 || i == 2)
                 {
@@ -159,9 +167,9 @@ public class AscensorHabitaciones : MonoBehaviour
     }
 
     private void ShowInitialAnimation()
-    {
-        Debug.LogError("Initial animation");
+    {        
         PlayerPrefs.SetInt("ElevatorAnim", 1);
         m_shouldShowInitialAnimation = false;
+        AnimateElevatorMovement(-1);
     }
 }
