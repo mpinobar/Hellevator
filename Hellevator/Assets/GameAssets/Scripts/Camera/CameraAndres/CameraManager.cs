@@ -128,6 +128,19 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		StartCoroutine(CameraShake(noise, m_lightShakeDuration));
 	}
 
+	public void CameraShakeLight3S()
+    {
+		StartCoroutine(ShakeLightAndLong(3));
+    }
+
+	IEnumerator ShakeLightAndLong(float duration)
+	{
+		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+		noise.m_AmplitudeGain = m_lightShakeAmplitude*0.15f;
+		yield return new WaitForSeconds(duration);
+		noise.m_AmplitudeGain = 0;		
+	}
+
 	public void CameraShakeMedium()
 	{
 		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
