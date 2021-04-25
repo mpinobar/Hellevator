@@ -239,7 +239,7 @@ public class BasicZombie : DemonBase
             {
                 if (PossessionManager.Instance.DemonShowingSkull == this)
                     PossessionManager.Instance.DemonShowingSkull = null;
-
+                if(PossessionManager.Instance.ControlledDemon)
                 DistanceToPlayer = Vector2.Distance(m_torso.transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
                 if (PossessionManager.Instance.CheckBodyInRange(this) && !IsPossessionBlocked && !IsInDanger && IsDead && PossessionManager.Instance.ControlledDemon != null)
                 {

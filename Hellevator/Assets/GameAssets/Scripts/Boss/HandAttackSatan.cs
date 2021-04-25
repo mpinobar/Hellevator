@@ -15,9 +15,11 @@ public class HandAttackSatan : MonoBehaviour
     Collider2D m_colliderCmp;
     public bool Enabled { get => m_enabled; set => m_enabled = value; }
 
-
+    Camera m_cam;
     private void OnEnable()
     {
+        if (!m_cam)
+            m_cam = Camera.main;
         if (!m_colliderCmp)
             m_colliderCmp = GetComponent<Collider2D>();
         m_colliderCmp.enabled = true;
@@ -31,8 +33,17 @@ public class HandAttackSatan : MonoBehaviour
     IEnumerator VerticalMovement()
     {
         float t = 0;
-        Vector2 initialPosition = transform.position;
-        Vector2 endPosition = transform.position - Vector3.up * m_maximumDistance;
+        Vector2 initialPosition = new Vector2(PossessionManager.Instance.ControlledDemon.transform.position.x, m_cam.transform.position.y + m_cam.orthographicSize);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(initialPosition,Vector2.down,m_cam.orthographicSize*2);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].transform.CompareTag("Floor"))
+            {
+                m_maximumDistance = hits[i].distance;
+                break;
+            }
+        }
+        Vector2 endPosition = initialPosition - Vector2.up * m_maximumDistance;
         while (t < 1)
         {
             t += Time.deltaTime * animationSpeed;
@@ -41,13 +52,16 @@ public class HandAttackSatan : MonoBehaviour
         }
         yield return new WaitForSeconds(m_timeBeforeDisablingCollider);
         m_colliderCmp.enabled = false;
+        yield return new WaitForSeconds(2);
+        Deactivate();
     }
 
     IEnumerator HorizontalMovement()
     {
         float t = 0;
-        Vector2 initialPosition = transform.position;
-        Vector2 endPosition = transform.position - Vector3.right * m_maximumDistance * transform.root.localScale.x;
+        m_maximumDistance = m_cam.orthographicSize * (16 / 9);
+        Vector2 initialPosition = new Vector2(m_cam.transform.position.x + m_cam.orthographicSize*(16/9)*transform.root.localScale.x/Mathf.Abs(transform.root.localScale.x), PossessionManager.Instance.ControlledDemon.transform.position.y);
+        Vector2 endPosition = initialPosition - Vector2.right * m_maximumDistance * (transform.root.localScale.x/Mathf.Abs(transform.root.localScale.x));
         while (t < 1)
         {
             t += Time.deltaTime * animationSpeed;
@@ -56,6 +70,8 @@ public class HandAttackSatan : MonoBehaviour
         }
         yield return new WaitForSeconds(m_timeBeforeDisablingCollider);
         m_colliderCmp.enabled = false;
+        yield return new WaitForSeconds(2);
+        Deactivate();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -69,5 +85,10 @@ public class HandAttackSatan : MonoBehaviour
                 character.Torso.GetComponent<Rigidbody2D>().velocity = new Vector2((character.Torso.position - transform.position).normalized.x * m_yeetSpeedHorizontal, m_yeetSpeedVertical);
             }
         }
+    }
+
+    void Deactivate()
+    {
+        gameObject.SetActive(false);
     }
 }
