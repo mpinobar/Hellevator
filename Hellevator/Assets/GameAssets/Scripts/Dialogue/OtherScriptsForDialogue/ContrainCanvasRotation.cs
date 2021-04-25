@@ -6,6 +6,13 @@ public class ContrainCanvasRotation : MonoBehaviour
 {
     void Update()
     {
-        this.transform.right = Vector2.right;
+        if(transform.root.transform.localScale.x < 0 && transform.localScale.x > 0)
+        {
+            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        }
+        if (transform.root.transform.localScale.x > 0 && transform.localScale.x < 0)
+        {
+            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        }
     }
 }

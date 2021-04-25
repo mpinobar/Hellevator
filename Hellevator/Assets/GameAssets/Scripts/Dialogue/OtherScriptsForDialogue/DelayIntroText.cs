@@ -15,7 +15,12 @@ public class DelayIntroText : MonoBehaviour
         if (m_counting)
         {
 			m_currentTimer -= Time.deltaTime;
-			if(m_currentTimer <= 0)
+
+            InputManager.Instance.IsInInteactionTrigger = true;
+            InputManager.Instance.ResetPlayerHorizontalInput();
+            InputManager.Instance.IsInDialogue = true;
+
+            if (m_currentTimer <= 0)
             {
                 if(m_canvas != null)
                 {
