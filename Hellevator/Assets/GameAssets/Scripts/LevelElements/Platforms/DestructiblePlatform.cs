@@ -122,7 +122,7 @@ public class DestructiblePlatform : MonoBehaviour
         if (demon && demon.IsControlledByPlayer)
         {
             RaycastHit2D hit = Physics2D.Raycast(collision.transform.position,Vector2.down,0.5f,1 << 0);
-            Debug.LogError(hit.transform);
+            //Debug.LogError(hit.transform);
             if (hit.transform != null && hit.transform == transform || hit.transform.GetComponent<Fire>())
             {
                 StartDestroyPlatform();

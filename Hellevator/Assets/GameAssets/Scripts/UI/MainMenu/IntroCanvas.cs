@@ -29,7 +29,6 @@ public partial class IntroCanvas : MonoBehaviour
         
         //Action.RemoveAll(OnBegin, OnBegin);
         OnBegin = null;       
-        
     }
 
     // Start is called before the first frame update
