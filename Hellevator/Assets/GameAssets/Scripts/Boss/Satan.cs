@@ -40,6 +40,8 @@ public class Satan : MonoBehaviour
     Vector2 m_bossPosition;
     public static Action OnInterphase;
     public static Action OnDeath;
+
+    bool started;
     private void Start()
     {
         m_attackTimer = m_timeBetweenAttacks;
@@ -48,23 +50,28 @@ public class Satan : MonoBehaviour
         m_currentLives = m_maxLives;
         m_horizontalHandAttack.gameObject.SetActive(false);
         m_verticalHandAttack.gameObject.SetActive(false);
+        mainCam = Camera.main;
     }
 
 
     private void Update()
     {
-        if (m_phase != Phase.Interphase && PossessionManager.Instance.ControlledDemon)
+        if (started)
         {
-            m_attackTimer -= Time.deltaTime;
-            if (m_attackTimer < 0)
+            if (m_phase != Phase.Interphase && PossessionManager.Instance.ControlledDemon)
             {
-                Attack();
+                m_attackTimer -= Time.deltaTime;
+                if (m_attackTimer < 0)
+                {
+                    Attack();
+                }
+            }
+            else
+            {
+                m_attackTimer = m_timeBetweenAttacks;
             }
         }
-        else
-        {
-            m_attackTimer = m_timeBetweenAttacks;
-        }
+        
     }
     public void SetPhase(Phase newPhase)
     {
@@ -80,9 +87,15 @@ public class Satan : MonoBehaviour
     private void Attack()
     {
         float f = Random.value;
+        if((PossessionManager.Instance.ControlledDemon.transform.position.y > mainCam.transform.position.y) && f < 0.33f)
+        {
+            f += Random.value * 0.66f;
+        }
         if (f < 0.33f)
-            /*StartCoroutine(*/
+        {            
             VerticalHandAttack(/*PossessionManager.Instance.ControlledDemon.transform)*/);
+        }
+            /*StartCoroutine(*/
         else if (f < 0.66f)
             /*StartCoroutine(*/
             HorizontalHandAttack(/*PossessionManager.Instance.ControlledDemon.transform)*/);
@@ -93,22 +106,25 @@ public class Satan : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (PossessionManager.Instance.ControlledDemon)
+        if (started)
         {
-            if (m_phase == Phase.First)
+            if (PossessionManager.Instance.ControlledDemon)
             {
-                m_bossPosition = PossessionManager.Instance.ControlledDemon.transform.position;
-                m_bossPosition.y = m_firstPhaseYCoordinate;
-            }
-            else if (m_phase == Phase.Second)
-                m_bossPosition = Vector3.Lerp(m_bossPosition, m_secondPhasePosition, 3 * Time.deltaTime);
-            else if (m_phase == Phase.Third)
-                m_bossPosition = Vector3.Lerp(m_bossPosition, m_thirdPhasePosition, 3 * Time.deltaTime);
-            else
-                m_bossPosition.y -= m_disappearSpeed * Time.deltaTime;
+                if (m_phase == Phase.First)
+                {
+                    m_bossPosition = PossessionManager.Instance.ControlledDemon.transform.position;
+                    m_bossPosition.y = m_firstPhaseYCoordinate;
+                }
+                else if (m_phase == Phase.Second)
+                    m_bossPosition = Vector3.Lerp(m_bossPosition, m_secondPhasePosition, 3 * Time.deltaTime);
+                else if (m_phase == Phase.Third)
+                    m_bossPosition = Vector3.Lerp(m_bossPosition, m_thirdPhasePosition, 3 * Time.deltaTime);
+                else
+                    m_bossPosition.y -= m_disappearSpeed * Time.deltaTime;
 
-            transform.position = m_bossPosition;
-        }
+                transform.position = m_bossPosition;
+            }
+        }        
     }
 
     public void ReceiveDamage()
@@ -118,12 +134,18 @@ public class Satan : MonoBehaviour
         if (m_currentLives <= 0)
         {
             m_anim.SetTrigger("Death");
-            OnDeath?.Invoke();
+            OnDeath?.Invoke();            
         }
+    }
+
+    public void BeginFight()
+    {
+        started = true;
     }
 
     void VerticalHandAttack(/*Transform target*/)
     {
+        Debug.LogError("Vertical hand attack");
         if (m_anim)
             m_anim.SetTrigger("Attack");
         m_verticalHandAttack.gameObject.SetActive(true);
@@ -134,6 +156,7 @@ public class Satan : MonoBehaviour
 
     void HorizontalHandAttack(/*Transform target*/)
     {
+        Debug.LogError("Horizontal hand attack");
         if (m_anim)
             m_anim.SetTrigger("Attack");
         m_horizontalHandAttack.gameObject.SetActive(true);
@@ -144,6 +167,7 @@ public class Satan : MonoBehaviour
     Camera mainCam;
     IEnumerator AtaqueRayo(Transform target)
     {
+        Debug.LogError("Lightning attack");
         if (m_anim)
             m_anim.SetTrigger("Attack");
         if (!mainCam)
@@ -155,7 +179,7 @@ public class Satan : MonoBehaviour
             m_previewRayo.gameObject.SetActive(true);
             float t = 0;
             Vector2 posicionPreview = target.position;
-            posicionPreview.y = m_previewRayo.position.y;
+            posicionPreview.y = mainCam.ViewportToWorldPoint(new Vector3(0,1,0)).y;
             while (t < m_tiempoPreviewRayo)
             {
                 t += Time.deltaTime;

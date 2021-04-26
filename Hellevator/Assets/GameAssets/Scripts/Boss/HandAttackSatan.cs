@@ -62,17 +62,30 @@ public class HandAttackSatan : MonoBehaviour
     IEnumerator HorizontalMovement()
     {
         float t = 0;
-        Vector3 position = m_cam.ViewportToWorldPoint(new Vector3(1,0,0));
-        //m_maximumDistance = m_cam.orthographicSize * (16 / 9);
+        int side;
+        if (UnityEngine.Random.value > 0.5f)
+            side = 1;
+        else
+            side = -1;
+        //Debug.LogError(side);
+        transform.root.localScale = new Vector3(Mathf.Abs(transform.root.localScale.x)*side, transform.root.localScale.y, 1);
+        if (side == -1)
+            side = 0;
+        Vector3 position = m_cam.ViewportToWorldPoint(new Vector3(side,0,0));
         Vector2 initialPosition = new Vector2(position.x, PossessionManager.Instance.ControlledDemon.transform.position.y);
         //Debug.LogError(initialPosition);
+        
         Vector2 endPosition = initialPosition - Vector2.right * m_maximumDistance * (transform.root.localScale.x/Mathf.Abs(transform.root.localScale.x));
+        endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
+        
         while (t < 1)
         {
-            if(t < 0.7f)
+            if (t < 0.7f)
             {
-                position = m_cam.ViewportToWorldPoint(new Vector3(1, 0, 0));
+                position = m_cam.ViewportToWorldPoint(new Vector3(side, 0, 0));
                 initialPosition = new Vector2(position.x, PossessionManager.Instance.ControlledDemon.transform.position.y);
+                endPosition = initialPosition;
+                endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
             }
             t += Time.deltaTime * animationSpeed;
             transform.position = Vector2.LerpUnclamped(initialPosition, endPosition, m_movementCurve.Evaluate(t));

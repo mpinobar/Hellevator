@@ -14,6 +14,7 @@ public class DerrumbarSuelo : MonoBehaviour
     {
         CameraManager.Instance.CameraShakeMega();
         GetComponent<Animation>().Play();
+        Satan.OnInterphase -= Animate;
     }
 
     private void OnDisable()

@@ -16,6 +16,8 @@ public class AudioManager : PersistentSingleton<AudioManager>
     float m_spatialBlendSFX = 0.35f;
     int m_musicClipIndex;
 
+    AudioClip m_introSatan;
+    AudioClip m_loopSatan;
 
     public static float MusicVolume
     {
@@ -29,6 +31,33 @@ public class AudioManager : PersistentSingleton<AudioManager>
     }
     public static float SfxVolume { get => m_sfxVolume; set => m_sfxVolume = value; }
 
+    public void PlayBossMusic(AudioClip intro, AudioClip loop)
+    {
+        m_introSatan = intro;
+        m_loopSatan = loop;
+        StopMusic();
+        m_BGM.clip = m_introSatan;
+        m_BGM.Play();
+        timerToLoop = true;
+        timer = m_introSatan.length;
+    }
+
+    bool timerToLoop;
+    float timer;
+    private void Update()
+    {
+        if (timerToLoop)
+        {
+            timer -= Time.deltaTime;
+            if(timer <= 0)
+            {
+                m_BGM.clip = m_loopSatan;
+                m_BGM.Play();
+                timerToLoop = false;
+                timer = m_introSatan.length;
+            }
+        }
+    }
     public void ChangeBGMVolume(float v)
     {
         m_BGM.volume = v * 0.5f;
