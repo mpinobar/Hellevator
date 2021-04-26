@@ -29,17 +29,22 @@ public class Satan : MonoBehaviour
 
     [Header("Phases")]
     [SerializeField] float m_firstPhaseYCoordinate;
-    [SerializeField] float m_secondPhaseYCoordinate;
-    [SerializeField] float m_thirdPhaseYCoordinate;
+    [SerializeField] Vector2 m_secondPhasePosition;
+    [SerializeField] Vector2 m_thirdPhasePosition;
     [SerializeField] float m_disappearSpeed;
 
+    [Space]
+    [SerializeField] int m_maxLives;
+    int m_currentLives;
     Animator m_anim;
     Vector2 m_bossPosition;
     public static Action OnInterphase;
+    public static Action OnDeath;
     private void Start()
     {
         m_attackTimer = m_timeBetweenAttacks;
         m_anim = GetComponentInChildren<Animator>();
+        m_previewRayo.gameObject.SetActive(false);
     }
 
 
@@ -63,6 +68,10 @@ public class Satan : MonoBehaviour
         m_phase = newPhase;
         if (newPhase == Phase.Interphase)
             OnInterphase?.Invoke();
+        else if(newPhase == Phase.Second || newPhase == Phase.Third)
+        {
+            transform.localScale = Vector3.one * 1.5f;
+        }        
     }
     private void Attack()
     {
@@ -81,14 +90,16 @@ public class Satan : MonoBehaviour
     private void LateUpdate()
     {
         if (PossessionManager.Instance.ControlledDemon)
-        {
-            m_bossPosition = PossessionManager.Instance.ControlledDemon.transform.position;
+        {            
             if (m_phase == Phase.First)
+            {
+                m_bossPosition = PossessionManager.Instance.ControlledDemon.transform.position;
                 m_bossPosition.y = m_firstPhaseYCoordinate;
+            }
             else if (m_phase == Phase.Second)
-                m_bossPosition.y = m_secondPhaseYCoordinate;
+                m_bossPosition = m_secondPhasePosition;
             else if (m_phase == Phase.Third)
-                m_bossPosition.y = m_thirdPhaseYCoordinate;
+                m_bossPosition = m_thirdPhasePosition;
             else
                 m_bossPosition.y -= m_disappearSpeed * Time.deltaTime;
 
@@ -96,10 +107,21 @@ public class Satan : MonoBehaviour
         }
     }
 
+    public void ReceiveDamage()
+    {
+        m_anim.SetTrigger("Hurt");
+        m_currentLives--;
+        if(m_currentLives <= 0)
+        {
+            m_anim.SetTrigger("Death");
+            OnDeath?.Invoke();
+        }
+    }
+
     void VerticalHandAttack(/*Transform target*/)
     {
         if (m_anim)
-            m_anim.SetTrigger("VerticalAttack");
+            m_anim.SetTrigger("Attack");
         m_verticalHandAttack.gameObject.SetActive(true);
         m_verticalHandAttack.transform.position = PossessionManager.Instance.ControlledDemon.transform.position + Vector3.up * m_verticalOffsetToSpawn;
         //yield return new WaitForSeconds(m_verticalHandAttackDuration);
@@ -109,7 +131,7 @@ public class Satan : MonoBehaviour
     void HorizontalHandAttack(/*Transform target*/)
     {
         if (m_anim)
-            m_anim.SetTrigger("HorizontalAttack");
+            m_anim.SetTrigger("Attack");
         m_horizontalHandAttack.gameObject.SetActive(true);
         //yield return new WaitForSeconds(m_horizontalHandAttackDuration);
         //m_horizontalHandAttack.Enabled = false;
@@ -117,7 +139,7 @@ public class Satan : MonoBehaviour
     IEnumerator AtaqueRayo(Transform target)
     {
         if (m_anim)
-            m_anim.SetTrigger("Rayo");
+            m_anim.SetTrigger("Attack");
         m_rayo.transform.position = new Vector3(PossessionManager.Instance.ControlledDemon.transform.position.x, PossessionManager.Instance.ControlledDemon.transform.position.y + 14.3f, 0);
         m_rayo.gameObject.SetActive(false);
         if (m_previewRayo)
@@ -135,8 +157,9 @@ public class Satan : MonoBehaviour
             }
             yield return new WaitForSeconds(m_delayAparicionRayo);
         }
-
+        m_rayo.transform.position = new Vector3(m_previewRayo.position.x, m_rayo.transform.position.y, 0);
         m_rayo.gameObject.SetActive(true);
+        m_previewRayo.gameObject.SetActive(false);
     }
 
 }

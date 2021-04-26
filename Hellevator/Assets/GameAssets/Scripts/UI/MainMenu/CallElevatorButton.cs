@@ -7,7 +7,7 @@ public class CallElevatorButton : MonoBehaviour
     bool active;
     [SerializeField] AudioClip m_buttonSoundClip;
 
-
+    [SerializeField] GameObject highlight;
 
     private void Update()
     {
@@ -44,11 +44,12 @@ public class CallElevatorButton : MonoBehaviour
 
     public void Highlight()
     {
-
+        if (!highlight.activeSelf)
+            highlight.SetActive(true);
     }
     public void HideHighlight()
     {
-
+        highlight.SetActive(false);
     }
     public void CallElevator()
     {
