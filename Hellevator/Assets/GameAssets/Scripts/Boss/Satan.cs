@@ -34,7 +34,7 @@ public class Satan : MonoBehaviour
     [SerializeField] float m_disappearSpeed;
 
     [Space]
-    [SerializeField] int m_maxLives;
+    [SerializeField] int m_maxLives = 3;
     int m_currentLives;
     Animator m_anim;
     Vector2 m_bossPosition;
@@ -45,6 +45,9 @@ public class Satan : MonoBehaviour
         m_attackTimer = m_timeBetweenAttacks;
         m_anim = GetComponentInChildren<Animator>();
         m_previewRayo.gameObject.SetActive(false);
+        m_currentLives = m_maxLives;
+        m_horizontalHandAttack.gameObject.SetActive(false);
+        m_verticalHandAttack.gameObject.SetActive(false);
     }
 
 
@@ -68,11 +71,12 @@ public class Satan : MonoBehaviour
         m_phase = newPhase;
         if (newPhase == Phase.Interphase)
             OnInterphase?.Invoke();
-        else if(newPhase == Phase.Second || newPhase == Phase.Third)
+        else if (newPhase == Phase.Second || newPhase == Phase.Third)
         {
             transform.localScale = Vector3.one * 1.5f;
-        }        
+        }
     }
+    
     private void Attack()
     {
         float f = Random.value;
@@ -84,22 +88,22 @@ public class Satan : MonoBehaviour
             HorizontalHandAttack(/*PossessionManager.Instance.ControlledDemon.transform)*/);
         else if (f <= 1)
             StartCoroutine(AtaqueRayo(PossessionManager.Instance.ControlledDemon.transform));
-        m_attackTimer = m_timeBetweenAttacks;
+        m_attackTimer = m_timeBetweenAttacks;        
     }
 
     private void LateUpdate()
     {
         if (PossessionManager.Instance.ControlledDemon)
-        {            
+        {
             if (m_phase == Phase.First)
             {
                 m_bossPosition = PossessionManager.Instance.ControlledDemon.transform.position;
                 m_bossPosition.y = m_firstPhaseYCoordinate;
             }
             else if (m_phase == Phase.Second)
-                m_bossPosition = m_secondPhasePosition;
+                m_bossPosition = Vector3.Lerp(m_bossPosition, m_secondPhasePosition, 3 * Time.deltaTime);
             else if (m_phase == Phase.Third)
-                m_bossPosition = m_thirdPhasePosition;
+                m_bossPosition = Vector3.Lerp(m_bossPosition, m_thirdPhasePosition, 3 * Time.deltaTime);
             else
                 m_bossPosition.y -= m_disappearSpeed * Time.deltaTime;
 
@@ -111,7 +115,7 @@ public class Satan : MonoBehaviour
     {
         m_anim.SetTrigger("Hurt");
         m_currentLives--;
-        if(m_currentLives <= 0)
+        if (m_currentLives <= 0)
         {
             m_anim.SetTrigger("Death");
             OnDeath?.Invoke();
@@ -136,11 +140,15 @@ public class Satan : MonoBehaviour
         //yield return new WaitForSeconds(m_horizontalHandAttackDuration);
         //m_horizontalHandAttack.Enabled = false;
     }
+
+    Camera mainCam;
     IEnumerator AtaqueRayo(Transform target)
     {
         if (m_anim)
             m_anim.SetTrigger("Attack");
-        m_rayo.transform.position = new Vector3(PossessionManager.Instance.ControlledDemon.transform.position.x, PossessionManager.Instance.ControlledDemon.transform.position.y + 14.3f, 0);
+        if (!mainCam)
+            mainCam = Camera.main;
+        /*new Vector3(PossessionManager.Instance.ControlledDemon.transform.position.x, PossessionManager.Instance.ControlledDemon.transform.position.y + 14.3f, 0);*/
         m_rayo.gameObject.SetActive(false);
         if (m_previewRayo)
         {
@@ -157,7 +165,10 @@ public class Satan : MonoBehaviour
             }
             yield return new WaitForSeconds(m_delayAparicionRayo);
         }
-        m_rayo.transform.position = new Vector3(m_previewRayo.position.x, m_rayo.transform.position.y, 0);
+        RaycastHit2D rayhit = Physics2D.Raycast(m_previewRayo.position + Vector3.up,Vector2.down,100,1<<0);
+
+        m_rayo.transform.position = rayhit.point + Vector2.up * 19.52f;
+        //m_rayo.transform.position = new Vector3(m_previewRayo.position.x, m_rayo.transform.position.y, 0);
         m_rayo.gameObject.SetActive(true);
         m_previewRayo.gameObject.SetActive(false);
     }

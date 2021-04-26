@@ -62,6 +62,7 @@ public class Rayo : MonoBehaviour
     private void DealDamage()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.GetChild(0).position,m_blastRadius);
+        CameraManager.Instance.CameraShakeMedium();
         Debug.DrawRay(transform.GetChild(0).position, Vector3.right, Color.green, 2);
         Debug.DrawRay(transform.GetChild(0).position, Vector3.up, Color.green, 2);
         Debug.DrawRay(transform.GetChild(0).position, -Vector3.right, Color.green, 2);
