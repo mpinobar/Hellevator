@@ -10,9 +10,9 @@ public class Spawner : MonoBehaviour
     [SerializeField] float m_spawnTimer = 6f;
     [SerializeField] int m_maxSpawnedDemons;
     float maxRange;
-
+    [SerializeField] bool m_spawnWhenInDanger;
     private float m_timer;
-
+    [SerializeField] bool debug;
     public float MaxRange { get => maxRange; set => maxRange = value; }
 
     private void Start()
@@ -28,7 +28,7 @@ public class Spawner : MonoBehaviour
             m_timer -= Time.deltaTime;
             if (m_timer <= 0)
             {
-                m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity,transform));
+                m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity, transform));
                 m_spawnedDemons[m_spawnedDemons.Count - 1].transform.parent = null;
                 if (maxRange != 0)
                 {
@@ -49,13 +49,26 @@ public class Spawner : MonoBehaviour
         int activeDemonsFromThisSpawner = 0;
         for (int i = 0; i < m_spawnedDemons.Count; i++)
         {
-            if (m_spawnedDemons[i] != null)
+            if (m_spawnedDemons[i] != null && m_spawnedDemons[i].enabled)
             {
                 if (spawnWhenPlayerPossesses)
                 {
                     if (!m_spawnedDemons[i].IsControlledByPlayer)
                     {
-                        activeDemonsFromThisSpawner++;
+                        if (m_spawnWhenInDanger)
+                        {
+                            if (m_spawnedDemons[i].IsInDanger || m_spawnedDemons[i].IsPossessionBlocked)
+                            {
+                                //if (debug) Debug.Log("Demon is in danger: " + m_spawnedDemons[i]);
+
+                                m_spawnedDemons.RemoveAt(i);
+                                i--;
+                            }
+                            else
+                            {
+                                activeDemonsFromThisSpawner++;
+                            }
+                        }
                     }
                     else
                     {
@@ -65,6 +78,10 @@ public class Spawner : MonoBehaviour
                 }
                 else
                     activeDemonsFromThisSpawner++;
+            }
+            else
+            {
+                m_spawnedDemons.RemoveAt(i);
             }
         }
         return activeDemonsFromThisSpawner;

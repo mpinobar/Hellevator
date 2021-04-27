@@ -81,6 +81,7 @@ public class Catapult : MonoBehaviour
                     directionToThrowHead.Normalize();
                     DrawTrajectory(directionToThrowHead);
                 }
+                
                 yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
             }
         }
@@ -108,6 +109,7 @@ public class Catapult : MonoBehaviour
         Vector3[] interr = Ballistics.GetBallisticPathInterrupted(drawnPoints,m_defaultMask);
         lr.positionCount = interr.Length;
         lr.SetPositions(interr);
+        PossessionManager.Instance.DemonShowingSkull = PossessionManager.Instance.GetNearestDemonToPoint(m_demon.MaximumPossessionRange, interr[interr.Length - 1]);
     }
 
     public void ThrowHead()
