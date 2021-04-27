@@ -14,7 +14,7 @@ public class HandAttackSatan : MonoBehaviour
     private bool m_enabled;
     Collider2D m_colliderCmp;
     public bool Enabled { get => m_enabled; set => m_enabled = value; }
-
+    [SerializeField] Satan m_satan;
     Camera m_cam;
     private void OnEnable()
     {
@@ -22,7 +22,7 @@ public class HandAttackSatan : MonoBehaviour
             m_cam = Camera.main;
         if (!m_colliderCmp)
             m_colliderCmp = GetComponent<Collider2D>();
-        m_colliderCmp.enabled = true;
+        m_colliderCmp.enabled = false;
         Enabled = true;
         if (m_yeetsOnContact)
             StartCoroutine(HorizontalMovement());
@@ -33,10 +33,11 @@ public class HandAttackSatan : MonoBehaviour
     IEnumerator VerticalMovement()
     {
         Vector3 position = m_cam.ViewportToWorldPoint(new Vector3(0,1,0));
+        Vector3 end = m_cam.ViewportToWorldPoint(new Vector3(0,0,0));
         float t = 0;
         Vector2 initialPosition = new Vector2(PossessionManager.Instance.ControlledDemon.transform.position.x, position.y - 10);
         //Debug.LogError(initialPosition);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(initialPosition,Vector2.down,m_cam.orthographicSize*2);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(initialPosition,Vector2.down,Mathf.Abs(position.y - end.y));
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].transform.CompareTag("Floor"))
@@ -45,9 +46,11 @@ public class HandAttackSatan : MonoBehaviour
                 break;
             }
         }
-        Vector2 endPosition = initialPosition - Vector2.up * m_maximumDistance + Vector2.up*5;
+        Vector2 endPosition = initialPosition - Vector2.up * m_maximumDistance + Vector2.up*2;
         while (t < 1)
         {
+            if(t > 0.7f)
+                m_colliderCmp.enabled = true;
             t += Time.deltaTime * animationSpeed;
             transform.position = Vector2.LerpUnclamped(initialPosition, endPosition, m_movementCurve.Evaluate(t));
             yield return null;
@@ -87,6 +90,10 @@ public class HandAttackSatan : MonoBehaviour
                 endPosition = initialPosition;
                 endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
             }
+            else
+            {
+                m_colliderCmp.enabled = true;
+            }
             t += Time.deltaTime * animationSpeed;
             transform.position = Vector2.LerpUnclamped(initialPosition, endPosition, m_movementCurve.Evaluate(t));
             yield return null;
@@ -115,5 +122,11 @@ public class HandAttackSatan : MonoBehaviour
     void Deactivate()
     {
         gameObject.SetActive(false);
+    }
+
+    public void Damage()
+    {
+        Debug.LogError("Damaged satan hand");
+        m_satan.ReceiveDamage();
     }
 }

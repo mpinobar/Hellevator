@@ -269,8 +269,12 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     {
 
         if (ChoosingWhenDead)
-            return;
+        {
 
+        //Debug.LogError("hmm");
+            return;
+        }
+        //Debug.LogError("got here");
         MultiplePossessionWhenDead = false;
         if (MultiplePossessionIsUnlocked && !ControllingMultipleDemons)
             StartCoroutine(DelayToChoose(m_decisionTime, currentCharacter));

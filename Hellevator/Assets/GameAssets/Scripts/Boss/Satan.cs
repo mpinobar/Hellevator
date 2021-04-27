@@ -35,9 +35,18 @@ public class Satan : MonoBehaviour
 
     [Space]
     [SerializeField] int m_maxLives = 3;
+    [SerializeField] AudioClip intro;
+    [SerializeField] AudioClip loop;
+    [SerializeField] private Color m_colorWhenHurt;
+    [SerializeField] private float m_timeFlickerWhenHurt = 0.08f;
+
+
     int m_currentLives;
+
+    Camera mainCam;
     Animator m_anim;
     Vector2 m_bossPosition;
+    
     public static Action OnInterphase;
     public static Action OnDeath;
 
@@ -129,23 +138,58 @@ public class Satan : MonoBehaviour
 
     public void ReceiveDamage()
     {
+        //Debug.LogError("Dealt damage to satan");
+        StartCoroutine(HurtVisuals());
         m_anim.SetTrigger("Hurt");
         m_currentLives--;
         if (m_currentLives <= 0)
         {
             m_anim.SetTrigger("Death");
-            OnDeath?.Invoke();            
+            OnDeath?.Invoke();
+            started = false;
+            m_phase = Phase.Interphase;
         }
     }
+
+    private IEnumerator HurtVisuals()
+    {
+        SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
+
+        bool isRed = false;
+        int switchCounter = 0;
+        while (switchCounter <= 5)
+        {
+
+            for (int i = 0; i < childSprites.Length; i++)
+            {
+                if (isRed)
+                {
+                    childSprites[i].color = Color.white;
+
+                }
+                else
+                {
+                    childSprites[i].color = m_colorWhenHurt;
+
+                }
+            }
+            isRed = !isRed;
+            switchCounter++;
+            yield return new WaitForSeconds(m_timeFlickerWhenHurt);
+        }
+
+    }
+
 
     public void BeginFight()
     {
         started = true;
+        AudioManager.Instance.PlayBossMusic(intro, loop);
     }
 
     void VerticalHandAttack(/*Transform target*/)
     {
-        Debug.LogError("Vertical hand attack");
+        //Debug.LogError("Vertical hand attack");
         if (m_anim)
             m_anim.SetTrigger("Attack");
         m_verticalHandAttack.gameObject.SetActive(true);
@@ -156,7 +200,7 @@ public class Satan : MonoBehaviour
 
     void HorizontalHandAttack(/*Transform target*/)
     {
-        Debug.LogError("Horizontal hand attack");
+        //Debug.LogError("Horizontal hand attack");
         if (m_anim)
             m_anim.SetTrigger("Attack");
         m_horizontalHandAttack.gameObject.SetActive(true);
@@ -164,10 +208,10 @@ public class Satan : MonoBehaviour
         //m_horizontalHandAttack.Enabled = false;
     }
 
-    Camera mainCam;
+
     IEnumerator AtaqueRayo(Transform target)
     {
-        Debug.LogError("Lightning attack");
+        //Debug.LogError("Lightning attack");
         if (m_anim)
             m_anim.SetTrigger("Attack");
         if (!mainCam)

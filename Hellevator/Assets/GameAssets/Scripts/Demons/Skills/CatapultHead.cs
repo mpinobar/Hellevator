@@ -26,12 +26,14 @@ public class CatapultHead : MonoBehaviour
     {
         if (m_active)
         {
-            
+            if(m_RGB.gravityScale == 0)
+                m_RGB.gravityScale = 8f;
+
             airTimer += Time.deltaTime;
-            if (airTimer >= 3)
+            if (airTimer >= 2)
             {
                 m_active = false;
-                LevelManager.Instance.RestartLevel();
+                PossessionManager.Instance.StartDeathChoice(m_demon.transform);
             }
         }
 
@@ -40,7 +42,7 @@ public class CatapultHead : MonoBehaviour
     {
         if (m_active)
         {
-            //Debug.LogError(m_RGB.velocity);
+            //Debug.LogError(collision.transform.root.name);
             m_demon.Torso.parent = null;
             m_demon.transform.position = transform.position;
             m_demon.Torso = transform;

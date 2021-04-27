@@ -167,6 +167,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     public void RestartLevel()
     {
+        //Debug.LogError("Restart");
         Cursor.visible = false;
         string nameToLoad = AppScenes.INITIAL_SCENE;
 
