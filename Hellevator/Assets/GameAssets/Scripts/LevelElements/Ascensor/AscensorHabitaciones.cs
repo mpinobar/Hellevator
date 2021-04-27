@@ -169,14 +169,14 @@ public class AscensorHabitaciones : MonoBehaviour
                 }                
             }
         }
-        Debug.LogError(min);
+        //Debug.LogError(min);
         SetSceneChangers(min);
     }
 
     private void ShowInitialAnimation()
     {        
         PlayerPrefs.SetInt("ElevatorAnim", 1);
-        Debug.LogError("init anim");
+        //Debug.LogError("init anim");
         m_shouldShowInitialAnimation = false;
         AnimateElevatorMovement(-1);
     }

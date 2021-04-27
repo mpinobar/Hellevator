@@ -33,13 +33,16 @@ public class AudioManager : PersistentSingleton<AudioManager>
 
     public void PlayBossMusic(AudioClip intro, AudioClip loop)
     {
-        m_introSatan = intro;
-        m_loopSatan = loop;
-        StopMusic();
-        m_BGM.clip = m_introSatan;
-        m_BGM.Play();
-        timerToLoop = true;
-        timer = m_introSatan.length;
+        if (m_BGM.clip != intro && m_BGM.clip != loop)
+        {
+            m_introSatan = intro;
+            m_loopSatan = loop;
+            StopMusic();
+            m_BGM.clip = m_introSatan;
+            m_BGM.Play();
+            timerToLoop = true;
+            timer = m_introSatan.length;
+        }
     }
 
     bool timerToLoop;
@@ -49,7 +52,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         if (timerToLoop)
         {
             timer -= Time.deltaTime;
-            if(timer <= 0)
+            if (timer <= 0)
             {
                 m_BGM.clip = m_loopSatan;
                 m_BGM.Play();
@@ -173,7 +176,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
                 }
             }
 
-            if(amountPlayingClip > 1)
+            if (amountPlayingClip > 1)
             {
                 for (int i = 0; i < m_sourcesList.Count; i++)
                 {
@@ -183,7 +186,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
                     }
                 }
             }
-            
+
 
             for (int i = 0; i < m_sourcesList.Count; i++)
             {
@@ -359,7 +362,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
     {
         for (int i = 0; i < m_sourcesList.Count; i++)
         {
-            if(m_sourcesList[i].clip == clipToStop && m_sourcesList[i].isPlaying)
+            if (m_sourcesList[i].clip == clipToStop && m_sourcesList[i].isPlaying)
             {
                 m_sourcesList[i].Stop();
             }

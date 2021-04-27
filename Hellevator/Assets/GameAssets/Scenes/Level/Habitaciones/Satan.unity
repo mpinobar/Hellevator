@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3478,6 +3478,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_satan: {fileID: 1375389907}
   m_newPhase: 2
+  OnTrigger:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &300415273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4918,6 +4921,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_satan: {fileID: 1375389907}
   m_newPhase: 3
+  OnTrigger:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &402521946
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21174,7 +21180,7 @@ GameObject:
   - component: {fileID: 1261171245}
   - component: {fileID: 1261171244}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: SatanStart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24450,6 +24456,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_satan: {fileID: 1375389907}
   m_newPhase: 3
+  OnTrigger:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 521464776}
+        m_MethodName: Animate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1475949293
 Transform:
   m_ObjectHideFlags: 0
@@ -27504,6 +27524,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_satan: {fileID: 1375389907}
   m_newPhase: 1
+  OnTrigger:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1629844407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35544,7 +35567,7 @@ PrefabInstance:
     - target: {fileID: 8609855425914059244, guid: f387eace3f579cf498e3c85287bc37a7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 642.67847
+      value: 642.6344
       objectReference: {fileID: 0}
     - target: {fileID: 8609855425914059244, guid: f387eace3f579cf498e3c85287bc37a7,
         type: 3}

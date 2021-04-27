@@ -5,21 +5,21 @@ using UnityEngine;
 
 public class DerrumbarSuelo : MonoBehaviour
 {
-    private void OnEnable()
-    {
-        Satan.OnInterphase += Animate;
-    }
+    //private void OnEnable()
+    //{
+    //    Satan.OnInterphase += Animate;
+    //}
 
-    private void Animate()
+    public void Animate()
     {
         CameraManager.Instance.CameraShakeMega();
         GetComponent<Animation>().Play();
-        Satan.OnInterphase -= Animate;
+        //Satan.OnInterphase -= Animate;
     }
 
-    private void OnDisable()
-    {
-        Satan.OnInterphase -= Animate;
-    }
+    //private void OnDisable()
+    //{
+    //    Satan.OnInterphase -= Animate;
+    //}
 
 }

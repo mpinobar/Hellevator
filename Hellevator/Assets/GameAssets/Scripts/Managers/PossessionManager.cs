@@ -30,7 +30,24 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
     public LayerMask RagdollBodyMask { get => m_ragdollBodyMask; }
     public bool ControllingMultipleDemons { get => m_controllingMultipleDemons; }
-    public DemonBase DemonShowingSkull { get => m_demonShowingSkull; set => m_demonShowingSkull = value; }
+    public DemonBase DemonShowingSkull
+    {
+        get => m_demonShowingSkull;
+        set
+        {
+            if (value != m_demonShowingSkull && m_demonShowingSkull != null)
+            {
+                //Debug.LogError("New demon showing skull is set to: " +value);
+                DemonBase temp = m_demonShowingSkull;
+                m_demonShowingSkull = value;
+                ((BasicZombie)temp).HideSkull();
+
+            }
+            else
+                m_demonShowingSkull = value;
+            //((BasicZombie)m_demonShowingSkull).ShowSkull();
+        }
+    }
     public Boss Boss { get => m_boss; set => m_boss = value; }
     public bool MultiplePossessionWhenDead { get => m_multiplePossessionWhenDead; set => m_multiplePossessionWhenDead = value; }
     public bool MultiplePossessionIsUnlocked { get => m_multiplePossessionIsUnlocked; set => m_multiplePossessionIsUnlocked = value; }
@@ -269,10 +286,15 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     /// <returns></returns>
     private IEnumerator DelayToChoose(float time, Transform currentCharacter)
     {
-        UIController.Instance.PossessionDecisionTime(time);
         //Debug.LogError("StartingToDecide");
         float decisionTime = time;
-        m_choosingWhenDead = true;
+        List <DemonBase> demons = GetAllDemonsInRange(currentCharacter.GetComponent<DemonBase>().MaximumPossessionRange,currentCharacter);
+        //Debug.LogError(demons.Count);
+        if (demons.Count >= 2)
+        {
+            UIController.Instance.PossessionDecisionTime(time);
+            m_choosingWhenDead = true;
+        }
         Time.timeScale = 0;
         while (decisionTime > 0 && ChoosingWhenDead)
         {
@@ -283,6 +305,66 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
         RemoveDemonPossession(currentCharacter);
         m_choosingWhenDead = false;
     }
+
+    public DemonBase GetNearestDemonToPoint(float radiusLimit, Vector3 point)
+    {
+        //Debug.LogError(point);
+        Collider2D[] other = Physics2D.OverlapCircleAll(point, radiusLimit*0.97f, m_ragdollBodyMask);
+        List<DemonBase> temp = new List<DemonBase>();
+        for (int i = 0; i < other.Length; i++)
+        {
+            DemonBase foundDemon = other[i].GetComponentInParent<DemonBase>();
+
+            //Debug.LogError("Candidate " + foundDemon.name);
+            //if ((foundDemon.GetComponent<DemonBase>() == ControlledDemon))
+            //    Debug.LogError("Is not main demon: " + (foundDemon.GetComponent<DemonBase>() != ControlledDemon));
+            //if (extraDemonsControlled.Contains(foundDemon))
+            //    Debug.LogError("Isnt already in extra controlled: " + !extraDemonsControlled.Contains(foundDemon));
+            //if ((currentDemon == foundDemon.transform))
+            //    Debug.LogError("Is not self: " + (currentDemon != foundDemon.transform));
+            //if (foundDemon.IsInDanger)
+            //    Debug.LogError("Is not in danger: " + !foundDemon.IsInDanger);
+            //if (!foundDemon.IsDead)
+            //    Debug.LogError("Is dead: " + foundDemon.IsDead);
+            //if (foundDemon.IsPossessionBlocked)
+            //    Debug.LogError("Has possession available: " + !foundDemon.IsPossessionBlocked);
+            //if (!(counter < m_maxDemonsPossessed))
+            //    Debug.LogError("Is within limits of max number of possessed: " + (counter < m_maxDemonsPossessed));
+            if (foundDemon != null && foundDemon != ControlledDemon || (m_extraDemonsControlled != null && !m_extraDemonsControlled.Contains(foundDemon) && foundDemon != null && foundDemon != ControlledDemon))
+            {
+                if (!foundDemon.IsInDanger && foundDemon.IsDead && !foundDemon.IsPossessionBlocked /*&& counter < m_maxDemonsPossessed*/)
+                {
+                    //counter++;
+                    temp.Add(foundDemon);
+                    //extraDemonsControlled.Add(foundDemon);
+                    //foundDemon.SetControlledByPlayer();
+                }
+            }
+        }
+        //Debug.LogError(temp.Count);
+        DemonBase nearest = null;
+
+        if (temp.Count == 0)
+            return null;
+        else
+        {
+            nearest = temp[0];
+            float nearestDst = Vector2.Distance(point,temp[0].transform.position);
+            for (int i = 0; i < temp.Count; i++)
+            {
+                if (Vector2.Distance(point, temp[i].transform.position) < nearestDst)
+                {
+                    nearestDst = Vector2.Distance(point, temp[i].transform.position);
+                    nearest = temp[i];
+                }
+            }
+        }
+        //Debug.LogError("Returned: " + nearest);
+        if (nearest)
+            ((BasicZombie)nearest).ShowSkull();
+        return nearest;
+    }
+
 
     /// <summary>
     /// Posee a los personajes cercanos, priorizando distancia y sin pasarse del limite de radio y de maximo especificado por la variable m_maxDemonsPossessed
@@ -300,38 +382,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 m_extraDemonsControlled = new List<DemonBase>();
             }
             m_extraDemonsControlled.Clear();
-            Collider2D[] other = Physics2D.OverlapCircleAll(currentDemon.transform.position, radiusLimit, m_ragdollBodyMask);
-            List<DemonBase> temp = new List<DemonBase>();
-            for (int i = 0; i < other.Length; i++)
-            {
-                DemonBase foundDemon = other[i].GetComponentInParent<DemonBase>();
-
-                //Debug.LogError("Candidate " + foundDemon.name);
-                //if ((foundDemon.GetComponent<DemonBase>() == ControlledDemon))
-                //    Debug.LogError("Is not main demon: " + (foundDemon.GetComponent<DemonBase>() != ControlledDemon));
-                //if (extraDemonsControlled.Contains(foundDemon))
-                //    Debug.LogError("Isnt already in extra controlled: " + !extraDemonsControlled.Contains(foundDemon));
-                //if ((currentDemon == foundDemon.transform))
-                //    Debug.LogError("Is not self: " + (currentDemon != foundDemon.transform));
-                //if (foundDemon.IsInDanger)
-                //    Debug.LogError("Is not in danger: " + !foundDemon.IsInDanger);
-                //if (!foundDemon.IsDead)
-                //    Debug.LogError("Is dead: " + foundDemon.IsDead);
-                //if (foundDemon.IsPossessionBlocked)
-                //    Debug.LogError("Has possession available: " + !foundDemon.IsPossessionBlocked);
-                //if (!(counter < m_maxDemonsPossessed))
-                //    Debug.LogError("Is within limits of max number of possessed: " + (counter < m_maxDemonsPossessed));
-                if (foundDemon != null && foundDemon != ControlledDemon && !m_extraDemonsControlled.Contains(foundDemon) && currentDemon != foundDemon.transform)
-                {
-                    if (!foundDemon.IsInDanger && foundDemon.IsDead && !foundDemon.IsPossessionBlocked /*&& counter < m_maxDemonsPossessed*/)
-                    {
-                        //counter++;
-                        temp.Add(foundDemon);
-                        //extraDemonsControlled.Add(foundDemon);
-                        //foundDemon.SetControlledByPlayer();
-                    }
-                }
-            }
+            List<DemonBase> temp = GetAllDemonsInRange(radiusLimit, currentDemon);
 
             for (int i = 0; i < m_maxDemonsPossessed; i++)
             {
@@ -382,6 +433,44 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
                 ControlledDemon.PlayTrueDeathEffects();
             }
         }
+    }
+
+    private List<DemonBase> GetAllDemonsInRange(float radiusLimit, Transform currentDemon)
+    {
+        Collider2D[] other = Physics2D.OverlapCircleAll(currentDemon.transform.position, radiusLimit, m_ragdollBodyMask);
+        List<DemonBase> temp = new List<DemonBase>();
+        for (int i = 0; i < other.Length; i++)
+        {
+            DemonBase foundDemon = other[i].GetComponentInParent<DemonBase>();
+
+            //Debug.LogError("Candidate " + foundDemon.name);
+            //if ((foundDemon.GetComponent<DemonBase>() == ControlledDemon))
+            //    Debug.LogError("Is not main demon: " + (foundDemon.GetComponent<DemonBase>() != ControlledDemon));
+            //if (extraDemonsControlled.Contains(foundDemon))
+            //    Debug.LogError("Isnt already in extra controlled: " + !extraDemonsControlled.Contains(foundDemon));
+            //if ((currentDemon == foundDemon.transform))
+            //    Debug.LogError("Is not self: " + (currentDemon != foundDemon.transform));
+            //if (foundDemon.IsInDanger)
+            //    Debug.LogError("Is not in danger: " + !foundDemon.IsInDanger);
+            //if (!foundDemon.IsDead)
+            //    Debug.LogError("Is dead: " + foundDemon.IsDead);
+            //if (foundDemon.IsPossessionBlocked)
+            //    Debug.LogError("Has possession available: " + !foundDemon.IsPossessionBlocked);
+            //if (!(counter < m_maxDemonsPossessed))
+            //    Debug.LogError("Is within limits of max number of possessed: " + (counter < m_maxDemonsPossessed));
+            if (foundDemon != null && foundDemon != ControlledDemon && currentDemon != foundDemon.transform || (m_extraDemonsControlled != null && !m_extraDemonsControlled.Contains(foundDemon) && foundDemon != null && foundDemon != ControlledDemon && currentDemon != foundDemon.transform))
+            {
+                if (!foundDemon.IsInDanger && foundDemon.IsDead && !foundDemon.IsPossessionBlocked /*&& counter < m_maxDemonsPossessed*/)
+                {
+                    //counter++;
+                    temp.Add(foundDemon);
+                    //extraDemonsControlled.Add(foundDemon);
+                    //foundDemon.SetControlledByPlayer();
+                }
+            }
+        }
+
+        return temp;
     }
 
     /// <summary>
