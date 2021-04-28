@@ -159,6 +159,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
     }
     IEnumerator DelayAndRestart(float time)
     {
+        Time.timeScale = 1;
         m_isRestarting = true;
         yield return new WaitForSeconds(time);
         CameraManager.Instance.FadeIn();

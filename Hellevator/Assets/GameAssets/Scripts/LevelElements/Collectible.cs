@@ -26,7 +26,7 @@ public class Collectible : MonoBehaviour
     }
     public void Collect()
     {
-        Debug.LogError("Picked up collectible");
+        AchievementsManager.AddCollectible();
         PlayerPrefs.SetInt(m_ID, 1);
         Destroy(gameObject);
     }
