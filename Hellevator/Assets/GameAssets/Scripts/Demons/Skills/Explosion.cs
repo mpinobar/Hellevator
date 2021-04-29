@@ -37,15 +37,21 @@ public class Explosion : MonoBehaviour
         DestructibleWall explodingWall;
         Boss boss;
         Zarzas zarzas;
+        HandAttackSatan satan;
         for (int i = 0; i < colliders.Length; i++)
         {
             zarzas = colliders[i].GetComponentInParent<Zarzas>();
             demonInRange = colliders[i].GetComponentInParent<DemonBase>();
             explodingWall = colliders[i].GetComponentInParent<DestructibleWall>();
             boss = colliders[i].GetComponent<Boss>();
+            satan = colliders[i].GetComponent<HandAttackSatan>();
             if (zarzas)
             {
                 zarzas.Explode(m_demonCmp.Torso.position, m_explosionForce);
+            }
+            if (satan)
+            {
+                satan.Damage();
             }
             if (demonInRange && demonInRange != GetComponentInParent<DemonBase>())
             {

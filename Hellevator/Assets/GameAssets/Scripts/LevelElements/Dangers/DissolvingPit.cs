@@ -58,6 +58,8 @@ public class DissolvingPit : MonoBehaviour
                 if (m_associatedFryingDemon)
                     StartCoroutine(EatAnimation());
                 cmpDemon.Die(true);
+                cmpDemon.IsInDanger = true;
+                cmpDemon.IsPossessionBlocked= true;
                 //Destroy(cmpDemon.gameObject);
                 StartCoroutine(SlowImmersion(cmpDemon));
 
@@ -98,8 +100,7 @@ public class DissolvingPit : MonoBehaviour
     IEnumerator EatAnimation()
     {
         if (!m_demonEatingAnimation)
-        {
-
+        {            
             //MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
             m_associatedFryingDemon.SetBool("Eat", true);
             m_demonEatingAnimation = true;

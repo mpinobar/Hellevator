@@ -81,5 +81,9 @@ public class CheckPoint : MonoBehaviour
         m_spr?.material.SetFloat("_Opening", 1);
         //CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();
+        if(TryGetComponent(out InstantBlend blend))
+        {
+            blend.InstaBlend();
+        }
     }
 }

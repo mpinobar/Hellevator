@@ -13,6 +13,6 @@ public class CameraEffectScaler : MonoBehaviour
 
     private void LateUpdate()
     {
-        transform.localScale = Vector3.one * camMain.orthographicSize*0.0428f + Vector3.one*0.058f;
+        transform.localScale = Vector3.one * camMain.orthographicSize*0.055f /*+ Vector3.one*0.05f*/;
     }
 }
