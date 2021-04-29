@@ -86,11 +86,12 @@ public class AmphibianDemon : MonoBehaviour
         }
         
         float animTime = 0;
+        Vector3 posInitJump = transform.position;
         //Vector3 endPosition = offsetPosition + Vector3.up*m_maxHeight;
         while (animTime < 1)
         {
             animTime += Time.deltaTime * m_jumpSpeed;
-            transform.position = offsetPosition + Vector3.up * m_maxHeight * m_heightCurve.Evaluate(animTime);
+            transform.position = posInitJump + Vector3.up * m_maxHeight * m_heightCurve.Evaluate(animTime);
             yield return null;
         }
         m_patrolIndex = 1;
@@ -148,7 +149,7 @@ public class AmphibianDemon : MonoBehaviour
             {
                 cmpDemon.Die(true);
                 m_detectionTrigger.Active = false;
-                ReturnToPatrol();
+                //ReturnToPatrol();
             }
         }
     }

@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Collectible : MonoBehaviour
 {
+    [SerializeField] AudioClip clip;
+
     [SerializeField]
     string m_ID;
 
     void Start()
     {
-        if(PlayerPrefs.HasKey(m_ID) && PlayerPrefs.GetInt(m_ID) > 0)
+        if (PlayerPrefs.HasKey(m_ID) && PlayerPrefs.GetInt(m_ID) > 0)
         {
             Destroy(gameObject);
         }
@@ -20,12 +22,14 @@ public class Collectible : MonoBehaviour
     {
         DemonBase character = collision.GetComponentInParent<DemonBase>();
         if (character && character.IsControlledByPlayer)
-        {            
+        {
             Collect();
         }
     }
     public void Collect()
     {
+        if (clip)
+            AudioManager.Instance.PlayAudioSFX(clip, false);
         AchievementsManager.AddCollectible();
         PlayerPrefs.SetInt(m_ID, 1);
         Destroy(gameObject);

@@ -47,6 +47,7 @@ public class Selectable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
+        UIController.Instance.PlaySwapSound();
         OnSelected();
     }
     public virtual void OnPointerExit(PointerEventData eventData)
@@ -58,6 +59,7 @@ public class Selectable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (m_buttonCmp)
         {
             m_buttonCmp.Select();
+            
         }
     }
 }

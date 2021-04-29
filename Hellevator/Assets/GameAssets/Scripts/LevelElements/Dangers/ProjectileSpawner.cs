@@ -25,9 +25,9 @@ public class ProjectileSpawner : ActivatedBase
 
 	[SerializeField] AudioClip m_spawnKnifeClip;
 
-	// Start is called before the first frame update
-	void Start()
-    {
+    // Start is called before the first frame update
+    void Start()
+    {        
         m_spriteCmp = GetComponentInChildren<SpriteRenderer>();
         if (m_spriteCmp)
             m_spriteCmp.color = m_spriteColor;

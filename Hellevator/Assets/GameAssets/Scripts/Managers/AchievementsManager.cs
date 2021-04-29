@@ -17,17 +17,24 @@ public class AchievementsManager
     static string ach_killed_satan = "ach_killed_satan";
     static string ach_all_collectibles = "ach_all_collectibles";
 
+    static bool init;
+
     public static void Initialize()
     {
-        deathNumber = PlayerPrefs.GetInt("deathNumber");
-        collectibles = PlayerPrefs.GetInt("collectibles");
-        killedBeelzebub = PlayerPrefs.GetInt("killedbz") == 1;
-        killedGardenKeeper = PlayerPrefs.GetInt("killedgk") == 1;
-        killedSatan = PlayerPrefs.GetInt("killedsatan") == 1;
+        if (!init)
+        {
+            deathNumber = PlayerPrefs.GetInt("deathNumber");
+            collectibles = PlayerPrefs.GetInt("collectibles");
+            killedBeelzebub = PlayerPrefs.GetInt("killedbz") == 1;
+            killedGardenKeeper = PlayerPrefs.GetInt("killedgk") == 1;
+            killedSatan = PlayerPrefs.GetInt("killedsatan") == 1;
+            init = true;
+        }
     }
 
     public static void AddCollectible()
     {
+        Initialize();
         collectibles++;
         if (collectibles >= 6)
         {
@@ -41,6 +48,7 @@ public class AchievementsManager
 
     public static void AddDeath()
     {
+        Initialize();
         deathNumber++;
         if (deathNumber > 0)
         {
@@ -66,28 +74,29 @@ public class AchievementsManager
     public static void UnlockKilledBz()
     {
         killedBeelzebub = true;
-        UnlockSteamAchievement(ach_killed_beelzebub);        
+        UnlockSteamAchievement(ach_killed_beelzebub);
     }
 
     public static void UnlockKilledGK()
     {
         killedGardenKeeper = true;
-        UnlockSteamAchievement(ach_kiled_garden_keeper);        
+        UnlockSteamAchievement(ach_kiled_garden_keeper);
     }
 
     public static void UnlockKilledSatan()
     {
         killedSatan = true;
-        UnlockSteamAchievement(ach_killed_satan);        
+        UnlockSteamAchievement(ach_killed_satan);
     }
 
     public static void UnlockSteamAchievement(string id)
     {
+        Initialize();
         bool hasAchievement;
         SteamUserStats.GetAchievement(id, out hasAchievement);
         if (!hasAchievement)
         {
-            SteamUserStats.SetAchievement(id);            
+            SteamUserStats.SetAchievement(id);
         }
         Save();
     }

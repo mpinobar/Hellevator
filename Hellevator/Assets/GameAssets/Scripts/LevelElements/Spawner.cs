@@ -69,6 +69,10 @@ public class Spawner : MonoBehaviour
                                 activeDemonsFromThisSpawner++;
                             }
                         }
+                        else
+                        {
+                            activeDemonsFromThisSpawner++;
+                        }
                     }
                     else
                     {
