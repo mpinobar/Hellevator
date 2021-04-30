@@ -8,12 +8,23 @@ public class CallElevatorButton : MonoBehaviour
     [SerializeField] AudioClip m_buttonSoundClip;
 
     [SerializeField] GameObject highlight;
+    bool counting;
+    float time;
 
+    private void Start()
+    {
+        IntroCanvas.OnBegin += () => counting = true;
+    }
+
+    private void OnDisable()
+    {
+        IntroCanvas.OnBegin -= () => counting = true;
+    }
     private void Update()
     {
+        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit r;
-        if (Physics.Raycast(ray, out r))
+        if (Physics.Raycast(ray, out RaycastHit r))
         {
             if (r.transform.GetComponent<CallElevatorButton>() == this)
             {
@@ -27,6 +38,15 @@ public class CallElevatorButton : MonoBehaviour
         else
         {
             HideHighlight();
+        }
+
+
+        if (counting)
+        {
+            time += Time.deltaTime;
+            if (time >= 4f)
+                if (Input.anyKeyDown)
+                    CallElevator();
         }
         //if (Input.GetMouseButtonDown(0))
         //{

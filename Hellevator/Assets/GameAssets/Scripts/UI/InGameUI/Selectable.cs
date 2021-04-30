@@ -10,10 +10,23 @@ public class Selectable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] protected GameObject m_selectedHighlight;
     Button m_buttonCmp;
 
-    private void Start()
+    private void Awake()
     {
         m_buttonCmp = GetComponent<Button>();
+        
     }
+
+    private void OnEnable()
+    {
+       
+       m_buttonCmp.onClick.AddListener(PlayPressedSound);
+    }
+
+    public void PlayPressedSound()
+    {
+        UIController.Instance.PlayPressedSound();
+    }
+
     public virtual void OnSelected()
     {
         if (m_selectedHighlight)

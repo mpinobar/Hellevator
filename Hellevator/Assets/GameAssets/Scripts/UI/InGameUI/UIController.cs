@@ -80,7 +80,7 @@ public class UIController : PersistentSingleton<UIController>
             m_activePanel.SetActive(false);
         }
         m_canvas.gameObject.SetActive(false);
-        PlayPressedSound();
+        
         Time.timeScale = 1f;
         CameraManager.Instance.HideUIEffects();
         InputManager.Instance.IsInMenu = false;
@@ -92,7 +92,7 @@ public class UIController : PersistentSingleton<UIController>
 
     public void Exit()
     {
-        PlayPressedSound();
+        
         m_canvas.gameObject.SetActive(false);
         Time.timeScale = 1f;
         m_activePanel = null;
@@ -112,13 +112,13 @@ public class UIController : PersistentSingleton<UIController>
 
     public void ShowCollectibles()
     {
-        PlayPressedSound();
+        
         ShowPanel(m_collectiblesPanel);
     }
 
     public void ShowSettings()
     {
-        PlayPressedSound();
+        
         ShowPanel(m_settingsPanel);
     }
 
