@@ -58,11 +58,11 @@ public class UIController : PersistentSingleton<UIController>
         //    m_canvas = transform.GetChild(0).gameObject.GetComponent<Canvas>();
         //m_canvas.gameObject.SetActive(false);
         m_resumeButton.onClick.AddListener(Resume);
-        m_inventoryButton.onClick.AddListener(ShowInventory);
-        m_mapButton.onClick.AddListener(ShowMap);
+        //m_inventoryButton.onClick.AddListener(ShowInventory);
+        //m_mapButton.onClick.AddListener(ShowMap);
         m_collectiblesButton.onClick.AddListener(ShowCollectibles);
         m_settingsButton.onClick.AddListener(ShowSettings);
-        m_bestiaryButton.onClick.AddListener(ShowBestiary);
+        //m_bestiaryButton.onClick.AddListener(ShowBestiary);
         m_exitButton.onClick.AddListener(Exit);
         LevelManager.LevelLoaded += ShowGameplayUI;
         if (SceneManager.GetActiveScene().name != "Menu")
@@ -87,6 +87,7 @@ public class UIController : PersistentSingleton<UIController>
         //ShowGameplayUI();
         m_gameplayPanel.gameObject.SetActive(true);
         m_activePanel = m_gameplayPanel.gameObject;
+        m_selected = null;
     }
 
     public void Exit()
@@ -162,6 +163,8 @@ public class UIController : PersistentSingleton<UIController>
             m_canvas.gameObject.SetActive(true);
         if (panelToShow != m_activePanel)
         {
+            //Debug.LogError(m_activePanel);
+            //Debug.LogError(panelToShow);
             if (m_activePanel != null && m_activePanel != m_canvas)
             {
                 m_activePanel.SetActive(false);

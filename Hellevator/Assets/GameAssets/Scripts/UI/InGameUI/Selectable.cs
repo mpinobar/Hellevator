@@ -58,8 +58,7 @@ public class Selectable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (m_buttonCmp)
         {
-            m_buttonCmp.Select();
-            
+            m_buttonCmp.Select();            
         }
     }
 }
