@@ -108,6 +108,7 @@ public class AchievementsManager
         PlayerPrefs.SetInt("killedbz", killedBeelzebub ? 1 : 0);
         PlayerPrefs.SetInt("killedgk", killedGardenKeeper ? 1 : 0);
         PlayerPrefs.SetInt("killedsatan", killedSatan ? 1 : 0);
-        SteamUserStats.StoreStats();
+        if (SteamManager.Initialized)
+            SteamUserStats.StoreStats();
     }
 }

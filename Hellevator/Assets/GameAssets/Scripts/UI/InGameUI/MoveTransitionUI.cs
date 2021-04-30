@@ -10,7 +10,7 @@ public class MoveTransitionUI : MonoBehaviour
     Vector2 m_endPosition;
     Vector2 m_startingPosition;
 
-    [SerializeField] MoveTransitionUI m_transformToReverse;
+    //[SerializeField] MoveTransitionUI m_transformToReverse;
 
     private void Awake()
     {
@@ -23,11 +23,6 @@ public class MoveTransitionUI : MonoBehaviour
     {
         m_transform.localPosition = m_startingPosition;
         StartAnimate();
-        if (m_transformToReverse)
-        {
-            //m_transformToReverse.gameObject.SetActive(true);
-            m_transformToReverse.Reverse();
-        }
     }
 
     private void StartAnimate()
@@ -44,18 +39,4 @@ public class MoveTransitionUI : MonoBehaviour
         //transform.position = m_endPosition;
     }
 
-    public void Reverse()
-    {
-        StopAllCoroutines();
-        StartCoroutine(AnimateReverse());
-    }
-    IEnumerator AnimateReverse()
-    {
-        while (Vector2.Distance(m_transform.localPosition, m_startingPosition) > 1f)
-        {
-            m_transform.localPosition = Vector2.Lerp(m_transform.localPosition, m_startingPosition, Time.unscaledDeltaTime * m_transitionSpeed);
-            yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
-        }
-        gameObject.SetActive(false);
-    }
 }

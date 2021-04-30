@@ -17,9 +17,12 @@ public class DissolvingPit : MonoBehaviour
     float m_currentClipTimer = 0f;
     float m_clipDuration = 0f;
     [SerializeField] bool m_disablesSkills;
-
+    [SerializeField] AudioSource m_bubbleSource;
+    [SerializeField] AudioClip m_demonSound;
     private void Start()
     {
+        if (m_bubbleSource)
+            m_bubbleSource.volume = AudioManager.SfxVolume;
         m_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         m_clipDuration = m_acidClip.length;
     }
@@ -96,11 +99,12 @@ public class DissolvingPit : MonoBehaviour
         if (m_bubblesParticles)
             m_bubblesParticles.Play();
     }
-
+    
     IEnumerator EatAnimation()
     {
         if (!m_demonEatingAnimation)
-        {            
+        {
+            AudioManager.Instance.PlayAudioSFX(m_demonSound, false);
             //MusicManager.Instance.PlayAudioSFX(m_acidClip, false, 0.65f);
             m_associatedFryingDemon.SetBool("Eat", true);
             m_demonEatingAnimation = true;

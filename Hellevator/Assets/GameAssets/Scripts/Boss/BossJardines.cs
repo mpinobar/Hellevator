@@ -65,6 +65,7 @@ public class BossJardines : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        flotadores[0].GetComponent<SpriteRenderer>().material = redGlowMaterial;
         m_initialPosition = transform.position;
         m_animator = GetComponentInChildren<Animator>();
         if (!m_spawnedDemon)
@@ -214,7 +215,7 @@ public class BossJardines : MonoBehaviour
                 CanGetHurt = false;
                 TakeDamage();
                 player.MyRgb.velocity = new Vector2(player.MyRgb.velocity.x, 0);
-                player.MyRgb.AddForce(Vector2.up * ((BasicZombie)player).JumpForce*1.5f);
+                player.MyRgb.AddForce(Vector2.up * ((BasicZombie)player).JumpForce * 1.5f);
             }
         }
     }
@@ -227,11 +228,19 @@ public class BossJardines : MonoBehaviour
             StopAllCoroutines();
             m_animator.SetTrigger("dead");
             StartCoroutine(Sink());
-            m_activateOnDeath.SetActive(true);
+            if (m_activateOnDeath)
+                m_activateOnDeath.SetActive(true);
+            flotadores[0].parent = null;
+            flotadores[0].GetComponent<Rigidbody2D>().isKinematic = false;            
+            flotadores.RemoveAt(0);
             AchievementsManager.UnlockKilledGK();
         }
         else
         {
+            flotadores[0].parent = null;
+            flotadores[0].GetComponent<Rigidbody2D>().isKinematic = false;
+            flotadores.RemoveAt(0);
+            flotadores[0].GetComponent<SpriteRenderer>().material = redGlowMaterial;
             m_animator.SetTrigger("hurt");
             target = m_pointToJumpToSwim;
             transform.GetChild(0).localScale = Vector3.one - Vector3.right * 2;
@@ -239,12 +248,13 @@ public class BossJardines : MonoBehaviour
             transform.GetChild(0).localPosition = new Vector3(-8.25f, 1.13f, 0);
         }
     }
-
+    [SerializeField] List<Transform> flotadores;
+    [SerializeField] Material redGlowMaterial;
     IEnumerator Sink()
     {
         while (true)
         {
-            transform.position += Vector3.down * Time.deltaTime*5f;
+            transform.position += Vector3.down * Time.deltaTime * 5f;
             yield return null;
         }
     }

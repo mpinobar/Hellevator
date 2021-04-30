@@ -296,6 +296,8 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	public void ShowUIEffects()
 	{
 		StopCoroutine(MoveHotel());
+		if (!hotel)
+			hotel = GetComponentInChildren<AnimationOnEnable>();
 		if(hotel.isOut)
 			hotel.OnEnable();
 		m_UIEffects.SetActive(true);
@@ -306,7 +308,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		m_UIEffects.SetActive(false);
 	}
 
-	[SerializeField] AnimationOnEnable hotel;
+	public AnimationOnEnable hotel;
 	public void HideHotel()
     {
 		hotel.Stop();

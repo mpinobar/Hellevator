@@ -14,12 +14,12 @@ public class PlatformDemon : MonoBehaviour
     [SerializeField] AnimationCurve m_hopToHandHorizontalCurve;
     //[SerializeField] float m_hopToHandMaxHeight;
     [SerializeField] float m_hopToHandSpeed = 1;
-
+    [SerializeField] AudioClip m_demonSound;
     Animator m_animator;
 
     // Start is called before the first frame update
     void Start()
-    {
+    {        
         m_animator = GetComponent<Animator>();
         m_platformCollider.enabled = false;
     }
@@ -41,6 +41,7 @@ public class PlatformDemon : MonoBehaviour
     }
     IEnumerator Travel(BasicZombie character)
     {
+        AudioManager.Instance.PlayAudioSFX(m_demonSound, false);
         m_animator.SetBool("Travel", true);
         character.CanMove = false;
         Rigidbody2D rgb = character.GetComponent<Rigidbody2D>();

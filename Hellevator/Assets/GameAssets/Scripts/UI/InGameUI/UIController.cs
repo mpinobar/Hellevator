@@ -12,7 +12,7 @@ public class UIController : PersistentSingleton<UIController>
     [Header("Parent references")]
     [SerializeField] Canvas m_canvas;
     [SerializeField] GameObject m_pausePanel;
-    [SerializeField] GameObject m_inventoryPanel;
+    [SerializeField] GameObject m_controlsPanel;
     [SerializeField] GameObject m_mapPanel;
     [SerializeField] GameObject m_bestiaryPanel;
     [SerializeField] GameObject m_collectiblesPanel;
@@ -25,7 +25,7 @@ public class UIController : PersistentSingleton<UIController>
     [SerializeField] Button m_resumeButton;
     [SerializeField] Button m_exitButton;
     [SerializeField] Button m_mapButton;
-    [SerializeField] Button m_inventoryButton;
+    [SerializeField] Button m_controlsButton;
     [SerializeField] Button m_bestiaryButton;
     [SerializeField] Button m_collectiblesButton;
     [SerializeField] Button m_settingsButton;
@@ -58,7 +58,7 @@ public class UIController : PersistentSingleton<UIController>
         //    m_canvas = transform.GetChild(0).gameObject.GetComponent<Canvas>();
         //m_canvas.gameObject.SetActive(false);
         m_resumeButton.onClick.AddListener(Resume);
-        //m_inventoryButton.onClick.AddListener(ShowInventory);
+        m_controlsButton.onClick.AddListener(ShowControls);
         //m_mapButton.onClick.AddListener(ShowMap);
         m_collectiblesButton.onClick.AddListener(ShowCollectibles);
         m_settingsButton.onClick.AddListener(ShowSettings);
@@ -100,9 +100,9 @@ public class UIController : PersistentSingleton<UIController>
         InputManager.Instance.IsInMenu = false;
     }
 
-    public void ShowInventory()
+    public void ShowControls()
     {
-        ShowPanel(m_inventoryPanel);
+        ShowPanel(m_controlsPanel);
     }
 
     public void ShowMap()

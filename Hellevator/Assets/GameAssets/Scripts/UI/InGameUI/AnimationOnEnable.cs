@@ -18,6 +18,7 @@ public class AnimationOnEnable : MonoBehaviour
     }
     public void OnEnable()
     {
+        //Debug.LogError("Enabling hotel background");
         transform.localPosition = m_startingPosition;
         StartAnimate();
     }

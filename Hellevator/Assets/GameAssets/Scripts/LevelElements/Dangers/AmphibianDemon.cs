@@ -125,9 +125,11 @@ public class AmphibianDemon : MonoBehaviour
             yield return null;
         }
     }
-
+    [SerializeField] AudioClip m_demonSound;
+    [SerializeField] AudioClip m_biteSound;
     public void StartChase(Transform target)
     {
+        AudioManager.Instance.PlayAudioSFX(m_demonSound, false);
         m_target = target;
         StopAllCoroutines();
         StartCoroutine(Chase());
@@ -147,6 +149,7 @@ public class AmphibianDemon : MonoBehaviour
         {
             if (cmpDemon.IsControlledByPlayer)
             {
+                AudioManager.Instance.PlayAudioSFX(m_biteSound, false);
                 cmpDemon.Die(true);
                 m_detectionTrigger.Active = false;
                 //ReturnToPatrol();
