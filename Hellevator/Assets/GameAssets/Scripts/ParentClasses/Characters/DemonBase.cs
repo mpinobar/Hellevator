@@ -1047,6 +1047,8 @@ public abstract class DemonBase : MonoBehaviour
             {
                 PossessionManager.Instance.StartDeathChoice(transform);
             }
+
+            AchievementsManager.AddDeath();
         }
         else if (m_isControlledByIA)
         {

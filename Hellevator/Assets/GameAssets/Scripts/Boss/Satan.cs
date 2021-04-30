@@ -145,9 +145,9 @@ public class Satan : MonoBehaviour
         if (m_currentLives <= 0)
         {
             m_anim.SetTrigger("Death");
-            OnDeath?.Invoke();
-            started = false;
+            OnDeath?.Invoke();            
             m_phase = Phase.Interphase;
+            AchievementsManager.UnlockKilledSatan();
         }
     }
 

@@ -190,6 +190,7 @@ public class Boss : MonoBehaviour
         Invoke(nameof(UnparentLimbs), m_timeDelayToExplodeLimbs);
         OpenEntrance();
         Invoke(nameof(DeactivateBoss), m_timeDelayToDeactivate);
+        AchievementsManager.UnlockKilledBz();
     }
 
     private void DeactivateBoss()

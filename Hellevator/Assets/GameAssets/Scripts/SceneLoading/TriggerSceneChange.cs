@@ -53,6 +53,8 @@ public class TriggerSceneChange : MonoBehaviour
                 PossessionManager.Instance.ChangeMainCharacter(demon);
                 LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
                 GetComponent<Collider2D>().enabled = false;
+                InputManager.Instance.IsInInteactionTrigger = false;
+                InputManager.Instance.IsInDialogue = false;
                 GC.Collect();
                 //Debug.LogError("Entered trigger to switch scenes to " + m_linkedScene);
             }

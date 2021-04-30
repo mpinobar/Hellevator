@@ -228,6 +228,7 @@ public class BossJardines : MonoBehaviour
             m_animator.SetTrigger("dead");
             StartCoroutine(Sink());
             m_activateOnDeath.SetActive(true);
+            AchievementsManager.UnlockKilledGK();
         }
         else
         {
