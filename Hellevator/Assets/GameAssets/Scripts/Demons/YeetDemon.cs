@@ -9,7 +9,8 @@ public class YeetDemon : MonoBehaviour
     [SerializeField] Vector2 m_yeetVelocity = Vector2.zero;
     Animator m_animator;
     [SerializeField] float m_travelTime = 1f;
-
+    [SerializeField] AudioClip m_demonSound;
+    [SerializeField] AudioClip m_throwSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +31,8 @@ public class YeetDemon : MonoBehaviour
 
     private IEnumerator Travel(BasicZombie character)
     {
+        AudioManager.Instance.PlayAudioSFX(m_demonSound, false);
+        
         //Debug.LogError(m_animator.GetBool("Travel"));
         m_animator.SetBool("Travel", true);
         //Debug.LogError(m_animator.GetBool("Travel"));
@@ -56,7 +59,7 @@ public class YeetDemon : MonoBehaviour
             time += Time.deltaTime;
             yield return null;
         }
-
+        AudioManager.Instance.PlayAudioSFX(m_throwSound, false);
         m_animator.SetBool("Travel", false);
 
         

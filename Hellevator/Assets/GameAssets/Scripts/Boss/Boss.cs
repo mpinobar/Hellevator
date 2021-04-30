@@ -40,6 +40,11 @@ public class Boss : MonoBehaviour
 	[SerializeField] GameObject m_bossKey = null;
 	[SerializeField] Transform m_bossKeySpawnPoint = null;
 
+    [Space]
+    [SerializeField] AudioClip m_attackAudio;
+    [SerializeField] AudioClip m_hurtAudio;
+    [SerializeField] AudioClip m_deathAudio;
+
     private enum State
     {
         Default, SeeingPlayer
@@ -129,11 +134,12 @@ public class Boss : MonoBehaviour
         if (m_currentHealth > 0)
         {
             m_bossAnimator.SetTrigger("Hurting");
-
+            AudioManager.Instance.PlayAudioSFX(m_hurtAudio, false);
             StartCoroutine(HurtVisuals());
         }
         else
         {
+            AudioManager.Instance.PlayAudioSFX(m_deathAudio, false);
             StartCoroutine(HurtVisuals());
             Die();
         }
@@ -210,6 +216,7 @@ public class Boss : MonoBehaviour
 
     public void ThrowKnife(Transform target, float delay, bool initial)
     {
+        AudioManager.Instance.PlayAudioSFX(m_attackAudio, false);
         StartCoroutine(SpawnKnife(target, delay, initial));
     }
     IEnumerator SpawnKnife(Transform target, float delay, bool initial)

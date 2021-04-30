@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -6332,7 +6332,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 801479625
-  m_SortingLayer: -3
+  m_SortingLayer: -4
   m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: 7d8c603c088d1ac4188a0bde452942f9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -10992,12 +10992,12 @@ PrefabInstance:
     - target: {fileID: 4682508436061072551, guid: 3529baf13f312124d9010d876a390783,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 38.69795
+      value: 38.688023
       objectReference: {fileID: 0}
     - target: {fileID: 4682508436061072551, guid: 3529baf13f312124d9010d876a390783,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -67.52606
+      value: -18.426064
       objectReference: {fileID: 0}
     - target: {fileID: 4682508437433496930, guid: 3529baf13f312124d9010d876a390783,
         type: 3}
@@ -12160,112 +12160,8 @@ PrefabInstance:
       value: -0.040003315
       objectReference: {fileID: 0}
     - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHorizontalCurve.m_Curve.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHorizontalCurve.m_Curve.Array.data[0].inSlope
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHorizontalCurve.m_Curve.Array.data[0].outSlope
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHorizontalCurve.m_Curve.Array.data[0].tangentMode
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHorizontalCurve.m_Curve.Array.data[1].time
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHorizontalCurve.m_Curve.Array.data[1].value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHorizontalCurve.m_Curve.Array.data[1].inSlope
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHorizontalCurve.m_Curve.Array.data[1].outSlope
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHorizontalCurve.m_Curve.Array.data[1].tangentMode
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[0].inSlope
-      value: 8.387095
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[0].outSlope
-      value: 8.387095
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[1].time
-      value: 0.5027734
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[1].value
-      value: 2.4816062
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[1].inSlope
-      value: 0.24020456
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[1].outSlope
-      value: 0.24020456
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[1].inWeight
-      value: 0.13033482
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[1].outWeight
-      value: 0.33333334
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[2].time
-      value: 0.99523926
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[2].value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
       propertyPath: m_hopToHandMaxHeight
       value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[2].inSlope
-      value: -2.6228204
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[2].outSlope
-      value: -2.6228204
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[2].inWeight
-      value: 0.08959629
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[0].outWeight
-      value: 0.067855954
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandSpeed
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 257179287, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
-      propertyPath: m_hopToHandHeightCurve.m_Curve.Array.data[0].time
-      value: -0.0011787415
       objectReference: {fileID: 0}
     - target: {fileID: 1412748508, guid: 4059749915b179d409c8f99fa5e8f06d, type: 3}
       propertyPath: m_LocalPosition.x
