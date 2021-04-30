@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,8 @@ public class UICollectibles : MonoBehaviour
 {
     [SerializeField] Text m_textCount;
     [SerializeField] Sprite[] m_collectiblesSprites;
+    [SerializeField] Sprite[] m_unlockedCollectiblesSprites;
+    [SerializeField] Sprite lockedCollectibleSprite;
     [SerializeField] Image m_image;
     [SerializeField]
     int m_currentIndex;
@@ -19,7 +22,23 @@ public class UICollectibles : MonoBehaviour
 
     private void OnEnable()
     {
-        CameraManager.Instance.HideHotel();        
+        CalculateCollectibles();
+        CameraManager.Instance.HideHotel();
+    }
+
+    private void CalculateCollectibles()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if(PlayerPrefs.GetInt("Hueso."+i) == 1)
+            {
+                m_collectiblesSprites[i] = m_unlockedCollectiblesSprites[i];
+            }
+            else
+            {
+                m_collectiblesSprites[i] = lockedCollectibleSprite;
+            }
+        }
     }
 
     public void Next()

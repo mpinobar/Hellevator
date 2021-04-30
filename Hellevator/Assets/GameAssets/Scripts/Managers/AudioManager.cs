@@ -26,7 +26,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         {
             value = Mathf.Clamp01(value);
             m_musicVolume = value;
-
+            
         }
     }
     public static float SfxVolume { get => m_sfxVolume; set
@@ -70,7 +70,10 @@ public class AudioManager : PersistentSingleton<AudioManager>
     {
         m_BGM.volume = v * 0.5f;
     }
-
+    public void RefreshVolume()
+    {
+        m_BGM.volume = MusicVolume;
+    }
     public void PauseMusic()
     {
 

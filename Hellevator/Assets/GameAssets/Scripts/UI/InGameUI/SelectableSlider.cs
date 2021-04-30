@@ -34,13 +34,16 @@ public class SelectableSlider : Selectable
             AudioManager.MusicVolume += 0.05f;
         }
         ChangeValue();
+        
     }
 
     public void ChangeValue()
     {
 
         m_sliderToAffect.value = isSFX ? AudioManager.SfxVolume : AudioManager.MusicVolume;
-        RefreshText();        
+        RefreshText();
+        if (!isSFX)
+            AudioManager.Instance.RefreshVolume();
     }
 
     public override void NavigateLeft()
