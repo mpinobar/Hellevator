@@ -17,7 +17,8 @@ public class MainMenuCanvasController : MonoBehaviour
     private bool m_hasFadedWhenLoading;
 
     bool m_loading;
-
+    [SerializeField] GameObject show;
+    [SerializeField] GameObject hide;
     public bool HasFadedWhenLoading { get => m_hasFadedWhenLoading; set => m_hasFadedWhenLoading = value; }
 
     private void Start()
@@ -25,13 +26,17 @@ public class MainMenuCanvasController : MonoBehaviour
         Cursor.visible = true;
         m_tmp = m_fadeTime * 0.5f;
         m_fadingIn = false;
-
+                
         ChangeState(MenuCameraState.Options);
 
         SetMenuActive();        
     }
 
-
+    public void Swap()
+    {
+        show.gameObject.SetActive(true);
+        hide.gameObject.SetActive(false);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -90,30 +95,31 @@ public class MainMenuCanvasController : MonoBehaviour
 
     private void SetMenuActive()
     {
-        switch (m_state)
-        {
-            case MenuCameraState.Default:
-                m_default.SetActive(true);
-                m_options.SetActive(false);
-                //m_levels.SetActive(false);
-                break;
-            //case MenuCameraState.LevelSelection:
-            //    m_default.SetActive(false);
-            //    m_options.SetActive(false);
-            //    m_levels.SetActive(true);
-            //    break;
-            case MenuCameraState.Options:
-                m_default.SetActive(false);
-                m_options.SetActive(true);
-                //m_levels.SetActive(false);
-                break;
-            //case MenuCameraState.Loading:
-            //    m_default.SetActive(false);
-            //    m_options.SetActive(false);
-            //    m_levels.SetActive(false);
-            //    break;
-            default:
-                break;
-        }
+        Swap();
+        //switch (m_state)
+        //{
+        //    case MenuCameraState.Default:
+        //        m_default.SetActive(true);
+        //        m_options.SetActive(false);
+        //        //m_levels.SetActive(false);
+        //        break;
+        //    //case MenuCameraState.LevelSelection:
+        //    //    m_default.SetActive(false);
+        //    //    m_options.SetActive(false);
+        //    //    m_levels.SetActive(true);
+        //    //    break;
+        //    case MenuCameraState.Options:
+        //        m_default.SetActive(false);
+        //        m_options.SetActive(true);
+        //        //m_levels.SetActive(false);
+        //        break;
+        //    //case MenuCameraState.Loading:
+        //    //    m_default.SetActive(false);
+        //    //    m_options.SetActive(false);
+        //    //    m_levels.SetActive(false);
+        //    //    break;
+        //    default:
+        //        break;
+        //}
     }
 }

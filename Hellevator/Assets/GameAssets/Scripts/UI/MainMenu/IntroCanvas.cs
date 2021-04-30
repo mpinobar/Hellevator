@@ -19,7 +19,7 @@ public partial class IntroCanvas : MonoBehaviour
     public static Action OnBegin;
     [SerializeField] float m_delayToActivateMouseParallax;
 
-    public event Action ElevatorCalled;
+    public static event Action ElevatorCalled;
     
 
     private void Awake()
@@ -84,8 +84,8 @@ public partial class IntroCanvas : MonoBehaviour
     {
         m_tmp = m_fadeTime * 0.5f;
         m_fadingIn = false;
-        m_puertaIzquierda.GetComponent<AnimacionPuerta>().Started = true;
-        m_puertaDerecha.GetComponent<AnimacionPuerta>().Started = true;
+        //m_puertaIzquierda.GetComponent<AnimacionPuerta>().Started = true;
+        //m_puertaDerecha.GetComponent<AnimacionPuerta>().Started = true;
         GetComponentInChildren<BlinkingText>().gameObject.SetActive(false);
         ElevatorCalled?.Invoke();
     }

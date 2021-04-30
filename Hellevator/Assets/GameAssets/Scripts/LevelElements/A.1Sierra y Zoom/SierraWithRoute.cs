@@ -8,9 +8,15 @@ public class SierraWithRoute : MonoBehaviour
 	[SerializeField] private float m_speed = 10f;
 	[SerializeField] private bool m_moving = false;
 	private int m_currentIndex = 0;
+	[SerializeField] VisualRotation rotation;
 
+	[SerializeField] AudioClip clip;
+    private void Start()
+    {
+		rotation.enabled = false;
+	}
 
-	private void Update()
+    private void Update()
 	{
 		if (m_moving)
 		{
@@ -24,6 +30,7 @@ public class SierraWithRoute : MonoBehaviour
 				else
 				{
 					this.enabled = false;
+					rotation.enabled = false;
 				}
 			}
 		}
@@ -31,7 +38,9 @@ public class SierraWithRoute : MonoBehaviour
 
 	public void StartMoving()
 	{
+		AudioManager.Instance.PlayAudioSFX(clip,false);
 		m_currentIndex = 0;
 		m_moving = true;
+		rotation.enabled = true;
 	}
 }
