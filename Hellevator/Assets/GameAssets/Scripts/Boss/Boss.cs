@@ -113,6 +113,10 @@ public class Boss : MonoBehaviour
             {
                 m_playerSeenAttackTimer = 0f;
             }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                PossessionManager.Instance.ControlledDemon.transform.position = new Vector3(-340, -80, 0);
+            }
         }
     }
 

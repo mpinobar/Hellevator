@@ -21,6 +21,7 @@ public class AchievementsManager
 
     public static void Initialize()
     {
+        return;
         if (!init)
         {
             deathNumber = PlayerPrefs.GetInt("deathNumber");
@@ -34,6 +35,7 @@ public class AchievementsManager
 
     public static void AddCollectible()
     {
+        return;
         Initialize();
         collectibles++;
         if (collectibles >= 6)
@@ -48,6 +50,7 @@ public class AchievementsManager
 
     public static void AddDeath()
     {
+        return;
         Initialize();
         deathNumber++;
         if (deathNumber > 0)
@@ -73,36 +76,44 @@ public class AchievementsManager
 
     public static void UnlockKilledBz()
     {
+        return;
         killedBeelzebub = true;
         UnlockSteamAchievement(ach_killed_beelzebub);
     }
 
     public static void UnlockKilledGK()
     {
+        return;
         killedGardenKeeper = true;
         UnlockSteamAchievement(ach_kiled_garden_keeper);
     }
 
     public static void UnlockKilledSatan()
     {
+        return;
         killedSatan = true;
         UnlockSteamAchievement(ach_killed_satan);
     }
 
     public static void UnlockSteamAchievement(string id)
     {
+        return;
         Initialize();
-        bool hasAchievement;
-        SteamUserStats.GetAchievement(id, out hasAchievement);
-        if (!hasAchievement)
+        if (SteamManager.Initialized)
         {
-            SteamUserStats.SetAchievement(id);
+            bool hasAchievement;
+            SteamUserStats.GetAchievement(id, out hasAchievement);
+            if (!hasAchievement)
+            {
+                SteamUserStats.SetAchievement(id);
+            }
+            Save();
         }
-        Save();
     }
 
     public static void Save()
     {
+        return;
         PlayerPrefs.SetInt("deathNumber", deathNumber);
         PlayerPrefs.SetInt("collectibles", collectibles);
         PlayerPrefs.SetInt("killedbz", killedBeelzebub ? 1 : 0);

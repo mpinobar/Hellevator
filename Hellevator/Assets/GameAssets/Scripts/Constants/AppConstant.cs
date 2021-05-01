@@ -19,7 +19,7 @@ public class AppScenes
 {
 	public static readonly string 	MENU_SCENE    = "Menu";
 	public static readonly string 	LOADING_SCENE = "Loading";
-	public static readonly string 	INITIAL_SCENE    = "A.0";
+	public static readonly string 	INITIAL_SCENE    = "BossRoom";
     public static readonly string   LEVEL_COMPLETED = "LevelCompleted";
 }
 

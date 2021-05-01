@@ -96,7 +96,10 @@ public class HandAttackSatan : MonoBehaviour
                 position = m_cam.ViewportToWorldPoint(new Vector3(side, 0, 0));
                 initialPosition = new Vector2(position.x, initialPosition.y);
                 endPosition = initialPosition;
-                endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
+                if (PossessionManager.Instance.ControlledDemon)
+                    endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
+                else
+                    Deactivate();
             }
             else
             {
@@ -129,6 +132,7 @@ public class HandAttackSatan : MonoBehaviour
 
     void Deactivate()
     {
+        StopAllCoroutines();
         gameObject.SetActive(false);
     }
 

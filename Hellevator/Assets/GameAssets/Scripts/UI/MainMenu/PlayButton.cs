@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayButton : MonoBehaviour
 {
+    [SerializeField] bool m_deletesPlayerPrefs;
     MainMenuCanvasController m_canvasController;
     [SerializeField] AudioClip m_buttonSoundClip;
     [SerializeField] bool m_goesToK1;
@@ -43,6 +44,9 @@ public class PlayButton : MonoBehaviour
         }
         else
         {
+            if (m_deletesPlayerPrefs)
+                PlayerPrefs.DeleteAll();
+
             if (!PlayerPrefs.HasKey("CPScene") || PlayerPrefs.GetString("CPScene") == null || PlayerPrefs.GetString("CPScene") == "")
                 LevelManager.Instance.CheckPointSceneToLoad = AppScenes.INITIAL_SCENE;
         }

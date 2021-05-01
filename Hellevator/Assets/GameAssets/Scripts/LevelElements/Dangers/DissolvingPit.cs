@@ -7,7 +7,7 @@ public class DissolvingPit : MonoBehaviour
 
     [SerializeField] AudioClip m_acidClip;
     [SerializeField] Animator m_associatedFryingDemon;
-    SpriteRenderer m_spriteRenderer;
+    [SerializeField] SpriteRenderer m_spriteRenderer;
     [SerializeField] ParticleSystem m_burstParticles;
     [SerializeField] ParticleSystem m_bubblesParticles;
     [SerializeField] float m_immersionSpeed = 0.5f;
@@ -21,9 +21,10 @@ public class DissolvingPit : MonoBehaviour
     [SerializeField] AudioClip m_demonSound;
     private void Start()
     {
+        m_clipIsPlaying = true;
         if (m_bubbleSource)
             m_bubbleSource.volume = AudioManager.SfxVolume;
-        m_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        //m_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         m_clipDuration = m_acidClip.length;
     }
     private void Update()
@@ -31,6 +32,18 @@ public class DissolvingPit : MonoBehaviour
         if (m_currentClipTimer > 0)
         {
             m_currentClipTimer -= Time.deltaTime;
+        }
+
+        if(m_clipIsPlaying && !m_spriteRenderer.isVisible)
+        {
+            m_clipIsPlaying = false;
+            m_bubbleSource.Stop();
+        }
+        if(!m_clipIsPlaying && m_spriteRenderer.isVisible)
+        {
+            m_bubbleSource.Play();
+            m_bubbleSource.volume = AudioManager.SfxVolume;
+            m_clipIsPlaying = true;
         }
     }
 
