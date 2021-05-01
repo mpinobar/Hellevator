@@ -61,6 +61,8 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.InputMenu.performed += ctx => InputMenu();
         //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
         UpdateDemonReference();
+        IntroCanvas.ElevatorCalled += () => IsInMenu = true;
+        
     }
 
     public void InputMenu()
@@ -134,10 +136,11 @@ public class InputManager : PersistentSingleton<InputManager>
 
     void FeedInputToMenuNavigation()
     {
-        if (SceneManager.GetActiveScene().name != "Menu")
-        {
+        //if (SceneManager.GetActiveScene().name != "Menu")
+        //{
+        //}else
             UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
-        }
+
     }
 
     private void LateUpdate()

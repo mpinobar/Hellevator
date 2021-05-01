@@ -15,13 +15,25 @@ public class SelectableSlider : Selectable
         {
             m_sliderToAffect = GetComponentInChildren<Slider>();
         }
-        
+        m_sliderToAffect.onValueChanged.AddListener(SendValueToAudioManager);
     }
     private void OnEnable()
     {
         ChangeValue();
     }
-
+    public void SendValueToAudioManager(float v)
+    {
+        if (isSFX)
+        {
+            AudioManager.SfxVolume =v;
+        }
+        else
+        {
+            AudioManager.MusicVolume =v;
+            
+        }
+        ChangeValue();
+    }
     public override void NavigateRight()
     {
         //Debug.LogError("Current value" + m_sliderToAffect.value + " new value "+ (m_sliderToAffect.value + 0.05f));

@@ -232,7 +232,7 @@ public class BossJardines : MonoBehaviour
                 m_activateOnDeath.SetActive(true);
             flotadores[0].parent = null;
             flotadores[0].GetComponent<Rigidbody2D>().isKinematic = false;            
-            flotadores.RemoveAt(0);
+            flotadores.RemoveAt(0);            
             AchievementsManager.UnlockKilledGK();
         }
         else

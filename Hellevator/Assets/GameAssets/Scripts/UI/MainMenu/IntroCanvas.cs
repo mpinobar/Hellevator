@@ -25,7 +25,7 @@ public partial class IntroCanvas : MonoBehaviour
     private void Awake()
     {
         m_canvasMenu.SetActive(false);
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         
         //Action.RemoveAll(OnBegin, OnBegin);
         OnBegin = null;       
