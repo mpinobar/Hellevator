@@ -79,6 +79,12 @@ public class Satan : MonoBehaviour
             {
                 m_attackTimer = m_timeBetweenAttacks;
             }
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            PossessionManager.Instance.ControlledDemon.transform.position = new Vector3(373, -130, 0);
         }
         
     }
@@ -145,9 +151,9 @@ public class Satan : MonoBehaviour
         if (m_currentLives <= 0)
         {
             m_anim.SetTrigger("Death");
-            OnDeath?.Invoke();
-            started = false;
+            OnDeath?.Invoke();            
             m_phase = Phase.Interphase;
+            AchievementsManager.UnlockKilledSatan();
         }
     }
 

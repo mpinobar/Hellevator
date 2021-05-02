@@ -295,6 +295,11 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	#region UIEffects
 	public void ShowUIEffects()
 	{
+		StopCoroutine(MoveHotel());
+		if (!hotel)
+			hotel = GetComponentInChildren<AnimationOnEnable>();
+		if(hotel.isOut)
+			hotel.OnEnable();
 		m_UIEffects.SetActive(true);
 	}
 
@@ -302,6 +307,27 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	{
 		m_UIEffects.SetActive(false);
 	}
+
+	public AnimationOnEnable hotel;
+	public void HideHotel()
+    {
+		hotel.Stop();
+		StartCoroutine(MoveHotel());
+    }
+
+	IEnumerator MoveHotel()
+    {
+		Vector2 initPos = hotel.transform.position;
+		Vector2 endPos = initPos + Vector2.right*50; 
+			float t = 0;
+		while (t < 1)
+        {
+			t += Time.unscaledTime;
+			hotel.transform.position = Vector2.Lerp(hotel.transform.position, endPos, Time.unscaledTime);
+			yield return new WaitForSecondsRealtime(Time.unscaledTime);
+        }
+
+    }
 	#endregion
 
 	#region CameraFade

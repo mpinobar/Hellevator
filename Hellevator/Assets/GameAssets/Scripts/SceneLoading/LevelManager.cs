@@ -159,6 +159,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
     }
     IEnumerator DelayAndRestart(float time)
     {
+        InputManager.Instance.IsInMenu = false;
+        Time.timeScale = 1;
         m_isRestarting = true;
         yield return new WaitForSeconds(time);
         CameraManager.Instance.FadeIn();
@@ -193,6 +195,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
         PossessionManager.Instance.ClearMultiplePossession();
         InputManager.Instance.ThrowingHead = false;
+        InputManager.Instance.IsInMenu = false;
     }
 
     private void LoadCompletedRestart(AsyncOperation obj)
@@ -219,15 +222,26 @@ public class LevelManager : PersistentSingleton<LevelManager>
         //}
         if (m_lastCheckPoint)
         {
-            //Debug.LogError("Trying to spawn player");
+            Debug.LogError("Trying to spawn player from cp: "+m_lastCheckPoint.name);
             m_lastCheckPoint.SpawnPlayer();
         }
         else
         {
-            //Debug.LogError("Not found checkpoint to spawn player from");
-            CheckPoint cp = FindObjectOfType<CheckPoint>();
-            if (cp)
-                cp.SpawnPlayer();
+            CheckPoint[] cp = FindObjectsOfType<CheckPoint>();
+            
+            int prio;
+            int index = 0;
+            if (cp.Length > 0)
+            {
+                prio = cp[0].Priority;
+                for (int i = 0; i < cp.Length; i++)
+                {
+                    if (cp[i].Priority > prio)
+                        index = i;
+                }
+                cp[index].SpawnPlayer();
+            }
+            Debug.LogError("Not found checkpoint to spawn player from "+cp[index].name);
         }
         LevelLoaded?.Invoke();
         CameraManager.Instance.FadeOut();

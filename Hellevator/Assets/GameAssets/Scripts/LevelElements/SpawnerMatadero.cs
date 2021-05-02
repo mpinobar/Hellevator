@@ -32,12 +32,15 @@ public class SpawnerMatadero : MonoBehaviour
         }
 
     }
-
+    Camera cam;
+    bool playingAudio;
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
         m_movingDirection = (m_endingPosition.position - m_startingPosition.position).normalized;
         AudioManager.Instance.PlayAudioSFX(m_spawnerClip, true);
+        playingAudio = true;
     }
 
     // Update is called once per frame
@@ -54,6 +57,28 @@ public class SpawnerMatadero : MonoBehaviour
         MoveAttachedCharacters();
 
         MoveAttachedBodyParts();
+        
+        if (playingAudio)
+        {
+            Vector2 startPos = cam.WorldToViewportPoint(m_startingPosition.position);
+            Vector2 endPos = cam.WorldToViewportPoint(m_endingPosition.position);
+            //Debug.LogError("Start " + startPos + " end " + endPos);
+            if ((startPos.x < 0 || startPos.y < 0 || startPos.x > 1 || startPos.y > 1) && (endPos.x < 0 || endPos.y < 0 || endPos.x > 1 || endPos.y > 1))
+            {
+                AudioManager.Instance.StopSFX(m_spawnerClip);
+                playingAudio = false;
+            }            
+        }
+        else
+        {
+            Vector2 startPos = cam.WorldToViewportPoint(m_startingPosition.position);
+            Vector2 endPos = cam.WorldToViewportPoint(m_endingPosition.position);
+            if ((startPos.x > 0 && startPos.y > 0 && startPos.x < 1 && startPos.y < 1) || (endPos.x > 0 && endPos.y > 0 && endPos.x < 1 && endPos.y < 1))
+            {
+                AudioManager.Instance.PlayAudioSFX(m_spawnerClip, true);
+                playingAudio = true;
+            }
+        }
     }
 
     private void MoveAttachedCharacters()

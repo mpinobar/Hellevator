@@ -284,8 +284,9 @@ public abstract class DemonBase : MonoBehaviour
     private void Start()
     {
 
-        if (m_possessedOnStart && PossessionManager.Instance.ControlledDemon == null)
+        if (m_possessedOnStart && PossessionManager.Instance.ControlledDemon == null || PossessionManager.Instance.ControlledDemon == this)
         {
+            Debug.LogError("f");
             PossessionManager.Instance.ControlledDemon = this;
             SetControlledByPlayer();
         }
@@ -1047,6 +1048,8 @@ public abstract class DemonBase : MonoBehaviour
             {
                 PossessionManager.Instance.StartDeathChoice(transform);
             }
+
+            AchievementsManager.AddDeath();
         }
         else if (m_isControlledByIA)
         {

@@ -24,12 +24,17 @@ public class AudioManager : PersistentSingleton<AudioManager>
         get => m_musicVolume;
         set
         {
-
+            value = Mathf.Clamp01(value);
             m_musicVolume = value;
-
+            
         }
     }
-    public static float SfxVolume { get => m_sfxVolume; set => m_sfxVolume = value; }
+    public static float SfxVolume { get => m_sfxVolume; set
+        {
+            value = Mathf.Clamp01(value);
+            m_sfxVolume = value;
+        }
+    }
 
     public void PlayBossMusic(AudioClip intro, AudioClip loop)
     {
@@ -65,7 +70,10 @@ public class AudioManager : PersistentSingleton<AudioManager>
     {
         m_BGM.volume = v * 0.5f;
     }
-
+    public void RefreshVolume()
+    {
+        m_BGM.volume = MusicVolume;
+    }
     public void PauseMusic()
     {
 

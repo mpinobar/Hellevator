@@ -24,10 +24,18 @@ public class HandAttackSatan : MonoBehaviour
             m_colliderCmp = GetComponent<Collider2D>();
         m_colliderCmp.enabled = false;
         Enabled = true;
-        if (m_yeetsOnContact)
-            StartCoroutine(HorizontalMovement());
+        if (PossessionManager.Instance.ControlledDemon)
+        {
+            if (m_yeetsOnContact)
+                StartCoroutine(HorizontalMovement());
+            else
+                StartCoroutine(VerticalMovement());
+        }
         else
-            StartCoroutine(VerticalMovement());
+        {
+            gameObject.SetActive(false);
+            Enabled = false;
+        }
     }
 
     IEnumerator VerticalMovement()
@@ -49,7 +57,7 @@ public class HandAttackSatan : MonoBehaviour
         Vector2 endPosition = initialPosition - Vector2.up * m_maximumDistance + Vector2.up*2;
         while (t < 1)
         {
-            if(t > 0.7f)
+            if (t > 0.7f)
                 m_colliderCmp.enabled = true;
             t += Time.deltaTime * animationSpeed;
             transform.position = Vector2.LerpUnclamped(initialPosition, endPosition, m_movementCurve.Evaluate(t));
@@ -71,24 +79,27 @@ public class HandAttackSatan : MonoBehaviour
         else
             side = -1;
         //Debug.LogError(side);
-        transform.root.localScale = new Vector3(Mathf.Abs(transform.root.localScale.x)*side, transform.root.localScale.y, 1);
+        transform.root.localScale = new Vector3(Mathf.Abs(transform.root.localScale.x) * side, transform.root.localScale.y, 1);
         if (side == -1)
             side = 0;
         Vector3 position = m_cam.ViewportToWorldPoint(new Vector3(side,0,0));
         Vector2 initialPosition = new Vector2(position.x, PossessionManager.Instance.ControlledDemon.transform.position.y);
         //Debug.LogError(initialPosition);
-        
+
         Vector2 endPosition = initialPosition - Vector2.right * m_maximumDistance * (transform.root.localScale.x/Mathf.Abs(transform.root.localScale.x));
         endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
-        
+
         while (t < 1)
         {
             if (t < 0.7f)
             {
                 position = m_cam.ViewportToWorldPoint(new Vector3(side, 0, 0));
-                initialPosition = new Vector2(position.x, PossessionManager.Instance.ControlledDemon.transform.position.y);
+                initialPosition = new Vector2(position.x, initialPosition.y);
                 endPosition = initialPosition;
-                endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
+                if (PossessionManager.Instance.ControlledDemon)
+                    endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
+                else
+                    Deactivate();
             }
             else
             {
@@ -121,6 +132,7 @@ public class HandAttackSatan : MonoBehaviour
 
     void Deactivate()
     {
+        StopAllCoroutines();
         gameObject.SetActive(false);
     }
 
