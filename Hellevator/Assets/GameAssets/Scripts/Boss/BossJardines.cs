@@ -38,6 +38,7 @@ public class BossJardines : MonoBehaviour
     [SerializeField] Material m_materialWhenInactive;
     [SerializeField] Material m_materialWhenActive;
     [SerializeField] GameObject m_activateOnDeath;
+    [SerializeField] GameObject m_deactivateOnDeath;
     Glow glowCMP;
     public bool CanGetHurt
     {
@@ -228,8 +229,10 @@ public class BossJardines : MonoBehaviour
             StopAllCoroutines();
             m_animator.SetTrigger("dead");
             StartCoroutine(Sink());
-            if (m_activateOnDeath)
+            if (m_activateOnDeath) { 
                 m_activateOnDeath.SetActive(true);
+                m_deactivateOnDeath.SetActive(false);
+            }
             flotadores[0].parent = null;
             flotadores[0].GetComponent<Rigidbody2D>().isKinematic = false;            
             flotadores.RemoveAt(0);            
