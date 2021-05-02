@@ -9,20 +9,27 @@ public class DelayIntroText : MonoBehaviour
     [SerializeField] private GameObject m_canvas = null;
 	private float m_currentTimer = 0f;
 	private bool m_counting = false;
+    [SerializeField] private bool m_blockInputImmediatly = true;
 
     private void Update()
     {
         if (m_counting)
         {
 			m_currentTimer -= Time.deltaTime;
-
-            InputManager.Instance.IsInInteactionTrigger = true;
-            InputManager.Instance.ResetPlayerHorizontalInput();
-            InputManager.Instance.IsInDialogue = true;
+            if (m_blockInputImmediatly)
+            {
+                InputManager.Instance.IsInInteactionTrigger = true;
+                InputManager.Instance.ResetPlayerHorizontalInput();
+                InputManager.Instance.IsInDialogue = true;
+            }
 
             if (m_currentTimer <= 0)
             {
-                if(m_canvas != null)
+                InputManager.Instance.IsInInteactionTrigger = true;
+                InputManager.Instance.ResetPlayerHorizontalInput();
+                InputManager.Instance.IsInDialogue = true;
+
+                if (m_canvas != null)
                 {
 				    m_dialogo.StartDialogue(m_canvas);
                 }
@@ -41,8 +48,11 @@ public class DelayIntroText : MonoBehaviour
         m_currentTimer = m_timeBeforeStartDialogue;
         m_counting = true;
 
-        InputManager.Instance.IsInInteactionTrigger = true;
-        InputManager.Instance.ResetPlayerHorizontalInput();
-        InputManager.Instance.IsInDialogue = true;
-	}
+        if (m_blockInputImmediatly)
+        {
+            InputManager.Instance.IsInInteactionTrigger = true;
+            InputManager.Instance.ResetPlayerHorizontalInput();
+            InputManager.Instance.IsInDialogue = true;
+        }
+    }
 }
