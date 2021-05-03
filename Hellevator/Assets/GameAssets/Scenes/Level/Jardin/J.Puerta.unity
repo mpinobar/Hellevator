@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -2356,7 +2356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a326e3f16fb66b4ea22b2e0789a8f7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_linkedScene: J.Boss
+  m_linkedScene: H.Ascensor
   m_positionToSetAfterEntering: {fileID: 958165508}
   m_changeSceneSFX: {fileID: 8300000, guid: 40e947a3f8faf6e4dafbb8e98b43c38a, type: 3}
   m_delayToActivateCollider: 0.5
@@ -15194,7 +15194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddf220ae317c0bc4e84a945b3970e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_linkedScene: H.1
+  m_linkedScene: H.Ascensor
 --- !u!114 &1211578372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15227,7 +15227,7 @@ MonoBehaviour:
   dialogue:
     sentences:
     - Ah! There you are
-    - I see you are an art connoisseurs
+    - I see you are an art connoisseur
     - Let me explain what this is
     - This is the Door of Hopeful Hopelessness
     - It serves as a reminder
@@ -15241,6 +15241,20 @@ MonoBehaviour:
     evento:
     - {fileID: 1211578371}
     - {fileID: 1211578372}
+  m_dialogueClipsToPlay:
+  - {fileID: 8300000, guid: 10e127662cd4c63428363cf88ca953be, type: 3}
+  - {fileID: 8300000, guid: 06b16281d794b4a45ae1c09194680977, type: 3}
+  - {fileID: 8300000, guid: fd492ea7ff6814c4ca9fade9aae9be25, type: 3}
+  - {fileID: 8300000, guid: 817f586de2c8ec147a3a757a7cb8b3f1, type: 3}
+  - {fileID: 8300000, guid: cb13422fdc41cef438d360eb08511fa6, type: 3}
+  - {fileID: 8300000, guid: 45497852a30dece47a990354915bb228, type: 3}
+  - {fileID: 8300000, guid: ac102acb377e5fc41ad3a14b87d5fefe, type: 3}
+  - {fileID: 8300000, guid: 6c224dceabbea9445ac7df08d0072a67, type: 3}
+  - {fileID: 8300000, guid: 2d0f31f022ec76c45992681e52bdea6d, type: 3}
+  - {fileID: 8300000, guid: f859cb15db04cd949bc127d69fb13532, type: 3}
+  - {fileID: 8300000, guid: 7c6fb6689c3b3314aa1fc4b516feba15, type: 3}
+  - {fileID: 8300000, guid: 66d42bdd5901dd94082e555168e94d60, type: 3}
+  m_pitchModifier: 1
 --- !u!1 &1217616641
 GameObject:
   m_ObjectHideFlags: 0
@@ -27750,7 +27764,7 @@ PrefabInstance:
     - target: {fileID: 2470189873418461632, guid: 2e5f0596ef5a09c49be948d033def38d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 48.063477
+      value: 48.05429
       objectReference: {fileID: 0}
     - target: {fileID: 2470189873418461632, guid: 2e5f0596ef5a09c49be948d033def38d,
         type: 3}
@@ -27985,13 +27999,23 @@ MonoBehaviour:
     - FINALLY!!
     - I can leave this cursed place!
     - It will be a shame if I lose this ability though...
-    - I have grown quite acostumed to living
+    - I have grown quite accustomed to living
     - Oh well
     - It really does hurt to die
     - 'I am happy '
     - The journey is over
     evento:
     - {fileID: 7105194618245882928}
+  m_dialogueClipsToPlay:
+  - {fileID: 8300000, guid: 100595252ebae33498c6f3e407f80b43, type: 3}
+  - {fileID: 8300000, guid: 66d42bdd5901dd94082e555168e94d60, type: 3}
+  - {fileID: 8300000, guid: ccfd44c3904da9c4e99a913255115c3a, type: 3}
+  - {fileID: 8300000, guid: 4e98f2af8e1d1fe46ae56d7aa6dd4d2c, type: 3}
+  - {fileID: 8300000, guid: 706a76794459c774f924f15c690b956a, type: 3}
+  - {fileID: 8300000, guid: 7e679e31f3574ca4b9133bbb6c1c2251, type: 3}
+  - {fileID: 8300000, guid: 10e127662cd4c63428363cf88ca953be, type: 3}
+  - {fileID: 8300000, guid: e1dd389d42f42df47992a4c7087bfeef, type: 3}
+  m_pitchModifier: 1
 --- !u!1 &7105194618245882931
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,13 +19,16 @@ public class TriggerDialogo : MonoBehaviour
 
 	[Space]
 	[SerializeField] protected Dialogue dialogue;
-
+	[SerializeField] List<AudioClip> m_dialogueClipsToPlay;
+	[SerializeField] float m_pitchModifier = 1;
 	protected void Event()
 	{
         if (!m_hasBeingPlayed)
         {
 			if (m_conversationStartsInstantly && m_onTigger)
 			{
+				AudioManager.Instance.DialogueSrc.pitch *= m_pitchModifier;
+				DialogueManager.Instance.DialogueClipsToPlay = m_dialogueClipsToPlay;
 				DialogueManager.Instance.StartTalking(dialogue, m_canvasForDialogue);
 				InputManager.Instance.ResetPlayerInput();
 

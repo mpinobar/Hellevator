@@ -17,6 +17,8 @@ public class CheckPoint : MonoBehaviour
     public string SceneToLoad { get => m_sceneToLoad; set => m_sceneToLoad = value; }
     public int Priority { get => priority; set => priority = value; }
 
+    [SerializeField] CameraChangeOnTrigger m_cameraChange;
+
     private void Awake()
     {
         m_spr = GetComponent<SpriteRenderer>();
@@ -71,10 +73,12 @@ public class CheckPoint : MonoBehaviour
     {
         if (PossessionManager.Instance.ControlledDemon)
         {
-            Debug.LogError("a");
+            //Debug.LogError("a");
             Destroy(PossessionManager.Instance.ControlledDemon);            
         }
-            Debug.LogError("b");
+        if (m_cameraChange)
+            m_cameraChange.ChangeCamera();
+            //Debug.LogError("b");
         
         DemonBase spawnedDemon = Instantiate(m_demonToSpawn, transform.position - Vector3.up*2, Quaternion.identity);
         PossessionManager.Instance.ControlledDemon = spawnedDemon;

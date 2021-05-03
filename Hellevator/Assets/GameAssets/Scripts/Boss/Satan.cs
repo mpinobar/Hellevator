@@ -39,7 +39,11 @@ public class Satan : MonoBehaviour
     [SerializeField] AudioClip loop;
     [SerializeField] private Color m_colorWhenHurt;
     [SerializeField] private float m_timeFlickerWhenHurt = 0.08f;
-
+    [Space]
+    [SerializeField] AudioClip m_attackClip;
+    [SerializeField] AudioClip m_hurtClip;
+    [SerializeField] AudioClip m_laughClip;
+    [SerializeField] AudioClip m_deathClip;
 
     int m_currentLives;
 
@@ -95,6 +99,7 @@ public class Satan : MonoBehaviour
             OnInterphase?.Invoke();
         else if (newPhase == Phase.Second || newPhase == Phase.Third)
         {
+            AudioManager.Instance.PlayAudioSFX(m_laughClip, false);
             transform.localScale = Vector3.one * 1.5f;
         }
     }
@@ -116,7 +121,8 @@ public class Satan : MonoBehaviour
             HorizontalHandAttack(/*PossessionManager.Instance.ControlledDemon.transform)*/);
         else if (f <= 1)
             StartCoroutine(AtaqueRayo(PossessionManager.Instance.ControlledDemon.transform));
-        m_attackTimer = m_timeBetweenAttacks;        
+        m_attackTimer = m_timeBetweenAttacks;
+        AudioManager.Instance.PlayAudioSFX(m_attackClip, false);
     }
 
     private void LateUpdate()
@@ -146,7 +152,6 @@ public class Satan : MonoBehaviour
     {
         //Debug.LogError("Dealt damage to satan");
         StartCoroutine(HurtVisuals());
-        m_anim.SetTrigger("Hurt");
         m_currentLives--;
         if (m_currentLives <= 0)
         {
@@ -154,6 +159,12 @@ public class Satan : MonoBehaviour
             OnDeath?.Invoke();            
             m_phase = Phase.Interphase;
             AchievementsManager.UnlockKilledSatan();
+            AudioManager.Instance.PlayAudioSFX(m_deathClip, false);
+        }
+        else
+        {
+            AudioManager.Instance.PlayAudioSFX(m_hurtClip, false);
+            m_anim.SetTrigger("Hurt");
         }
     }
 
@@ -229,7 +240,7 @@ public class Satan : MonoBehaviour
             m_previewRayo.gameObject.SetActive(true);
             float t = 0;
             Vector2 posicionPreview = target.position;
-            posicionPreview.y = mainCam.ViewportToWorldPoint(new Vector3(0,1,0)).y;
+            posicionPreview.y = mainCam.ViewportToWorldPoint(new Vector3(0,0.9f,0)).y;
             while (t < m_tiempoPreviewRayo)
             {
                 t += Time.deltaTime;

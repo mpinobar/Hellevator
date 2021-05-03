@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 public class BossJardines : MonoBehaviour
 {
@@ -40,6 +41,13 @@ public class BossJardines : MonoBehaviour
     [SerializeField] GameObject m_activateOnDeath;
     [SerializeField] GameObject m_deactivateOnDeath;
     Glow glowCMP;
+
+    [Space]
+    [SerializeField] AudioClip m_spawnDemonClip;
+    [SerializeField] AudioClip m_hurtClip;
+    [SerializeField] AudioClip m_waterSplashClip;
+    [SerializeField] AudioClip m_deathClip;
+
     public bool CanGetHurt
     {
         get => m_canGetHurt;
@@ -93,6 +101,7 @@ public class BossJardines : MonoBehaviour
 
         while (numSpawns > 0)
         {
+            AudioManager.Instance.PlayAudioSFX(m_spawnDemonClip, false);
             m_animator.SetTrigger("spawnDemon");
             yield return new WaitForSeconds(1);
             numSpawns--;
@@ -180,8 +189,14 @@ public class BossJardines : MonoBehaviour
         float iterator = 0f;
         characterToMove.position = startPos;
         Vector3 nextPosition = startPos;
+        bool isJumpingDown = xMovement == m_xMovementJumpToWater;
         while (iterator < 1)
         {
+            if(isJumpingDown && iterator > 0.65f)
+            {
+                isJumpingDown = false;
+                AudioManager.Instance.PlayAudioSFX(m_waterSplashClip, false);
+            }
             iterator += Time.deltaTime * animationSpeed;
             nextPosition.x = startPos.x + (endPos.x - startPos.x) * xMovement.Evaluate(iterator);
             nextPosition.y = startPos.y + (endPos.y - startPos.y) * yMovement.Evaluate(iterator);
@@ -226,6 +241,7 @@ public class BossJardines : MonoBehaviour
         m_lives--;
         if (m_lives <= 0)
         {
+            AudioManager.Instance.PlayAudioSFX(m_deathClip, false);
             StopAllCoroutines();
             m_animator.SetTrigger("dead");
             StartCoroutine(Sink());
@@ -234,12 +250,14 @@ public class BossJardines : MonoBehaviour
                 m_deactivateOnDeath.SetActive(false);
             }
             flotadores[0].parent = null;
-            flotadores[0].GetComponent<Rigidbody2D>().isKinematic = false;            
+            flotadores[0].GetComponent<Rigidbody2D>().isKinematic = false;
+            flotadores[0].GetComponent<SpriteSkin>().enabled = false;
             flotadores.RemoveAt(0);            
             AchievementsManager.UnlockKilledGK();
         }
         else
         {
+            AudioManager.Instance.PlayAudioSFX(m_hurtClip, false);
             flotadores[0].parent = null;
             flotadores[0].GetComponent<Rigidbody2D>().isKinematic = false;
             flotadores.RemoveAt(0);
