@@ -305,6 +305,7 @@ public class BasicZombie : DemonBase
     }
     public void UnparentBodyParts(float explosionForce)
     {
+        m_unparentedLimbs = true;
         //RagdollLogicCollider.gameObject.SetActive(false);
         IsPossessionBlocked = true;
         for (int i = 0; i < m_limbsToUnparent.Count; i++)
@@ -318,10 +319,12 @@ public class BasicZombie : DemonBase
                 m_limbsToUnparent[i].GetComponent<Rigidbody2D>().AddForce((Vector2.up + Random.Range(-2, 2) * Vector2.right) * explosionForce, ForceMode2D.Impulse);
         }
         //m_spiritFire.SetActive(false);
+        
         enabled = false;
     }
     public Transform UnparentLimbs()
     {
+        m_unparentedLimbs = true;
         //RagdollLogicCollider.gameObject.SetActive(false);
         IsPossessionBlocked = true;
         for (int i = 0; i < m_limbsToUnparent.Count - 1; i++)

@@ -45,7 +45,12 @@ public class PlayButton : MonoBehaviour
         else
         {
             if (m_deletesPlayerPrefs)
+            {
+                PossessionManager.Instance.MultiplePossessionIsUnlocked = false;
+                LevelManager.Instance.LastCheckPoint = null;
+                LevelManager.Instance.CheckPointSceneToLoad = null;
                 PlayerPrefs.DeleteAll();
+            }
 
             if (!PlayerPrefs.HasKey("CPScene") || PlayerPrefs.GetString("CPScene") == null || PlayerPrefs.GetString("CPScene") == "")
                 LevelManager.Instance.CheckPointSceneToLoad = AppScenes.INITIAL_SCENE;

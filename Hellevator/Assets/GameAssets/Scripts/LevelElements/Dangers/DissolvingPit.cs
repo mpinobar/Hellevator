@@ -34,12 +34,12 @@ public class DissolvingPit : MonoBehaviour
             m_currentClipTimer -= Time.deltaTime;
         }
 
-        if(m_clipIsPlaying && !m_spriteRenderer.isVisible)
+        if (m_spriteRenderer && m_clipIsPlaying && !m_spriteRenderer.isVisible)
         {
             m_clipIsPlaying = false;
             m_bubbleSource.Stop();
         }
-        if(!m_clipIsPlaying && m_spriteRenderer.isVisible)
+        if (m_spriteRenderer && !m_clipIsPlaying && m_spriteRenderer.isVisible)
         {
             m_bubbleSource.Play();
             m_bubbleSource.volume = AudioManager.SfxVolume;
@@ -75,7 +75,7 @@ public class DissolvingPit : MonoBehaviour
                     StartCoroutine(EatAnimation());
                 cmpDemon.Die(true);
                 cmpDemon.IsInDanger = true;
-                cmpDemon.IsPossessionBlocked= true;
+                cmpDemon.IsPossessionBlocked = true;
                 //Destroy(cmpDemon.gameObject);
                 StartCoroutine(SlowImmersion(cmpDemon));
 
@@ -112,7 +112,7 @@ public class DissolvingPit : MonoBehaviour
         if (m_bubblesParticles)
             m_bubblesParticles.Play();
     }
-    
+
     IEnumerator EatAnimation()
     {
         if (!m_demonEatingAnimation)
@@ -133,9 +133,14 @@ public class DissolvingPit : MonoBehaviour
         characterToImmerse.IsInDanger = true;
         characterToImmerse.IsPossessionBlocked = true;
         float timeToDestroy = m_timeToDestroy;
-        characterToImmerse.SetRagdollNewGravity(0);
-        ((BasicZombie)characterToImmerse).ResetRagdollVelocity();
-        ((BasicZombie)characterToImmerse).ResetVelocity();
+
+        if (!((BasicZombie)characterToImmerse).m_unparentedLimbs)
+        {
+            characterToImmerse.SetRagdollNewGravity(0);
+            ((BasicZombie)characterToImmerse).ResetRagdollVelocity();
+            ((BasicZombie)characterToImmerse).ResetVelocity();
+        }
+
         Vector3 initialPoint = characterToImmerse.Torso.transform.position;
         Vector3 endPoint = initialPoint - Vector3.up*2f;
 
@@ -167,9 +172,13 @@ public class DissolvingPit : MonoBehaviour
         characterToImmerse.IsInDanger = true;
         characterToImmerse.IsPossessionBlocked = true;
         float timeToDestroy = m_timeToDestroy;
-        characterToImmerse.SetRagdollNewGravity(0);
-        ((BasicZombie)characterToImmerse).ResetRagdollVelocity();
-        ((BasicZombie)characterToImmerse).ResetVelocity();
+
+        if (!((BasicZombie)characterToImmerse).m_unparentedLimbs)
+        {
+            characterToImmerse.SetRagdollNewGravity(0);
+            ((BasicZombie)characterToImmerse).ResetRagdollVelocity();
+            ((BasicZombie)characterToImmerse).ResetVelocity();
+        }
 
         Transform characterTransform = characterToImmerse.Torso.transform;
 

@@ -64,6 +64,7 @@ public class AmphibianDemon : MonoBehaviour
             yield return null;
         }
         float rot = transform.localEulerAngles.z;
+        AudioManager.Instance.PlayAudioSFX(m_demonSound, false);
         while (time < m_timeBeforeJumping)
         {
             time += Time.deltaTime;
@@ -87,11 +88,15 @@ public class AmphibianDemon : MonoBehaviour
         
         float animTime = 0;
         Vector3 posInitJump = transform.position;
+        Vector3 prevPos = posInitJump;
         //Vector3 endPosition = offsetPosition + Vector3.up*m_maxHeight;
         while (animTime < 1)
-        {
+        {                        
             animTime += Time.deltaTime * m_jumpSpeed;
             transform.position = posInitJump + Vector3.up * m_maxHeight * m_heightCurve.Evaluate(animTime);
+            transform.right = transform.position - prevPos;
+            transform.eulerAngles += Vector3.forward * 81.3f;
+            prevPos = transform.position;
             yield return null;
         }
         m_patrolIndex = 1;
@@ -129,7 +134,7 @@ public class AmphibianDemon : MonoBehaviour
     [SerializeField] AudioClip m_biteSound;
     public void StartChase(Transform target)
     {
-        AudioManager.Instance.PlayAudioSFX(m_demonSound, false);
+        
         m_target = target;
         StopAllCoroutines();
         StartCoroutine(Chase());

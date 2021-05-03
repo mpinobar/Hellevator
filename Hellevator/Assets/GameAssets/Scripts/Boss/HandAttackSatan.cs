@@ -82,8 +82,9 @@ public class HandAttackSatan : MonoBehaviour
         transform.root.localScale = new Vector3(Mathf.Abs(transform.root.localScale.x) * side, transform.root.localScale.y, 1);
         if (side == -1)
             side = 0;
+        
         Vector3 position = m_cam.ViewportToWorldPoint(new Vector3(side,0,0));
-        Vector2 initialPosition = new Vector2(position.x, PossessionManager.Instance.ControlledDemon.transform.position.y);
+        Vector2 initialPosition = new Vector2(position.x*0.9f, PossessionManager.Instance.ControlledDemon.transform.position.y);
         //Debug.LogError(initialPosition);
 
         Vector2 endPosition = initialPosition - Vector2.right * m_maximumDistance * (transform.root.localScale.x/Mathf.Abs(transform.root.localScale.x));
@@ -94,7 +95,7 @@ public class HandAttackSatan : MonoBehaviour
             if (t < 0.7f)
             {
                 position = m_cam.ViewportToWorldPoint(new Vector3(side, 0, 0));
-                initialPosition = new Vector2(position.x, initialPosition.y);
+                initialPosition = new Vector2(position.x * 0.9f, initialPosition.y);
                 endPosition = initialPosition;
                 if (PossessionManager.Instance.ControlledDemon)
                     endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
