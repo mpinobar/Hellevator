@@ -119,6 +119,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
                 }
             }
             InputManager.Instance.IsInDialogue = false;
+            AudioManager.Instance.DialogueSrc.pitch = 1;
         }
     }
     public void DeactivateTextAndImage()
