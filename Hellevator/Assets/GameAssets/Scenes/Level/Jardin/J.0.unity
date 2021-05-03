@@ -15347,6 +15347,10 @@ MonoBehaviour:
     evento:
     - {fileID: 965708242}
     - {fileID: 18354379}
+  m_dialogueClipsToPlay:
+  - {fileID: 8300000, guid: 1633ded5ad537f442babbac102275d65, type: 3}
+  - {fileID: 8300000, guid: 2d0f31f022ec76c45992681e52bdea6d, type: 3}
+  m_pitchModifier: 1
 --- !u!4 &965708244
 Transform:
   m_ObjectHideFlags: 0
@@ -22409,6 +22413,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
         type: 3}
+      propertyPath: m_dialogueClipsToPlay.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
+        type: 3}
       propertyPath: dialogue.sentences.Array.data[0]
       value: Before we check in let me show you around
       objectReference: {fileID: 0}
@@ -22442,6 +22451,31 @@ PrefabInstance:
       propertyPath: dialogue.evento.Array.data[1]
       value: 
       objectReference: {fileID: 1426781331}
+    - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
+        type: 3}
+      propertyPath: m_dialogueClipsToPlay.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: fd492ea7ff6814c4ca9fade9aae9be25, type: 3}
+    - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
+        type: 3}
+      propertyPath: m_dialogueClipsToPlay.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: cb13422fdc41cef438d360eb08511fa6, type: 3}
+    - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
+        type: 3}
+      propertyPath: m_dialogueClipsToPlay.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: 811457b9785254748b27095e5408f546, type: 3}
+    - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
+        type: 3}
+      propertyPath: m_dialogueClipsToPlay.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 41d04bc34fb16844fa17171664c584a8, type: 3}
+    - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
+        type: 3}
+      propertyPath: m_dialogueClipsToPlay.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: a0fa7854bc72325488df4b3553477b25, type: 3}
     m_RemovedComponents:
     - {fileID: 6894708076482050599, guid: bce92c09af73b934591508835aaa71d7, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bce92c09af73b934591508835aaa71d7, type: 3}
@@ -24927,6 +24961,7 @@ MonoBehaviour:
   m_dialogo: {fileID: 1426781334}
   m_timeBeforeStartDialogue: 2
   m_canvas: {fileID: 950700719}
+  m_blockInputImmediatly: 1
 --- !u!61 &1568633769
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -33969,7 +34004,7 @@ PrefabInstance:
     - target: {fileID: 2470189873418461632, guid: 2e5f0596ef5a09c49be948d033def38d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 48.063477
+      value: 48.05429
       objectReference: {fileID: 0}
     - target: {fileID: 2470189873418461632, guid: 2e5f0596ef5a09c49be948d033def38d,
         type: 3}
