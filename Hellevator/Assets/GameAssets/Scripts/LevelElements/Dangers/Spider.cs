@@ -9,10 +9,12 @@ public class Spider : MonoBehaviour
     [SerializeField] float m_rotationSpeed = 30f;
     Vector3 m_initialPosition;
     Quaternion m_initialRotation;
+    Animator m_anim;
 
     // Start is called before the first frame update
     void Start()
     {
+        m_anim = GetComponentInChildren<Animator>();
         m_initialPosition = transform.position;
         m_initialRotation = transform.rotation;
     }
@@ -24,6 +26,7 @@ public class Spider : MonoBehaviour
         {
             transform.position += (m_target.position - transform.position).normalized * m_spiderSpeed * Time.deltaTime;
             transform.up = Vector3.Lerp(transform.up, (m_target.position - transform.position), m_rotationSpeed * Time.deltaTime);
+            
         }
     }
 
@@ -42,7 +45,7 @@ public class Spider : MonoBehaviour
             transform.up = Vector3.Lerp(transform.up, (m_initialPosition - transform.position), m_rotationSpeed * Time.deltaTime);
             yield return null;
         }
-
+        m_anim.SetBool("Walking", false);
         while (Quaternion.Angle(m_initialRotation, transform.rotation) > 1)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, m_initialRotation, m_rotationSpeed * Time.deltaTime);
@@ -55,6 +58,7 @@ public class Spider : MonoBehaviour
     {
         StopAllCoroutines();
         m_target = newTarget;
+        m_anim.SetBool("Walking", true);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

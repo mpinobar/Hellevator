@@ -13,8 +13,9 @@ public class CheckPoint : MonoBehaviour
     private float m_openingValue;
     SpriteRenderer m_spr;
     [SerializeField] bool m_savesGameToPlayerPrefs = false;
-
+    [SerializeField] int priority;
     public string SceneToLoad { get => m_sceneToLoad; set => m_sceneToLoad = value; }
+    public int Priority { get => priority; set => priority = value; }
 
     private void Awake()
     {
@@ -22,8 +23,7 @@ public class CheckPoint : MonoBehaviour
         m_openingValue = 1;
         m_sceneToLoad = gameObject.scene.name;
 
-    }
-
+    }    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         DemonBase demon = collision.GetComponentInParent<DemonBase>();
@@ -33,7 +33,7 @@ public class CheckPoint : MonoBehaviour
             m_opening = true;
             if (!m_active)
             {
-                if(m_lightUpClip)
+                if (m_lightUpClip)
                     AudioManager.Instance.PlayAudioSFX(m_lightUpClip, false);
                 m_active = true;
             }
@@ -41,29 +41,27 @@ public class CheckPoint : MonoBehaviour
     }
 
 
-    private void Update()
-    {
-        if (m_opening)
-        {
-            m_openingValue -= Time.deltaTime;
-            m_openingValue = Mathf.Clamp01(m_openingValue);
-            m_spr?.material.SetFloat("_Opening", m_openingValue);
-            if (m_openingValue <= 0)
-            {
-                m_opening = false;
-            }
-        }
-    }
+    //private void Update()
+    //{
+    //    if (m_opening)
+    //    {
+    //        m_openingValue -= Time.deltaTime;
+    //        m_openingValue = Mathf.Clamp01(m_openingValue);
+    //        //m_spr?.material.SetFloat("_Opening", m_openingValue);
+    //        if (m_openingValue <= 0)
+    //        {
+    //            m_opening = false;
+    //        }
+    //    }
+    //}
 
     private void ActivateCheckPoint()
     {
         LevelManager.Instance.SetLastCheckPoint(this);
-        m_spr?.material.SetFloat("_Active", 1);
-        m_spr?.material.SetFloat("_Opening", 0);
-        if (m_savesGameToPlayerPrefs)
-        {
-            LevelManager.Instance.SaveSceneToLoad(SceneToLoad);
-        }
+        //m_spr?.material.SetFloat("_Active", 1);
+        //m_spr?.material.SetFloat("_Opening", 0);
+        LevelManager.Instance.SaveSceneToLoad(SceneToLoad);
+
     }
 
     /// <summary>
@@ -71,9 +69,18 @@ public class CheckPoint : MonoBehaviour
     /// </summary>
     public void SpawnPlayer()
     {
+        if (PossessionManager.Instance.ControlledDemon)
+        {
+            Debug.LogError("a");
+            Destroy(PossessionManager.Instance.ControlledDemon);            
+        }
+            Debug.LogError("b");
+        
         DemonBase spawnedDemon = Instantiate(m_demonToSpawn, transform.position - Vector3.up*2, Quaternion.identity);
+        PossessionManager.Instance.ControlledDemon = spawnedDemon;
         spawnedDemon.enabled = true;
         spawnedDemon.PossessedOnStart = true;
+        spawnedDemon.SetControlledByPlayer();
         spawnedDemon.AssignLastMask();
         ActivateCheckPoint();
         m_openingValue = 1;
@@ -81,5 +88,9 @@ public class CheckPoint : MonoBehaviour
         m_spr?.material.SetFloat("_Opening", 1);
         //CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();
+        if (TryGetComponent(out InstantBlend blend))
+        {
+            blend.InstaBlend();
+        }
     }
 }

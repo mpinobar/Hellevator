@@ -284,8 +284,9 @@ public abstract class DemonBase : MonoBehaviour
     private void Start()
     {
 
-        if (m_possessedOnStart && PossessionManager.Instance.ControlledDemon == null)
+        if (m_possessedOnStart && PossessionManager.Instance.ControlledDemon == null || PossessionManager.Instance.ControlledDemon == this)
         {
+            Debug.LogError("f");
             PossessionManager.Instance.ControlledDemon = this;
             SetControlledByPlayer();
         }
@@ -857,7 +858,7 @@ public abstract class DemonBase : MonoBehaviour
     {
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
-            if (m_limbsRbds[i])
+            if (m_limbsRbds[i] && m_limbsRbds[i].GetComponent<CatapultHead>() == null)
                 m_limbsRbds[i].velocity = Vector2.zero;
         }
     }
@@ -1038,7 +1039,7 @@ public abstract class DemonBase : MonoBehaviour
             UIController.Instance.ShowBloodOverlay();
             CanMove = false;
             Catapult catapultCmp = GetComponent<Catapult>();
-            if (catapultCmp)
+            if (catapultCmp && !PossessionManager.Instance.ControllingMultipleDemons)
             {
                 IsPossessionBlocked = true;
                 catapultCmp.ShowAim();
@@ -1047,6 +1048,8 @@ public abstract class DemonBase : MonoBehaviour
             {
                 PossessionManager.Instance.StartDeathChoice(transform);
             }
+
+            AchievementsManager.AddDeath();
         }
         else if (m_isControlledByIA)
         {

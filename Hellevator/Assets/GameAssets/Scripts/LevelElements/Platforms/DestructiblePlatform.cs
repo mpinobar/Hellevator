@@ -118,12 +118,12 @@ public class DestructiblePlatform : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        DemonBase demon = collision.transform.root.GetComponent<DemonBase>();
+        DemonBase demon = collision.transform.GetComponentInParent<DemonBase>();
         if (demon && demon.IsControlledByPlayer)
         {
             RaycastHit2D hit = Physics2D.Raycast(collision.transform.position,Vector2.down,0.5f,1 << 0);
-            
-            if (hit.transform != null && hit.transform == transform)
+            //Debug.LogError(hit.transform);
+            if ((hit.transform != null && hit.transform == transform) || (hit.transform != null && hit.transform.GetComponent<Fire>()))
             {
                 StartDestroyPlatform();
                 Invoke(nameof(CallReverseDissolve), m_timeToReappear + m_timeToDestroy);

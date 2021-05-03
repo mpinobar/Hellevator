@@ -7,26 +7,70 @@ public class CallElevatorButton : MonoBehaviour
     bool active;
     [SerializeField] AudioClip m_buttonSoundClip;
 
+    [SerializeField] GameObject highlight;
+    bool counting;
+    float time;
 
+    private void Start()
+    {
+        IntroCanvas.OnBegin += () => counting = true;
+    }
 
+    private void OnDisable()
+    {
+        IntroCanvas.OnBegin -= () => counting = true;
+    }
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit r))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit r;
-            if(Physics.Raycast(ray, out r))
+            if (r.transform.GetComponent<CallElevatorButton>() == this)
             {
-                if(r.transform.GetComponent<CallElevatorButton>() == this)
+                Highlight();
+                if (Input.GetMouseButtonDown(0))
                 {
                     CallElevator();
                 }
             }
         }
+        else
+        {
+            HideHighlight();
+        }
+
+
+        if (counting)
+        {
+            time += Time.deltaTime;
+            if (time >= 4f)
+                if (Input.anyKeyDown)
+                    CallElevator();
+        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+
+        //    //RaycastHit r;
+        //    if (Physics.Raycast(ray, out r))
+        //    {
+        //        if (r.transform.GetComponent<CallElevatorButton>() == this)
+        //        {
+        //            CallElevator();
+        //        }
+        //    }
+        //}
     }
 
-
+    public void Highlight()
+    {
+        if (!highlight.activeSelf)
+            highlight.SetActive(true);
+    }
+    public void HideHighlight()
+    {
+        highlight.SetActive(false);
+    }
     public void CallElevator()
     {
         if (!active)

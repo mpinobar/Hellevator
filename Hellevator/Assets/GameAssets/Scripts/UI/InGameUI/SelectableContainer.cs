@@ -74,20 +74,21 @@ public class SelectableContainer : Selectable, IPointerExitHandler, IPointerEnte
 
     public override void OnSelected()
     {
+        //Debug.LogError(name);
         //SelectableContainer selected = (SelectableContainer)Selectables[KeptIndex];
-        if (Selectables[CurrentIndex] is SelectableContainer)
-        {
-            if (((SelectableContainer)Selectables[KeptIndex]).KeepsIndex)
-            {
-                //m_currentIndex = KeptIndex;
-                //if (m_currentIndex < 0)
-                //    m_currentIndex = 0;
-                //if (m_currentIndex >= Selectables.Count)
-                //    m_currentIndex = Selectables.Count - 1;
+        //if (Selectables[CurrentIndex] is SelectableContainer)
+        //{
+        //    if (((SelectableContainer)Selectables[KeptIndex]).KeepsIndex)
+        //    {
+        //        //m_currentIndex = KeptIndex;
+        //        //if (m_currentIndex < 0)
+        //        //    m_currentIndex = 0;
+        //        //if (m_currentIndex >= Selectables.Count)
+        //        //    m_currentIndex = Selectables.Count - 1;
 
-                (Selectables[CurrentIndex] as SelectableContainer).CurrentIndex = KeptIndex;
-            }
-        }
+        //        (Selectables[CurrentIndex] as SelectableContainer).CurrentIndex = KeptIndex;
+        //    }
+        //}
         if (CurrentIndex < 0)
             CurrentIndex = 0;
         if (CurrentIndex >= Selectables.Count)

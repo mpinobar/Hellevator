@@ -16,7 +16,7 @@ public class ElevatorPositionSetter : MonoBehaviour
     {
         if (m_sceneChangeTrigger == trigger)
         {
-            Debug.LogError(trigger.name);
+            //Debug.LogError(trigger.name);
             if (m_setsElevatorUp)
                 m_elevator.SetPositionUp();
             else

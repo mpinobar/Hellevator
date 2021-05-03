@@ -16,24 +16,64 @@ public class AudioManager : PersistentSingleton<AudioManager>
     float m_spatialBlendSFX = 0.35f;
     int m_musicClipIndex;
 
+    AudioClip m_introSatan;
+    AudioClip m_loopSatan;
 
     public static float MusicVolume
     {
         get => m_musicVolume;
         set
         {
-
+            value = Mathf.Clamp01(value);
             m_musicVolume = value;
-
+            
         }
     }
-    public static float SfxVolume { get => m_sfxVolume; set => m_sfxVolume = value; }
+    public static float SfxVolume { get => m_sfxVolume; set
+        {
+            value = Mathf.Clamp01(value);
+            m_sfxVolume = value;
+        }
+    }
 
+    public void PlayBossMusic(AudioClip intro, AudioClip loop)
+    {
+        if (m_BGM.clip != intro && m_BGM.clip != loop)
+        {
+            m_introSatan = intro;
+            m_loopSatan = loop;
+            StopMusic();
+            m_BGM.clip = m_introSatan;
+            m_BGM.Play();
+            timerToLoop = true;
+            timer = m_introSatan.length;
+        }
+    }
+
+    bool timerToLoop;
+    float timer;
+    private void Update()
+    {
+        if (timerToLoop)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                m_BGM.clip = m_loopSatan;
+                m_BGM.Play();
+                timerToLoop = false;
+                timer = m_introSatan.length;
+            }
+        }
+    }
     public void ChangeBGMVolume(float v)
     {
         m_BGM.volume = v * 0.5f;
     }
-
+    public void RefreshVolume()
+    {
+        m_BGM.volume = MusicVolume;
+    }
     public void PauseMusic()
     {
 
@@ -144,7 +184,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
                 }
             }
 
-            if(amountPlayingClip > 1)
+            if (amountPlayingClip > 1)
             {
                 for (int i = 0; i < m_sourcesList.Count; i++)
                 {
@@ -154,7 +194,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
                     }
                 }
             }
-            
+
 
             for (int i = 0; i < m_sourcesList.Count; i++)
             {
@@ -245,9 +285,37 @@ public class AudioManager : PersistentSingleton<AudioManager>
 
     public void SetBackgroundMusicToKitchen()
     {
-        if (m_musicClipIndex != 2)
+        if (m_musicClipIndex != 3)
         {
-            m_musicClipIndex = 2;
+            m_musicClipIndex = 3;
+            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
+
+        }
+    }
+
+    public void SetBackgroundMusicToStorage()
+    {
+        if (m_musicClipIndex != 1)
+        {
+            m_musicClipIndex = 1;
+            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
+
+        }
+    }
+    public void SetBackgroundMusicToGardens()
+    {
+        if (m_musicClipIndex != 4)
+        {
+            m_musicClipIndex = 4;
+            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
+
+        }
+    }
+    public void SetBackgroundMusicToRooms()
+    {
+        if (m_musicClipIndex != 5)
+        {
+            m_musicClipIndex = 5;
             StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
 
         }
@@ -277,9 +345,9 @@ public class AudioManager : PersistentSingleton<AudioManager>
     }
     public void SetBackgroundMusicToRestaurant()
     {
-        if (m_musicClipIndex != 1)
+        if (m_musicClipIndex != 2)
         {
-            m_musicClipIndex = 1;
+            m_musicClipIndex = 2;
             StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
 
         }
@@ -302,7 +370,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
     {
         for (int i = 0; i < m_sourcesList.Count; i++)
         {
-            if(m_sourcesList[i].clip == clipToStop && m_sourcesList[i].isPlaying)
+            if (m_sourcesList[i].clip == clipToStop && m_sourcesList[i].isPlaying)
             {
                 m_sourcesList[i].Stop();
             }

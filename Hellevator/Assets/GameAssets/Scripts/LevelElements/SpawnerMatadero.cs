@@ -12,25 +12,35 @@ public class SpawnerMatadero : MonoBehaviour
     [SerializeField] Transform m_startingPosition;
     [SerializeField] Transform m_endingPosition;
     [SerializeField] float m_movementSpeed = 2f;
+    [SerializeField] float m_hookOffset = 2f;
 
     List<DemonBase> m_spawnedCharacters;
     List<Transform> m_attachedParts;
-
+    List<Transform> m_hooks;
+    [SerializeField] Transform m_hookPrefab;
     Vector2 m_movingDirection;
-	[SerializeField] AudioClip m_spawnerClip;
+    [SerializeField] AudioClip m_spawnerClip;
 
     private void Awake()
     {
         m_spawnedCharacters = new List<DemonBase>();
         m_timeToSpawnNewCharacterTimer = m_timeToSpawnNewCharacter;
+        m_hooks = new List<Transform>();
+        for (int i = 0; i < 10; i++)
+        {
+            m_hooks.Add(Instantiate(m_hookPrefab, m_startingPosition.position + Vector3.up * m_hookOffset, Quaternion.identity));
+        }
 
     }
-
+    Camera cam;
+    bool playingAudio;
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
         m_movingDirection = (m_endingPosition.position - m_startingPosition.position).normalized;
-		AudioManager.Instance.PlayAudioSFX(m_spawnerClip, true);
+        AudioManager.Instance.PlayAudioSFX(m_spawnerClip, true);
+        playingAudio = true;
     }
 
     // Update is called once per frame
@@ -47,6 +57,28 @@ public class SpawnerMatadero : MonoBehaviour
         MoveAttachedCharacters();
 
         MoveAttachedBodyParts();
+        
+        if (playingAudio)
+        {
+            Vector2 startPos = cam.WorldToViewportPoint(m_startingPosition.position);
+            Vector2 endPos = cam.WorldToViewportPoint(m_endingPosition.position);
+            //Debug.LogError("Start " + startPos + " end " + endPos);
+            if ((startPos.x < 0 || startPos.y < 0 || startPos.x > 1 || startPos.y > 1) && (endPos.x < 0 || endPos.y < 0 || endPos.x > 1 || endPos.y > 1))
+            {
+                AudioManager.Instance.StopSFX(m_spawnerClip);
+                playingAudio = false;
+            }            
+        }
+        else
+        {
+            Vector2 startPos = cam.WorldToViewportPoint(m_startingPosition.position);
+            Vector2 endPos = cam.WorldToViewportPoint(m_endingPosition.position);
+            if ((startPos.x > 0 && startPos.y > 0 && startPos.x < 1 && startPos.y < 1) || (endPos.x > 0 && endPos.y > 0 && endPos.x < 1 && endPos.y < 1))
+            {
+                AudioManager.Instance.PlayAudioSFX(m_spawnerClip, true);
+                playingAudio = true;
+            }
+        }
     }
 
     private void MoveAttachedCharacters()
@@ -68,8 +100,9 @@ public class SpawnerMatadero : MonoBehaviour
                     ((BasicZombie)m_spawnedCharacters[i]).SkullIndicator();
                 }
                 else
-                {                    
+                {
                     m_spawnedCharacters[i].Torso.position += (Vector3)m_movingDirection * m_movementSpeed * Time.deltaTime;
+                    m_hooks[i].transform.position = m_spawnedCharacters[i].Torso.position + Vector3.up * m_hookOffset;
                 }
             }
 
@@ -84,6 +117,7 @@ public class SpawnerMatadero : MonoBehaviour
             for (int i = 0; i < m_attachedParts.Count; i++)
             {
                 m_attachedParts[i].position += (Vector3)m_movingDirection * m_movementSpeed * Time.deltaTime;
+                m_hooks[i + m_spawnedCharacters.Count].transform.position = m_attachedParts[i].position + Vector3.up * m_hookOffset;
                 if (Vector2.Distance(m_attachedParts[i].position, m_endingPosition.position) <= 2f)
                 {
                     DestroyPartAndParentDemon(m_attachedParts[i]);

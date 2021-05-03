@@ -49,6 +49,8 @@ public class CameraManager : TemporalSingleton<CameraManager>
     [SerializeField] float m_heavyShakeAmplitude = 80f;
     [SerializeField] float m_heavyShakeDuration = 1f;
 
+    [SerializeField] float m_megaShakeAmplitude = 150f;
+    [SerializeField] float m_megaShakeDuration = 3f;
     public override void Awake()
     {
         if (_instance == null)
@@ -126,6 +128,19 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		StartCoroutine(CameraShake(noise, m_lightShakeDuration));
 	}
 
+	public void CameraShakeLight3S()
+    {
+		StartCoroutine(ShakeLightAndLong(3));
+    }
+
+	IEnumerator ShakeLightAndLong(float duration)
+	{
+		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+		noise.m_AmplitudeGain = m_lightShakeAmplitude*0.15f;
+		yield return new WaitForSeconds(duration);
+		noise.m_AmplitudeGain = 0;		
+	}
+
 	public void CameraShakeMedium()
 	{
 		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
@@ -161,6 +176,26 @@ public class CameraManager : TemporalSingleton<CameraManager>
 		StartCoroutine(CameraShake(noise, m_heavyShakeDuration));
 	}
 
+	public void CameraShakeMega()
+	{
+		CinemachineBasicMultiChannelPerlin noise = m_currentCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+		noise.m_AmplitudeGain = m_megaShakeAmplitude;
+		StopAllCoroutines();
+		StartCoroutine(MegaCameraShakeSlowDown(noise, m_megaShakeDuration));
+	}
+	private IEnumerator MegaCameraShakeSlowDown(CinemachineBasicMultiChannelPerlin noiseCmp, float time)
+	{
+		float timeRemaining = time;
+		float initialGain = noiseCmp.m_AmplitudeGain;
+		//float amp = noiseCmp.m_AmplitudeGain;
+		while (timeRemaining > 0)
+		{
+			timeRemaining -= Time.unscaledDeltaTime;
+			noiseCmp.m_AmplitudeGain = Mathf.Lerp(initialGain, 0, (1 - timeRemaining / time));
+			yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
+		}
+		noiseCmp.m_AmplitudeGain = 0f;
+	}
 	/// <summary>
 	/// Hace shake de la camara y para al cabo de un tiempo
 	/// </summary>
@@ -260,6 +295,11 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	#region UIEffects
 	public void ShowUIEffects()
 	{
+		StopCoroutine(MoveHotel());
+		if (!hotel)
+			hotel = GetComponentInChildren<AnimationOnEnable>();
+		if(hotel.isOut)
+			hotel.OnEnable();
 		m_UIEffects.SetActive(true);
 	}
 
@@ -267,6 +307,27 @@ public class CameraManager : TemporalSingleton<CameraManager>
 	{
 		m_UIEffects.SetActive(false);
 	}
+
+	public AnimationOnEnable hotel;
+	public void HideHotel()
+    {
+		hotel.Stop();
+		StartCoroutine(MoveHotel());
+    }
+
+	IEnumerator MoveHotel()
+    {
+		Vector2 initPos = hotel.transform.position;
+		Vector2 endPos = initPos + Vector2.right*50; 
+			float t = 0;
+		while (t < 1)
+        {
+			t += Time.unscaledTime;
+			hotel.transform.position = Vector2.Lerp(hotel.transform.position, endPos, Time.unscaledTime);
+			yield return new WaitForSecondsRealtime(Time.unscaledTime);
+        }
+
+    }
 	#endregion
 
 	#region CameraFade

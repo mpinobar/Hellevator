@@ -21,8 +21,10 @@ public class MouseParallax : MonoBehaviour
         cam = Camera.main;
         m_initialPosition = transform.localPosition;
         IntroCanvas.OnBegin += ActivateWithDelay;
+        mousepos = Input.mousePosition;
+        input = Vector2.one * 0.5f;
     }
-
+    Vector3 mousepos;
     // Update is called once per frame
     void Update()
     {
@@ -30,18 +32,29 @@ public class MouseParallax : MonoBehaviour
         //Debug.LogError(cam.ScreenToViewportPoint(Input.mousePosition));
         if (active)
         {
-
-            m_distanceToCenter = cam.ScreenToViewportPoint(Input.mousePosition);
+            input.x += InputManager.Instance.MoveInputValue * Time.deltaTime;
+            input.x = Mathf.Clamp01(input.x);
+            input.y += InputManager.Instance.VerticalInputValue * Time.deltaTime;
+            input.y = Mathf.Clamp01(input.y);
+            if (mousepos != Input.mousePosition)
+            {
+                mousepos = Input.mousePosition;
+                m_distanceToCenter = cam.ScreenToViewportPoint(Input.mousePosition);
+                input = m_distanceToCenter;
+            }
+            else
+                m_distanceToCenter = input;
             m_distanceToCenter.x *= m_horizontalParallaxMultiplier;
             m_distanceToCenter.y *= m_verticalParallaxMultiplier;
             transform.localPosition = Vector3.Lerp(transform.localPosition, m_initialPosition - m_distanceToCenter /*+ m_offset*/ /*+ Vector2.right*/, Time.deltaTime * m_parallaxSpeed);
         }
     }
 
+    Vector2 input;
     private void Activate()
     {
         active = true;
-        
+
     }
 
     private void ActivateWithDelay()

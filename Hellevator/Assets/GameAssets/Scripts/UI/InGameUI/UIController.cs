@@ -12,7 +12,7 @@ public class UIController : PersistentSingleton<UIController>
     [Header("Parent references")]
     [SerializeField] Canvas m_canvas;
     [SerializeField] GameObject m_pausePanel;
-    [SerializeField] GameObject m_inventoryPanel;
+    [SerializeField] GameObject m_controlsPanel;
     [SerializeField] GameObject m_mapPanel;
     [SerializeField] GameObject m_bestiaryPanel;
     [SerializeField] GameObject m_collectiblesPanel;
@@ -25,12 +25,14 @@ public class UIController : PersistentSingleton<UIController>
     [SerializeField] Button m_resumeButton;
     [SerializeField] Button m_exitButton;
     [SerializeField] Button m_mapButton;
-    [SerializeField] Button m_inventoryButton;
+    [SerializeField] Button m_controlsButton;
     [SerializeField] Button m_bestiaryButton;
     [SerializeField] Button m_collectiblesButton;
     [SerializeField] Button m_settingsButton;
 
-
+    [Space]
+    [SerializeField] AudioClip m_changeSelectionSFX;
+    [SerializeField] AudioClip m_select;
     GameObject m_activePanel;
     bool m_hasMovedVerticallyOnMenu;
     bool m_hasMovedHorizontallyOnMenu;
@@ -56,11 +58,11 @@ public class UIController : PersistentSingleton<UIController>
         //    m_canvas = transform.GetChild(0).gameObject.GetComponent<Canvas>();
         //m_canvas.gameObject.SetActive(false);
         m_resumeButton.onClick.AddListener(Resume);
-        m_inventoryButton.onClick.AddListener(ShowInventory);
-        m_mapButton.onClick.AddListener(ShowMap);
+        m_controlsButton.onClick.AddListener(ShowControls);
+        //m_mapButton.onClick.AddListener(ShowMap);
         m_collectiblesButton.onClick.AddListener(ShowCollectibles);
         m_settingsButton.onClick.AddListener(ShowSettings);
-        m_bestiaryButton.onClick.AddListener(ShowBestiary);
+        //m_bestiaryButton.onClick.AddListener(ShowBestiary);
         m_exitButton.onClick.AddListener(Exit);
         LevelManager.LevelLoaded += ShowGameplayUI;
         if (SceneManager.GetActiveScene().name != "Menu")
@@ -78,17 +80,19 @@ public class UIController : PersistentSingleton<UIController>
             m_activePanel.SetActive(false);
         }
         m_canvas.gameObject.SetActive(false);
-
+        
         Time.timeScale = 1f;
         CameraManager.Instance.HideUIEffects();
         InputManager.Instance.IsInMenu = false;
         //ShowGameplayUI();
         m_gameplayPanel.gameObject.SetActive(true);
         m_activePanel = m_gameplayPanel.gameObject;
+        m_selected = null;
     }
 
     public void Exit()
     {
+        
         m_canvas.gameObject.SetActive(false);
         Time.timeScale = 1f;
         m_activePanel = null;
@@ -96,9 +100,9 @@ public class UIController : PersistentSingleton<UIController>
         InputManager.Instance.IsInMenu = false;
     }
 
-    public void ShowInventory()
+    public void ShowControls()
     {
-        ShowPanel(m_inventoryPanel);
+        ShowPanel(m_controlsPanel);
     }
 
     public void ShowMap()
@@ -108,11 +112,13 @@ public class UIController : PersistentSingleton<UIController>
 
     public void ShowCollectibles()
     {
+        
         ShowPanel(m_collectiblesPanel);
     }
 
     public void ShowSettings()
     {
+        
         ShowPanel(m_settingsPanel);
     }
 
@@ -157,6 +163,8 @@ public class UIController : PersistentSingleton<UIController>
             m_canvas.gameObject.SetActive(true);
         if (panelToShow != m_activePanel)
         {
+            //Debug.LogError(m_activePanel);
+            //Debug.LogError(panelToShow);
             if (m_activePanel != null && m_activePanel != m_canvas)
             {
                 m_activePanel.SetActive(false);
@@ -174,11 +182,13 @@ public class UIController : PersistentSingleton<UIController>
         {
             if (xInput > 0)
             {
+                PlaySwapSound();
                 Selected.NavigateRight();
                 m_hasMovedHorizontallyOnMenu = true;
             }
             if (xInput < 0)
             {
+                PlaySwapSound();
                 Selected.NavigateLeft();
                 m_hasMovedHorizontallyOnMenu = true;
             }
@@ -187,11 +197,13 @@ public class UIController : PersistentSingleton<UIController>
         {
             if (yInput < 0)
             {
+                PlaySwapSound();
                 Selected.NavigateDown();
                 m_hasMovedVerticallyOnMenu = true;
             }
             if (yInput > 0)
             {
+                PlaySwapSound();
                 Selected.NavigateUp();
                 m_hasMovedVerticallyOnMenu = true;
             }
@@ -205,6 +217,17 @@ public class UIController : PersistentSingleton<UIController>
         {
             m_hasMovedVerticallyOnMenu = false;
         }
+    }
+
+    public void PlaySwapSound()
+    {
+        AudioManager.Instance.PlayAudioSFX(m_changeSelectionSFX, false);
+    }
+
+    public void PlayPressedSound()
+    {
+        //Debug.LogError("Playing pressed sound");
+        AudioManager.Instance.PlayAudioSFX(m_select, false);
     }
 
     public void TryDiscoverNewZone(string zone)

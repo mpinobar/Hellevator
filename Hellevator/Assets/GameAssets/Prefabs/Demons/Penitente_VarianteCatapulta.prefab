@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &7653931097682709595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1598980579691256809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1b9e73b2cd449342902462f6f230cdf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_active: 0
 --- !u!120 &2281711656051585084
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -130,6 +117,19 @@ MonoBehaviour:
   m_defaultMask:
     serializedVersion: 2
     m_Bits: 8193
+--- !u!114 &7653931097682709595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598980579691256809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1b9e73b2cd449342902462f6f230cdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_active: 0
 --- !u!1001 &874616940075889557
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -166,6 +166,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Bounds.m_Center.y
       value: -0.000030517578
+      objectReference: {fileID: 0}
+    - target: {fileID: 1879121604080691324, guid: 461757b89eefba449b5410c2c00bf711,
+        type: 3}
+      propertyPath: m_Layer
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 2203671856483373280, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
@@ -380,7 +385,7 @@ PrefabInstance:
     - target: {fileID: 9032155453379708232, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
       propertyPath: m_Name
-      value: Penitente_VarianteCatapulta (2)
+      value: Penitente_VarianteCatapulta
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 461757b89eefba449b5410c2c00bf711, type: 3}

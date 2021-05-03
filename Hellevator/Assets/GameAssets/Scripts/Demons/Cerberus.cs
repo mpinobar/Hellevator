@@ -15,6 +15,8 @@ public class Cerberus : MonoBehaviour
     [SerializeField] Transform      m_mouthTransform;
 
     [SerializeField] SpriteRenderer [] m_mandibulas;
+    [SerializeField] AudioClip m_cerberusBark;
+    [SerializeField] AudioClip m_cerberusEat;
 
     [SerializeField] GameObject [] m_eyes;
     [SerializeField] float m_timeToEatCorpse = 0.5f;
@@ -83,12 +85,12 @@ public class Cerberus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 origin = (Vector2)transform.position+Vector2.up*m_obstacleDetectionHeight- (Vector2)transform.right * transform.localScale.x * 5f;
+        Vector2 origin = (Vector2)transform.position+Vector2.up*m_obstacleDetectionHeight/*- (Vector2)transform.right * transform.localScale.x * 5f*/;
         //Debug.DrawRay(origin, -transform.right * transform.localScale.x * 3f, Color.green);
         RaycastHit2D impact = Physics2D.Raycast(origin,-transform.right * transform.localScale.x,3f,1<<0);
 
         m_waiting = impact;
-
+        
         if (!m_waiting)
         {
             if (CurrentState == CerberusState.Patrol)
@@ -114,7 +116,7 @@ public class Cerberus : MonoBehaviour
                 }
 
                 //Vector3 positionToMoveTo = m_charactersInView[indexOfNearestDemon].Torso.transform.position;
-                if (impact.distance > Vector3.Distance(origin, m_charactersInView[indexOfNearestDemon].Torso.transform.position))
+                if (Vector3.Distance(transform.position, impact.point) > Vector3.Distance(transform.position, m_charactersInView[indexOfNearestDemon].Torso.transform.position))
                 {
                     Chase();
                 }
@@ -192,6 +194,7 @@ public class Cerberus : MonoBehaviour
     /// <returns></returns>
     private IEnumerator EatCoroutine(DemonBase characterToEat)
     {
+        AudioManager.Instance.PlayAudioSFX(m_cerberusEat, false);
         m_animator.SetTrigger("Attack");
         float fixedAnimationTime = 0.5f;
         float animationSpeed = fixedAnimationTime/m_timeToEatCorpse;
@@ -238,6 +241,8 @@ public class Cerberus : MonoBehaviour
         m_animator.SetTrigger("EndAttack");
     }
 
+    
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         DemonBase cmpDemon = collision.GetComponentInParent<DemonBase>();
@@ -248,7 +253,7 @@ public class Cerberus : MonoBehaviour
             if (m_charactersInView.Count == 1 && CurrentState != CerberusState.Eating)
             {
                 CurrentState = CerberusState.Chasing;
-
+                AudioManager.Instance.PlayAudioSFX(m_cerberusBark, false);
             }
         }
     }

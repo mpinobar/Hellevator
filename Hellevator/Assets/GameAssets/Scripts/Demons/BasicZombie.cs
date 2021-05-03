@@ -233,13 +233,13 @@ public class BasicZombie : DemonBase
 
     public void SkullIndicator()
     {
-        if (m_skullIndicator)
-        {
+        if (m_skullIndicator && !InputManager.Instance.ThrowingHead)
+        {            
             if (PossessionManager.Instance.MultiplePossessionWhenDead && !IsControlledByPlayer)
             {
                 if (PossessionManager.Instance.DemonShowingSkull == this)
                     PossessionManager.Instance.DemonShowingSkull = null;
-
+                if(PossessionManager.Instance.ControlledDemon)
                 DistanceToPlayer = Vector2.Distance(m_torso.transform.position, PossessionManager.Instance.ControlledDemon.transform.position);
                 if (PossessionManager.Instance.CheckBodyInRange(this) && !IsPossessionBlocked && !IsInDanger && IsDead && PossessionManager.Instance.ControlledDemon != null)
                 {
@@ -294,6 +294,15 @@ public class BasicZombie : DemonBase
         }
     }
 
+    public void HideSkull()
+    {
+        //Debug.LogError("Hiding skull of: " + name);
+        m_skullIndicator.SetActive(false);
+    }
+    public void ShowSkull()
+    {
+        m_skullIndicator.SetActive(true);
+    }
     public void UnparentBodyParts(float explosionForce)
     {
         //RagdollLogicCollider.gameObject.SetActive(false);

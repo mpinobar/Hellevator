@@ -31,7 +31,11 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     public bool IsInInteactionTrigger
     {
-        get => m_isInInteactionTrigger; set => m_isInInteactionTrigger = value;
+        get => m_isInInteactionTrigger; 
+        set
+        {
+            m_isInInteactionTrigger = value;
+        }
     }
     public float VerticalInputValue { get => m_verticalInputValue; set => m_verticalInputValue = value; }
     public bool IsInMenu { get => m_isInMenu; set => m_isInMenu = value; }
@@ -57,6 +61,8 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.InputMenu.performed += ctx => InputMenu();
         //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
         UpdateDemonReference();
+        IntroCanvas.ElevatorCalled += () => IsInMenu = true;
+        
     }
 
     public void InputMenu()
@@ -67,11 +73,17 @@ public class InputManager : PersistentSingleton<InputManager>
             if (!IsInMenu)
             {
                 UIController.Instance.ShowPauseMenu();
+                Cursor.visible = true;
             }
             else
             {
+                Cursor.visible = false;
                 UIController.Instance.Resume();
             }
+        }
+        else
+        {
+            Cursor.visible = true;
         }
 
     }
@@ -116,18 +128,19 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             FeedInputToMenuNavigation();
         }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            UIController.Instance.UnlockMap();
-        }
+        //if (Input.GetKeyDown(KeyCode.J))
+        //{
+        //    UIController.Instance.UnlockMap();
+        //}
     }
 
     void FeedInputToMenuNavigation()
     {
-        if (SceneManager.GetActiveScene().name != "Menu")
-        {
+        //if (SceneManager.GetActiveScene().name != "Menu")
+        //{
+        //}else
             UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
-        }
+
     }
 
     private void LateUpdate()
@@ -272,6 +285,7 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     void Interact()
     {
+
         if (IsInInteactionTrigger)
         {
             OnInteract();
@@ -285,7 +299,7 @@ public class InputManager : PersistentSingleton<InputManager>
 
     void Jump()
     {
-        if (!IsInMenu)
+        if (!IsInMenu && !IsInDialogue)
         {
             if (PossessionManager.Instance.ChoosingWhenDead)
             {
