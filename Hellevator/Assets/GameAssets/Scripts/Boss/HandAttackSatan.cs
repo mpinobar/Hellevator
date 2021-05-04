@@ -76,16 +76,21 @@ public class HandAttackSatan : MonoBehaviour
     {
         float t = 0;
         int side;
+        float insideOffset = 0.1f;
         if (UnityEngine.Random.value > 0.5f)
+        {
+            insideOffset *= -1;
             side = 1;
+        }
         else
             side = -1;
         //Debug.LogError(side);
         transform.root.localScale = new Vector3(Mathf.Abs(transform.root.localScale.x) * side, transform.root.localScale.y, 1);
         if (side == -1)
+        {
             side = 0;
-
-        Vector3 position = m_cam.ViewportToWorldPoint(new Vector3(side,0,0));
+        }
+        Vector3 position = m_cam.ViewportToWorldPoint(new Vector3(side + insideOffset,0,0) ) ;
         Vector2 initialPosition = new Vector2(position.x/**0.9f*/, PossessionManager.Instance.ControlledDemon.transform.position.y);
         //Debug.LogError(initialPosition);
 
@@ -96,7 +101,7 @@ public class HandAttackSatan : MonoBehaviour
         {
             if (t < 0.7f)
             {
-                position = m_cam.ViewportToWorldPoint(new Vector3(side, 0, 0));
+                position = m_cam.ViewportToWorldPoint(new Vector3(side + insideOffset, 0, 0));
                 initialPosition = new Vector2(position.x /** 0.9f*/, initialPosition.y);
                 endPosition = initialPosition;
                 if (PossessionManager.Instance.ControlledDemon)
@@ -146,7 +151,7 @@ public class HandAttackSatan : MonoBehaviour
     }
     public void Damage()
     {
-        Debug.LogError("Damaged satan hand");
+        //Debug.LogError("Damaged satan hand");
         m_satan.ReceiveDamage();
     }
 }
