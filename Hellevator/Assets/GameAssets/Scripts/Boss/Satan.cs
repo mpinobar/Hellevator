@@ -40,7 +40,7 @@ public class Satan : MonoBehaviour
     [SerializeField] private Color m_colorWhenHurt;
     [SerializeField] private float m_timeFlickerWhenHurt = 0.08f;
     [Space]
-    [SerializeField] AudioClip m_attackClip;
+    //[SerializeField] AudioClip m_attackClip;
     [SerializeField] AudioClip m_hurtClip;
     [SerializeField] AudioClip m_laughClip;
     [SerializeField] AudioClip m_deathClip;
@@ -122,7 +122,7 @@ public class Satan : MonoBehaviour
         else if (f <= 1)
             StartCoroutine(AtaqueRayo(PossessionManager.Instance.ControlledDemon.transform));
         m_attackTimer = m_timeBetweenAttacks;
-        AudioManager.Instance.PlayAudioSFX(m_attackClip, false);
+        //AudioManager.Instance.PlayAudioSFX(m_attackClip, false);
     }
 
     private void LateUpdate()
@@ -225,9 +225,12 @@ public class Satan : MonoBehaviour
         //m_horizontalHandAttack.Enabled = false;
     }
 
+    [SerializeField] AudioClip m_thunderClip;
 
+    AudioSource src;
     IEnumerator AtaqueRayo(Transform target)
     {
+        
         //Debug.LogError("Lightning attack");
         if (m_anim)
             m_anim.SetTrigger("Attack");
@@ -235,6 +238,7 @@ public class Satan : MonoBehaviour
             mainCam = Camera.main;
         /*new Vector3(PossessionManager.Instance.ControlledDemon.transform.position.x, PossessionManager.Instance.ControlledDemon.transform.position.y + 14.3f, 0);*/
         m_rayo.gameObject.SetActive(false);
+        bool playedSound = false;
         if (m_previewRayo)
         {
             m_previewRayo.gameObject.SetActive(true);
@@ -243,6 +247,15 @@ public class Satan : MonoBehaviour
             posicionPreview.y = mainCam.ViewportToWorldPoint(new Vector3(0,0.9f,0)).y;
             while (t < m_tiempoPreviewRayo)
             {
+                if(t > 0.6f*m_tiempoPreviewRayo && !playedSound)
+                {
+                    if (src && src.isPlaying)
+                    {
+                        src.Stop();
+                    }
+                    playedSound = true;
+                    src = AudioManager.Instance.PlayAudioSFX(m_thunderClip, false);
+                }
                 t += Time.deltaTime;
                 posicionPreview.x = target.position.x;
                 m_previewRayo.position = posicionPreview;
