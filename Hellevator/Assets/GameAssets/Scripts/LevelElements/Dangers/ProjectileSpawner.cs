@@ -61,7 +61,10 @@ public class ProjectileSpawner : ActivatedBase
                     if (m_spriteCmp.isVisible)
                     {
                         if (src && src.isPlaying)
+                        {
+                            AudioManager.Instance.RemoveSrcFromList(src);
                             src.Stop();
+                        }
                         src = AudioManager.Instance.PlayAudioSFX(m_spawnKnifeClip, false);
                     }
                     return;
@@ -74,10 +77,19 @@ public class ProjectileSpawner : ActivatedBase
             if (m_spriteCmp.isVisible)
             {
                 if (src && src.isPlaying)
+                {
+                    AudioManager.Instance.RemoveSrcFromList(src);
                     src.Stop();
+                }
                 AudioManager.Instance.PlayAudioSFX(m_spawnKnifeClip, false);
             }
         }
+    }
+
+    private void OnDisable()
+    {
+        if (src)
+            AudioManager.Instance.AddSrcToList(src);
     }
 
     private void Update()

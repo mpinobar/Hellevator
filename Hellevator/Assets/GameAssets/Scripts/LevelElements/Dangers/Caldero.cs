@@ -17,6 +17,9 @@ public class Caldero : MonoBehaviour
         m_changeSpeed = 1 / m_timeToExplode;
     }
     bool coroutineActive;
+    [SerializeField] AudioClip m_kettleClip;
+    AudioSource src;
+
     private void Update()
     {
         m_covered = m_cauldronFire.m_fireCovered;
@@ -43,6 +46,8 @@ public class Caldero : MonoBehaviour
         }
         else
         {
+            if (src && src.isPlaying)
+                src.Stop();
             if (m_explodeTimer > 0)
                 m_explodeTimer -= Time.deltaTime;
             else
@@ -59,10 +64,16 @@ public class Caldero : MonoBehaviour
         go.transform.localScale = Vector3.one * 10f;
         canExplode = false;
         coroutineActive = false;
+        if (src && src.isPlaying)
+            src.Stop();
     }
-
+    
     IEnumerator ShakeCauldron()
     {
+        if (src && src.isPlaying)
+            src.Stop();
+        src = AudioManager.Instance.PlayAudioSFX(m_kettleClip, false);
+
         Transform cldr = m_spr.transform;
         int framesPerShake = 1;
         float frames = 0;

@@ -247,6 +247,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         CameraManager.Instance.FadeOut();
         AudioManager.Instance.StartGameplayMusic();
         m_isRestarting = false;
+        Cursor.visible = false;
 
     }
 
@@ -337,5 +338,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public void LoadMainMenu()
     {
         SceneManager.LoadSceneAsync(AppScenes.MENU_SCENE);
+        AudioManager.Instance.SetBackgroundMusicToMenu();
     }
 }

@@ -36,6 +36,17 @@ public class AudioManager : PersistentSingleton<AudioManager>
         }
     }
 
+    public void AddSrcToList(AudioSource src)
+    {
+        if (!m_sourcesList.Contains(src))
+            m_sourcesList.Add(src);
+    }
+
+    public void RemoveSrcFromList(AudioSource src)
+    {
+        if (m_sourcesList.Contains(src))
+            m_sourcesList.Remove(src);
+    }
     public AudioSource DialogueSrc { get => m_dialogueSrc; set => m_dialogueSrc = value; }
 
     public void PlayBossMusic(AudioClip intro, AudioClip loop)

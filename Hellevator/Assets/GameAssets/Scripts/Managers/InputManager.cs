@@ -59,6 +59,7 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.InputShowRange.performed += ctx => UseSkill();
         m_controls.PlayerControls.InputPosMulti.performed += ctx => ToggleMultiplePosseion();
         m_controls.PlayerControls.InputMenu.performed += ctx => InputMenu();
+        m_controls.PlayerControls.Restart.performed += yabadabadoo => InputRestart();
         //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
         UpdateDemonReference();
         IntroCanvas.ElevatorCalled += () => IsInMenu = true;
@@ -114,15 +115,8 @@ public class InputManager : PersistentSingleton<InputManager>
                 if (PossessionManager.Instance.ControllingMultipleDemons)
                 {
                     FeedInputToExtraDemons();
-                }
-
-                if (Input.GetKeyDown(KeyCode.R) && !FadeManager.IsRestarting)
-                {
-
-                    LevelManager.Instance.StartRestartingLevelNoDelay();
-                }
+                }               
             }
-
         }
         else
         {
@@ -134,13 +128,15 @@ public class InputManager : PersistentSingleton<InputManager>
         //}
     }
 
-    void FeedInputToMenuNavigation()
+    void InputRestart()
     {
-        //if (SceneManager.GetActiveScene().name != "Menu")
-        //{
-        //}else
-            UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
+        if(!FadeManager.IsRestarting)
+            LevelManager.Instance.StartRestartingLevelNoDelay();
+    }
 
+    void FeedInputToMenuNavigation()
+    {     
+            UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
     }
 
     private void LateUpdate()
@@ -334,8 +330,6 @@ public class InputManager : PersistentSingleton<InputManager>
                     }
                 }
             }
-
-
         }
         else
         {

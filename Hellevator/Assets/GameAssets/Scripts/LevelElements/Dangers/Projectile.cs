@@ -59,7 +59,10 @@ public class Projectile : MonoBehaviour
         if (m_spriteCmp.isVisible)
         {
             if (src && src.isPlaying)
+            {
+                AudioManager.Instance.RemoveSrcFromList(src);
                 src.Stop();
+            }
             src = AudioManager.Instance.PlayAudioSFX(m_impactClip, false);
         }
         gameObject.SetActive(false);
