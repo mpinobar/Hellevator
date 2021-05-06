@@ -67,11 +67,12 @@ public class Selectable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
        // OnDeselected();
     }
+
     public void Press()
     {
         if (m_buttonCmp)
         {
-            m_buttonCmp.Select();            
+            m_buttonCmp.onClick.Invoke();//Select();
         }
     }
 }
