@@ -245,6 +245,28 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
         LevelLoaded?.Invoke();
         CameraManager.Instance.FadeOut();
+        string sceneName = PossessionManager.Instance.ControlledDemon.gameObject.scene.name;
+        if (sceneName == "Menu")
+            AudioManager.Instance.SetBackgroundMusicToMenu();
+        else
+        {
+            
+             if (sceneName[0] == 'R')
+            {
+                AudioManager.Instance.SetBackgroundMusicToRestaurant();
+            }
+            else if(sceneName[0] == 'K')
+            {
+                AudioManager.Instance.SetBackgroundMusicToKitchen();
+            } else if (sceneName[0] == 'H' && !sceneName.Contains("Satan"))
+            {
+                AudioManager.Instance.SetBackgroundMusicToRooms();
+            }
+            else
+            {
+                AudioManager.Instance.SetBackgroundMusicToStorage();
+            }
+        }
         AudioManager.Instance.StartGameplayMusic();
         m_isRestarting = false;
         Cursor.visible = false;
