@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraEffectScaler : MonoBehaviour
 {
     Camera camMain;
+    [SerializeField] float scaling = 0.055f;
     private void OnEnable()
     {
         if (!camMain)
@@ -13,6 +14,6 @@ public class CameraEffectScaler : MonoBehaviour
 
     private void LateUpdate()
     {
-        transform.localScale = Vector3.one * camMain.orthographicSize*0.055f /*+ Vector3.one*0.05f*/;
+        transform.localScale = Vector3.one * camMain.orthographicSize*scaling /*+ Vector3.one*0.05f*/;
     }
 }

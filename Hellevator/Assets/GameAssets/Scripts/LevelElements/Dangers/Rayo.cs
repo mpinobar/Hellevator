@@ -8,7 +8,7 @@ public class Rayo : MonoBehaviour
     [SerializeField] float m_appearanceTime = 0.15f;
     [SerializeField] float m_fadeTime = 0.75f;
     [SerializeField] float m_blastRadius = 1;
-
+    
     float m_alphaShaderDelta;
     float m_newAlpha = 0;
     float m_timer = 0f;
@@ -63,10 +63,10 @@ public class Rayo : MonoBehaviour
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.GetChild(0).position,m_blastRadius);
         CameraManager.Instance.CameraShakeMedium();
-        Debug.DrawRay(transform.GetChild(0).position, Vector3.right, Color.green, 2);
-        Debug.DrawRay(transform.GetChild(0).position, Vector3.up, Color.green, 2);
-        Debug.DrawRay(transform.GetChild(0).position, -Vector3.right, Color.green, 2);
-        Debug.DrawRay(transform.GetChild(0).position, -Vector3.up, Color.green, 2);
+        //Debug.DrawRay(transform.GetChild(0).position, Vector3.right, Color.green, 2);
+        //Debug.DrawRay(transform.GetChild(0).position, Vector3.up, Color.green, 2);
+        //Debug.DrawRay(transform.GetChild(0).position, -Vector3.right, Color.green, 2);
+        //Debug.DrawRay(transform.GetChild(0).position, -Vector3.up, Color.green, 2);
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].TryGetComponent(out DemonBase character))
@@ -91,6 +91,6 @@ public class Rayo : MonoBehaviour
         m_spr.color = color;
         noiseOffset += Vector4.one * Random.value;
         m_mpb.SetVector("_noiseOffset", noiseOffset);
-        m_spr.SetPropertyBlock(m_mpb);
+        m_spr.SetPropertyBlock(m_mpb);        
     }
 }

@@ -12,11 +12,15 @@ public class Projectile : MonoBehaviour
 
     bool m_destroyOnScenaryImpact = true;
     Rigidbody2D m_rgb;
-
+    SpriteRenderer m_spriteCmp;
     bool m_countingDown = true;
     [SerializeField] bool m_isBossProjectile = false;
+    [SerializeField] AudioClip m_impactClip;
     private void OnEnable()
     {
+        if (!m_spriteCmp)
+            m_spriteCmp = GetComponentInChildren<SpriteRenderer>();
+
         if (!m_rgb)
         {
             m_rgb = GetComponent<Rigidbody2D>();
@@ -41,18 +45,27 @@ public class Projectile : MonoBehaviour
 
     private void Update()
     {
-        if(m_countingDown)
+        if (m_countingDown)
             m_timeToDeactivateTimer -= Time.deltaTime;
         if (m_timeToDeactivateTimer <= 0)
         {
             DeactivateProjectile();
         }
     }
-
+    AudioSource src;
     public void DeactivateProjectile()
     {
-        gameObject.SetActive(false);
         transform.localPosition = Vector3.zero;
+        if (m_spriteCmp.isVisible)
+        {
+            if (src && src.isPlaying)
+            {
+                AudioManager.Instance.RemoveSrcFromList(src);
+                src.Stop();
+            }
+            src = AudioManager.Instance.PlayAudioSFX(m_impactClip, false);
+        }
+        gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -66,22 +79,23 @@ public class Projectile : MonoBehaviour
             if (m_isBossProjectile)
             {
                 //es proyectil de boss
-                StopBossKnifeLogic();                
+                StopBossKnifeLogic();
                 transform.position -= Vector3.up * Random.value;
                 if (collision.GetComponent<DemonBase>())
                 {
                     transform.parent = collision.GetComponent<DemonBase>().DemonMaskSprite.transform.parent;
-                    transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerID = collision.GetComponent<DemonBase>().DemonMaskSprite.GetComponent<SpriteRenderer>().sortingLayerID;   
-                    if(collision.GetComponent<DemonBase>().DemonMaskSprite.transform.parent.childCount < 4)
+                    transform.GetChild(0).GetComponent<SpriteRenderer>().sortingLayerID = collision.GetComponent<DemonBase>().DemonMaskSprite.GetComponent<SpriteRenderer>().sortingLayerID;
+                    if (collision.GetComponent<DemonBase>().DemonMaskSprite.transform.parent.childCount < 4)
                         m_countingDown = false;
                 }
-                
-                
+
+
             }
             else
             {
                 //es proyectil de spawner
-                gameObject.SetActive(false);
+                DeactivateProjectile();
+
             }
         }
         else
@@ -89,7 +103,7 @@ public class Projectile : MonoBehaviour
             //Es proyectil de boss pero de los iniciales, no mata al jugador
             StopBossKnifeLogic();
         }
-    }      
+    }
 
     private void StopBossKnifeLogic()
     {

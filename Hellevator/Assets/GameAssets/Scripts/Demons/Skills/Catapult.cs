@@ -29,6 +29,7 @@ public class Catapult : MonoBehaviour
     {
         if (!m_hasThrown)
         {
+            Cursor.visible = true;
             m_demon.StopLerpResetRagdoll();
             m_hasThrown = true;
             m_demon.CanMove = false;
@@ -134,7 +135,8 @@ public class Catapult : MonoBehaviour
         headRigidbody.velocity = directionToThrowHead.normalized * m_throwVelocity;
         //Debug.LogError("Set velocity as: " + directionToThrowHead.normalized * m_throwVelocity);
         lr.positionCount = 0;
-        
+        Cursor.visible = false;
+
     }
 
     IEnumerator SlowDown()
@@ -260,7 +262,7 @@ public class Catapult : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Calculated trajectory is empty");
+                //Debug.LogError("Calculated trajectory is empty");
                 return null;
             }
             RaycastHit2D hit;

@@ -36,7 +36,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     string m_checkpointPlayerPrefsID = "CPScene";
 
-	bool m_hasKitchenKey;
+    bool m_hasKitchenKey;
     public CheckPoint LastCheckPoint
     {
         get => m_lastCheckPoint;
@@ -67,8 +67,8 @@ public class LevelManager : PersistentSingleton<LevelManager>
 
     private void Start()
     {
-		//PlayerPrefs.DeleteAll
-	}
+        //PlayerPrefs.DeleteAll
+    }
 
     /// <summary>
     /// Checks if the checkpoint has been already entered
@@ -184,7 +184,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
             nameToLoad = m_checkPointSceneToLoad;
         }
         AsyncOperation op = SceneManager.LoadSceneAsync(nameToLoad);
-		if (m_adjacentScenes != null)
+        if (m_adjacentScenes != null)
             m_adjacentScenes.Clear();
         CentralSceneLoadManager = null;
         op.completed += LoadCompletedRestart;
@@ -222,13 +222,13 @@ public class LevelManager : PersistentSingleton<LevelManager>
         //}
         if (m_lastCheckPoint)
         {
-            Debug.LogError("Trying to spawn player from cp: "+m_lastCheckPoint.name);
+            
             m_lastCheckPoint.SpawnPlayer();
         }
         else
         {
             CheckPoint[] cp = FindObjectsOfType<CheckPoint>();
-            
+
             int prio;
             int index = 0;
             if (cp.Length > 0)
@@ -240,14 +240,15 @@ public class LevelManager : PersistentSingleton<LevelManager>
                         index = i;
                 }
                 cp[index].SpawnPlayer();
+
             }
-            Debug.LogError("Not found checkpoint to spawn player from "+cp[index].name);
         }
         LevelLoaded?.Invoke();
         CameraManager.Instance.FadeOut();
         AudioManager.Instance.StartGameplayMusic();
         m_isRestarting = false;
-        
+        Cursor.visible = false;
+
     }
 
 
@@ -337,5 +338,6 @@ public class LevelManager : PersistentSingleton<LevelManager>
     public void LoadMainMenu()
     {
         SceneManager.LoadSceneAsync(AppScenes.MENU_SCENE);
+        AudioManager.Instance.SetBackgroundMusicToMenu();
     }
 }

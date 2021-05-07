@@ -18,7 +18,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
 
     AudioClip m_introSatan;
     AudioClip m_loopSatan;
-
+    AudioSource m_dialogueSrc;
     public static float MusicVolume
     {
         get => m_musicVolume;
@@ -26,15 +26,30 @@ public class AudioManager : PersistentSingleton<AudioManager>
         {
             value = Mathf.Clamp01(value);
             m_musicVolume = value;
-            
+
         }
     }
-    public static float SfxVolume { get => m_sfxVolume; set
+    public static float SfxVolume
+    {
+        get => m_sfxVolume; set
         {
             value = Mathf.Clamp01(value);
             m_sfxVolume = value;
         }
     }
+
+    public void AddSrcToList(AudioSource src)
+    {
+        if (!m_sourcesList.Contains(src))
+            m_sourcesList.Add(src);
+    }
+
+    public void RemoveSrcFromList(AudioSource src)
+    {
+        if (m_sourcesList.Contains(src))
+            m_sourcesList.Remove(src);
+    }
+    public AudioSource DialogueSrc { get => m_dialogueSrc; set => m_dialogueSrc = value; }
 
     public void PlayBossMusic(AudioClip intro, AudioClip loop)
     {
@@ -76,7 +91,6 @@ public class AudioManager : PersistentSingleton<AudioManager>
     }
     public void PauseMusic()
     {
-
         m_BGM.Pause();
     }
 
@@ -89,6 +103,9 @@ public class AudioManager : PersistentSingleton<AudioManager>
         base.Awake();
         m_sourcesList = new List<AudioSource>();
         m_BGM = gameObject.AddComponent<AudioSource>();
+        m_dialogueSrc = gameObject.AddComponent<AudioSource>();
+        m_dialogueSrc.volume = m_sfxVolume;
+        m_dialogueSrc.loop = false;
         m_BGM.volume = m_musicVolume * 0.5f;
         m_BGM.loop = true;
         if (m_backgroundMusicClips != null)
@@ -96,6 +113,15 @@ public class AudioManager : PersistentSingleton<AudioManager>
             m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];
             m_BGM.Play();
         }
+    }
+
+    public void PlayDialogueSFX(AudioClip clip)
+    {
+        if (m_dialogueSrc.isPlaying)
+            m_dialogueSrc.Stop();
+        m_dialogueSrc.clip = clip;
+        m_dialogueSrc.volume = SfxVolume;
+        m_dialogueSrc.Play();
     }
 
     internal void CheckMusic()
@@ -354,12 +380,8 @@ public class AudioManager : PersistentSingleton<AudioManager>
     }
     public void SetBackgroundMusicToMenu()
     {
-        if (m_musicClipIndex != 0)
-        {
-            m_musicClipIndex = 0;
-            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
-
-        }
+        m_musicClipIndex = 0;
+        StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
     }
 
     /// <summary>

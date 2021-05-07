@@ -15,20 +15,21 @@ public class ProjectileSpawner : ActivatedBase
     [SerializeField] bool       m_activatedWithButton;
     [ColorUsage(true,true)]
     [SerializeField] Color      m_spriteColor;
+    [SerializeField]
     SpriteRenderer              m_spriteCmp;
 
     int m_maxNumberOfProjectiles = 5;
     List<GameObject> m_projectilePool;
-
     bool m_active;
     Animator m_anim;
 
-	[SerializeField] AudioClip m_spawnKnifeClip;
+    [SerializeField] AudioClip m_spawnKnifeClip;
 
     // Start is called before the first frame update
     void Start()
-    {        
-        m_spriteCmp = GetComponentInChildren<SpriteRenderer>();
+    {
+        if (!m_spriteCmp)
+            m_spriteCmp = GetComponentInChildren<SpriteRenderer>();
         if (m_spriteCmp)
             m_spriteCmp.color = m_spriteColor;
         m_anim = GetComponentInParent<Animator>();
@@ -45,11 +46,11 @@ public class ProjectileSpawner : ActivatedBase
         }
         //InvokeRepeating(nameof(ShootProjectile), m_initialWaitTimeBeforeShooting, m_timeIntervalBetweenShots);
     }
-
+    AudioSource src;
     private void ShootProjectile()
     {
         if (m_active)
-        {            
+        {
             for (int i = 0; i < m_projectilePool.Count; i++)
             {
                 if (!m_projectilePool[i].activeSelf)
@@ -57,6 +58,15 @@ public class ProjectileSpawner : ActivatedBase
                     m_projectilePool[i].transform.position = transform.position;
                     m_projectilePool[i].SetActive(true);
                     m_projectilePool[i].GetComponent<Projectile>().Speed = m_projectileSpeed;
+                    if (m_spriteCmp.isVisible)
+                    {
+                        if (src && src.isPlaying)
+                        {
+                            AudioManager.Instance.RemoveSrcFromList(src);
+                            src.Stop();
+                        }
+                        src = AudioManager.Instance.PlayAudioSFX(m_spawnKnifeClip, false);
+                    }
                     return;
                 }
             }
@@ -64,25 +74,40 @@ public class ProjectileSpawner : ActivatedBase
             newProjectile.transform.up = (m_direction.position - transform.position).normalized;
             m_projectilePool.Add(newProjectile);
             newProjectile.GetComponent<Projectile>().Speed = m_projectileSpeed;
+            if (m_spriteCmp.isVisible)
+            {
+                if (src && src.isPlaying)
+                {
+                    AudioManager.Instance.RemoveSrcFromList(src);
+                    src.Stop();
+                }
+                AudioManager.Instance.PlayAudioSFX(m_spawnKnifeClip, false);
+            }
         }
+    }
+
+    private void OnDisable()
+    {
+        if (src)
+            AudioManager.Instance.AddSrcToList(src);
     }
 
     private void Update()
     {
-        if(m_initialWaitTimeBeforeShooting > 0)
+        if (m_initialWaitTimeBeforeShooting > 0)
         {
             m_initialWaitTimeBeforeShooting -= Time.deltaTime;
         }
-        else if(m_active)
+        else if (m_active)
         {
             m_timeIntervalBetweenShotsTimer -= Time.deltaTime;
-            if(m_timeIntervalBetweenShotsTimer <= 0)
+            if (m_timeIntervalBetweenShotsTimer <= 0)
             {
                 m_timeIntervalBetweenShotsTimer = m_timeIntervalBetweenShots;
                 if (m_anim)
                 {
                     m_anim.SetTrigger("Attack");
-					AudioManager.Instance.PlayAudioSFX(m_spawnKnifeClip, false);
+
                     StartCoroutine(DelayProjectile(m_waitFromAnimationStart));
                 }
                 else
@@ -93,7 +118,7 @@ public class ProjectileSpawner : ActivatedBase
         }
     }
 
-    IEnumerator DelayProjectile (float time)
+    IEnumerator DelayProjectile(float time)
     {
         yield return new WaitForSeconds(time);
         ShootProjectile();

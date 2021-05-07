@@ -203,6 +203,8 @@ public class Cerberus : MonoBehaviour
         characterToEat.CanMove = false;
         characterToEat.IsPossessionBlocked = true;
         characterToEat.Torso.GetComponent<Rigidbody2D>().isKinematic = true;
+        Debug.LogError(characterToEat.Torso.name);
+        characterToEat.MyRgb.isKinematic = true;
         m_mandibulas[0].sortingLayerName = "Foreground";
         m_mandibulas[1].sortingLayerName = "Foreground";
         yield return new WaitForSeconds(m_timeToEatCorpse);
@@ -210,6 +212,7 @@ public class Cerberus : MonoBehaviour
         characterToEat.Die(true);
         float time = 0;
         float maxTime = 0.75f/animationSpeed;
+        characterToEat.SetRagdollNewGravity(0);
         while (time < maxTime)
         {
             characterToEat.Torso.position = Vector3.MoveTowards(characterToEat.Torso.position, m_mouthTransform.position, Time.deltaTime * 8f);

@@ -27,7 +27,7 @@ public class RagdollLogicalCollider : MonoBehaviour
             {
                 //m_parentDemon.Torso
                 //Debug.LogError("Resetting ragdoll velocity of " + m_parentDemon.name);
-                m_parentDemon.ResetRagdollVelocity();
+                if(!m_parentDemon.m_unparentedLimbs) m_parentDemon.ResetRagdollVelocity();
             }
             //for (int i = 0; i < LimbsColliders.Length; i++)
             //{

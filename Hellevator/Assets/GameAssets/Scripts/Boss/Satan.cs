@@ -39,7 +39,11 @@ public class Satan : MonoBehaviour
     [SerializeField] AudioClip loop;
     [SerializeField] private Color m_colorWhenHurt;
     [SerializeField] private float m_timeFlickerWhenHurt = 0.08f;
-
+    [Space]
+    //[SerializeField] AudioClip m_attackClip;
+    [SerializeField] AudioClip m_hurtClip;
+    [SerializeField] AudioClip m_laughClip;
+    [SerializeField] AudioClip m_deathClip;
 
     int m_currentLives;
 
@@ -95,6 +99,7 @@ public class Satan : MonoBehaviour
             OnInterphase?.Invoke();
         else if (newPhase == Phase.Second || newPhase == Phase.Third)
         {
+            AudioManager.Instance.PlayAudioSFX(m_laughClip, false);
             transform.localScale = Vector3.one * 1.5f;
         }
     }
@@ -116,7 +121,8 @@ public class Satan : MonoBehaviour
             HorizontalHandAttack(/*PossessionManager.Instance.ControlledDemon.transform)*/);
         else if (f <= 1)
             StartCoroutine(AtaqueRayo(PossessionManager.Instance.ControlledDemon.transform));
-        m_attackTimer = m_timeBetweenAttacks;        
+        m_attackTimer = m_timeBetweenAttacks;
+        //AudioManager.Instance.PlayAudioSFX(m_attackClip, false);
     }
 
     private void LateUpdate()
@@ -146,7 +152,6 @@ public class Satan : MonoBehaviour
     {
         //Debug.LogError("Dealt damage to satan");
         StartCoroutine(HurtVisuals());
-        m_anim.SetTrigger("Hurt");
         m_currentLives--;
         if (m_currentLives <= 0)
         {
@@ -154,7 +159,20 @@ public class Satan : MonoBehaviour
             OnDeath?.Invoke();            
             m_phase = Phase.Interphase;
             AchievementsManager.UnlockKilledSatan();
+            AudioManager.Instance.PlayAudioSFX(m_deathClip, false);
+            StartCoroutine(DelayLoadMenu());
         }
+        else
+        {
+            AudioManager.Instance.PlayAudioSFX(m_hurtClip, false);
+            m_anim.SetTrigger("Hurt");
+        }
+    }
+
+    private IEnumerator DelayLoadMenu()
+    {
+        yield return new WaitForSeconds(3);
+        LevelManager.Instance.LoadMainMenu();
     }
 
     private IEnumerator HurtVisuals()
@@ -214,9 +232,12 @@ public class Satan : MonoBehaviour
         //m_horizontalHandAttack.Enabled = false;
     }
 
+    [SerializeField] AudioClip m_thunderClip;
 
+    AudioSource src;
     IEnumerator AtaqueRayo(Transform target)
     {
+        
         //Debug.LogError("Lightning attack");
         if (m_anim)
             m_anim.SetTrigger("Attack");
@@ -224,14 +245,24 @@ public class Satan : MonoBehaviour
             mainCam = Camera.main;
         /*new Vector3(PossessionManager.Instance.ControlledDemon.transform.position.x, PossessionManager.Instance.ControlledDemon.transform.position.y + 14.3f, 0);*/
         m_rayo.gameObject.SetActive(false);
+        bool playedSound = false;
         if (m_previewRayo)
         {
             m_previewRayo.gameObject.SetActive(true);
             float t = 0;
             Vector2 posicionPreview = target.position;
-            posicionPreview.y = mainCam.ViewportToWorldPoint(new Vector3(0,1,0)).y;
+            posicionPreview.y = mainCam.ViewportToWorldPoint(new Vector3(0,0.9f,0)).y;
             while (t < m_tiempoPreviewRayo)
             {
+                if(t > 0.6f*m_tiempoPreviewRayo && !playedSound)
+                {
+                    if (src && src.isPlaying)
+                    {
+                        src.Stop();
+                    }
+                    playedSound = true;
+                    src = AudioManager.Instance.PlayAudioSFX(m_thunderClip, false);
+                }
                 t += Time.deltaTime;
                 posicionPreview.x = target.position.x;
                 m_previewRayo.position = posicionPreview;

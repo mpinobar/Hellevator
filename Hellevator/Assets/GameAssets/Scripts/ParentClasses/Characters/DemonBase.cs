@@ -20,9 +20,6 @@ public abstract class DemonBase : MonoBehaviour
     private bool        m_isLerpingToResetBones;
     private bool        m_hasResetParentPosition;
     protected bool      m_isDead;
-    private bool        m_grabbedByRight;
-    private Color       m_outlineColorWhenControlledByPlayer;
-    private float       m_initialGlowThickness;
     private bool        m_canMove;
     private float       m_distanceToPlayer;
 
@@ -52,7 +49,7 @@ public abstract class DemonBase : MonoBehaviour
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
     [SerializeField] private float      m_maximumPossessionRange;
-
+    [SerializeField] public Transform   m_possessionCircle;
     //[ColorUsage(true, true)]
     //private float                       m_distanceStartGlow = 10;
 
@@ -102,7 +99,7 @@ public abstract class DemonBase : MonoBehaviour
     private Collider2D      m_playerCollider;
     protected Animator      m_myAnimator;
     protected int           m_numSpikesTouching;
-
+    public bool             m_unparentedLimbs;
 
     /*
     //Grab Variables
@@ -286,7 +283,7 @@ public abstract class DemonBase : MonoBehaviour
 
         if (m_possessedOnStart && PossessionManager.Instance.ControlledDemon == null || PossessionManager.Instance.ControlledDemon == this)
         {
-            Debug.LogError("f");
+            //Debug.LogError("f");
             PossessionManager.Instance.ControlledDemon = this;
             SetControlledByPlayer();
         }
@@ -847,6 +844,7 @@ public abstract class DemonBase : MonoBehaviour
 
     public void SetRagdollNewGravity(float newGravity)
     {
+        
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
             if (m_limbsRbds[i])
@@ -856,6 +854,7 @@ public abstract class DemonBase : MonoBehaviour
 
     public void ResetRagdollVelocity()
     {
+        //Debug.LogError(name);
         for (int i = 0; i < m_limbsRbds.Length; i++)
         {
             if (m_limbsRbds[i] && m_limbsRbds[i].GetComponent<CatapultHead>() == null)

@@ -31,7 +31,7 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     public bool IsInInteactionTrigger
     {
-        get => m_isInInteactionTrigger; 
+        get => m_isInInteactionTrigger;
         set
         {
             m_isInInteactionTrigger = value;
@@ -39,7 +39,15 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     public float VerticalInputValue { get => m_verticalInputValue; set => m_verticalInputValue = value; }
     public bool IsInMenu { get => m_isInMenu; set => m_isInMenu = value; }
-    public bool ThrowingHead { get => m_throwingHead; set => m_throwingHead = value; }
+    public bool ThrowingHead
+    {
+        get => m_throwingHead; set
+        {
+            Cursor.visible = value;
+
+            m_throwingHead = value;
+        }
+    }
     public float MoveInputValue { get => m_moveInputValue; }
     public bool IsInDialogue { get => m_isInDialogue; set => m_isInDialogue = value; }
 
@@ -59,10 +67,11 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.InputShowRange.performed += ctx => UseSkill();
         m_controls.PlayerControls.InputPosMulti.performed += ctx => ToggleMultiplePosseion();
         m_controls.PlayerControls.InputMenu.performed += ctx => InputMenu();
+        m_controls.PlayerControls.Restart.performed += yabadabadoo => InputRestart();
         //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
         UpdateDemonReference();
         IntroCanvas.ElevatorCalled += () => IsInMenu = true;
-        
+
     }
 
     public void InputMenu()
@@ -77,7 +86,6 @@ public class InputManager : PersistentSingleton<InputManager>
             }
             else
             {
-                Cursor.visible = false;
                 UIController.Instance.Resume();
             }
         }
@@ -115,14 +123,7 @@ public class InputManager : PersistentSingleton<InputManager>
                 {
                     FeedInputToExtraDemons();
                 }
-
-                if (Input.GetKeyDown(KeyCode.R) && !FadeManager.IsRestarting)
-                {
-
-                    LevelManager.Instance.StartRestartingLevelNoDelay();
-                }
             }
-
         }
         else
         {
@@ -134,13 +135,15 @@ public class InputManager : PersistentSingleton<InputManager>
         //}
     }
 
+    void InputRestart()
+    {
+        if (!FadeManager.IsRestarting)
+            LevelManager.Instance.StartRestartingLevelNoDelay();
+    }
+
     void FeedInputToMenuNavigation()
     {
-        //if (SceneManager.GetActiveScene().name != "Menu")
-        //{
-        //}else
-            UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
-
+        UIController.Instance.NavigateMenu(m_moveInputValue, m_verticalInputValue);
     }
 
     private void LateUpdate()
@@ -334,8 +337,6 @@ public class InputManager : PersistentSingleton<InputManager>
                     }
                 }
             }
-
-
         }
         else
         {

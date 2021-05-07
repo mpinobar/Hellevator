@@ -84,6 +84,7 @@ public class UIController : PersistentSingleton<UIController>
         Time.timeScale = 1f;
         CameraManager.Instance.HideUIEffects();
         InputManager.Instance.IsInMenu = false;
+        Cursor.visible = false;
         //ShowGameplayUI();
         m_gameplayPanel.gameObject.SetActive(true);
         m_activePanel = m_gameplayPanel.gameObject;
