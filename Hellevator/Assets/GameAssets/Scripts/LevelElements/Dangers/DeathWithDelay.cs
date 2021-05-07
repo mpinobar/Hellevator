@@ -55,7 +55,7 @@ public class DeathWithDelay : MonoBehaviour
 
         }
     }
-
+    [SerializeField] float delayToPlaySound = 1.6f;
     private IEnumerator KillWithDelay(DemonBase character, float delay)
     {
         //Animate here
@@ -64,25 +64,35 @@ public class DeathWithDelay : MonoBehaviour
             m_animator.SetTrigger("Eat");
         }
         yield return new WaitForSeconds(m_delayToAttach);
-        if (m_audioClip)
-            AudioManager.Instance.PlayAudioSFX(m_audioClip, false);
+
         float t = 0;
-        while(t < delay)
+        bool playedSound = false;
+        while (t < delay)
         {
-            character.Torso.transform.position = Vector3.Lerp(character.Torso.transform.position, m_attachedTransform.position, 3 * Time.deltaTime);
+            if (t > delayToPlaySound && !playedSound)
+            {
+                if (m_audioClip)
+                {
+                    playedSound = true;
+                    AudioManager.Instance.PlayAudioSFX(m_audioClip, false);
+                }
+            }
+            character.Torso.transform.position = Vector3.Lerp(character.Torso.transform.position, m_attachedTransform.position, 6 * Time.deltaTime);
             t += Time.deltaTime;
 
             yield return null;
         }
+
         character.Die(true);
         character.Torso.parent = null;
         character.transform.position = character.Torso.position;
         character.Torso.parent = character.transform;
-        if(character.TryGetComponent(out Catapult cat))
+        if (character.TryGetComponent(out Catapult cat))
         {
-            
-        }else
-        character.gameObject.SetActive(false);
+
+        }
+        else
+            character.gameObject.SetActive(false);
     }
 
     private void LateUpdate()
