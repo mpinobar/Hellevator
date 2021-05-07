@@ -10,6 +10,9 @@ public class KeyActivatedDoor : MonoBehaviour
     [SerializeField] GameObject m_doorOpen;
     [SerializeField] GameObject m_keyNeededText;
     [SerializeField] string m_associatedMapID;
+    [SerializeField] AudioClip m_lockHitClip;
+    [SerializeField] AudioClip m_lockOpenClip;
+    [SerializeField] Animator animationOpenDoor;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -44,12 +47,23 @@ public class KeyActivatedDoor : MonoBehaviour
     {
         m_keyNeededText.SetActive(true);
     }
+    [SerializeField] float delayToPlayEffects = 1.1f;
+    public IEnumerator DelayPlaySoundAndShake()
+    {
+        yield return new WaitForSeconds(delayToPlayEffects);
+        AudioManager.Instance.PlayAudioSFX(m_lockHitClip, false);
+        
+        CameraManager.Instance.CameraShakeLight();
+        m_doorClosed.GetComponent<Collider2D>().enabled = false;
+    }
 
     public void OpenDoor()
     {
-        m_doorClosed.gameObject.SetActive(false);
-        m_doorOpen.gameObject.SetActive(true);
-        if(m_associatedMapID != null && m_associatedMapID != "")
+        //m_doorClosed.GetComponent<Collider2D>().enabled = false;
+        AudioManager.Instance.PlayAudioSFX(m_lockOpenClip, false); 
+        animationOpenDoor.SetTrigger("Open");
+        StartCoroutine(DelayPlaySoundAndShake());
+        if (m_associatedMapID != null && m_associatedMapID != "")
         {
             PlayerPrefs.SetInt(m_associatedMapID, 1);
         }

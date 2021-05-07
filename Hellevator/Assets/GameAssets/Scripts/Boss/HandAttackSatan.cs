@@ -16,6 +16,7 @@ public class HandAttackSatan : MonoBehaviour
     public bool Enabled { get => m_enabled; set => m_enabled = value; }
     [SerializeField] Satan m_satan;
     Camera m_cam;
+    [SerializeField] AudioClip m_attackClip;
     private void OnEnable()
     {
         if (!m_cam)
@@ -26,6 +27,7 @@ public class HandAttackSatan : MonoBehaviour
         Enabled = true;
         if (PossessionManager.Instance.ControlledDemon)
         {
+            src = AudioManager.Instance.PlayAudioSFX(m_attackClip, false, 2.5f);
             if (m_yeetsOnContact)
                 StartCoroutine(HorizontalMovement());
             else
@@ -69,22 +71,27 @@ public class HandAttackSatan : MonoBehaviour
         yield return new WaitForSeconds(1);
         Deactivate();
     }
-
+    AudioSource src;
     IEnumerator HorizontalMovement()
     {
         float t = 0;
         int side;
+        float insideOffset = 0.1f;
         if (UnityEngine.Random.value > 0.5f)
+        {
+            insideOffset *= -1;
             side = 1;
+        }
         else
             side = -1;
         //Debug.LogError(side);
         transform.root.localScale = new Vector3(Mathf.Abs(transform.root.localScale.x) * side, transform.root.localScale.y, 1);
         if (side == -1)
+        {
             side = 0;
-        
-        Vector3 position = m_cam.ViewportToWorldPoint(new Vector3(side,0,0));
-        Vector2 initialPosition = new Vector2(position.x*0.9f, PossessionManager.Instance.ControlledDemon.transform.position.y);
+        }
+        Vector3 position = m_cam.ViewportToWorldPoint(new Vector3(side + insideOffset,0,0) ) ;
+        Vector2 initialPosition = new Vector2(position.x/**0.9f*/, PossessionManager.Instance.ControlledDemon.transform.position.y);
         //Debug.LogError(initialPosition);
 
         Vector2 endPosition = initialPosition - Vector2.right * m_maximumDistance * (transform.root.localScale.x/Mathf.Abs(transform.root.localScale.x));
@@ -94,8 +101,8 @@ public class HandAttackSatan : MonoBehaviour
         {
             if (t < 0.7f)
             {
-                position = m_cam.ViewportToWorldPoint(new Vector3(side, 0, 0));
-                initialPosition = new Vector2(position.x * 0.9f, initialPosition.y);
+                position = m_cam.ViewportToWorldPoint(new Vector3(side + insideOffset, 0, 0));
+                initialPosition = new Vector2(position.x /** 0.9f*/, initialPosition.y);
                 endPosition = initialPosition;
                 if (PossessionManager.Instance.ControlledDemon)
                     endPosition.x = PossessionManager.Instance.ControlledDemon.transform.position.x;
@@ -137,9 +144,14 @@ public class HandAttackSatan : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    private void OnDisable()
+    {
+        if (src)
+            src.Stop();
+    }
     public void Damage()
     {
-        Debug.LogError("Damaged satan hand");
+        //Debug.LogError("Damaged satan hand");
         m_satan.ReceiveDamage();
     }
 }

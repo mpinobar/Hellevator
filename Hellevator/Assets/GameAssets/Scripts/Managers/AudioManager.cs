@@ -26,16 +26,29 @@ public class AudioManager : PersistentSingleton<AudioManager>
         {
             value = Mathf.Clamp01(value);
             m_musicVolume = value;
-            
+
         }
     }
-    public static float SfxVolume { get => m_sfxVolume; set
+    public static float SfxVolume
+    {
+        get => m_sfxVolume; set
         {
-            value = Mathf.Clamp01(value);            
+            value = Mathf.Clamp01(value);
             m_sfxVolume = value;
         }
     }
 
+    public void AddSrcToList(AudioSource src)
+    {
+        if (!m_sourcesList.Contains(src))
+            m_sourcesList.Add(src);
+    }
+
+    public void RemoveSrcFromList(AudioSource src)
+    {
+        if (m_sourcesList.Contains(src))
+            m_sourcesList.Remove(src);
+    }
     public AudioSource DialogueSrc { get => m_dialogueSrc; set => m_dialogueSrc = value; }
 
     public void PlayBossMusic(AudioClip intro, AudioClip loop)
@@ -367,12 +380,8 @@ public class AudioManager : PersistentSingleton<AudioManager>
     }
     public void SetBackgroundMusicToMenu()
     {
-        if (m_musicClipIndex != 0)
-        {
-            m_musicClipIndex = 0;
-            StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
-
-        }
+        m_musicClipIndex = 0;
+        StartCoroutine(MusicVolumeFadeInAndOut(m_volumeFadeTransitionDuration));
     }
 
     /// <summary>

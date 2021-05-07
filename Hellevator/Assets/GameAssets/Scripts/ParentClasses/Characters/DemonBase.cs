@@ -49,7 +49,7 @@ public abstract class DemonBase : MonoBehaviour
     [Header("Possession")]
     [SerializeField] private bool       m_possessedOnStart;
     [SerializeField] private float      m_maximumPossessionRange;
-
+    [SerializeField] public Transform   m_possessionCircle;
     //[ColorUsage(true, true)]
     //private float                       m_distanceStartGlow = 10;
 

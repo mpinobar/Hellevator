@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -2656,7 +2656,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 473c34f328a7fc246894d5fc69952a84, type: 3}
   - {fileID: 8300000, guid: 817f586de2c8ec147a3a757a7cb8b3f1, type: 3}
   - {fileID: 8300000, guid: ccfd44c3904da9c4e99a913255115c3a, type: 3}
-  m_pitchModifier: 0.8
+  m_pitchModifier: 0.6
 --- !u!114 &755068461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4650,7 +4650,7 @@ PrefabInstance:
     - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
         type: 3}
       propertyPath: m_pitchModifier
-      value: 0.8
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
         type: 3}
@@ -4696,6 +4696,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DialogoBefore
+      objectReference: {fileID: 0}
+    - target: {fileID: 8869622892738868228, guid: bce92c09af73b934591508835aaa71d7,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1.01
       objectReference: {fileID: 0}
     - target: {fileID: 9174803753170619877, guid: bce92c09af73b934591508835aaa71d7,
         type: 3}
@@ -6023,7 +6028,7 @@ PrefabInstance:
     - target: {fileID: 3558451554793534631, guid: e73db34c6d0c2b9479f791f44709ec17,
         type: 3}
       propertyPath: m_linkedScene
-      value: BossRoom
+      value: K.BossRoom
       objectReference: {fileID: 0}
     - target: {fileID: 3558451554793534631, guid: e73db34c6d0c2b9479f791f44709ec17,
         type: 3}

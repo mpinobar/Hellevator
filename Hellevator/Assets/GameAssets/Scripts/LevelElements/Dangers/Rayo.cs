@@ -8,7 +8,7 @@ public class Rayo : MonoBehaviour
     [SerializeField] float m_appearanceTime = 0.15f;
     [SerializeField] float m_fadeTime = 0.75f;
     [SerializeField] float m_blastRadius = 1;
-    [SerializeField] AudioClip m_thunderClip;
+    
     float m_alphaShaderDelta;
     float m_newAlpha = 0;
     float m_timer = 0f;
@@ -91,7 +91,6 @@ public class Rayo : MonoBehaviour
         m_spr.color = color;
         noiseOffset += Vector4.one * Random.value;
         m_mpb.SetVector("_noiseOffset", noiseOffset);
-        m_spr.SetPropertyBlock(m_mpb);
-        AudioManager.Instance.PlayAudioSFX(m_thunderClip, false);
+        m_spr.SetPropertyBlock(m_mpb);        
     }
 }

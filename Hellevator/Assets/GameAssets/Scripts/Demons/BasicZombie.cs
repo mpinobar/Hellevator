@@ -459,7 +459,18 @@ public class BasicZombie : DemonBase
             if (traversed)
                 return;
         }
-
+        
+        float distanceToCheckBeds = 2f;
+        Debug.DrawRay(transform.position, Vector3.down * distanceToCheckBeds, Color.green, 2f);
+        RaycastHit2D[] raycastHits = Physics2D.RaycastAll(transform.position, Vector2.down, distanceToCheckBeds);
+        for (int i = 0; i < raycastHits.Length; i++)
+        {
+            if (raycastHits[i].transform.TryGetComponent(out Cama cama))
+            {
+                cama.SetBouncy(this);
+                return;
+            }
+        }
 
         if (m_canJump)
         {
