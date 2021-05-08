@@ -43,6 +43,7 @@ public class Collectible : MonoBehaviour
         if (canMove)
         {
             PossessionManager.Instance.ControlledDemon.GetComponent<Rigidbody2D>().velocity = new Vector3(0, PossessionManager.Instance.ControlledDemon.GetComponent<Rigidbody2D>().velocity.y, 0);
+            InputManager.Instance.ResetPlayerInput();
         }   
     }
 
