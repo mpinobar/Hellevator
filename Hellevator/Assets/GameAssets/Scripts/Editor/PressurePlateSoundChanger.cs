@@ -126,7 +126,7 @@ public class PressurePlateSoundChanger : EditorWindow
 
                 for (int j = 0; j < children.Length; j++)
                 {
-                    if(children[j].TryGetComponent(out WeightedPreassurePlate plate))
+                    if (children[j].TryGetComponent(out WeightedPreassurePlate plate))
                     {
                         plate.m_buttonActivatedSFX = clip;
                     }
@@ -135,5 +135,3 @@ public class PressurePlateSoundChanger : EditorWindow
         }
     }
 }
-
-
