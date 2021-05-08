@@ -38,7 +38,6 @@ public class Boss : MonoBehaviour
 
 	[Space]
 	[SerializeField] GameObject m_bossKey = null;
-	[SerializeField] Transform m_bossKeySpawnPoint = null;
 
     [Space]
     [SerializeField] AudioClip m_attackAudio;
@@ -244,7 +243,7 @@ public class Boss : MonoBehaviour
     private void OpenEntrance()
     {
         if(m_doorToCloseUponStart) m_doorToCloseUponStart.SetActive(false);
-		GameObject newBossKey = Instantiate(m_bossKey, m_bossKeySpawnPoint.position, Quaternion.identity);
+        m_bossKey.SetActive(true);
     }
 
     public void UnparentLimbs()

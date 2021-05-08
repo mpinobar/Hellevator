@@ -63,7 +63,7 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.VerticalMovement.performed += ctx => VerticalInputStart(ctx.ReadValue<float>());
         m_controls.PlayerControls.VerticalMovement.performed += ctx => m_verticalInputValue = ctx.ReadValue<float>();
         m_controls.PlayerControls.VerticalMovement.canceled += ctx => m_verticalInputValue = ctx.ReadValue<float>();
-        m_controls.PlayerControls.InputInteract.performed += ctx => Interact();
+        //m_controls.PlayerControls.InputInteract.performed += ctx => Interact();
         m_controls.PlayerControls.InputShowRange.performed += ctx => UseSkill();
         m_controls.PlayerControls.InputPosMulti.performed += ctx => ToggleMultiplePosseion();
         m_controls.PlayerControls.InputMenu.performed += ctx => InputMenu();
@@ -115,7 +115,7 @@ public class InputManager : PersistentSingleton<InputManager>
             {
                 //Inputs de dialogo
             }
-            else if (m_canControlCharacters)
+            else if (m_canControlCharacters && !m_isInInteactionTrigger)
             {
                 FeedInputToMainDemon();
 
@@ -286,14 +286,7 @@ public class InputManager : PersistentSingleton<InputManager>
         }
 
     }
-    void Interact()
-    {
-
-        if (IsInInteactionTrigger)
-        {
-            OnInteract();
-        }
-    }
+    
 
     void ToggleMultiplePosseion()
     {
@@ -302,7 +295,7 @@ public class InputManager : PersistentSingleton<InputManager>
 
     void Jump()
     {
-        if (!IsInMenu && !IsInDialogue)
+        if (!IsInMenu && !IsInDialogue && !IsInInteactionTrigger)
         {
             if (PossessionManager.Instance.ChoosingWhenDead)
             {
@@ -340,7 +333,14 @@ public class InputManager : PersistentSingleton<InputManager>
         }
         else
         {
-            UIController.Instance.Selected.Press();
+            if (IsInInteactionTrigger)
+            {
+                OnInteract();
+            }
+            if (IsInMenu)
+            {
+                UIController.Instance.Selected.Press();
+            }
         }
 
     }

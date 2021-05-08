@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class UIController : PersistentSingleton<UIController>
 {
@@ -16,6 +17,7 @@ public class UIController : PersistentSingleton<UIController>
     [SerializeField] GameObject m_mapPanel;
     [SerializeField] GameObject m_bestiaryPanel;
     [SerializeField] GameObject m_collectiblesPanel;
+    [SerializeField] GameObject m_collectiblesInGameCanvas; 
     [SerializeField] GameObject m_settingsPanel;
 
     [SerializeField] GameplayUIController m_gameplayPanel;
@@ -30,12 +32,19 @@ public class UIController : PersistentSingleton<UIController>
     [SerializeField] Button m_collectiblesButton;
     [SerializeField] Button m_settingsButton;
 
+    [Header("Colecctibles in game references")]
+    [SerializeField] Image m_colectibleIMG;
+    [SerializeField] TextMeshProUGUI m_textFechaColeccionable;
+
+
     [Space]
     [SerializeField] AudioClip m_changeSelectionSFX;
     [SerializeField] AudioClip m_select;
     GameObject m_activePanel;
     bool m_hasMovedVerticallyOnMenu;
     bool m_hasMovedHorizontallyOnMenu;
+
+
 
     public Selectable Selected
     {
@@ -65,6 +74,8 @@ public class UIController : PersistentSingleton<UIController>
         //m_bestiaryButton.onClick.AddListener(ShowBestiary);
         m_exitButton.onClick.AddListener(Exit);
         LevelManager.LevelLoaded += ShowGameplayUI;
+
+
         if (SceneManager.GetActiveScene().name != "Menu")
         {
             //Debug.LogError("gameplay ui");
@@ -306,6 +317,24 @@ public class UIController : PersistentSingleton<UIController>
             Debug.Log(eventData2.gameObject.name);
         }
         return raysastResults;
+    }
+
+
+    public void ShowCollectibleInGame(Sprite colSprite)
+    {
+        m_collectiblesInGameCanvas.SetActive(true);
+        
+        if (m_colectibleIMG != null)
+        {
+            m_colectibleIMG.sprite = colSprite;
+            m_textFechaColeccionable.text = System.DateTime.Today.Day.ToString() + "/" + System.DateTime.Today.Month.ToString() + "/" + System.DateTime.Today.Year.ToString();
+        }
+    }
+
+    public void HideCollectibleInGame()
+    {
+        m_colectibleIMG.sprite = null;
+        m_collectiblesInGameCanvas.SetActive(false);
     }
 
 
