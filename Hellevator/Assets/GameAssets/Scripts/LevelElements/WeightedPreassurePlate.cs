@@ -46,7 +46,7 @@ public class WeightedPreassurePlate : MonoBehaviour
 
     //Sound variables
     [SerializeField] private AudioClip m_machineClip;
-    [SerializeField] public AudioClip m_buttonActivatedSFX;
+    [SerializeField] private AudioClip m_buttonActivatedSFX;
     private AudioSource m_audioSource;
     Vector3 m_lastLOPosition;
 
