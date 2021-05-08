@@ -54,6 +54,8 @@ public class Collectible : MonoBehaviour
             UIController.Instance.HideCollectibleInGame();
             InputManager.Instance.IsInInteactionTrigger = false;
             canMove = false;
+            PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().updateMode = AnimatorUpdateMode.Normal;
+            Time.timeScale = 1;
             Destroy(prefab);
             Destroy(gameObject);
             
@@ -78,6 +80,7 @@ public class Collectible : MonoBehaviour
     }
     public void Collect()
     {
+        Time.timeScale = 0;
         InputManager.Instance.IsInInteactionTrigger = true;
         InputManager.Instance.ResetPlayerInput();
 
@@ -102,20 +105,31 @@ public class Collectible : MonoBehaviour
 
     IEnumerator spawnMiniAfterDelay()
     {
-        yield return new WaitForSeconds(m_timeBeforeMiniPopUp);
-        PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().SetTrigger("Jump");
+        yield return new WaitForSecondsRealtime(m_timeBeforeMiniPopUp);
+        
+        PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().updateMode = AnimatorUpdateMode.UnscaledTime;
         prefab = Instantiate(m_miniPrefab, new Vector3(0, 1, 0), Quaternion.identity, PossessionManager.Instance.ControlledDemon.transform);
+        if(PossessionManager.Instance.ControlledDemon.transform.localScale.x < 0)
+        {
+            prefab.GetComponent<Animator>().SetTrigger("Negativa");
+        }
+        else
+        {
+            prefab.GetComponent<Animator>().SetTrigger("Positiva");
+        }
+        yield return new WaitForSecondsRealtime(0.5f);
+        PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().SetTrigger("Jump"); 
     }
 
     IEnumerator waitBeforePopUp()
     {
-        yield return new WaitForSeconds(m_timeBeforeBigPopUp);
+        yield return new WaitForSecondsRealtime(m_timeBeforeBigPopUp);
         canOpenBig = true;
     }
 
     IEnumerator waitBeforeClosing()
     {
-        yield return new WaitForSeconds(m_timeBeforeCanClosePopUp);
+        yield return new WaitForSecondsRealtime(m_timeBeforeCanClosePopUp);
         canClose = true;
     }
 }

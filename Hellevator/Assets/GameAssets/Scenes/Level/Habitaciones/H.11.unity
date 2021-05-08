@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -5500,13 +5500,19 @@ PrefabInstance:
         type: 3}
       propertyPath: m_miniPrefab
       value: 
-      objectReference: {fileID: 1317472299}
+      objectReference: {fileID: 6257332419811133319, guid: 14017bf3e49521947b33239801c6a4fd,
+        type: 3}
     - target: {fileID: 4433261585786731881, guid: e8af39f919e5aa34b995ab73c1bb9534,
         type: 3}
       propertyPath: m_bigSprite
       value: 
       objectReference: {fileID: 21300000, guid: 4fee75d39372dec4c9e0c4a79e9563ca,
         type: 3}
+    - target: {fileID: 4433261585786731881, guid: e8af39f919e5aa34b995ab73c1bb9534,
+        type: 3}
+      propertyPath: m_mainCamera
+      value: 
+      objectReference: {fileID: 1317472301}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8af39f919e5aa34b995ab73c1bb9534, type: 3}
 --- !u!4 &1062987935 stripped
@@ -5660,6 +5666,11 @@ PrefabInstance:
     - target: {fileID: 7152071399073627621, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418663556276120726, guid: 461757b89eefba449b5410c2c00bf711,
+        type: 3}
+      propertyPath: m_possessedOnStart
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9032155453379708232, guid: 461757b89eefba449b5410c2c00bf711,
@@ -7272,18 +7283,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e09fa1bfd28c2f3428228de715172664, type: 3}
---- !u!1 &1317472299 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6618036691683287739, guid: e09fa1bfd28c2f3428228de715172664,
-    type: 3}
-  m_PrefabInstance: {fileID: 1317472298}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1317472300 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6618036692148204900, guid: e09fa1bfd28c2f3428228de715172664,
     type: 3}
   m_PrefabInstance: {fileID: 1317472298}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1317472301 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6618036691683287736, guid: e09fa1bfd28c2f3428228de715172664,
+    type: 3}
+  m_PrefabInstance: {fileID: 1317472298}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1319758862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8688,30 +8705,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8397350571814287404, guid: fe39900d578b2524ab09427677588559,
+    - target: {fileID: 3785840522690319490, guid: fe39900d578b2524ab09427677588559,
         type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 0
+      propertyPath: m_AnchoredPosition.y
+      value: -56.80005
       objectReference: {fileID: 0}
-    - target: {fileID: 8397350571814287404, guid: fe39900d578b2524ab09427677588559,
+    - target: {fileID: 5409289116648911024, guid: fe39900d578b2524ab09427677588559,
         type: 3}
-      propertyPath: m_textInfo.spaceCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8397350571814287404, guid: fe39900d578b2524ab09427677588559,
-        type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8397350571814287404, guid: fe39900d578b2524ab09427677588559,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8397350571814287404, guid: fe39900d578b2524ab09427677588559,
-        type: 3}
-      propertyPath: m_textInfo.pageCount
-      value: 0
+      propertyPath: m_AnchoredPosition.y
+      value: -10.100098
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe39900d578b2524ab09427677588559, type: 3}
