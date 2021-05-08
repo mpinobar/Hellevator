@@ -733,7 +733,7 @@ PrefabInstance:
     - target: {fileID: 8028671402884467286, guid: d0d1ebaaebeeba846970a3ca70793124,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8028671402884467286, guid: d0d1ebaaebeeba846970a3ca70793124,
         type: 3}
@@ -784,7 +784,7 @@ Transform:
   - {fileID: 1100071722}
   - {fileID: 1967740113}
   - {fileID: 331097513}
-  - {fileID: 96005227}
+  - {fileID: 919622946}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -870,36 +870,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &96005226
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 96005227}
-  m_Layer: 0
-  m_Name: A.9.Decoracion
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &96005227
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 96005226}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 86276590}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &105080530
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1029,7 @@ MonoBehaviour:
   m_deactivatesOnPuzzleCompletion: 0
   m_speed: 7
   m_endPosition: {fileID: 748285696}
+  m_simultaneousActivation: {fileID: 0}
 --- !u!114 &195228846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1619,6 +1590,7 @@ MonoBehaviour:
   m_deactivatesOnPuzzleCompletion: 0
   m_speed: 7
   m_endPosition: {fileID: 1706093840}
+  m_simultaneousActivation: {fileID: 0}
 --- !u!114 &273203424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2202,7 +2174,7 @@ PrefabInstance:
     - target: {fileID: 8609855425914059244, guid: f387eace3f579cf498e3c85287bc37a7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 39.656174
+      value: 39.69545
       objectReference: {fileID: 0}
     - target: {fileID: 8609855425914059244, guid: f387eace3f579cf498e3c85287bc37a7,
         type: 3}
@@ -2989,6 +2961,7 @@ MonoBehaviour:
   m_deactivatesOnPuzzleCompletion: 0
   m_speed: 1.5
   m_endPosition: {fileID: 1535150592}
+  m_simultaneousActivation: {fileID: 0}
 --- !u!114 &326948770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4399,6 +4372,7 @@ MonoBehaviour:
   m_deactivatesOnPuzzleCompletion: 0
   m_speed: 7
   m_endPosition: {fileID: 2133144259}
+  m_simultaneousActivation: {fileID: 0}
 --- !u!114 &507991868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5282,6 +5256,7 @@ MonoBehaviour:
   m_deactivatesOnPuzzleCompletion: 0
   m_speed: 3
   m_endPosition: {fileID: 983239171}
+  m_simultaneousActivation: {fileID: 0}
 --- !u!114 &808551119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6038,6 +6013,81 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &919622945
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 86276590}
+    m_Modifications:
+    - target: {fileID: 3160257577883906112, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_Name
+      value: A.9.Decoracion (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 00da1cebcccb6114ea9aee708b940a13, type: 3}
+--- !u!4 &919622946 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3160257577883906113, guid: 00da1cebcccb6114ea9aee708b940a13,
+    type: 3}
+  m_PrefabInstance: {fileID: 919622945}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &961429247
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13667,6 +13717,7 @@ MonoBehaviour:
   m_deactivatesOnPuzzleCompletion: 0
   m_speed: 3
   m_endPosition: {fileID: 8481204485665339860}
+  m_simultaneousActivation: {fileID: 0}
 --- !u!4 &8154209147661625129
 Transform:
   m_ObjectHideFlags: 0
