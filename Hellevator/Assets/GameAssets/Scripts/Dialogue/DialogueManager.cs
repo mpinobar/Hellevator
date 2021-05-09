@@ -40,7 +40,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
 
 
         InputManager.Instance.IsInDialogue = true;
-        PossessionManager.Instance.ControlledDemon.StopMovement();
+        
 
         currentDialogue = dialogue;
 
@@ -63,6 +63,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
     {
         if (!conversationEnded)
         {
+            
             if (coroutineActive)
             {
                 StopAllCoroutines();
@@ -94,6 +95,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
             AudioManager.Instance.PlayDialogueSFX(DialogueClipsToPlay[index]);
             index++;
         }
+        PossessionManager.Instance.ControlledDemon.StopMovement();
         m_dialogueTxt.text = "";
         foreach (char letter in sentence.ToCharArray())
         {
@@ -119,6 +121,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
                 }
             }
             InputManager.Instance.IsInDialogue = false;
+            InputManager.Instance.IsInInteactionTrigger = false;
             AudioManager.Instance.DialogueSrc.pitch = 1;
         }
     }

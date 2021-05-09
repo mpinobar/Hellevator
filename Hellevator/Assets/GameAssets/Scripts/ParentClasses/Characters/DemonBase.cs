@@ -1099,8 +1099,9 @@ public abstract class DemonBase : MonoBehaviour
     }
 
     public virtual void StopMovement()
-    {
-
+    {        
+        Move(0);
+        InputManager.Instance.ResetPlayerHorizontalInput();
     }
 
     public virtual void ContinueMovement()

@@ -286,7 +286,7 @@ public class InputManager : PersistentSingleton<InputManager>
         }
 
     }
-    
+
 
     void ToggleMultiplePosseion()
     {
@@ -333,14 +333,16 @@ public class InputManager : PersistentSingleton<InputManager>
         }
         else
         {
-            if (IsInInteactionTrigger)
-            {
-                OnInteract();
-            }
             if (IsInMenu)
             {
                 UIController.Instance.Selected.Press();
             }
+            else
+            if (IsInInteactionTrigger)
+            {
+                OnInteract();
+            }
+
         }
 
     }
