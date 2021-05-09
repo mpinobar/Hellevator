@@ -44,7 +44,7 @@ public class UIController : PersistentSingleton<UIController>
     bool m_hasMovedVerticallyOnMenu;
     bool m_hasMovedHorizontallyOnMenu;
 
-
+    [SerializeField] GameObject m_whiteOverlay;
 
     public Selectable Selected
     {
@@ -81,6 +81,11 @@ public class UIController : PersistentSingleton<UIController>
             //Debug.LogError("gameplay ui");
             ShowGameplayUI();
         }
+    }
+
+    public void ActivateWhiteOverlay()
+    {
+        m_whiteOverlay.SetActive(true);
     }
 
 

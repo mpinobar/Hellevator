@@ -575,6 +575,8 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
 
         //CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();
+        UIController.Instance.ActivateWhiteOverlay();
+        CameraManager.Instance.SlightZoomInAndOut();
         if (m_pLight != null)
         {
             m_pLight.gameObject.SetActive(false);
