@@ -96,6 +96,7 @@ public class CameraManager : TemporalSingleton<CameraManager>
 
 	public void SetCurrentLiveCamera(CinemachineVirtualCamera newLiveCamera)
 	{
+		print(newLiveCamera.gameObject.name);
 		newLiveCamera.Priority = 1;
 		m_currentCamera.Priority = 0;
 
