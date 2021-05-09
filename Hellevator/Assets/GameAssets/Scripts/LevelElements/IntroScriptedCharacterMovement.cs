@@ -5,13 +5,15 @@ using UnityEngine;
 public class IntroScriptedCharacterMovement : MonoBehaviour
 {
     [SerializeField] DemonBase initialCharacter;
+    [SerializeField]RuntimeAnimatorController fallController;    
 
     bool hasHit = false;
     float xPosition;
     private void Start()
     {
         xPosition = initialCharacter.transform.position.x;
-        initialCharacter.GetComponent<Animator>().SetBool("falling", true);        
+        initialCharacter.GetComponent<Animator>().runtimeAnimatorController = fallController;
+        initialCharacter.GetComponent<Animator>().SetBool("falling", true);
     }
 
     private void LateUpdate()
@@ -25,16 +27,13 @@ public class IntroScriptedCharacterMovement : MonoBehaviour
     {
         if (collision.TryGetComponent(out DemonBase character) && character == initialCharacter)
         {
-            
-            
             initialCharacter.GetComponent<Animator>().SetBool("falling", false);
             Invoke(nameof(AllowCharacterMovement), 1f);
         }
     }
 
     private void AllowCharacterMovement()
-    {
+    {        
         hasHit = true;
-        
     }
 }
