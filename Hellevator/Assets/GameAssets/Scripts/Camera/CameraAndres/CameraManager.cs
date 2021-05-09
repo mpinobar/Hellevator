@@ -136,6 +136,10 @@ public class CameraManager : TemporalSingleton<CameraManager>
             {
                 timeZoomInAndOut -= Time.deltaTime;
                 CurrentCamera.m_Lens.OrthographicSize = Mathf.Lerp(CurrentCamera.m_Lens.OrthographicSize, currentOSize, Time.deltaTime * zoomSpeed);
+                if (timeZoomInAndOut < 0)
+                {
+                    CurrentCamera.m_Lens.OrthographicSize = currentOSize;
+                }
             }
 
 
