@@ -1100,7 +1100,9 @@ public abstract class DemonBase : MonoBehaviour
 
     public virtual void StopMovement()
     {
-
+        MyRgb.velocity = Vector2.zero;
+        Move(0);
+        InputManager.Instance.ResetPlayerHorizontalInput();
     }
 
     public virtual void ContinueMovement()

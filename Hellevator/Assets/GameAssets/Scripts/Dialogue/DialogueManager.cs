@@ -119,6 +119,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
                 }
             }
             InputManager.Instance.IsInDialogue = false;
+            InputManager.Instance.IsInInteactionTrigger = false;
             AudioManager.Instance.DialogueSrc.pitch = 1;
         }
     }
