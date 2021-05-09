@@ -27,6 +27,7 @@ public class TriggerDialogo : MonoBehaviour
         {
 			if (m_conversationStartsInstantly && m_onTigger)
 			{
+				print(gameObject.name);
 				AudioManager.Instance.DialogueSrc.pitch = m_pitchModifier;
 				DialogueManager.Instance.DialogueClipsToPlay = m_dialogueClipsToPlay;
 				DialogueManager.Instance.StartTalking(dialogue, m_canvasForDialogue);
