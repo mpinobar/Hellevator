@@ -605,6 +605,7 @@ public class BasicZombie : DemonBase
 
     public override void StopMovement()
     {
+        base.StopMovement();
         MyRgb.velocity = Vector3.zero;
         m_previousGravityScale = MyRgb.gravityScale;
         MyRgb.gravityScale = 0;
