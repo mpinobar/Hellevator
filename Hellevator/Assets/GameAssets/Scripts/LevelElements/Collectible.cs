@@ -38,6 +38,11 @@ public class Collectible : MonoBehaviour
 
     }
 
+    private void OnDisable()
+    {
+        InputManager.Instance.OnInteract -= CloseCollectible;
+    }
+
     private void Update()
     {
         if (canMove)
