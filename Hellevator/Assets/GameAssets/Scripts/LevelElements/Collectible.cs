@@ -138,8 +138,4 @@ public class Collectible : MonoBehaviour
         yield return new WaitForSecondsRealtime(m_timeBeforeCanClosePopUp);
         canClose = true;
     }
-    private void OnDisable()
-    {
-        InputManager.Instance.OnInteract -= CloseCollectible;
-    }
 }
