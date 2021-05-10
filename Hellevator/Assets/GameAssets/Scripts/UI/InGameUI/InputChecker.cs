@@ -7,65 +7,62 @@ public class InputChecker : MonoBehaviour
 {
     [SerializeField] GameObject keyboardText;
     [SerializeField] GameObject gamepadText;
-    private void Awake()
+
+    private void CheckDevice(InputDevice device, InputDeviceChange change)
     {
 
-        SetKeyboardText();
 
-        InputSystem.onDeviceChange +=
-        (device, change) =>
+        switch (change)
         {
-            switch (change)
-            {
-                case InputDeviceChange.Added:
+            case InputDeviceChange.Added:
+                {
+                    Debug.LogError("Devide added" + device);
+                    UIController.Instance.ShowPauseMenu();
+                    Cursor.visible = true;
+                    print(Gamepad.current);
+                    print(Keyboard.current);
+                    if (Gamepad.current != null)
                     {
-                        Debug.LogError("Devide added" + device);
-                        UIController.Instance.ShowPauseMenu();
-                        Cursor.visible = true;
-                        print(Gamepad.current);
-                        print(Keyboard.current);
-                        if (Gamepad.current != null)
-                        {
-                            SetGamepadText();
-                        }
-                        else
-                            SetKeyboardText();
+                        SetGamepadText();
+                    }
+                    else
+                        SetKeyboardText();
 
-                    }
-                    break;
-                case InputDeviceChange.Disconnected:
+                }
+                break;
+            case InputDeviceChange.Disconnected:
+                {
+                    UIController.Instance.ShowPauseMenu();
+                    Cursor.visible = true;
+                    if (Gamepad.current != null)
                     {
-                        UIController.Instance.ShowPauseMenu();
-                        Cursor.visible = true;
-                        if (Gamepad.current != null)
-                        {
-                            SetGamepadText();
-                        }
-                        else
-                            SetKeyboardText();
+                        SetGamepadText();
                     }
-                    break;
-                case InputDeviceChange.Reconnected:
-                    {
+                    else
+                        SetKeyboardText();
+                }
+                break;
+            case InputDeviceChange.Reconnected:
+                {
 
-                        UIController.Instance.ShowPauseMenu();
-                        Cursor.visible = true;
-                        if (Gamepad.current != null)
-                        {
-                            SetGamepadText();
-                        }
-                        else
-                            SetKeyboardText();
+                    UIController.Instance.ShowPauseMenu();
+                    Cursor.visible = true;
+                    if (Gamepad.current != null)
+                    {
+                        SetGamepadText();
                     }
-                    break;
-                case InputDeviceChange.Removed:
-                    // Remove from Input System entirely; by default, Devices stay in the system once discovered.
-                    break;
-                default:
-                    // See InputDeviceChange reference for other event types.
-                    break;
-            }
-        };
+                    else
+                        SetKeyboardText();
+                }
+                break;
+            case InputDeviceChange.Removed:
+                // Remove from Input System entirely; by default, Devices stay in the system once discovered.
+                break;
+            default:
+                // See InputDeviceChange reference for other event types.
+                break;
+        }
+
     }
 
 
@@ -80,4 +77,20 @@ public class InputChecker : MonoBehaviour
         keyboardText.SetActive(true);
         gamepadText.SetActive(false);
     }
+
+    private void OnEnable()
+    {
+        InputSystem.onDeviceChange += CheckDevice;
+        if (Gamepad.current != null)
+        {
+            SetGamepadText();
+        }
+        else
+            SetKeyboardText();
+    }
+    private void OnDisable()
+    {
+        InputSystem.onDeviceChange -= CheckDevice;
+    }
+
 }
