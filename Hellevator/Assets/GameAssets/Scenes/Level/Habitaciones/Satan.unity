@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3119,7 +3119,6 @@ GameObject:
   m_Component:
   - component: {fileID: 128448277}
   - component: {fileID: 128448274}
-  - component: {fileID: 128448275}
   - component: {fileID: 128448276}
   m_Layer: 0
   m_Name: Dialogo (2)
@@ -3149,22 +3148,9 @@ MonoBehaviour:
     sentences:
     - Are you willing to make a deal to leave?
     evento:
-    - {fileID: 128448275}
     - {fileID: 128448276}
   m_dialogueClipsToPlay: []
   m_pitchModifier: 1
---- !u!114 &128448275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 128448273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0164bf1f0f005684db039c7b6fc93019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &128448276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12739,8 +12725,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c2276c074547045ab42780bc22b1e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_canvasForDialogue: {fileID: 0}
-  m_playerStartsConversation: 1
+  m_canvasForDialogue: {fileID: 1614054619}
+  m_playerStartsConversation: 0
   m_canStartConversationIndicator: {fileID: 0}
   m_conversationStartsInstantly: 1
   m_isRepeatable: 0
@@ -12751,7 +12737,6 @@ MonoBehaviour:
     - I can not let you...
     - So good luck, may the best one win
     evento:
-    - {fileID: 546689152}
     - {fileID: 546689153}
   m_dialogueClipsToPlay: []
   m_pitchModifier: 1
@@ -22580,7 +22565,6 @@ GameObject:
   m_Component:
   - component: {fileID: 747544055}
   - component: {fileID: 747544058}
-  - component: {fileID: 747544057}
   - component: {fileID: 747544056}
   m_Layer: 0
   m_Name: Dialogo (4)
@@ -22618,18 +22602,6 @@ MonoBehaviour:
   m_nextDialogue: {fileID: 1105971610}
   m_nextToTalkIsPlayer: 1
   m_otherCanvas: {fileID: 0}
---- !u!114 &747544057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747544054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0164bf1f0f005684db039c7b6fc93019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &747544058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22658,7 +22630,6 @@ MonoBehaviour:
     - And you will be in heaven
     - Did you get all that?
     evento:
-    - {fileID: 747544057}
     - {fileID: 747544056}
   m_dialogueClipsToPlay: []
   m_pitchModifier: 1
@@ -27161,7 +27132,7 @@ PrefabInstance:
     - target: {fileID: 8418663556276120726, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
       propertyPath: m_possessedOnStart
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9032155453379708232, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
@@ -31017,7 +30988,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1105971607}
   - component: {fileID: 1105971610}
-  - component: {fileID: 1105971609}
   - component: {fileID: 1105971608}
   m_Layer: 0
   m_Name: Dialogo (5)
@@ -31055,18 +31025,6 @@ MonoBehaviour:
   m_nextDialogue: {fileID: 546689151}
   m_nextToTalkIsPlayer: 0
   m_otherCanvas: {fileID: 1614054619}
---- !u!114 &1105971609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105971606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0164bf1f0f005684db039c7b6fc93019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1105971610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31090,7 +31048,6 @@ MonoBehaviour:
     - THANK YOU
     - I will be on my way
     evento:
-    - {fileID: 1105971609}
     - {fileID: 1105971608}
   m_dialogueClipsToPlay: []
   m_pitchModifier: 1
@@ -34610,7 +34567,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1217849854}
   - component: {fileID: 1217849857}
-  - component: {fileID: 1217849856}
   - component: {fileID: 1217849855}
   m_Layer: 0
   m_Name: Dialogo (1)
@@ -34648,18 +34604,6 @@ MonoBehaviour:
   m_nextDialogue: {fileID: 128448274}
   m_nextToTalkIsPlayer: 0
   m_otherCanvas: {fileID: 1614054619}
---- !u!114 &1217849856
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1217849853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0164bf1f0f005684db039c7b6fc93019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1217849857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34683,7 +34627,6 @@ MonoBehaviour:
     - I want to leave
     - HOW CAN I LEAVE??
     evento:
-    - {fileID: 1217849856}
     - {fileID: 1217849855}
   m_dialogueClipsToPlay: []
   m_pitchModifier: 1
@@ -42579,7 +42522,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1514073669}
   - component: {fileID: 1514073672}
-  - component: {fileID: 1514073671}
   - component: {fileID: 1514073670}
   m_Layer: 0
   m_Name: Dialogo (3)
@@ -42617,18 +42559,6 @@ MonoBehaviour:
   m_nextDialogue: {fileID: 747544058}
   m_nextToTalkIsPlayer: 0
   m_otherCanvas: {fileID: 1614054619}
---- !u!114 &1514073671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1514073668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0164bf1f0f005684db039c7b6fc93019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1514073672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42652,7 +42582,6 @@ MonoBehaviour:
     - 'I will do anything '
     - Just tell me how to leave I beg you
     evento:
-    - {fileID: 1514073671}
     - {fileID: 1514073670}
   m_dialogueClipsToPlay: []
   m_pitchModifier: 1
@@ -43588,7 +43517,7 @@ PrefabInstance:
     - target: {fileID: 8418663556276120726, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
       propertyPath: m_possessedOnStart
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9032155453379708232, guid: 461757b89eefba449b5410c2c00bf711,
         type: 3}
@@ -46098,7 +46027,7 @@ PrefabInstance:
     - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
         type: 3}
       propertyPath: dialogue.evento.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6894708076482050617, guid: bce92c09af73b934591508835aaa71d7,
         type: 3}
@@ -46124,8 +46053,9 @@ PrefabInstance:
         type: 3}
       propertyPath: dialogue.evento.Array.data[0]
       value: 
-      objectReference: {fileID: 1614054621}
-    m_RemovedComponents: []
+      objectReference: {fileID: 1614054622}
+    m_RemovedComponents:
+    - {fileID: 6894708076482050616, guid: bce92c09af73b934591508835aaa71d7, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bce92c09af73b934591508835aaa71d7, type: 3}
 --- !u!4 &1614054618 stripped
 Transform:
@@ -46145,18 +46075,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1614054617}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1614054621 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6894708076482050616, guid: bce92c09af73b934591508835aaa71d7,
-    type: 3}
-  m_PrefabInstance: {fileID: 1614054617}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1614054620}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0164bf1f0f005684db039c7b6fc93019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1614054622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59918,7 +59836,7 @@ PrefabInstance:
     - target: {fileID: 8609855425914059244, guid: f387eace3f579cf498e3c85287bc37a7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 653.04016
+      value: 653.001
       objectReference: {fileID: 0}
     - target: {fileID: 8609855425914059244, guid: f387eace3f579cf498e3c85287bc37a7,
         type: 3}

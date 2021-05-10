@@ -29,7 +29,7 @@ public class Collectible : MonoBehaviour
     {
         if (PlayerPrefs.HasKey(m_ID) && PlayerPrefs.GetInt(m_ID) > 0)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         else
         {
@@ -63,7 +63,7 @@ public class Collectible : MonoBehaviour
             PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().updateMode = AnimatorUpdateMode.Normal;
             Time.timeScale = 1;
             Destroy(prefab);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             
         }
         else if(canOpenBig)
@@ -137,5 +137,9 @@ public class Collectible : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(m_timeBeforeCanClosePopUp);
         canClose = true;
+    }
+    private void OnDisable()
+    {
+        InputManager.Instance.OnInteract -= CloseCollectible;
     }
 }

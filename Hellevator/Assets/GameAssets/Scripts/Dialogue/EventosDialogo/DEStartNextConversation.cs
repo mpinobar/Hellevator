@@ -10,6 +10,7 @@ public class DEStartNextConversation : DialogEvent
     [SerializeField] private GameObject m_otherCanvas = null;
     public override void ActivateEvent()
     {
+        DialogueManager.Instance.DeactivateTextAndImage();
         InputManager.Instance.IsInInteactionTrigger = true;
         InputManager.Instance.ResetPlayerHorizontalInput();
         InputManager.Instance.IsInDialogue = true;

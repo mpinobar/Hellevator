@@ -10,9 +10,7 @@ public class TriggerDialogo : MonoBehaviour
 
 	[Space]
 	[SerializeField] private GameObject m_canStartConversationIndicator = null; //El gameobject que tenga un indicador de que puedes empezar a hablar con alguien
-	[SerializeField] private bool m_conversationStartsInstantly = false;
-	private bool m_onTigger = false;
-
+	
 	[Space]
 	[SerializeField] private bool m_isRepeatable = false;
 	private bool m_hasBeingPlayed = false;
@@ -25,19 +23,15 @@ public class TriggerDialogo : MonoBehaviour
 	{
         if (!m_hasBeingPlayed)
         {
-			if (m_conversationStartsInstantly && m_onTigger)
+			AudioManager.Instance.DialogueSrc.pitch = m_pitchModifier;
+			DialogueManager.Instance.DialogueClipsToPlay = m_dialogueClipsToPlay;
+			DialogueManager.Instance.StartTalking(dialogue, m_canvasForDialogue);
+			InputManager.Instance.ResetPlayerInput();
+
+			if (!m_isRepeatable)
 			{
-				print(gameObject.name);
-				AudioManager.Instance.DialogueSrc.pitch = m_pitchModifier;
-				DialogueManager.Instance.DialogueClipsToPlay = m_dialogueClipsToPlay;
-				DialogueManager.Instance.StartTalking(dialogue, m_canvasForDialogue);
-				InputManager.Instance.ResetPlayerInput();
+				m_hasBeingPlayed = true;
 
-				if (!m_isRepeatable)
-				{
-					m_hasBeingPlayed = true;
-
-				}
 			}
 		}
 	}
@@ -54,34 +48,12 @@ public class TriggerDialogo : MonoBehaviour
 					m_canvasForDialogue = PossessionManager.Instance.ControlledDemon.GetComponentInChildren<Canvas>().transform.GetChild(0).gameObject;
 				}
 
-				m_onTigger = true;
 				InputManager.Instance.IsInInteactionTrigger = true;
-
-				if (m_conversationStartsInstantly)
-				{
-					Event();
-				}
-				else
-				{
-					m_canStartConversationIndicator.SetActive(true);
-				}
+				Event();
 			}
 		}		
 	}
 
-	private void OnTriggerExit2D(Collider2D collision)
-	{
-		if ((PossessionManager.Instance.ControlledDemon != null) && (collision.transform.root.GetComponent<DemonBase>() == PossessionManager.Instance.ControlledDemon))
-		{
-			InputManager.Instance.IsInInteactionTrigger = false;
-			m_onTigger = false;
-
-			if (!m_conversationStartsInstantly)
-			{
-				m_canStartConversationIndicator.SetActive(false);
-			}
-		}
-	}
 
 	public void DestroyTrigger()
 	{
@@ -92,7 +64,6 @@ public class TriggerDialogo : MonoBehaviour
     {
 		m_canvasForDialogue = canvas;
 
-		m_onTigger = true;
 		InputManager.Instance.IsInInteactionTrigger = true;
 
 		Event();
