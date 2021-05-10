@@ -50,6 +50,7 @@ public class InputManager : PersistentSingleton<InputManager>
     }
     public float MoveInputValue { get => m_moveInputValue; }
     public bool IsInDialogue { get => m_isInDialogue; set => m_isInDialogue = value; }
+       
 
     public override void Awake()
     {
@@ -71,6 +72,42 @@ public class InputManager : PersistentSingleton<InputManager>
         //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
         UpdateDemonReference();
         IntroCanvas.ElevatorCalled += () => IsInMenu = true;
+        InputSystem.onDeviceChange +=
+        (device, change) =>
+        {
+            switch (change)
+            {
+                case InputDeviceChange.Added:
+                    {
+                        Debug.LogError("Devide added" + device);
+                        //UIController.Instance.ShowPauseMenu();
+                        //Cursor.visible = true;
+                        print(Gamepad.current);
+                        print(Keyboard.current);
+                        
+                    }
+                    break;
+                case InputDeviceChange.Disconnected:
+                    {
+                        //UIController.Instance.ShowPauseMenu();
+                        //Cursor.visible = true;
+                    }
+                    break;
+                case InputDeviceChange.Reconnected:
+                    {
+
+                        //UIController.Instance.ShowPauseMenu();
+                        //Cursor.visible = true;
+                    }
+                    break;
+                case InputDeviceChange.Removed:
+                    // Remove from Input System entirely; by default, Devices stay in the system once discovered.
+                    break;
+                default:
+                    // See InputDeviceChange reference for other event types.
+                    break;
+            }
+        };
 
     }
 
@@ -129,6 +166,7 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             FeedInputToMenuNavigation();
         }
+        
         //if (Input.GetKeyDown(KeyCode.J))
         //{
         //    UIController.Instance.UnlockMap();
