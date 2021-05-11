@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -4805,8 +4805,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossKey
       objectReference: {fileID: 0}
+    - target: {fileID: 5083661117111844522, guid: 3d295fa397faa9444a2a8b3c50d414d2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d295fa397faa9444a2a8b3c50d414d2, type: 3}
+--- !u!1 &210814282 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5083661117111844522, guid: 3d295fa397faa9444a2a8b3c50d414d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 210814281}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &215470031
 GameObject:
   m_ObjectHideFlags: 0
@@ -12128,6 +12139,11 @@ PrefabInstance:
       propertyPath: m_deathAudio
       value: 
       objectReference: {fileID: 8300000, guid: e05baa6c8c0e71e4689e8684e0e762ca, type: 3}
+    - target: {fileID: 6015265662278131129, guid: a094cd4470695c94ca59081cf9a6cdd3,
+        type: 3}
+      propertyPath: m_bossKey
+      value: 
+      objectReference: {fileID: 210814282}
     - target: {fileID: 6113569765075153183, guid: a094cd4470695c94ca59081cf9a6cdd3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16505,7 +16521,7 @@ Transform:
   m_LocalScale: {x: 10.141115, y: 10.616721, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 28
+  m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &708790244
 PrefabInstance:
@@ -26154,7 +26170,7 @@ Transform:
   m_LocalScale: {x: 1.6331342, y: 9.526093, z: 4.248926}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1225418554
 MonoBehaviour:
@@ -29442,7 +29458,7 @@ Transform:
   m_LocalScale: {x: 1.6915932, y: 1.6915932, z: 1.6915932}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 36
+  m_RootOrder: 37
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1390944096
 GameObject:

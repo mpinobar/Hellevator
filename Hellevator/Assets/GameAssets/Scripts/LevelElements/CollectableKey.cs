@@ -67,6 +67,11 @@ public class CollectableKey : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        InputManager.Instance.OnInteract -= CloseCollectible;
+    }
+
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponentInParent<DemonBase>())
