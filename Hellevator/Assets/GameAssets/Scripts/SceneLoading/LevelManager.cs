@@ -251,18 +251,23 @@ public class LevelManager : PersistentSingleton<LevelManager>
         else
         {
             
-             if (sceneName[0] == 'R')
+            if (sceneName[0] == 'R')
             {
                 AudioManager.Instance.SetBackgroundMusicToRestaurant();
             }
             else if(sceneName[0] == 'K')
             {
                 AudioManager.Instance.SetBackgroundMusicToKitchen();
-            } else if (sceneName[0] == 'H' && !sceneName.Contains("Satan"))
+            } 
+            else if (sceneName[0] == 'H' && !sceneName.Contains("Satan"))
             {
                 AudioManager.Instance.SetBackgroundMusicToRooms();
             }
-            else
+            else if(sceneName[0] == 'J' )
+            {
+                AudioManager.Instance.SetBackgroundMusicToGardens();
+            }
+            else if (sceneName[0] == 'A')
             {
                 AudioManager.Instance.SetBackgroundMusicToStorage();
             }

@@ -12,7 +12,6 @@ public class CheckPoint : MonoBehaviour
     [SerializeField] private DemonBase m_demonToSpawn;
     private float m_openingValue;
     SpriteRenderer m_spr;
-    [SerializeField] bool m_savesGameToPlayerPrefs = false;
     [SerializeField] int priority;
     public string SceneToLoad { get => m_sceneToLoad; set => m_sceneToLoad = value; }
     public int Priority { get => priority; set => priority = value; }
@@ -87,9 +86,9 @@ public class CheckPoint : MonoBehaviour
         spawnedDemon.SetControlledByPlayer();
         spawnedDemon.AssignLastMask();
         ActivateCheckPoint();
-        m_openingValue = 1;
-        m_spr?.material.SetFloat("_Active", 1);
-        m_spr?.material.SetFloat("_Opening", 1);
+        //m_openingValue = 1;
+        //m_spr?.material.SetFloat("_Active", 1);
+        //m_spr?.material.SetFloat("_Opening", 1);
         //CameraManager.Instance.ChangeCamTarget();
         InputManager.Instance.UpdateDemonReference();
         if (TryGetComponent(out InstantBlend blend))
