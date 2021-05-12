@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class IntroScriptedCharacterMovement : MonoBehaviour
 {
     [SerializeField] DemonBase initialCharacter;
-    [SerializeField]RuntimeAnimatorController fallController;    
+    [SerializeField]RuntimeAnimatorController fallController;
+    [SerializeField] GameObject [] fondos;
+    public UnityEvent triggerEvent;
 
     bool hasHit = false;
     float xPosition;
@@ -19,7 +22,13 @@ public class IntroScriptedCharacterMovement : MonoBehaviour
     private void LateUpdate()
     {
         if (!hasHit)
+        {
             initialCharacter.transform.position = new Vector3(xPosition, initialCharacter.transform.position.y, 0);
+            for (int i = 0; i < fondos.Length; i++)
+            {
+                fondos[i].transform.position = new Vector3(fondos[i].transform.position.x, -298.1318f, 10);
+            }
+        }
 
     }
 
@@ -29,11 +38,13 @@ public class IntroScriptedCharacterMovement : MonoBehaviour
         {
             initialCharacter.GetComponent<Animator>().SetBool("falling", false);
             Invoke(nameof(AllowCharacterMovement), 1f);
+            
         }
     }
 
     private void AllowCharacterMovement()
-    {        
+    {
+        triggerEvent?.Invoke();
         hasHit = true;
     }
 }
