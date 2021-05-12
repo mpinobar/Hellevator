@@ -118,6 +118,7 @@ public class PressurePlateSoundChanger : EditorWindow
         {
             if (parentObjs[i].GetComponent<CameraManager>())
             {
+                parentObjs[i].GetComponentInChildren<CameraEffectScaler>().scaling = 0.055f;
                 continue;
             }
             else
