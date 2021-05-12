@@ -51,11 +51,9 @@ public class CollectableKey : MonoBehaviour
 
 
     public void CloseCollectible()
-    {
-        print("a");
+    {        
         if (canClose)
-        {
-            print("b");
+        {            
             CameraManager.Instance.SetCurrentLiveCamera(m_mainCamera);
             UIController.Instance.HideCollectibleInGame();
             InputManager.Instance.IsInInteactionTrigger = false;
