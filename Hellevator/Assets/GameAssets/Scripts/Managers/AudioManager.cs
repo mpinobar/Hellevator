@@ -140,7 +140,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
 
     public void StartGameplayMusic()
     {
-        if (m_backgroundMusicClips != null && m_backgroundMusicClips.Count > 0)
+        if (m_backgroundMusicClips != null && m_backgroundMusicClips.Count > 0 && m_BGM.clip != m_backgroundMusicClips[m_musicClipIndex])
         {
             m_BGM.Stop();
             m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];

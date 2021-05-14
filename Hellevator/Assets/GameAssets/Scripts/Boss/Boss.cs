@@ -86,7 +86,7 @@ public class Boss : MonoBehaviour
     public void Begin()
     {
         m_started = true;
-        SetNotSeeingPlayer();
+        //SetNotSeeingPlayer();
         CloseEntrance();
 		ChangeColorStartFight();
         PossessionManager.Instance.Boss = this;
@@ -105,6 +105,7 @@ public class Boss : MonoBehaviour
                     AttackPlayer();
                 }
                 float maxX = Mathf.Max(PossessionManager.Instance.ControlledDemon.transform.position.x - m_offsetMovement,m_maxCoordinate);
+                //Debug.LogError(maxX);
                 m_desiredPos = new Vector3(maxX, transform.position.y, 0);
                 transform.position = Vector3.Lerp(transform.position, m_desiredPos, Time.deltaTime * m_movementSpeed);
             }
@@ -112,10 +113,10 @@ public class Boss : MonoBehaviour
             {
                 m_playerSeenAttackTimer = 0f;
             }
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                PossessionManager.Instance.ControlledDemon.transform.position = new Vector3(-340, -80, 0);
-            }
+            //if (Input.GetKeyDown(KeyCode.O))
+            //{
+            //    PossessionManager.Instance.ControlledDemon.transform.position = new Vector3(-340, -80, 0);
+            //}
         }
     }
 

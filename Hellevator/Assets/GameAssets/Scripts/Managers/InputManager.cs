@@ -66,7 +66,7 @@ public class InputManager : PersistentSingleton<InputManager>
         m_controls.PlayerControls.VerticalMovement.canceled += ctx => m_verticalInputValue = ctx.ReadValue<float>();
         //m_controls.PlayerControls.InputInteract.performed += ctx => Interact();
         m_controls.PlayerControls.InputShowRange.performed += ctx => UseSkill();
-        m_controls.PlayerControls.InputPosMulti.performed += ctx => ToggleMultiplePosseion();
+        m_controls.PlayerControls.InputPosMulti.performed += ctx => MenuGoBack();
         m_controls.PlayerControls.InputMenu.performed += ctx => InputMenu();
         m_controls.PlayerControls.Restart.performed += yabadabadoo => InputRestart();
         //m_controls.PlayerControls.InputSuicide.performed += ctx => PossesNearestDemon();
@@ -326,9 +326,12 @@ public class InputManager : PersistentSingleton<InputManager>
     }
 
 
-    void ToggleMultiplePosseion()
+    void MenuGoBack()
     {
-        //PossessionManager.Instance.ToggleMultiplePossesion();
+        if (IsInMenu)
+        {
+            UIController.Instance.GoBack();
+        }
     }
 
     void Jump()
