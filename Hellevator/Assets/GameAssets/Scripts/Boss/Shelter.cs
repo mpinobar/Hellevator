@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -9,7 +10,7 @@ public class Shelter : MonoBehaviour
     [SerializeField] Boss boss;
     [SerializeField] bool m_startsBoss;
     [SerializeField] List<Transform> m_attackPlaces;
-
+    public UnityEvent triggerEvent;
     bool m_init;
 
     [SerializeField] AudioSource m_audioPruebaBoss = null;
@@ -53,7 +54,10 @@ public class Shelter : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.GetComponentInParent<DemonBase>() == PossessionManager.Instance.ControlledDemon)
+        {
             boss.SetSeeingPlayer();
+            triggerEvent?.Invoke();
+        }
     }
 
 }

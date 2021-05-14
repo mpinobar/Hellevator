@@ -34,7 +34,7 @@ public class Collectible : MonoBehaviour
         }
         else
         {
-            if (prefab)
+            if (m_miniPrefab)
                 InputManager.Instance.OnInteract += CloseCollectible;
         }
 
@@ -42,7 +42,7 @@ public class Collectible : MonoBehaviour
 
     private void OnDisable()
     {
-        if (prefab)
+        if (m_miniPrefab)
             InputManager.Instance.OnInteract -= CloseCollectible;
     }
 
@@ -89,7 +89,7 @@ public class Collectible : MonoBehaviour
     }
     public void Collect()
     {
-        if (prefab)
+        if (m_miniPrefab)
         {
             Time.timeScale = 0;
             InputManager.Instance.IsInInteactionTrigger = true;

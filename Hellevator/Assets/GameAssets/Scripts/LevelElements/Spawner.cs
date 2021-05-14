@@ -28,8 +28,7 @@ public class Spawner : MonoBehaviour
             m_timer -= Time.deltaTime;
             if (m_timer <= 0)
             {
-                m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity, transform));
-                m_spawnedDemons[m_spawnedDemons.Count - 1].transform.parent = null;
+                SpawnCharacter();
                 if (maxRange != 0)
                 {
                     m_spawnedDemons[m_spawnedDemons.Count - 1].MaximumPossessionRange = maxRange;
@@ -38,6 +37,12 @@ public class Spawner : MonoBehaviour
                 m_timer = m_spawnTimer;
             }
         }
+    }
+
+    private void SpawnCharacter()
+    {
+        m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity, transform));
+        m_spawnedDemons[m_spawnedDemons.Count - 1].transform.parent = null;
     }
 
     /// <summary>
