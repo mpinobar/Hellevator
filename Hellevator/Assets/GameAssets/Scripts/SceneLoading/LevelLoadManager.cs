@@ -51,6 +51,7 @@ public class LevelLoadManager : MonoBehaviour
                 ((BasicZombie)PossessionManager.Instance.ControlledDemon).SetOnLadder(false);
                 ((BasicZombie)PossessionManager.Instance.ControlledDemon).MyRgb.velocity = Vector2.zero;
                 InputManager.Instance.ResetPlayerInput();
+                return;
             }
         }
     }
