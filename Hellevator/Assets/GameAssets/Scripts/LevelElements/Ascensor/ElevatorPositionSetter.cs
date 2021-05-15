@@ -12,17 +12,17 @@ public class ElevatorPositionSetter : MonoBehaviour
     TriggerSceneChange m_sceneChangeTrigger;
 
     // Start is called before the first frame update
-    public void ElevatorPositionRefresh(TriggerSceneChange trigger)
-    {
-        if (m_sceneChangeTrigger == trigger)
-        {
-            //Debug.LogError(trigger.name);
-            if (m_setsElevatorUp)
-                m_elevator.SetPositionUp();
-            else
-                m_elevator.SetPositionDown();
-        }
-    }
+    //public void ElevatorPositionRefresh(TriggerSceneChange trigger)
+    //{
+    //    if (m_sceneChangeTrigger == trigger)
+    //    {
+    //        //Debug.LogError(trigger.name);
+    //        if (m_setsElevatorUp)
+    //            m_elevator.SetPositionUp();
+    //        else
+    //            m_elevator.SetPositionDown();
+    //    }
+    //}
 
     private void Awake()
     {

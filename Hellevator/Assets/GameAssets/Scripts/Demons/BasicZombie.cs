@@ -165,7 +165,6 @@ public class BasicZombie : DemonBase
                     }
                 }
 
-
                 //ascending part of the jump
                 if (MyRgb.velocity.y > 1)
                 {
@@ -191,6 +190,7 @@ public class BasicZombie : DemonBase
                 }
                 else if (MyRgb.velocity.y > -1)
                 {
+                    print("FUCK OFFFFF");
                     if (m_hasDoubleJumped)
                     {
                         MyRgb.gravityScale = m_thirdGravityDoubleJump;
