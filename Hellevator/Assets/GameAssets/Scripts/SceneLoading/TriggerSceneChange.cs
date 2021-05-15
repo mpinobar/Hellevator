@@ -10,14 +10,18 @@ public class TriggerSceneChange : MonoBehaviour
 
     [SerializeField] AudioClip m_changeSceneSFX = null;
     [SerializeField] float m_delayToActivateCollider = 0f;
-
+    [SerializeField] bool m_stopsMusic = false;
     public string LinkedScene { get => m_linkedScene; set => m_linkedScene = value; }
     public Transform PositionToSetAfterEntering
     {
         get
         {
-            TryGetComponent(out ElevatorPositionSetter setter);
-            setter?.ElevatorPositionRefresh(this);
+            if (TryGetComponent(out ElevatorPositionSetter setter))
+            {
+                setter.ElevatorPositionRefresh(this);
+            }
+            if (m_stopsMusic)
+                AudioManager.Instance.StopMusic();
             return m_positionToSetAfterEntering;
         }
         set
