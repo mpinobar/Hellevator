@@ -16,8 +16,8 @@ public class TriggerSceneChange : MonoBehaviour
     {
         get
         {
-            TryGetComponent(out ElevatorPositionSetter setter);
-            setter?.ElevatorPositionRefresh(this);
+            //TryGetComponent(out ElevatorPositionSetter setter);
+            //setter?.ElevatorPositionRefresh(this);
             return m_positionToSetAfterEntering;
         }
         set
