@@ -9,6 +9,8 @@ public class DEStartSatanFight : DialogEvent
 
     public override void ActivateEvent()
     {
+        InputManager.Instance.IsInDialogue = false;
+        InputManager.Instance.IsInInteactionTrigger = false;
         m_satan.BeginFight();
         m_botones.SetActive(false);
     }
