@@ -95,7 +95,6 @@ public class HorizontalPeriodicPlatform : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(cmpDemon.Torso.position, Vector2.down, 2f, 1<<0);
             if (hit.transform != null && (hit.transform == transform || hit.transform == transform.GetChild(0)))
             {
-                print(this.gameObject.name);
                 m_enemiesOnPreassurePlate.Add(cmpDemon);
                 cmpDemon.transform.parent = transform;
             }

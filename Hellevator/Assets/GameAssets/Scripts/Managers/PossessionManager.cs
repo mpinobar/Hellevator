@@ -550,6 +550,7 @@ public class PossessionManager : PersistentSingleton<PossessionManager>
     /// <param name="newMainCharacter">Nuevo personaje que queremos que sea el principal</param>
     public void ChangeMainCharacter(DemonBase newMainCharacter)
     {
+        print("------------"+newMainCharacter.name);
         if (ControllingMultipleDemons)
         {
             if (m_extraDemonsControlled.Contains(newMainCharacter))

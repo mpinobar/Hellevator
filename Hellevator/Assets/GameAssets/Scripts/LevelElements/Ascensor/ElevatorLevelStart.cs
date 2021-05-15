@@ -10,7 +10,7 @@ public class ElevatorLevelStart : MonoBehaviour
 	[SerializeField] private float m_delayBeforeSceneChange;
 	[SerializeField] private AudioClip m_changeSceneSFX;
 
-	[SerializeField] private string m_linkedScene;
+	[SerializeField] private GameObject m_trigger;
 
 	private bool moving = false;
 
@@ -61,9 +61,7 @@ public class ElevatorLevelStart : MonoBehaviour
 	IEnumerator CloseDoorAndChangeScene()
     {
 		yield return new WaitForSecondsRealtime(m_delayBeforeSceneChange);
-		AudioManager.Instance.PlayAudioSFX(m_changeSceneSFX, false, 2f);
-		PossessionManager.Instance.ChangeMainCharacter(m_demon);
-		LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
+		m_trigger.SetActive(true);
 	}
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -74,9 +72,6 @@ public class ElevatorLevelStart : MonoBehaviour
             {
 				PossessionManager.Instance.ControlledDemon.CanMove = false;
 				this.GetComponent<Animator>().SetTrigger("CloseDoor");
-				GetComponent<Collider2D>().enabled = false;
-				InputManager.Instance.IsInInteactionTrigger = false;
-				InputManager.Instance.IsInDialogue = false;
 				StartCoroutine(CloseDoorAndChangeScene());
 			}
         }
