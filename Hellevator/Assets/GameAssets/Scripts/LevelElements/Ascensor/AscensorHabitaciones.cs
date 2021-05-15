@@ -127,8 +127,10 @@ public class AscensorHabitaciones : MonoBehaviour
 
     private IEnumerator DelayOpenDoor(Transform doorToOpen)
     {
+        PossessionManager.Instance.ControlledDemon.CanMove = false;
         yield return new WaitForSeconds(3);
         doorToOpen.gameObject.SetActive(false);
+        PossessionManager.Instance.ControlledDemon.CanMove = true;
 
     }
 
@@ -142,6 +144,7 @@ public class AscensorHabitaciones : MonoBehaviour
     IEnumerator ShakeAndFade()
     {
         //Debug.LogError("Animating elevator movement ");
+        PossessionManager.Instance.ControlledDemon.CanMove = false;
         m_elevatorFade.gameObject.SetActive(true);
         CameraManager.Instance.CameraShakeLight3S();
         yield return new WaitForSeconds(3);

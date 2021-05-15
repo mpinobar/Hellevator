@@ -58,6 +58,8 @@ public class DeathWithDelay : MonoBehaviour
     [SerializeField] float delayToPlaySound = 1.6f;
     private IEnumerator KillWithDelay(DemonBase character, float delay)
     {
+        if (character.TryGetComponent(out Petrification platform))
+            Destroy(platform);
         //Animate here
         if (m_animator)
         {
@@ -82,7 +84,7 @@ public class DeathWithDelay : MonoBehaviour
 
             yield return null;
         }
-
+        
         character.Die(true);
         character.Torso.parent = null;
         character.transform.position = character.Torso.position;
