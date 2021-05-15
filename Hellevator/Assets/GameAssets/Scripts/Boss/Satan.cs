@@ -160,7 +160,6 @@ public class Satan : MonoBehaviour
             m_phase = Phase.Interphase;
             AchievementsManager.UnlockKilledSatan();
             AudioManager.Instance.PlayAudioSFX(m_deathClip, false);
-            StartCoroutine(DelayLoadMenu());
         }
         else
         {

@@ -13,6 +13,8 @@ public class Spawner : MonoBehaviour
     [SerializeField] bool m_spawnWhenInDanger;
     private float m_timer;
     [SerializeField] bool debug;
+
+    [SerializeField]private bool m_isActive = true;
     public float MaxRange { get => maxRange; set => maxRange = value; }
 
     private void Start()
@@ -23,20 +25,23 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ActiveDemons() < m_maxSpawnedDemons)
+        if (m_isActive)
         {
-            m_timer -= Time.deltaTime;
-            if (m_timer <= 0)
+            if (ActiveDemons() < m_maxSpawnedDemons)
             {
-                SpawnCharacter();
-                if (maxRange != 0)
+                m_timer -= Time.deltaTime;
+                if (m_timer <= 0)
                 {
-                    m_spawnedDemons[m_spawnedDemons.Count - 1].MaximumPossessionRange = maxRange;
-                }
+                    SpawnCharacter();
+                    if (maxRange != 0)
+                    {
+                        m_spawnedDemons[m_spawnedDemons.Count - 1].MaximumPossessionRange = maxRange;
+                    }
 
-                m_timer = m_spawnTimer;
+                    m_timer = m_spawnTimer;
+                }
             }
-        }
+        }        
     }
 
     private void SpawnCharacter()
@@ -94,5 +99,17 @@ public class Spawner : MonoBehaviour
             }
         }
         return activeDemonsFromThisSpawner;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        DemonBase m_demon = collision.GetComponent<DemonBase>();
+        if (m_demon != null)
+        {
+            if (m_demon.IsControlledByPlayer)
+            {
+                m_isActive = true;
+            }
+        }
     }
 }
