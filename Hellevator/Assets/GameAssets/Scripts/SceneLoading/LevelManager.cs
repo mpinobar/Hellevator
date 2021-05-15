@@ -276,7 +276,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
                 AudioManager.Instance.SetBackgroundMusicToStorage();
             }
         }
-        AudioManager.Instance.StartGameplayMusic();
+        //AudioManager.Instance.StartGameplayMusic();
         m_isRestarting = false;
         Cursor.visible = false;
 

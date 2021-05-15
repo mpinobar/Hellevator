@@ -127,8 +127,10 @@ public class AscensorHabitaciones : MonoBehaviour
 
     private IEnumerator DelayOpenDoor(Transform doorToOpen)
     {
+        PossessionManager.Instance.ControlledDemon.CanMove = false;
         yield return new WaitForSeconds(3);
         doorToOpen.gameObject.SetActive(false);
+        PossessionManager.Instance.ControlledDemon.CanMove = true;
 
     }
 
