@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraEffectScaler : MonoBehaviour
 {
     Camera camMain;
-    [SerializeField] float scaling = 0.055f;
+    [SerializeField] public float scaling = 0.155f;
     private void OnEnable()
     {
         if (!camMain)

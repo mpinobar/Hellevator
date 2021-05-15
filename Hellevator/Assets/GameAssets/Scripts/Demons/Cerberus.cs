@@ -203,7 +203,7 @@ public class Cerberus : MonoBehaviour
         characterToEat.CanMove = false;
         characterToEat.IsPossessionBlocked = true;
         characterToEat.Torso.GetComponent<Rigidbody2D>().isKinematic = true;
-        Debug.LogError(characterToEat.Torso.name);
+        //Debug.LogError(characterToEat.Torso.name);
         characterToEat.MyRgb.isKinematic = true;
         m_mandibulas[0].sortingLayerName = "Foreground";
         m_mandibulas[1].sortingLayerName = "Foreground";

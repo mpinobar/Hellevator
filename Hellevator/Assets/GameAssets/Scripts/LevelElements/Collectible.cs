@@ -29,13 +29,21 @@ public class Collectible : MonoBehaviour
     {
         if (PlayerPrefs.HasKey(m_ID) && PlayerPrefs.GetInt(m_ID) > 0)
         {
-            Destroy(gameObject);
+
+            gameObject.SetActive(false);
         }
         else
         {
-            InputManager.Instance.OnInteract += CloseCollectible;
+            if (m_miniPrefab)
+                InputManager.Instance.OnInteract += CloseCollectible;
         }
 
+    }
+
+    private void OnDisable()
+    {
+        if (m_miniPrefab)
+            InputManager.Instance.OnInteract -= CloseCollectible;
     }
 
     private void Update()
@@ -44,7 +52,7 @@ public class Collectible : MonoBehaviour
         {
             PossessionManager.Instance.ControlledDemon.GetComponent<Rigidbody2D>().velocity = new Vector3(0, PossessionManager.Instance.ControlledDemon.GetComponent<Rigidbody2D>().velocity.y, 0);
             InputManager.Instance.ResetPlayerInput();
-        }   
+        }
     }
 
     public void CloseCollectible()
@@ -57,11 +65,11 @@ public class Collectible : MonoBehaviour
             canMove = false;
             PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().updateMode = AnimatorUpdateMode.Normal;
             Time.timeScale = 1;
-            Destroy(prefab);
-            Destroy(gameObject);
-            
+            Destroy(prefab);            
+            gameObject.SetActive(false);
+
         }
-        else if(canOpenBig)
+        else if (canOpenBig)
         {
             UIController.Instance.ShowCollectibleInGame(m_bigSprite);
             this.GetComponent<SpriteRenderer>().enabled = false;
@@ -81,36 +89,50 @@ public class Collectible : MonoBehaviour
     }
     public void Collect()
     {
-        Time.timeScale = 0;
-        InputManager.Instance.IsInInteactionTrigger = true;
-        InputManager.Instance.ResetPlayerInput();
+        if (m_miniPrefab)
+        {
+            Time.timeScale = 0;
+            InputManager.Instance.IsInInteactionTrigger = true;
+            InputManager.Instance.ResetPlayerInput();
 
-        canClose = false;
-        canOpenBig = false;
-        canMove = true;
+            canClose = false;
+            canOpenBig = false;
+            canMove = true;
 
-        CameraManager.Instance.SetCurrentLiveCamera(m_collectibleCamera);
+            CameraManager.Instance.SetCurrentLiveCamera(m_collectibleCamera);
 
-        this.GetComponent<SpriteRenderer>().enabled = false;
-        this.GetComponent<Collider2D>().enabled = false;
+            this.GetComponent<SpriteRenderer>().enabled = false;
+            this.GetComponent<Collider2D>().enabled = false;
 
-        if (clip)
-            AudioManager.Instance.PlayAudioSFX(clip, false);
+            if (clip)
+                AudioManager.Instance.PlayAudioSFX(clip, false);
 
-        AchievementsManager.AddCollectible();
-        PlayerPrefs.SetInt(m_ID, 1);
+            AchievementsManager.AddCollectible();
+            PlayerPrefs.SetInt(m_ID, 1);
 
-        StartCoroutine(waitBeforePopUp());
-        StartCoroutine(spawnMiniAfterDelay());
+            StartCoroutine(waitBeforePopUp());
+            StartCoroutine(spawnMiniAfterDelay());
+        }
+        else
+        {
+            this.GetComponent<SpriteRenderer>().enabled = false;
+            this.GetComponent<Collider2D>().enabled = false;
+            if (clip)
+                AudioManager.Instance.PlayAudioSFX(clip, false);
+
+            AchievementsManager.AddCollectible();
+            PlayerPrefs.SetInt(m_ID, 1);
+        }
+
     }
 
     IEnumerator spawnMiniAfterDelay()
     {
         yield return new WaitForSecondsRealtime(m_timeBeforeMiniPopUp);
-        
+
         PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().updateMode = AnimatorUpdateMode.UnscaledTime;
         prefab = Instantiate(m_miniPrefab, new Vector3(0, 1, 0), Quaternion.identity, PossessionManager.Instance.ControlledDemon.transform);
-        if(PossessionManager.Instance.ControlledDemon.transform.localScale.x < 0)
+        if (PossessionManager.Instance.ControlledDemon.transform.localScale.x < 0)
         {
             prefab.GetComponent<Animator>().SetTrigger("Negativa");
         }
@@ -119,7 +141,7 @@ public class Collectible : MonoBehaviour
             prefab.GetComponent<Animator>().SetTrigger("Positiva");
         }
         yield return new WaitForSecondsRealtime(0.5f);
-        PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().SetTrigger("Jump"); 
+        PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().SetTrigger("Jump");
     }
 
     IEnumerator waitBeforePopUp()

@@ -4,24 +4,18 @@ using UnityEngine;
 
 public class ChangeConversationAfterEvent : MonoBehaviour
 {
-    [SerializeField] private TriggerDialogo m_dialogoBeforeKey = null;
-    [SerializeField] private TriggerDialogo m_dialogoAfterKey = null;
+    [SerializeField] private GameObject m_dialogoBeforeKey = null;
+    [SerializeField] private GameObject m_dialogoAfterKey = null;
     [SerializeField] Key key;
-    [SerializeField] private GameObject m_canvas = null;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(PlayerPrefs.GetInt(key.ToString()) == 1)
         {
-            m_dialogoAfterKey.StartDialogue(m_canvas);
-        }
-        else
-        {
-            m_dialogoBeforeKey.StartDialogue(m_canvas);
+            m_dialogoBeforeKey.SetActive(false);
+            m_dialogoAfterKey.SetActive(true);
         }
 
-        InputManager.Instance.IsInInteactionTrigger = true;
-        InputManager.Instance.ResetPlayerHorizontalInput();
-        InputManager.Instance.IsInDialogue = true;
+        Destroy(this.gameObject);
     }
 }

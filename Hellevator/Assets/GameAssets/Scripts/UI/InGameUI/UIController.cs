@@ -117,6 +117,14 @@ public class UIController : PersistentSingleton<UIController>
         InputManager.Instance.IsInMenu = false;
     }
 
+    public void GoBack()
+    {
+        if (m_activePanel != m_pausePanel)
+            ShowPauseMenu();
+        else
+            Resume();
+    }
+
     public void ShowControls()
     {
         ShowPanel(m_controlsPanel);

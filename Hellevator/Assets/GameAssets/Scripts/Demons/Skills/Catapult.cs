@@ -7,6 +7,7 @@ public class Catapult : MonoBehaviour
 {
     [SerializeField] float m_slowDownTime = 0.5f;
     [SerializeField] float m_throwVelocity = 5f;
+    [SerializeField] float m_aimSpeed = 2.5f;
     [SerializeField] Transform m_headTransform = null;
     [SerializeField] float m_timeToThrowHead = 3f;
     DemonBase m_demon;
@@ -78,7 +79,7 @@ public class Catapult : MonoBehaviour
                 }
                 else if (InputManager.Instance.VerticalInputValue != 0 || InputManager.Instance.MoveInputValue != 0)
                 {
-                    directionToThrowHead += (InputManager.Instance.VerticalInputValue * Vector2.up + InputManager.Instance.MoveInputValue * Vector2.right) * Time.unscaledDeltaTime;
+                    directionToThrowHead += (InputManager.Instance.VerticalInputValue * Vector2.up + InputManager.Instance.MoveInputValue * Vector2.right) * Time.unscaledDeltaTime * m_aimSpeed;
                     directionToThrowHead.Normalize();
                     DrawTrajectory(directionToThrowHead);
                 }

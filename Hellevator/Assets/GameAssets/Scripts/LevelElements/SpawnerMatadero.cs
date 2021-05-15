@@ -57,7 +57,7 @@ public class SpawnerMatadero : MonoBehaviour
         MoveAttachedCharacters();
 
         MoveAttachedBodyParts();
-        
+
         if (playingAudio)
         {
             Vector2 startPos = cam.WorldToViewportPoint(m_startingPosition.position);
@@ -67,7 +67,7 @@ public class SpawnerMatadero : MonoBehaviour
             {
                 AudioManager.Instance.StopSFX(m_spawnerClip);
                 playingAudio = false;
-            }            
+            }
         }
         else
         {
@@ -80,7 +80,10 @@ public class SpawnerMatadero : MonoBehaviour
             }
         }
     }
-
+    private void OnDisable()
+    {
+        AudioManager.Instance.StopSFX(m_spawnerClip);
+    }
     private void MoveAttachedCharacters()
     {
         if (m_spawnedCharacters.Count > 0)
@@ -102,7 +105,12 @@ public class SpawnerMatadero : MonoBehaviour
                 else
                 {
                     m_spawnedCharacters[i].Torso.position += (Vector3)m_movingDirection * m_movementSpeed * Time.deltaTime;
-                    m_hooks[i].transform.position = m_spawnedCharacters[i].Torso.position + Vector3.up * m_hookOffset;
+                    if (m_hooks.Count >=i &&  m_hooks[i] != null)
+                        m_hooks[i].transform.position = m_spawnedCharacters[i].Torso.position + Vector3.up * m_hookOffset;
+                    else
+                    {
+                        m_hooks.RemoveAt(i);
+                    }
                 }
             }
 
