@@ -14,10 +14,13 @@ public class DEAfterFinalConversation : DialogEvent
     {
         m_fall.SetParent(m_auxTrans, true);
         m_camera.Priority = 2;
-        m_trapDoor.Explode(PossessionManager.Instance.ControlledDemon.transform.position, 8);
+        m_trapDoor.Explode(PossessionManager.Instance.ControlledDemon.transform.position, 80);
 
-        PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().SetTrigger("falling");
+        PossessionManager.Instance.ControlledDemon.GetComponent<Animator>().SetBool("falling", true);
         PossessionManager.Instance.ControlledDemon.CanMove = true;
+        InputManager.Instance.IsInInteactionTrigger = true;
+        DialogueManager.Instance.DeactivateTextAndImage();
+
         for (int i = 0; i < m_trapDoor.transform.childCount; i++)
         {
 
