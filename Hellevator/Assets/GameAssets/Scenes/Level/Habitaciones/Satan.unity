@@ -3602,6 +3602,7 @@ MonoBehaviour:
   m_positionToSetAfterEntering: {fileID: 1946061257}
   m_changeSceneSFX: {fileID: 8300000, guid: 40e947a3f8faf6e4dafbb8e98b43c38a, type: 3}
   m_delayToActivateCollider: 0
+  m_stopsMusic: 0
 --- !u!61 &159089553
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5178,6 +5179,7 @@ MonoBehaviour:
   m_positionToSetAfterEntering: {fileID: 958165508}
   m_changeSceneSFX: {fileID: 8300000, guid: 40e947a3f8faf6e4dafbb8e98b43c38a, type: 3}
   m_delayToActivateCollider: 0
+  m_stopsMusic: 0
 --- !u!61 &209981304
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -39326,7 +39328,7 @@ MonoBehaviour:
   m_secondPhasePosition: {x: 504.5, y: -286.1}
   m_thirdPhasePosition: {x: 373.5, y: -98}
   m_disappearSpeed: 50
-  m_maxLives: 1
+  m_maxLives: 3
   intro: {fileID: 8300000, guid: df2464d376f412f4ca2d80d82b052613, type: 3}
   loop: {fileID: 8300000, guid: fff9b56a233f4d543a6b59c39f15a89a, type: 3}
   m_colorWhenHurt: {r: 0.74509805, g: 0, b: 0, a: 0.6039216}
@@ -54093,6 +54095,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 784507923029626307, guid: 1e3ed07e005606949847e872366ffc31,
+        type: 3}
+      propertyPath: m_Bounds.m_Center.x
+      value: -0.00031666458
+      objectReference: {fileID: 0}
+    - target: {fileID: 2446920592426392768, guid: 1e3ed07e005606949847e872366ffc31,
+        type: 3}
+      propertyPath: m_Bounds.m_Center.x
+      value: 0.00012613833
+      objectReference: {fileID: 0}
+    - target: {fileID: 3461518412413707661, guid: 1e3ed07e005606949847e872366ffc31,
+        type: 3}
+      propertyPath: m_Bounds.m_Center.x
+      value: -0.00049331784
+      objectReference: {fileID: 0}
+    - target: {fileID: 3582922943633538854, guid: 1e3ed07e005606949847e872366ffc31,
+        type: 3}
+      propertyPath: m_Bounds.m_Center.x
+      value: 0.0003566593
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982617207647418243, guid: 1e3ed07e005606949847e872366ffc31,
+        type: 3}
+      propertyPath: m_Bounds.m_Center.x
+      value: -0.00011283159
+      objectReference: {fileID: 0}
     - target: {fileID: 4771738867878349160, guid: 1e3ed07e005606949847e872366ffc31,
         type: 3}
       propertyPath: m_Name
@@ -54101,7 +54128,7 @@ PrefabInstance:
     - target: {fileID: 5455318573218209974, guid: 1e3ed07e005606949847e872366ffc31,
         type: 3}
       propertyPath: m_possessedOnStart
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6638716773621166533, guid: 1e3ed07e005606949847e872366ffc31,
         type: 3}
@@ -54157,6 +54184,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235858610139222308, guid: 1e3ed07e005606949847e872366ffc31,
+        type: 3}
+      propertyPath: m_Bounds.m_Center.y
+      value: 0.0000076293945
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235858610139222308, guid: 1e3ed07e005606949847e872366ffc31,
+        type: 3}
+      propertyPath: m_Bounds.m_Extent.y
+      value: 0.55667436
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e3ed07e005606949847e872366ffc31, type: 3}
@@ -59678,6 +59715,7 @@ MonoBehaviour:
   m_positionToSetAfterEntering: {fileID: 5836539038763434138}
   m_changeSceneSFX: {fileID: 8300000, guid: f2b72dd50c307c04faf841845509a6e1, type: 3}
   m_delayToActivateCollider: 0
+  m_stopsMusic: 0
 --- !u!61 &3558451553621754010
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -60754,7 +60792,7 @@ PrefabInstance:
     - target: {fileID: 8609855425914059244, guid: f387eace3f579cf498e3c85287bc37a7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 652.9392
+      value: 653.03723
       objectReference: {fileID: 0}
     - target: {fileID: 8609855425914059244, guid: f387eace3f579cf498e3c85287bc37a7,
         type: 3}
