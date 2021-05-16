@@ -10,7 +10,7 @@ public class ButtonActivatedDoor : ActivatedBase
 	private bool m_opening = false;
 	[SerializeField] ButtonActivatedDoor m_simultaneousActivation;
 	
-    private void Update()
+    private void FixedUpdate()
 	{
 		if (m_opening)
 		{
