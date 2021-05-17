@@ -165,7 +165,6 @@ public class BasicZombie : DemonBase
                     }
                 }
 
-
                 //ascending part of the jump
                 if (MyRgb.velocity.y > 1)
                 {

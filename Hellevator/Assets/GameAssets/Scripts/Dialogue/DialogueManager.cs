@@ -120,9 +120,7 @@ public class DialogueManager : TemporalSingleton<DialogueManager>
                     currentDialogue.Evento[i].ActivateEvent();
                 }
             }
-            InputManager.Instance.IsInDialogue = false;
-            InputManager.Instance.IsInInteactionTrigger = false;
-            AudioManager.Instance.DialogueSrc.pitch = 1;
+            //AudioManager.Instance.DialogueSrc.pitch = 1;
         }
     }
     public void DeactivateTextAndImage()

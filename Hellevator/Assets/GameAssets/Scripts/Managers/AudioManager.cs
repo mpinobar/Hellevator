@@ -60,27 +60,20 @@ public class AudioManager : PersistentSingleton<AudioManager>
             StopMusic();
             m_BGM.clip = m_introSatan;
             m_BGM.Play();
-            timerToLoop = true;
-            timer = m_introSatan.length;
+            introLoopDuration = m_introSatan.length;
+            StartCoroutine(IntroMusicSatan());
         }
     }
 
-    bool timerToLoop;
-    float timer;
-    private void Update()
-    {
-        if (timerToLoop)
-        {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                m_BGM.clip = m_loopSatan;
-                m_BGM.Play();
-                timerToLoop = false;
-                timer = m_introSatan.length;
-            }
-        }
+    IEnumerator IntroMusicSatan()
+    {        
+        yield return new WaitForSecondsRealtime(introLoopDuration);
+        m_BGM.clip = m_loopSatan;
+        m_BGM.Play();
     }
+
+    float introLoopDuration;
+
     public void ChangeBGMVolume(float v)
     {
         m_BGM.volume = v * 0.5f;
@@ -140,7 +133,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
 
     public void StartGameplayMusic()
     {
-        if (m_backgroundMusicClips != null && m_backgroundMusicClips.Count > 0)
+        if (m_backgroundMusicClips != null && m_backgroundMusicClips.Count > 0 && m_BGM.clip != m_backgroundMusicClips[m_musicClipIndex])
         {
             m_BGM.Stop();
             m_BGM.clip = m_backgroundMusicClips[m_musicClipIndex];

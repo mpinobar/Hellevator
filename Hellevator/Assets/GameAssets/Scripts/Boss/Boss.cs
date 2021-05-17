@@ -68,14 +68,14 @@ public class Boss : MonoBehaviour
             m_limbsToUnparent[i].GetComponent<Rigidbody2D>().isKinematic = true;
         }
 
-        m_kitchenUtensilsParents = new List<Transform>();
-        m_kitchenUtensilsStartingOffset = new List<Vector2>();
+        //m_kitchenUtensilsParents = new List<Transform>();
+        //m_kitchenUtensilsStartingOffset = new List<Vector2>();
 
-        for (int i = 0; i < m_kitchenUtensils.Count; i++)
-        {
-            m_kitchenUtensilsParents.Add(m_kitchenUtensils[i].transform.parent);
-            m_kitchenUtensilsStartingOffset.Add(m_kitchenUtensils[i].transform.position - m_kitchenUtensilsParents[i].position);
-        }
+        //for (int i = 0; i < m_kitchenUtensils.Count; i++)
+        //{
+        //    m_kitchenUtensilsParents.Add(m_kitchenUtensils[i].transform.parent);
+        //    m_kitchenUtensilsStartingOffset.Add(m_kitchenUtensils[i].transform.position - m_kitchenUtensilsParents[i].position);
+        //}
 
         m_playerSeenAttackTimer = 0f;
         if(m_doorToCloseUponStart) m_doorToCloseUponStart.SetActive(false);
@@ -86,7 +86,7 @@ public class Boss : MonoBehaviour
     public void Begin()
     {
         m_started = true;
-        SetNotSeeingPlayer();
+        //SetNotSeeingPlayer();
         CloseEntrance();
 		ChangeColorStartFight();
         PossessionManager.Instance.Boss = this;
@@ -105,6 +105,7 @@ public class Boss : MonoBehaviour
                     AttackPlayer();
                 }
                 float maxX = Mathf.Max(PossessionManager.Instance.ControlledDemon.transform.position.x - m_offsetMovement,m_maxCoordinate);
+                //Debug.LogError(maxX);
                 m_desiredPos = new Vector3(maxX, transform.position.y, 0);
                 transform.position = Vector3.Lerp(transform.position, m_desiredPos, Time.deltaTime * m_movementSpeed);
             }
@@ -112,10 +113,10 @@ public class Boss : MonoBehaviour
             {
                 m_playerSeenAttackTimer = 0f;
             }
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                PossessionManager.Instance.ControlledDemon.transform.position = new Vector3(-340, -80, 0);
-            }
+            //if (Input.GetKeyDown(KeyCode.O))
+            //{
+            //    PossessionManager.Instance.ControlledDemon.transform.position = new Vector3(-340, -80, 0);
+            //}
         }
     }
 
@@ -162,11 +163,11 @@ public class Boss : MonoBehaviour
         while (switchCounter <= 5)
         {
 
-            for (int i = 0; i < childSprites.Length; i++)
+            for (int i = 0; i < childSprites.Length-1; i++)
             {
                 if (isRed)
                 {
-                    childSprites[i].color = Color.white;
+                    childSprites[i].color = spritesColor;
 
                 }
                 else
@@ -175,20 +176,24 @@ public class Boss : MonoBehaviour
 
                 }
             }
+            childSprites[childSprites.Length-1].color = m_colorWhenHurt;
             isRed = !isRed;
             switchCounter++;
             yield return new WaitForSeconds(m_timeFlickerWhenHurt);
         }
 
     }
+    [ColorUsage(true,true)]
+    [SerializeField] Color spritesColor;
 	private void ChangeColorStartFight()
 	{
 		SpriteRenderer[] childSprites = GetComponentsInChildren<SpriteRenderer>();
 
-		for (int i = 0; i < childSprites.Length; i++)
+		for (int i = 0; i < childSprites.Length-1; i++)
 		{
-			childSprites[i].color = Color.white;
+			childSprites[i].color = spritesColor;
 		}
+        childSprites[childSprites.Length-1].color = Color.white;
 	}
 
     private void Die()
@@ -212,7 +217,8 @@ public class Boss : MonoBehaviour
         //m_bossAnimator.SetTrigger("Attack");
         Halo halo = Instantiate(m_haloPrefab,PossessionManager.Instance.ControlledDemon.transform.position + Vector3.up*m_haloSpawnHeight,Quaternion.identity);
         halo.SetTarget(PossessionManager.Instance.ControlledDemon.transform, m_haloSpawnHeight);
-        StartCoroutine(VisualKitchenKnives());
+        m_bossAnimator.SetTrigger("Attack");
+        //StartCoroutine(VisualKitchenKnives());
         ThrowKnife(PossessionManager.Instance.ControlledDemon.transform, m_knifeDelay, false);
         m_playerSeenAttackTimer = 0f;
     }
@@ -270,12 +276,12 @@ public class Boss : MonoBehaviour
             m_time += Time.deltaTime;
             m_evaluationTime += Time.deltaTime * m_visualKnivesHeightCurve.length / m_visualKnivesDuration;
 
-            for (int i = 0; i < m_kitchenUtensils.Count; i++)
-            {
+            //for (int i = 0; i < m_kitchenUtensils.Count; i++)
+            //{
 
-                m_kitchenUtensils[i].transform.position = (Vector2)m_kitchenUtensilsParents[i].position + m_kitchenUtensilsStartingOffset[i] + Vector2.up * m_visualKnivesHeightCurve.Evaluate(m_evaluationTime) * m_visualKnivesHeightMultiplier;
-                m_kitchenUtensils[i].transform.eulerAngles = Vector3.forward * m_kitchenUtensilsStartingRot[i];
-            }
+            //    m_kitchenUtensils[i].transform.position = (Vector2)m_kitchenUtensilsParents[i].position + m_kitchenUtensilsStartingOffset[i] + Vector2.up * m_visualKnivesHeightCurve.Evaluate(m_evaluationTime) * m_visualKnivesHeightMultiplier;
+            //    m_kitchenUtensils[i].transform.eulerAngles = Vector3.forward * m_kitchenUtensilsStartingRot[i];
+            //}
         }
     }
     public IEnumerator VisualKitchenKnives()

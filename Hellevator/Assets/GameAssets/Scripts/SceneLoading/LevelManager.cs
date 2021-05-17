@@ -222,7 +222,7 @@ public class LevelManager : PersistentSingleton<LevelManager>
         //}
         if (m_lastCheckPoint)
         {
-            
+
             m_lastCheckPoint.SpawnPlayer();
         }
         else
@@ -245,29 +245,38 @@ public class LevelManager : PersistentSingleton<LevelManager>
         }
         LevelLoaded?.Invoke();
         CameraManager.Instance.FadeOut();
-        string sceneName = PossessionManager.Instance.ControlledDemon.gameObject.scene.name;
+        string sceneName = "";
+        if (PossessionManager.Instance.ControlledDemon)
+            sceneName = PossessionManager.Instance.ControlledDemon.gameObject.scene.name;
+        else
+            sceneName = CameraManager.Instance.MainCamera.gameObject.scene.name;
         if (sceneName == "Menu")
             AudioManager.Instance.SetBackgroundMusicToMenu();
         else
         {
-            
-             if (sceneName[0] == 'R')
+
+            if (sceneName[0] == 'R')
             {
                 AudioManager.Instance.SetBackgroundMusicToRestaurant();
             }
-            else if(sceneName[0] == 'K')
+            else if (sceneName[0] == 'K')
             {
                 AudioManager.Instance.SetBackgroundMusicToKitchen();
-            } else if (sceneName[0] == 'H' && !sceneName.Contains("Satan"))
+            }
+            else if (sceneName[0] == 'H' && !sceneName.Contains("Satan"))
             {
                 AudioManager.Instance.SetBackgroundMusicToRooms();
             }
-            else
+            else if (sceneName[0] == 'J')
+            {
+                AudioManager.Instance.SetBackgroundMusicToGardens();
+            }
+            else if (sceneName[0] == 'A')
             {
                 AudioManager.Instance.SetBackgroundMusicToStorage();
             }
         }
-        AudioManager.Instance.StartGameplayMusic();
+        //AudioManager.Instance.StartGameplayMusic();
         m_isRestarting = false;
         Cursor.visible = false;
 

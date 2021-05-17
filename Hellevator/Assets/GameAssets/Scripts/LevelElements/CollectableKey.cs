@@ -51,11 +51,9 @@ public class CollectableKey : MonoBehaviour
 
 
     public void CloseCollectible()
-    {
-        print("a");
+    {        
         if (canClose)
-        {
-            print("b");
+        {            
             CameraManager.Instance.SetCurrentLiveCamera(m_mainCamera);
             UIController.Instance.HideCollectibleInGame();
             InputManager.Instance.IsInInteactionTrigger = false;
@@ -65,6 +63,11 @@ public class CollectableKey : MonoBehaviour
             Destroy(prefab);
             Destroy(gameObject);
         }
+    }
+
+    private void OnDisable()
+    {
+        InputManager.Instance.OnInteract -= CloseCollectible;
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

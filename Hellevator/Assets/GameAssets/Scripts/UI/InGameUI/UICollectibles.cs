@@ -30,7 +30,7 @@ public class UICollectibles : MonoBehaviour
     {
         for (int i = 0; i < 6; i++)
         {
-            if(PlayerPrefs.GetInt("Hueso."+i) == 1)
+            if(PlayerPrefs.GetInt("Col."+(i+1)) == 1)
             {
                 m_collectiblesSprites[i] = m_unlockedCollectiblesSprites[i];
             }
