@@ -18,6 +18,7 @@ public class TriggerSceneChange : MonoBehaviour
         {
             if (TryGetComponent(out ElevatorPositionSetter setter))
             {
+                print(setter.gameObject.name);
                 setter.ElevatorPositionRefresh(this);
             }
             if (m_stopsMusic)

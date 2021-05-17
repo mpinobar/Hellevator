@@ -21,6 +21,13 @@ public class IntroScriptedCharacterMovement : MonoBehaviour
 
     private void LateUpdate()
     {
+
+        if (PossessionManager.Instance.ControlledDemon != initialCharacter)
+        {
+            initialCharacter = PossessionManager.Instance.ControlledDemon;
+            
+        }
+
         if (!hasHit)
         {
             initialCharacter.transform.position = new Vector3(xPosition, initialCharacter.transform.position.y, 0);
