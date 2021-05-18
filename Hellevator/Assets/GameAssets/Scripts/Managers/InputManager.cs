@@ -166,10 +166,10 @@ public class InputManager : PersistentSingleton<InputManager>
         {
             FeedInputToMenuNavigation();
         }
-        //if (Input.GetKeyDown(KeyCode.L))
-        //{
-        //    AchievementsManager.ClearAchievements();
-        //}
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            AchievementsManager.Instance.ClearAchievements();
+        }
         //if (Input.GetKeyDown(KeyCode.J))
         //{
         //    UIController.Instance.UnlockMap();

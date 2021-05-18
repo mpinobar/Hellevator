@@ -64,7 +64,7 @@ public class AchievementsManager : PersistentSingleton<AchievementsManager>
     {
         Initialize();
         collectibles++;
-        if (collectibles >= 6)
+        if (collectibles >= 9)
         {
             if (PlayerPrefs.GetInt(ach_all_collectibles) == 0)
             {
