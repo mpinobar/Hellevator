@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
+using Steamworks;
 
 public class UIController : PersistentSingleton<UIController>
 {
@@ -59,6 +61,8 @@ public class UIController : PersistentSingleton<UIController>
         }
     }
 
+    protected Callback<GameOverlayActivated_t> m_GameOverlayActivated;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,11 +79,25 @@ public class UIController : PersistentSingleton<UIController>
         m_exitButton.onClick.AddListener(Exit);
         LevelManager.LevelLoaded += ShowGameplayUI;
 
+        m_GameOverlayActivated = Callback<GameOverlayActivated_t>.Create(OnGameOverlayActivated);
 
         if (SceneManager.GetActiveScene().name != "Menu")
         {
             //Debug.LogError("gameplay ui");
             ShowGameplayUI();
+        }
+    }
+
+    
+    private void OnGameOverlayActivated(GameOverlayActivated_t pCallback)
+    {
+        if (pCallback.m_bActive != 0)
+        {
+            ShowPauseMenu();
+        }
+        else
+        {
+            Resume();
         }
     }
 
@@ -105,6 +123,11 @@ public class UIController : PersistentSingleton<UIController>
         m_gameplayPanel.gameObject.SetActive(true);
         m_activePanel = m_gameplayPanel.gameObject;
         m_selected = null;
+    }
+    [SerializeField] Text debugtx;
+    internal void SetAchievementText(string v)
+    {
+        debugtx.text = v;
     }
 
     public void Exit()
@@ -294,13 +317,6 @@ public class UIController : PersistentSingleton<UIController>
     }
 
 
-    //private void Update()
-    //{
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        IsPointerOverUIElement();
-    //    }
-    //}
 
     ///Returns 'true' if we touched or hovering on Unity UI element.
     public static bool IsPointerOverUIElement()

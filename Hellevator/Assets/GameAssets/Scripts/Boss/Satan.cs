@@ -158,7 +158,7 @@ public class Satan : MonoBehaviour
             m_anim.SetTrigger("Death");
             OnDeath?.Invoke();            
             m_phase = Phase.Interphase;
-            AchievementsManager.UnlockKilledSatan();
+            AchievementsManager.Instance.UnlockKilledSatan();
             AudioManager.Instance.PlayAudioSFX(m_deathClip, false);
             AudioManager.Instance.StopMusic();
         }
