@@ -5,20 +5,20 @@ using Steamworks;
 public class AchievementsManager : PersistentSingleton<AchievementsManager>
 {
 
-    static int deathNumber;
-    static bool killedBeelzebub;
-    static bool killedGardenKeeper;
-    static bool killedSatan;
-    static int collectibles;
+     int deathNumber;
+     bool killedBeelzebub;
+     bool killedGardenKeeper;
+     bool killedSatan;
+     int collectibles;
 
-    static string ach_first_death = "ach_first_death";
-    static string ach_100_deaths = "ach_100_deaths";
-    static string ach_killed_beelzebub = "ach_killed_bz";
-    static string ach_kiled_garden_keeper = "ach_killed_gk";
-    static string ach_killed_satan = "ach_killed_satan";
-    static string ach_all_collectibles = "ach_all_collectibles";
+     string ach_first_death = "ach_first_death";
+     string ach_100_deaths = "ach_100_deaths";
+     string ach_killed_beelzebub = "ach_killed_bz";
+     string ach_kiled_garden_keeper = "ach_killed_gk";
+     string ach_killed_satan = "ach_killed_satan";
+     string ach_all_collectibles = "ach_all_collectibles";
 
-    static bool init;
+     bool init;
 
     public override void Awake()
     {
@@ -72,16 +72,17 @@ public class AchievementsManager : PersistentSingleton<AchievementsManager>
                 UnlockSteamAchievement(ach_all_collectibles);
             }
         }
+        Save();
     }
 
     public void AddDeath()
     {
         Initialize();
-        Debug.LogError("-1" + ach_first_death);
+        //Debug.LogError("-1" + ach_first_death);
         deathNumber++;
         if (deathNumber > 0)
         {
-            Debug.LogError("0" + ach_first_death);
+            //Debug.LogError("0" + ach_first_death);
             PlayerPrefs.SetInt(ach_first_death, 1);
             //call steam to unlock first death ach
             UnlockSteamAchievement(ach_first_death);
@@ -119,15 +120,15 @@ public class AchievementsManager : PersistentSingleton<AchievementsManager>
     public void UnlockSteamAchievement(string id)
     {
         Initialize();
-        Debug.LogError("1" + ach_first_death);
+        //Debug.LogError("1" + ach_first_death);
         if (SteamManager.Initialized)
         {
             bool hasAchievement;
             SteamUserStats.GetAchievement(id, out hasAchievement);
-            Debug.LogError("2" + ach_first_death);
+            //Debug.LogError("2" + ach_first_death);
             if (!hasAchievement)
             {
-                Debug.LogError("3" + ach_first_death);
+                //Debug.LogError("3" + ach_first_death);
                 SteamUserStats.SetAchievement(id);
 
             }
