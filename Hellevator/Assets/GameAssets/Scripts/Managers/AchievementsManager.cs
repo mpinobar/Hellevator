@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Steamworks;
-public class AchievementsManager
+public class AchievementsManager : PersistentSingleton<AchievementsManager>
 {
-    
+
     static int deathNumber;
     static bool killedBeelzebub;
     static bool killedGardenKeeper;
@@ -20,7 +20,34 @@ public class AchievementsManager
 
     static bool init;
 
-    public static void Initialize()
+    public override void Awake()
+    {
+        base.Awake();
+        Initialize();
+    }
+
+    public void ClearAchievements()
+    {
+        deathNumber = 0;
+        collectibles = 0;
+        killedBeelzebub = false;
+        killedGardenKeeper = false;
+        killedSatan = false;
+        PlayerPrefs.SetInt("deathNumber", 0);
+        PlayerPrefs.SetInt("collectibles", 0);
+        PlayerPrefs.SetInt("killedbz", 0);
+        PlayerPrefs.SetInt("killedgk", 0);
+        PlayerPrefs.SetInt("killedsatan", 0);
+        SteamUserStats.ClearAchievement("ach_first_death");
+        SteamUserStats.ClearAchievement("ach_100_deaths");
+        SteamUserStats.ClearAchievement("ach_killed_bz");
+        SteamUserStats.ClearAchievement("ach_killed_gk");
+        SteamUserStats.ClearAchievement("ach_killed_satan");
+        SteamUserStats.ClearAchievement("ach_all_collectibles");
+        Save();
+
+    }
+    public void Initialize()
     {
         if (!init)
         {
@@ -33,7 +60,7 @@ public class AchievementsManager
         }
     }
 
-    public static void AddCollectible()
+    public void AddCollectible()
     {
         Initialize();
         collectibles++;
@@ -47,75 +74,77 @@ public class AchievementsManager
         }
     }
 
-    public static void AddDeath()
+    public void AddDeath()
     {
         Initialize();
+        Debug.LogError("-1" + ach_first_death);
         deathNumber++;
         if (deathNumber > 0)
         {
-            if (PlayerPrefs.GetInt(ach_first_death) == 1)
-            {
-                PlayerPrefs.SetInt(ach_first_death, 1);
-                //call steam to unlock first death ach
-                UnlockSteamAchievement(ach_first_death);
-            }
+            Debug.LogError("0" + ach_first_death);
+            PlayerPrefs.SetInt(ach_first_death, 1);
+            //call steam to unlock first death ach
+            UnlockSteamAchievement(ach_first_death);
+
         }
         if (deathNumber >= 100)
         {
-            if (PlayerPrefs.GetInt(ach_100_deaths) == 1)
-            {
-                PlayerPrefs.SetInt(ach_100_deaths, 1);
-                //call steam to unlock 100 death ach
-                UnlockSteamAchievement(ach_100_deaths);
-            }
+
+            PlayerPrefs.SetInt(ach_100_deaths, 1);
+            //call steam to unlock 100 death ach
+            UnlockSteamAchievement(ach_100_deaths);
+
         }
         Save();
     }
 
-    public static void UnlockKilledBz()
+    public void UnlockKilledBz()
     {
         killedBeelzebub = true;
         UnlockSteamAchievement(ach_killed_beelzebub);
     }
 
-    public static void UnlockKilledGK()
+    public void UnlockKilledGK()
     {
         killedGardenKeeper = true;
         UnlockSteamAchievement(ach_kiled_garden_keeper);
     }
 
-    public static void UnlockKilledSatan()
+    public void UnlockKilledSatan()
     {
         killedSatan = true;
         UnlockSteamAchievement(ach_killed_satan);
     }
 
-    public static void UnlockSteamAchievement(string id)
+    public void UnlockSteamAchievement(string id)
     {
         Initialize();
+        Debug.LogError("1" + ach_first_death);
+        if (SteamManager.Initialized)
+        {
+            bool hasAchievement;
+            SteamUserStats.GetAchievement(id, out hasAchievement);
+            Debug.LogError("2" + ach_first_death);
+            if (!hasAchievement)
+            {
+                Debug.LogError("3" + ach_first_death);
+                SteamUserStats.SetAchievement(id);
 
-        //if (SteamManager.Initialized)
-        //{
-        //    bool hasAchievement;
-        //    SteamUserStats.GetAchievement(id, out hasAchievement);
-        //    if (!hasAchievement)
-        //    {
-        //        SteamUserStats.SetAchievement(id);
-        //    }
-        //    Save();
-        //}
+            }
+            Save();
+        }
     }
 
-    public static void Save()
-    {        
+    public void Save()
+    {
         PlayerPrefs.SetInt("deathNumber", deathNumber);
         PlayerPrefs.SetInt("collectibles", collectibles);
         PlayerPrefs.SetInt("killedbz", killedBeelzebub ? 1 : 0);
         PlayerPrefs.SetInt("killedgk", killedGardenKeeper ? 1 : 0);
         PlayerPrefs.SetInt("killedsatan", killedSatan ? 1 : 0);
 
-        //if (SteamManager.Initialized)
-        //    SteamUserStats.StoreStats();
+        if (SteamManager.Initialized)
+            SteamUserStats.StoreStats();
     }
-    
+
 }

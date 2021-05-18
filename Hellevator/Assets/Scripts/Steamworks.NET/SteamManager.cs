@@ -23,7 +23,7 @@ using Steamworks;
 public class SteamManager : MonoBehaviour {
 #if !DISABLESTEAMWORKS
 	protected static bool s_EverInitialized = false;
-
+	[SerializeField] UnityEngine.UI.Text tx;
 	protected static SteamManager s_instance;
 	protected static SteamManager Instance {
 		get {
@@ -67,7 +67,7 @@ public class SteamManager : MonoBehaviour {
 			return;
 		}
 		s_instance = this;
-
+		tx.text = "1";
 		if(s_EverInitialized) {
 			// This is almost always an error.
 			// The most common case where this happens is when SteamManager gets destroyed because of Application.Quit(),
@@ -94,8 +94,8 @@ public class SteamManager : MonoBehaviour {
 			// Once you get a Steam AppID assigned by Valve, you need to replace AppId_t.Invalid with it and
 			// remove steam_appid.txt from the game depot. eg: "(AppId_t)480" or "new AppId_t(480)".
 			// See the Valve documentation for more information: https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
-			if (SteamAPI.RestartAppIfNecessary((AppId_t)1594410)) {
-				Debug.LogError("COULDNT FIND STEAM IN LIBRARY");				
+			if (SteamAPI.RestartAppIfNecessary(new AppId_t(1594410))) {
+				tx.text = "RESTART";
 				Application.Quit();
 				return;
 			}
@@ -131,7 +131,8 @@ public class SteamManager : MonoBehaviour {
 		if (s_instance == null) {
 			s_instance = this;
 		}
-
+		if(tx.text != "")
+		tx.text = "Initialized";
 		if (!m_bInitialized) {
 			return;
 		}

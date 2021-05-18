@@ -253,7 +253,7 @@ public class BossJardines : MonoBehaviour
             flotadores[0].GetComponent<Rigidbody2D>().isKinematic = false;
             flotadores[0].GetComponent<SpriteSkin>().enabled = false;
             flotadores.RemoveAt(0);            
-            AchievementsManager.UnlockKilledGK();
+            AchievementsManager.Instance.UnlockKilledGK();
         }
         else
         {

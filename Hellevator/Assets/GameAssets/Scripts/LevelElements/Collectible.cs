@@ -107,7 +107,7 @@ public class Collectible : MonoBehaviour
             if (clip)
                 AudioManager.Instance.PlayAudioSFX(clip, false);
 
-            AchievementsManager.AddCollectible();
+            AchievementsManager.Instance.AddCollectible();
             PlayerPrefs.SetInt(m_ID, 1);
 
             StartCoroutine(waitBeforePopUp());
@@ -120,7 +120,7 @@ public class Collectible : MonoBehaviour
             if (clip)
                 AudioManager.Instance.PlayAudioSFX(clip, false);
 
-            AchievementsManager.AddCollectible();
+            //AchievementsManager.Instance.AddCollectible();
             PlayerPrefs.SetInt(m_ID, 1);
         }
 
