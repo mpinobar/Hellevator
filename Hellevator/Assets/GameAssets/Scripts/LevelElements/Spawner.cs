@@ -44,7 +44,7 @@ public class Spawner : MonoBehaviour
         }        
     }
 
-    private void SpawnCharacter()
+    public void SpawnCharacter()
     {
         m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity, transform));
         m_spawnedDemons[m_spawnedDemons.Count - 1].transform.parent = null;
