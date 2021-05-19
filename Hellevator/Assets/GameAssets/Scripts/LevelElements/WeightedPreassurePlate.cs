@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class WeightedPreassurePlate : MonoBehaviour
 {
@@ -54,7 +55,8 @@ public class WeightedPreassurePlate : MonoBehaviour
     private float m_positionY = 0f;
     private float m_LOpositionY = 0f;
     private float m_LOpositionX = 0f;
-
+    [Space]
+    public UnityEvent activeTrigger;
 
     private void Awake()
     {
@@ -76,8 +78,8 @@ public class WeightedPreassurePlate : MonoBehaviour
         }
         else
         {
-            if(m_parent)
-            m_startingPosition = m_parent.transform.position;
+            if (m_parent)
+                m_startingPosition = m_parent.transform.position;
             m_distanceToEndPosition = Vector3.Distance(m_startingPosition, m_pressurePlateEndPosition.position);
         }
         m_spikesData = new List<SpikesWeightData>();
@@ -92,7 +94,7 @@ public class WeightedPreassurePlate : MonoBehaviour
             print("The preassureplate " + this.gameObject.name + " needs to have a Linked Object");
         }
     }
-
+    bool m_canSpawn;
     private void Update()
     {
         //print(m_enemiesOnPreassurePlate.Count);
@@ -175,8 +177,13 @@ public class WeightedPreassurePlate : MonoBehaviour
                         {
                             if (m_percentage >= 1)
                             {
-                                m_buttonActivatedObject.Activate();
-
+                                if (m_buttonActivatedObject)
+                                    m_buttonActivatedObject.Activate();
+                                if (m_canSpawn)
+                                {
+                                    activeTrigger?.Invoke();
+                                    m_canSpawn = false;
+                                }
                                 if (m_audioSource && !m_audioSource.isPlaying)
                                     m_audioSource.Play();
                             }
@@ -184,7 +191,9 @@ public class WeightedPreassurePlate : MonoBehaviour
                             {
                                 if (m_audioSource)
                                     m_audioSource.Stop();
-                                m_buttonActivatedObject.Deactivate();
+                                if (m_buttonActivatedObject)
+                                    m_buttonActivatedObject.Deactivate();
+                                m_canSpawn = true;
                             }
                             m_positionY = m_distanceToEndPosition * m_percentage;
                             m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
@@ -338,8 +347,8 @@ public class WeightedPreassurePlate : MonoBehaviour
                         }
                     }
                     m_positionY = m_distanceToEndPosition * m_percentage;
-                    if(m_parent)
-                    m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
+                    if (m_parent)
+                        m_parent.transform.position = Vector3.MoveTowards(m_parent.transform.position, new Vector3(m_startingPosition.x, m_startingPosition.y - m_positionY, m_startingPosition.z), m_speed * Time.deltaTime);
 
                 }
                 break;
