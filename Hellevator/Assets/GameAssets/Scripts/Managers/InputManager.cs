@@ -113,7 +113,11 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public void InputMenu()
     {
-        //Debug.LogError(SceneManager.GetActiveScene().name);
+        if (EndCredits.isInCredits)
+        {
+            FindObjectOfType<EndCredits>().HideEndCredits();
+            return;
+        }
         if (SceneManager.GetActiveScene().name != "Menu")
         {
             if (!IsInMenu)
