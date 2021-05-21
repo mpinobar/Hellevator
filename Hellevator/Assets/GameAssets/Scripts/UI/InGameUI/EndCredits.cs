@@ -14,11 +14,14 @@ public class EndCredits : MonoBehaviour
         m_credits.SetActive(true);
         ((BasicZombie)PossessionManager.Instance.ControlledDemon).OnJumped += HideEndCredits;
     }
-   
+
     public void HideEndCredits()
     {
         isInCredits = false;
-        m_credits.gameObject.SetActive(false);
+        for (int i = 0; i < m_credits.transform.childCount; i++)
+        {
+            m_credits.transform.GetChild(i).gameObject.SetActive(false);
+        }
         PossessionManager.Instance.ControlledDemon.MyRgb.isKinematic = false;
         ((BasicZombie)PossessionManager.Instance.ControlledDemon).OnJumped -= HideEndCredits;
         PossessionManager.Instance.ControlledDemon.transform.position = positionToSetAfterEndCredits.position;
@@ -31,14 +34,14 @@ public class EndCredits : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent(out DemonBase character))
+        if (collision.TryGetComponent(out DemonBase character))
         {
             if (character.IsControlledByPlayer)
             {
                 ShowEndCredits();
                 ((BasicZombie)PossessionManager.Instance.ControlledDemon).ResetJumps();
                 character.MyRgb.isKinematic = true;
-                character.MyRgb.velocity = Vector2.zero;                
+                character.MyRgb.velocity = Vector2.zero;
             }
         }
     }
