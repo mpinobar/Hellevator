@@ -41,13 +41,16 @@ public class Spawner : MonoBehaviour
                     m_timer = m_spawnTimer;
                 }
             }
-        }        
+        }
     }
 
     public void SpawnCharacter()
     {
-        m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity, transform));
-        m_spawnedDemons[m_spawnedDemons.Count - 1].transform.parent = null;
+        if (m_spawnedDemons.Count < m_maxSpawnedDemons)
+        {
+            m_spawnedDemons.Add(Instantiate(m_demonToSpawn, transform.position, Quaternion.identity, transform));
+            m_spawnedDemons[m_spawnedDemons.Count - 1].transform.parent = null;
+        }
     }
 
     /// <summary>
