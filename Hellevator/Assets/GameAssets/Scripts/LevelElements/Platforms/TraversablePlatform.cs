@@ -8,11 +8,22 @@ public class TraversablePlatform : MonoBehaviour
     Collider2D m_myCollider;
     [SerializeField] GameObject m_canvasShowTutorialTraversePlatform;
     bool m_showingTutorial;
+    [SerializeField] float timeToActivate = 0f;
 
     private void Start()
     {
         m_myCollider = GetComponent<Collider2D>();
         InputManager.Instance.OnInteract += EndTutorial;        
+        if(timeToActivate > 0)
+        {
+            m_myCollider.enabled = false;
+            Invoke(nameof(ActivateCollider), timeToActivate);
+        }
+    }
+
+    private void ActivateCollider()
+    {
+        m_myCollider.enabled = true;
     }
 
     private void EndTutorial()
