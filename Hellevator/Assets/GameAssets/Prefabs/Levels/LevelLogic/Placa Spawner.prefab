@@ -309,7 +309,7 @@ MonoBehaviour:
   m_blocksPossession: 0
   m_enemyLayerMask:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 256
   m_speed: 2
   m_pressurePlateEndPosition: {fileID: 2691972610620726006}
   m_parent: {fileID: 2691972611648944350}
@@ -1460,12 +1460,22 @@ PrefabInstance:
     - target: {fileID: 3669460897684785797, guid: aff37eb78020cc140a857c4e2fd8ca34,
         type: 3}
       propertyPath: m_maxSpawnedDemons
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3669460897684785797, guid: aff37eb78020cc140a857c4e2fd8ca34,
         type: 3}
       propertyPath: m_spawnTimer
       value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669460897684785797, guid: aff37eb78020cc140a857c4e2fd8ca34,
+        type: 3}
+      propertyPath: m_spawnWhenInDanger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669460897684785797, guid: aff37eb78020cc140a857c4e2fd8ca34,
+        type: 3}
+      propertyPath: m_isActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aff37eb78020cc140a857c4e2fd8ca34, type: 3}

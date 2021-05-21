@@ -52,8 +52,8 @@ public class TriggerSceneChange : MonoBehaviour
         {
             if (demon.IsControlledByPlayer)
             {
-                //Debug.LogError(demon.name);
-                //Debug.LogError("Loading scene " + m_linkedScene);
+                //Debug.LogError(demon.name + " entered trigger "+name);
+                //Debug.LogError("Loading scene " + m_linkedScene + " from " + gameObject.scene.name);
                 AudioManager.Instance.PlayAudioSFX(m_changeSceneSFX, false, 2f);
                 PossessionManager.Instance.ChangeMainCharacter(demon);
                 LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
