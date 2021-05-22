@@ -11,6 +11,7 @@ public class MusicSlider : MonoBehaviour
     private void Awake()
     {
         m_slider = GetComponent<Slider>();
+        m_slider.value = AudioManager.MusicVolume;
     }
        
     public void ChangeValue()

@@ -26,7 +26,7 @@ public class MainMenuCanvasController : MonoBehaviour
         Cursor.visible = true;
         m_tmp = m_fadeTime * 0.5f;
         m_fadingIn = false;
-                
+        InputManager.Instance.IsInMenu = true;
         ChangeState(MenuCameraState.Options);
 
         SetMenuActive();        

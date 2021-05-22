@@ -10,6 +10,7 @@ public class SFXSlider : MonoBehaviour
     private void Awake()
     {
         m_slider = GetComponent<Slider>();
+        m_slider.value = AudioManager.SfxVolume;
     }
 
 
