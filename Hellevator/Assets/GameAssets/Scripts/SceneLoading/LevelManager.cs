@@ -274,6 +274,9 @@ public class LevelManager : PersistentSingleton<LevelManager>
             else if (sceneName[0] == 'A')
             {
                 AudioManager.Instance.SetBackgroundMusicToStorage();
+            }else if(sceneName == "Satan" && AudioManager.Instance.MusicClipIndex == 5)
+            {
+                AudioManager.Instance.StopMusic();
             }
         }
         //AudioManager.Instance.StartGameplayMusic();

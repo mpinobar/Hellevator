@@ -50,6 +50,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
             m_sourcesList.Remove(src);
     }
     public AudioSource DialogueSrc { get => m_dialogueSrc; set => m_dialogueSrc = value; }
+    public int MusicClipIndex { get => m_musicClipIndex; set => m_musicClipIndex = value; }
 
     public void PlayBossMusic(AudioClip intro, AudioClip loop)
     {
@@ -128,7 +129,10 @@ public class AudioManager : PersistentSingleton<AudioManager>
     public void StopMusic()
     {
         if (m_BGM)
+        {
+            StopAllCoroutines();
             m_BGM.Stop();
+        }
     }
 
     public void StartGameplayMusic()
