@@ -17,7 +17,7 @@ public class CheckPoint : MonoBehaviour
     public int Priority { get => priority; set => priority = value; }
 
     [SerializeField] CameraChangeOnTrigger m_cameraChange;
-
+    [SerializeField] bool destroysPossessedOnStart = true;
     private void Awake()
     {
         m_spr = GetComponent<SpriteRenderer>();
@@ -70,7 +70,7 @@ public class CheckPoint : MonoBehaviour
     /// </summary>
     public void SpawnPlayer()
     {
-        if (PossessionManager.Instance.ControlledDemon)
+        if (PossessionManager.Instance.ControlledDemon && destroysPossessedOnStart)
         {
             //Debug.LogError("a");
             Destroy(PossessionManager.Instance.ControlledDemon);            
