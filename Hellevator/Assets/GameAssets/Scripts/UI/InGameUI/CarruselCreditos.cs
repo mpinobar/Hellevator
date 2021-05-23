@@ -15,7 +15,8 @@ public class CarruselCreditos : MonoBehaviour
     float currentAlpha = 0;
     Color currentColor;
     Text [] childTexts;
-
+    Image cenefa;
+    Image bichillo;
     private void Start()
     {
         transform.GetChild(index).gameObject.SetActive(true);
@@ -33,7 +34,8 @@ public class CarruselCreditos : MonoBehaviour
             {
                 childTexts[i].color = currentColor;
             }
-
+            cenefa.color = currentColor;
+            bichillo.color = currentColor;
             if (currentAlpha >= 1)
                 panelTimer += Time.deltaTime;
 
@@ -68,11 +70,16 @@ public class CarruselCreditos : MonoBehaviour
             {
                 childTexts[i].color = currentColor;
             }
+            cenefa.color = currentColor;
+            bichillo.color = currentColor;
         }
     }
     private void GetChildTextReferences()
     {
         childTexts = transform.GetChild(index).GetComponentsInChildren<Text>();
+        Image[] imgs = transform.GetChild(index).GetComponentsInChildren<Image>();
+        cenefa = imgs[0];
+        bichillo = imgs[1];
     }
     private void End()
     {

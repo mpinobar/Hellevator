@@ -130,7 +130,7 @@ public class Boss : MonoBehaviour
         m_currentState = State.Default;
         m_playerSeenAttackTimer = 0f;
     }
-
+    AudioSource src;
     public void DamageBoss()
     {
         m_currentHealth--;
@@ -138,7 +138,12 @@ public class Boss : MonoBehaviour
         if (m_currentHealth > 0)
         {
             m_bossAnimator.SetTrigger("Hurting");
-            AudioManager.Instance.PlayAudioSFX(m_hurtAudio, false);
+            if (!src)
+                src = gameObject.AddComponent<AudioSource>();
+            src.clip = m_hurtAudio;
+            src.volume = AudioManager.SfxVolume;
+            src.priority++;
+            src.Play();
             StartCoroutine(HurtVisuals());
         }
         else

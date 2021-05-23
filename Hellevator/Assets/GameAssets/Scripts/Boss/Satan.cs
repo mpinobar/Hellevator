@@ -53,7 +53,7 @@ public class Satan : MonoBehaviour
     
     public static Action OnInterphase;
     public static Action OnDeath;
-
+    [SerializeField] GameObject m_Maurice;
     bool started;
     private void Start()
     {
@@ -63,7 +63,7 @@ public class Satan : MonoBehaviour
         m_currentLives = m_maxLives;
         m_horizontalHandAttack.gameObject.SetActive(false);
         m_verticalHandAttack.gameObject.SetActive(false);
-        mainCam = Camera.main;
+        mainCam = Camera.main;        
     }
 
 
@@ -85,11 +85,10 @@ public class Satan : MonoBehaviour
             }
             
         }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            PossessionManager.Instance.ControlledDemon.transform.position = new Vector3(373, -130, 0);
-        }
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    PossessionManager.Instance.ControlledDemon.transform.position = new Vector3(373, -130, 0);
+        //}
         
     }
     public void SetPhase(Phase newPhase)
@@ -133,7 +132,7 @@ public class Satan : MonoBehaviour
             {
                 if (m_phase == Phase.First)
                 {
-                    m_bossPosition = PossessionManager.Instance.ControlledDemon.transform.position;
+                    m_bossPosition = Vector2.Lerp(m_bossPosition, PossessionManager.Instance.ControlledDemon.transform.position,4*Time.deltaTime);
                     m_bossPosition.y = m_firstPhaseYCoordinate;
                 }
                 else if (m_phase == Phase.Second)
@@ -209,6 +208,8 @@ public class Satan : MonoBehaviour
     {
         started = true;
         AudioManager.Instance.PlayBossMusic(intro, loop);
+        if (m_Maurice)
+            m_Maurice.SetActive(false);
     }
 
     void VerticalHandAttack(/*Transform target*/)
