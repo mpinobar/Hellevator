@@ -25,7 +25,10 @@ public class TraversablePlatform : MonoBehaviour
     {
         m_myCollider.enabled = true;
     }
-
+    private void OnDisable()
+    {
+        InputManager.Instance.OnInteract -= EndTutorial;
+    }
     private void EndTutorial()
     {
         if (m_showingTutorial)
