@@ -28,7 +28,7 @@ public class UICollectibles : MonoBehaviour
 
     private void CalculateCollectibles()
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 9; i++)
         {
             if(PlayerPrefs.GetInt("Col."+(i+1)) == 1)
             {

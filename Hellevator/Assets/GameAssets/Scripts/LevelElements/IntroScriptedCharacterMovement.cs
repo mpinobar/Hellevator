@@ -45,6 +45,7 @@ public class IntroScriptedCharacterMovement : MonoBehaviour
         {
             initialCharacter.GetComponent<Animator>().SetBool("falling", false);
             Invoke(nameof(AllowCharacterMovement), 1f);
+            LevelManager.Instance.ClearSceneReference();
             
         }
     }
