@@ -196,8 +196,17 @@ public class LevelManager : PersistentSingleton<LevelManager>
         PossessionManager.Instance.ClearMultiplePossession();
         InputManager.Instance.ThrowingHead = false;
         InputManager.Instance.IsInMenu = false;
+        InputManager.Instance.IsInInteactionTrigger = false;
+        UIController.Instance.HideCollectibleInGame();
     }
 
+    public void ClearSceneReference()
+    {
+        m_lastCheckPoint = null;
+        m_checkPoints = null;
+        m_checkPointSceneToLoad = null;
+        CentralSceneLoadManager = null;
+    }
     private void LoadCompletedRestart(AsyncOperation obj)
     {
         //Debug.LogError("Has Checkpoint?" + (m_lastCheckPoint != null));
