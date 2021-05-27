@@ -17,12 +17,12 @@ public class TriggerSceneChange : MonoBehaviour
         get
         {
             if (TryGetComponent(out ElevatorPositionSetter setter))
-            {
-                print(setter.gameObject.name);
+            {                
                 setter.ElevatorPositionRefresh(this);
             }
             if (m_stopsMusic)
                 AudioManager.Instance.StopMusic();
+            isChangingRoom = false;
             return m_positionToSetAfterEntering;
         }
         set
@@ -44,16 +44,17 @@ public class TriggerSceneChange : MonoBehaviour
         }
 
     }
-
+    static bool isChangingRoom;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         DemonBase demon = collision.GetComponent<DemonBase>();
         if (demon != null)
         {
-            if (demon.IsControlledByPlayer)
+            if (demon.IsControlledByPlayer && !isChangingRoom)
             {
                 //Debug.LogError(demon.name + " entered trigger "+name);
                 //Debug.LogError("Loading scene " + m_linkedScene + " from " + gameObject.scene.name);
+                isChangingRoom = true;
                 AudioManager.Instance.PlayAudioSFX(m_changeSceneSFX, false, 2f);
                 PossessionManager.Instance.ChangeMainCharacter(demon);
                 LevelManager.Instance.SwitchToAdjacentScene(m_linkedScene);
