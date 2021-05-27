@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -7182,7 +7182,7 @@ PrefabInstance:
     - target: {fileID: 5859845341354498524, guid: 39ed3cf4f717c644694023ce1f0b5d0e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5859845341354498524, guid: 39ed3cf4f717c644694023ce1f0b5d0e,
         type: 3}
@@ -7714,10 +7714,15 @@ PrefabInstance:
       propertyPath: orthographic size
       value: 24.91
       objectReference: {fileID: 0}
+    - target: {fileID: 4048761725079898168, guid: c890b64d24c20ef419b0caa14a4fe032,
+        type: 3}
+      propertyPath: m_NormalizedViewPortRect.height
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4048761725079898171, guid: c890b64d24c20ef419b0caa14a4fe032,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -387.86462
+      value: -387.81842
       objectReference: {fileID: 0}
     - target: {fileID: 4048761725079898171, guid: c890b64d24c20ef419b0caa14a4fe032,
         type: 3}
@@ -21345,7 +21350,7 @@ Transform:
   - {fileID: 482474453}
   - {fileID: 411907701}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1935776739
 GameObject:
@@ -21497,6 +21502,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PossessionManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4911191576296881286, guid: 33e4d4c5ee367be4aa05b92511263bb1,
+        type: 3}
+      propertyPath: m_multiUnlockedFromStart
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4911191576296881287, guid: 33e4d4c5ee367be4aa05b92511263bb1,
         type: 3}

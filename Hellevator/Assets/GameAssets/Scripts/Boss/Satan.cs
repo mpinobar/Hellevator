@@ -63,9 +63,10 @@ public class Satan : MonoBehaviour
         m_currentLives = m_maxLives;
         m_horizontalHandAttack.gameObject.SetActive(false);
         m_verticalHandAttack.gameObject.SetActive(false);
-        mainCam = Camera.main;        
+        mainCam = Camera.main;
+        satanColor = GetComponentInChildren<SpriteRenderer>().color;
     }
-
+    Color satanColor;
 
     private void Update()
     {
@@ -187,7 +188,7 @@ public class Satan : MonoBehaviour
             {
                 if (isRed)
                 {
-                    childSprites[i].color = Color.white;
+                    childSprites[i].color = satanColor;
 
                 }
                 else
