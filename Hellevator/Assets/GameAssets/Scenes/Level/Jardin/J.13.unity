@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -6929,6 +6929,7 @@ MonoBehaviour:
   m_positionToSetAfterEntering: {fileID: 958165508}
   m_changeSceneSFX: {fileID: 8300000, guid: 40e947a3f8faf6e4dafbb8e98b43c38a, type: 3}
   m_delayToActivateCollider: 0.5
+  m_stopsMusic: 0
 --- !u!61 &209981304
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -43266,7 +43267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 646824eb81832bb4fbbfa0df0ccea4af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_newMusic: 1
+  m_newMusic: 4
 --- !u!1 &1310143736
 GameObject:
   m_ObjectHideFlags: 0
@@ -61464,6 +61465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_canvasShowTutorialTraversePlatform: {fileID: 2078310437}
+  timeToActivate: 0
 --- !u!61 &1843315861
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -62427,6 +62429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_canvasShowTutorialTraversePlatform: {fileID: 1713211461}
+  timeToActivate: 0
 --- !u!61 &1881260498
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -72436,6 +72439,7 @@ MonoBehaviour:
   m_positionToSetAfterEntering: {fileID: 5836539038763434138}
   m_changeSceneSFX: {fileID: 8300000, guid: 40e947a3f8faf6e4dafbb8e98b43c38a, type: 3}
   m_delayToActivateCollider: 0
+  m_stopsMusic: 0
 --- !u!61 &3558451553621754010
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -72695,6 +72699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_canvasShowTutorialTraversePlatform: {fileID: 594809297144958961}
+  timeToActivate: 0
 --- !u!4 &5836539038763434138
 Transform:
   m_ObjectHideFlags: 0
@@ -72739,12 +72744,12 @@ PrefabInstance:
     - target: {fileID: 2470189873418461632, guid: 2e5f0596ef5a09c49be948d033def38d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -23.195698
+      value: -28.739674
       objectReference: {fileID: 0}
     - target: {fileID: 2470189873418461632, guid: 2e5f0596ef5a09c49be948d033def38d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 48.0486
+      value: 936.5459
       objectReference: {fileID: 0}
     - target: {fileID: 2470189873764762856, guid: 2e5f0596ef5a09c49be948d033def38d,
         type: 3}
